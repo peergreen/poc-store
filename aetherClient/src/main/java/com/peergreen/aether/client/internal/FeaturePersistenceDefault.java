@@ -1,9 +1,9 @@
-package com.peergreen.aetherClient.internal;
+package com.peergreen.aether.client.internal;
 
 import java.io.File;
 import java.util.HashMap;
 
-import com.peergreen.aetherClient.FeaturesPersistence;
+import com.peergreen.aether.client.IFeaturesPersistence;
 
 
 /**
@@ -18,7 +18,7 @@ import com.peergreen.aetherClient.FeaturesPersistence;
  * 		<li>add a feature to the local repository</li>
  * </ul>
  */
-public class FeaturePersistenceDefault implements FeaturesPersistence {
+public class FeaturePersistenceDefault implements IFeaturesPersistence {
 
 	/**
 	 * Method to recover feature's metadata from its id

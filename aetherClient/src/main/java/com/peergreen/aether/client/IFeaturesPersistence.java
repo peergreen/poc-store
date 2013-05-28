@@ -1,4 +1,4 @@
-package com.peergreen.aetherClient;
+package com.peergreen.aether.client;
 
 import java.io.File;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.HashMap;
  * 		<li>add a feature to the local repository</li>
  * </ul>
  */
-public interface FeaturesPersistence 
+public interface IFeaturesPersistence 
 {
 	/**
 	 * Method to recover feature's metadata from its id

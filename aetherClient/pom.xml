@@ -9,8 +9,9 @@
 		<artifactId>serviceStore</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>aetherClient</artifactId>
-	<name>aetherClient</name>
+	<packaging>bundle</packaging>
+	<artifactId>aether-client</artifactId>
+	<name>aether-client</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
