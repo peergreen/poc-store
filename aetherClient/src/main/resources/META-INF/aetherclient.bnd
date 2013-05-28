@@ -1,0 +1,2 @@
+Private-Package com.peergreen.aetherClient.internal,\
+				com.peergreen.aetherClient.utils.*
