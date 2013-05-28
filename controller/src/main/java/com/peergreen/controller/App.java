@@ -1,4 +1,4 @@
-package com.peergreen;
+package com.peergreen.controller;
 
 /**
  * Hello world!

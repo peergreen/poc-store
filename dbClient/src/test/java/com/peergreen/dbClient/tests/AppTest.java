@@ -1,4 +1,4 @@
-package com.peergreen;
+package com.peergreen.dbClient.tests;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

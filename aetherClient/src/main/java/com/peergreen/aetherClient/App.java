@@ -1,4 +1,4 @@
-package com.peergreen;
+package com.peergreen.aetherClient;
 
 /**
  * Hello world!

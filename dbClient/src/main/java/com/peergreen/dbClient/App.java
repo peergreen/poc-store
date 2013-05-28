@@ -1,4 +1,4 @@
-package com.peergreen;
+package com.peergreen.dbClient;
 
 /**
  * Hello world!

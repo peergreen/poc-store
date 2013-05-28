@@ -1,4 +1,4 @@
-package com.peergreen;
+package com.peergreen.controller.tests;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
