@@ -9,11 +9,8 @@
 		<artifactId>serviceStore</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-
-	<groupId>com.peergreen</groupId>
-	<artifactId>clientAether</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<name>clientAether</name>
+	<artifactId>aetherClient</artifactId>
+	<name>aetherClient</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
