@@ -1,4 +1,4 @@
-package com.peergreen.aether.client.util.internal;
+package com.peergreen.store.aether.client.util.internal;
 
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
