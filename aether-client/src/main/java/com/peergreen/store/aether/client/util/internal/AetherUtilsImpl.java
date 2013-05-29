@@ -14,17 +14,17 @@ import com.peergreen.aether.client.util.IAetherUtils;
 @Provides
 public class AetherUtilsImpl implements IAetherUtils {
 
-	@Override
-	public RepositorySystem newRepositorySystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public RepositorySystem newRepositorySystem() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public DefaultRepositorySystemSession newRepositorySystemSession(
-			RepositorySystem system) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public DefaultRepositorySystemSession newRepositorySystemSession(
+            RepositorySystem system) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }
