@@ -1,0 +1,2 @@
+Bundle-Activator org.ow2.easybeans.osgi.ejbjar.Activator
+DynamicImport-Package *

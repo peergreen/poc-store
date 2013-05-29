@@ -13,6 +13,22 @@
 	<artifactId>db-client</artifactId>
 	<name>db-client</name>
 	
+	<dependencies>
+		<dependency>
+			<groupId>javaee</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>5</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository> <!-- for javaee:javaee-api -->
+			<id>java.net2</id>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
+	</repositories>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
