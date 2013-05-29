@@ -61,8 +61,8 @@ public interface IFeaturesPersistence
 	 * @param version feature's version
 	 * @param description feature's description
 	 * @param category feature's category
-	 * @param requiredServices required services list
-	 * @param exportedServices exported services list
+	 * @param requirements requirements list
+	 * @param capacities exported capacities list
 	 * @param properties feature's additional properties
 	 * @param feature feature's binary
 	 */
@@ -72,8 +72,8 @@ public interface IFeaturesPersistence
 			String version,
 			String description,
 //			Category category,
-//			ArrayList<Service> requiredServices,
-//			ArrayList<Service> exportedServices,
+//			ArrayList<Requirement> requirements,
+//			ArrayList<Capacity> capacities,
 			HashMap<String, String> properties,
 			File feature);
 	
@@ -85,8 +85,8 @@ public interface IFeaturesPersistence
 	 * @param version feature's version
 	 * @param description feature's description
 	 * @param category feature's category
-	 * @param requiredServices required services list
-	 * @param exportedServices exported services list
+	 * @param requirements requirements list
+	 * @param capacities exported capacities list
 	 * @param properties feature's additional properties
 	 * @param feature feature's binary
 	 */
@@ -96,8 +96,8 @@ public interface IFeaturesPersistence
 			String version,
 			String description,
 //			Category category,
-//			ArrayList<Service> requiredServices,
-//			ArrayList<Service> exportedServices,
+//			ArrayList<Requirement> requirements,
+//			ArrayList<Capacity> capacities,
 			HashMap<String, String> properties,
 			File feature);
 }
