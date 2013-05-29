@@ -62,7 +62,7 @@ public interface IFeaturesPersistence
 	 * @param description feature's description
 	 * @param category feature's category
 	 * @param requirements requirements list
-	 * @param capacities exported capacities list
+	 * @param capabilities exported capabilities list
 	 * @param properties feature's additional properties
 	 * @param feature feature's binary
 	 */
@@ -73,7 +73,7 @@ public interface IFeaturesPersistence
 			String description,
 //			Category category,
 //			ArrayList<Requirement> requirements,
-//			ArrayList<Capacity> capacities,
+//			ArrayList<Capability> capabilities,
 			HashMap<String, String> properties,
 			File feature);
 	
@@ -86,7 +86,7 @@ public interface IFeaturesPersistence
 	 * @param description feature's description
 	 * @param category feature's category
 	 * @param requirements requirements list
-	 * @param capacities exported capacities list
+	 * @param capabilities exported capabilities list
 	 * @param properties feature's additional properties
 	 * @param feature feature's binary
 	 */
@@ -97,7 +97,7 @@ public interface IFeaturesPersistence
 			String description,
 //			Category category,
 //			ArrayList<Requirement> requirements,
-//			ArrayList<Capacity> capacities,
+//			ArrayList<Capability> capabilities,
 			HashMap<String, String> properties,
 			File feature);
 }

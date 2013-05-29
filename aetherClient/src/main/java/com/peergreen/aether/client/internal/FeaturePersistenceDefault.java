@@ -82,7 +82,7 @@ public class FeaturePersistenceDefault implements IFeaturesPersistence {
 	 * @param description feature's description
 	 * @param category feature's category
 	 * @param requirements requirements list
-	 * @param capacities exported capacities list
+	 * @param capabilities exported capabilities list
 	 * @param properties feature's additional properties
 	 * @param feature feature's binary
 	 */
@@ -102,7 +102,7 @@ public class FeaturePersistenceDefault implements IFeaturesPersistence {
 	 * @param description feature's description
 	 * @param category feature's category
 	 * @param requirements requirements list
-	 * @param capacities exported capacities list
+	 * @param capabilities exported capabilities list
 	 * @param properties feature's additional properties
 	 * @param feature feature's binary
 	 */
