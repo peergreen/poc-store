@@ -9,6 +9,12 @@
 	<packaging>pom</packaging>
 	<name>serviceStore</name>
 
+	<parent>
+		<groupId>com.peergreen</groupId>
+		<artifactId>peergreen-pom</artifactId>
+		<version>1</version>
+	</parent>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
