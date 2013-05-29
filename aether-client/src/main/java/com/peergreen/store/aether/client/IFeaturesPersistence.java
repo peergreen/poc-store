@@ -1,4 +1,4 @@
-package com.peergreen.aether.client;
+package com.peergreen.store.aether.client;
 
 import java.io.File;
 import java.util.HashMap;

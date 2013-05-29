@@ -1,4 +1,4 @@
-package com.peergreen.aether.client.util;
+package com.peergreen.store.aether.client.util;
 
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
