@@ -11,65 +11,65 @@ import com.peergreen.db.ejb.session.IRequirement;
 
 public class DefaultFeature implements IFeature {
 
-	public Feature addFeature(int featureId, String groupId, String artifactId,
-			String version, String description, Category category,
-			Collection<Capability> capabilities,
-			Collection<IRequirement> requirements) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature addFeature(int featureId, String groupId, String artifactId,
+            String version, String description, Category category,
+            Collection<Capability> capabilities,
+            Collection<IRequirement> requirements) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature findFeature(int featureId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature findFeature(int featureId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Collection<Feature> collectFeaturesByGroup(Group group) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Collection<Feature> collectFeaturesByGroup(Group group) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature updateFeature(int featureId, String groupId,
-			String artifactId, String version, String description,
-			Category category, Collection<Capability> capabilities,
-			Collection<IRequirement> requirements) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature updateFeature(int featureId, String groupId,
+            String artifactId, String version, String description,
+            Category category, Collection<Capability> capabilities,
+            Collection<IRequirement> requirements) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public void deleteFeature(int featureId) {
-		// TODO Auto-generated method stub
+    public void deleteFeature(int featureId) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public Feature giveAccesToGroup(Group group) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature giveAccesToGroup(Group group) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature removeAccesToGroup(Group group) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature removeAccesToGroup(Group group) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature addCapability(Capability capability) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature addCapability(Capability capability) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature removeCapability(Capability capability) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature removeCapability(Capability capability) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature addRequirement(IRequirement requirement) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature addRequirement(IRequirement requirement) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public Feature removeRequirement(IRequirement requirement) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Feature removeRequirement(IRequirement requirement) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

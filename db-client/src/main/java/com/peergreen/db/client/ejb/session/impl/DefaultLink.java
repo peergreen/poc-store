@@ -5,19 +5,19 @@ import com.peergreen.db.ejb.session.ILink;
 
 public class DefaultLink implements ILink {
 
-	public Link addLink(int linkId, String url, String description) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Link addLink(int linkId, String url, String description) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public void deleteLink(int linkId) {
-		// TODO Auto-generated method stub
+    public void deleteLink(int linkId) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	public Link findLink(int linkId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Link findLink(int linkId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }
