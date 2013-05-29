@@ -6,13 +6,10 @@
 
 	<parent>
 		<groupId>com.peergreen</groupId>
-		<artifactId>serviceStore</artifactId>
+		<artifactId>store</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-
-	<groupId>com.peergreen</groupId>
 	<artifactId>controller</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<name>controller</name>
 
 	<properties>

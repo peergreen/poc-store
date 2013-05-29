@@ -6,14 +6,12 @@
 	
 	<parent>
 		<groupId>com.peergreen</groupId>
-		<artifactId>serviceStore</artifactId>
+		<artifactId>store</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	
-	<groupId>com.peergreen</groupId>
-	<artifactId>clientBD</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<name>clientBD</name>
+	<packaging>bundle</packaging>
+	<artifactId>db-client</artifactId>
+	<name>db-client</name>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

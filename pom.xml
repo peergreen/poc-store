@@ -3,17 +3,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.peergreen</groupId>
-	<artifactId>serviceStore</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>serviceStore</name>
-
 	<parent>
 		<groupId>com.peergreen</groupId>
 		<artifactId>peergreen-pom</artifactId>
 		<version>1</version>
 	</parent>
+
+	<artifactId>store</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>store</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,8 +20,8 @@
 
 	<modules>
 		<module>controller</module>
-		<module>dbClient</module>
-		<module>aetherClient</module>
+		<module>db-client</module>
+		<module>aether-client</module>
 	</modules>
 
 	<dependencies>
