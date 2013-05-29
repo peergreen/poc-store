@@ -1,2 +1,2 @@
-Private-Package com.peergreen.aetherClient.internal,\
-                com.peergreen.aetherClient.utils.*
+Private-Package com.peergreen.store.aether.client.internal,\
+                com.peergreen.store.aether.client.util.*
