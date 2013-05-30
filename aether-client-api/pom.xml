@@ -9,6 +9,7 @@
     <artifactId>store</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
+  <packaging>bundle</packaging>
   <artifactId>aether-client-api</artifactId>
   <name>Peergreen Store Aether client API</name>
 
