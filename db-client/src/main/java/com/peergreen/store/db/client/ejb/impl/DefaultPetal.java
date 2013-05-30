@@ -2,15 +2,10 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.Capability;
-import com.peergreen.store.db.client.ejb.entity.Category;
-import com.peergreen.store.db.client.ejb.entity.Group;
-import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IGroup;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.session.IRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 
@@ -85,5 +80,5 @@ public class DefaultPetal implements ISessionPetal {
         return null;
     }
 
-
+  
 }
