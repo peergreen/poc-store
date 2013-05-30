@@ -1,48 +1,42 @@
 package com.peergreen.store.db.client.ejb.entity.api;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+/**
+ * Interface defining an entity bean representing a link between two stores
+ */
+public interface Link {
 
-@Entity
-public class Link {
-    @Id
-    private int linkId;
-    private String url; 
-    private String description;
     /**
      * @return the linkId
      */
-    public int getLinkId() {
-        return linkId;
-    }
+    public int getLinkId();
+
+
     /**
      * @param linkId the linkId to set
      */
-    public void setLinkId(int linkId) {
-        this.linkId = linkId;
-    }
+    public void setLinkId(int linkId);
+
+
     /**
      * @return the url
      */
-    public String getUrl() {
-        return url;
-    }
+    public String getUrl();
+
+
     /**
      * @param url the url to set
      */
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    public void setUrl(String url);
+
+
     /**
      * @return the description
      */
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription();
+
+
     /**
      * @param description the description to set
      */
-    public void setDescription(String description) {
-        this.description = description;
-    } 
+    public void setDescription(String description);
 }
