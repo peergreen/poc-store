@@ -23,6 +23,7 @@
     <module>controller</module>
     <module>db-client</module>
     <module>aether-client</module>
+    <module>db-client-api</module>
   </modules>
 
   <dependencies>

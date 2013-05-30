@@ -1,4 +1,4 @@
-package com.peergreen.store.db.client.ejb.entity;
+package com.peergreen.store.db.client.ejb.entity.api;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
