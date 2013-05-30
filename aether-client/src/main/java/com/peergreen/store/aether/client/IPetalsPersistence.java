@@ -46,7 +46,7 @@ public interface IPetalsPersistence
      * @param id
      * @return petal's binary
      */
-    public File getFeature(int id);
+    public File getPetal(int id);
 
     /**
      * Method to recover petal's binary from its information
@@ -56,7 +56,7 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return petal's binary
      */
-    public File getFeature(String groupId, String artifactId, String version);
+    public File getPetal(String groupId, String artifactId, String version);
 
     /**
      * Method to add a petal to the staging repository

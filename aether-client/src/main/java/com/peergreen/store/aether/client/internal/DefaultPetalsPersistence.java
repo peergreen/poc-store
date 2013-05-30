@@ -32,8 +32,9 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public HashMap<String, String> getMetadata(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        HashMap<String, String> metadata = new HashMap<String, String>();
+        
+        return metadata;
     }
 
     /**
@@ -57,7 +58,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return petal's binary
      */
     @Override
-    public File getFeature(int id) {
+    public File getPetal(int id) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -71,7 +72,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return petal's binary
      */
     @Override
-    public File getFeature(String groupId, String artifactId, String version) {
+    public File getPetal(String groupId, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
