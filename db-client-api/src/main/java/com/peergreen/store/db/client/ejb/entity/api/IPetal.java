@@ -6,7 +6,7 @@ import java.util.List;
  * Interface defining an entity bean representing a petal
  */
 
-public interface Petal {
+public interface IPetal {
 
 
     /**
@@ -72,36 +72,36 @@ public interface Petal {
     /**
      * @return the category
      */
-    public Category getCategory();
+    public ICategory getCategory();
 
 
     /**
      * @param category the category to set
      */
-    public void setCategory(Category category);
+    public void setCategory(ICategory category);
 
 
     /**
      * @return the requirements
      */
-    public List<Requirement> getRequirements();
+    public List<IRequirement> getRequirements();
 
 
     /**
      * @param requirements the requirements to set
      */
-    public void setRequirements(List<Requirement> requirements);
+    public void setRequirements(List<IRequirement> requirements);
 
 
     /**
      * @return the capabilities
      */
-    public List<Capability> getCapabilities();
+    public List<ICapability> getCapabilities();
 
 
     /**
      * @param capabilities the capabilities to set
      */
-    public void setCapabilities(List<Capability> capabilities);
+    public void setCapabilities(List<ICapability> capabilities);
 
 }

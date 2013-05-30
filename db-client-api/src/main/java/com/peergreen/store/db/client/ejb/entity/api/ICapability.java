@@ -7,7 +7,7 @@ import java.util.Map;
  *Interface Entity Bean representing capability of a petal
  */
 
-public interface Capability {
+public interface ICapability {
 
     /**
      * @return the namespace
@@ -36,11 +36,11 @@ public interface Capability {
     /**
      * @return the petals
      */
-    public List<Petal> getPetals();
+    public List<IPetal> getPetals();
 
 
     /**
      * @param petals the petals to set
      */
-    public void setPetals(List<Petal> petals) ;
+    public void setPetals(List<IPetal> petals) ;
 }

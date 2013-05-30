@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import com.peergreen.store.db.client.ejb.entity.api.Capability;
-import com.peergreen.store.db.client.ejb.entity.api.Category;
-import com.peergreen.store.db.client.ejb.entity.api.Requirement;
+import com.peergreen.store.db.client.ejb.entity.api.ICapability;
+import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 
 
 /**
@@ -78,9 +78,9 @@ public interface IPetalsPersistence
             String artifactId,
             String version,
             String description,
-            Category category,
-            List<Requirement> requirements,
-            List<Capability> capabilities,
+            ICategory category,
+            List<IRequirement> requirements,
+            List<ICapability> capabilities,
             Map<String, String> properties,
             File petal);
 
@@ -102,9 +102,9 @@ public interface IPetalsPersistence
             String artifactId,
             String version,
             String description,
-            Category category,
-            List<Requirement> requirements,
-            List<Capability> capabilities,
+            ICategory category,
+            List<IRequirement> requirements,
+            List<ICapability> capabilities,
             Map<String, String> properties,
             File petal);
 }

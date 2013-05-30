@@ -7,7 +7,7 @@ import java.util.List;
  * Interface defining an entity bean representing the user
  */
 
-public interface User {
+public interface IUser {
 
     /**
      * @return the pseudo
@@ -48,13 +48,13 @@ public interface User {
     /**
      * @return the groupSet
      */
-    public List<Group> getGroupSet();
+    public List<IGroup> getGroupSet();
     
     
     /**
      * @param groupSet the groupSet to set
      */
-    public void setGroupSet(List<Group> groupSet) ;
+    public void setGroupSet(List<IGroup> groupSet) ;
 
 
 }

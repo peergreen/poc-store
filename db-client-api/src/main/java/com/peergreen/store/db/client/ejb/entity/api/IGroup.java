@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Interface defining an entity bean representing a group of users
  */
-public interface Group {
+public interface IGroup {
 
     /**
      * @return the groupname
@@ -22,25 +22,25 @@ public interface Group {
     /**
      * @return the users
      */
-    public List<User> getUsers();
+    public List<IUser> getUsers();
 
 
     /**
      * @param users the users to set
      */
-    public void setUsers(List<User> users);
+    public void setUsers(List<IUser> users);
 
 
     /**
      * @return the petals
      */
-    public List<Petal> getPetals();
+    public List<IPetal> getPetals();
 
 
     /**
      * @param petals the petals to set
      */
-    public void setPetals(List<Petal> petals);
+    public void setPetals(List<IPetal> petals);
 
 
 }

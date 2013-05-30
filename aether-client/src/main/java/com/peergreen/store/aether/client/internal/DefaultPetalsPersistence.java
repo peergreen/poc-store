@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
-import com.peergreen.store.db.client.ejb.entity.api.Capability;
-import com.peergreen.store.db.client.ejb.entity.api.Category;
-import com.peergreen.store.db.client.ejb.entity.api.Requirement;
+import com.peergreen.store.db.client.ejb.entity.api.ICapability;
+import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 
 
 /**
@@ -92,8 +92,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToStaging(String groupId, String artifactId, String version, String description, Category category,
-            List<Requirement> requirements, List<Capability> capabilities,
+    public void addToStaging(String groupId, String artifactId, String version, String description, ICategory category,
+            List<IRequirement> requirements, List<ICapability> capabilities,
             Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
         
@@ -113,8 +113,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToLocal(String groupId, String artifactId, String version, String description, Category category,
-            List<Requirement> requirements, List<Capability> capabilities,
+    public void addToLocal(String groupId, String artifactId, String version, String description, ICategory category,
+            List<IRequirement> requirements, List<ICapability> capabilities,
             Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
         

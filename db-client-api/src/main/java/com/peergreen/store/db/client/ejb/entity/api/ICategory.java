@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Entity Bean representing the category of a petal  
  */
-public interface Category {
+public interface ICategory {
 
     /**
      * @return the categoryId
@@ -35,11 +35,11 @@ public interface Category {
     /**
      * @return the petals
      */
-    public List<Petal> getPetals();
+    public List<IPetal> getPetals();
 
 
     /**
      * @param petals the petals to set
      */
-    public void setPetals(List<Petal> petals);
+    public void setPetals(List<IPetal> petals);
 }

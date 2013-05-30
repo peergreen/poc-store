@@ -2,15 +2,15 @@ package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.Category;
-import com.peergreen.store.db.client.ejb.entity.api.Petal;
+import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 
 public interface ISessionCategory {
 
-    Category addCategory(int categoryId, String name, String version);
+    ICategory addCategory(int categoryId, String name, String version);
     void deleteCategory(int categoryId);
-    Category findCategory(int categoryId);
-    Collection<Petal> collectPetals();
-    Category addPetal(Petal petal);
-    Category removePetal(Petal petal);
+    ICategory findCategory(int categoryId);
+    Collection<IPetal> collectPetals();
+    ICategory addPetal(IPetal petal);
+    ICategory removePetal(IPetal petal);
 }

@@ -2,35 +2,35 @@ package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.Capability;
-import com.peergreen.store.db.client.ejb.entity.api.Category;
-import com.peergreen.store.db.client.ejb.entity.api.Group;
-import com.peergreen.store.db.client.ejb.entity.api.Petal;
+import com.peergreen.store.db.client.ejb.entity.api.ICapability;
+import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IGroup;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 
 public interface ISesssionPetal {
 
-    Petal addPetal(int petalId, String groupId, String artifactId, 
-            String version, String description, Category category, 
-            Collection<Capability> capabilities, Collection<ISessionRequirement> requirements);
+    IPetal addPetal(int petalId, String groupId, String artifactId, 
+            String version, String description, ICategory category, 
+            Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
 
-    Petal findPetal(int petalId);
+    IPetal findPetal(int petalId);
 
-    Collection <Petal> collectPetalsByGroup(Group group); 
+    Collection <IPetal> collectPetalsByGroup(IGroup group); 
 
-    Petal updatePetal(int petalId, String groupId, String artifactId, 
-            String version, String description, Category category, 
-            Collection<Capability> capabilities, Collection<ISessionRequirement> requirements);
+    IPetal updatePetal(int petalId, String groupId, String artifactId, 
+            String version, String description, ICategory category, 
+            Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
 
     void deletePetal(int petalId); 
 
-    Petal giveAccesToGroup(Group group);
+    IPetal giveAccesToGroup(IGroup group);
 
-    Petal removeAccesToGroup(Group group);
+    IPetal removeAccesToGroup(IGroup group);
 
-    Petal addCapability(Capability capability);
-    Petal removeCapability(Capability capability);
+    IPetal addCapability(ICapability capability);
+    IPetal removeCapability(ICapability capability);
 
-    Petal addRequirement(ISessionRequirement requirement);
-    Petal removeRequirement(ISessionRequirement requirement);
+    IPetal addRequirement(ISessionRequirement requirement);
+    IPetal removeRequirement(ISessionRequirement requirement);
 
 }

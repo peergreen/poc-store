@@ -7,7 +7,7 @@ import java.util.List;
  * Interface defining an entity bean representing requirement of a petal
  */
 
-public interface Requirement {
+public interface IRequirement {
 
     /**
      * @return the requirementId
@@ -36,12 +36,12 @@ public interface Requirement {
     /**
      * @return the petals
      */
-    public List<Petal> getPetals();
+    public List<IPetal> getPetals();
 
 
     /**
      * @param petals the petals to set
      */
-    public void setPetals(List<Petal> petals);
+    public void setPetals(List<IPetal> petals);
 
 }

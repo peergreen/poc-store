@@ -3,7 +3,7 @@ package com.peergreen.store.db.client.ejb.entity.api;
 /**
  * Interface defining an entity bean representing a link between two stores
  */
-public interface Link {
+public interface ILink {
 
     /**
      * @return the linkId
