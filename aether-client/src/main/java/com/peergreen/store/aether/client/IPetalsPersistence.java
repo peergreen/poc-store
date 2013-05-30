@@ -1,8 +1,8 @@
 package com.peergreen.store.aether.client;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
@@ -16,6 +16,8 @@ import com.peergreen.store.db.client.ejb.entity.Requirement;
  * <ul>
  * 		<li>retrieve petal's metadata</li>
  * 		<li>retrieve petal's binary</li>
+ *      <li>retrieve a petal from its id</li>
+ *      <li>retrieve a petal from its information</li>
  * 		<li>add a petal to the staging repository</li>
  * 		<li>add a petal to the local repository</li>
  * </ul>
@@ -28,7 +30,7 @@ public interface IPetalsPersistence
      * @param id petal's id
      * @return collection containing all petal's metadata
      */
-    public HashMap<String, String> getMetadata(int id);
+    public Map<String, String> getMetadata(int id);
 
     /**
      * Method to recover petal's metadata from its information
@@ -38,7 +40,7 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return collection containing all petal's metadata
      */
-    public HashMap<String, String> getMetadata(String groupId, String artifactId, String version);
+    public Map<String, String> getMetadata(String groupId, String artifactId, String version);
 
     /**
      * Method to recover petal's binary from its id
@@ -77,9 +79,9 @@ public interface IPetalsPersistence
             String version,
             String description,
             Category category,
-            ArrayList<Requirement> requirements,
-            ArrayList<Capability> capabilities,
-            HashMap<String, String> properties,
+            List<Requirement> requirements,
+            List<Capability> capabilities,
+            Map<String, String> properties,
             File petal);
 
     /**
@@ -101,8 +103,8 @@ public interface IPetalsPersistence
             String version,
             String description,
             Category category,
-            ArrayList<Requirement> requirements,
-            ArrayList<Capability> capabilities,
-            HashMap<String, String> properties,
+            List<Requirement> requirements,
+            List<Capability> capabilities,
+            Map<String, String> properties,
             File petal);
 }

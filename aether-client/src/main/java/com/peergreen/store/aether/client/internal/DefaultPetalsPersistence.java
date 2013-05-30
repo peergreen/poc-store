@@ -1,8 +1,9 @@
 package com.peergreen.store.aether.client.internal;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.db.client.ejb.entity.Capability;
@@ -92,8 +93,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public void addToStaging(String groupId, String artifactId, String version, String description, Category category,
-            ArrayList<Requirement> requirements, ArrayList<Capability> capabilities,
-            HashMap<String, String> properties, File petal) {
+            List<Requirement> requirements, List<Capability> capabilities,
+            Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
         
     }
@@ -113,8 +114,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public void addToLocal(String groupId, String artifactId, String version, String description, Category category,
-            ArrayList<Requirement> requirements, ArrayList<Capability> capabilities,
-            HashMap<String, String> properties, File petal) {
+            List<Requirement> requirements, List<Capability> capabilities,
+            Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
         
     }
