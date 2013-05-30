@@ -1,35 +1,34 @@
 <?xml version="1.0"?>
 <project
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.peergreen.store</groupId>
-    <artifactId>store</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <packaging>bundle</packaging>
-  <artifactId>db-client</artifactId>
-  <name>Peergreen Store database client</name>
+	<parent>
+		<groupId>com.peergreen.store</groupId>
+		<artifactId>store</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<packaging>bundle</packaging>
+	<artifactId>db-client</artifactId>
+	<name>Peergreen Store database client</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>javaee</groupId>
-      <artifactId>javaee-api</artifactId>
-      <version>5</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>3.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
-  <repositories>
-    <repository> <!-- for javaee:javaee-api -->
-      <id>java.net2</id>
-      <url>http://download.java.net/maven/2/</url>
-    </repository>
-  </repositories>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 </project>
