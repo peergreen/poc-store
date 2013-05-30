@@ -13,17 +13,19 @@
   <artifactId>store</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Peergreen Store Parent</name>
+  <name>Peergreen Store parent</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <modules>
+    <module>controller-api</module>
     <module>controller</module>
-    <module>db-client</module>
-    <module>aether-client</module>
     <module>db-client-api</module>
+    <module>db-client</module>
+    <module>aether-client-api</module>
+    <module>aether-client</module>
   </modules>
 
   <dependencies>
