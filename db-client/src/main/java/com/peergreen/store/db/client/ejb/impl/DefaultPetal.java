@@ -6,34 +6,39 @@ import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.session.IPetal;
+import com.peergreen.store.db.client.ejb.entity.api.ICapability;
+import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IGroup;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.session.IRequirement;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 
 
-public class DefaultPetal implements IPetal {
+public class DefaultPetal implements ISessionPetal {
 
     @Override
-    public Petal addPetal(int petalId, String groupId, String artifactId, String version, String description,
-            Category category, Collection<Capability> capabilities, Collection<IRequirement> requirements) {
+    public IPetal addPetal(int petalId, String groupId, String artifactId, String version, String description,
+            ICategory category, Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal findPetal(int petalId) {
+    public IPetal findPetal(int petalId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<Petal> collectPetalsByGroup(Group group) {
+    public Collection<IPetal> collectPetalsByGroup(IGroup group) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal updatePetal(int petalId, String groupId, String artifactId, String version, String description,
-            Category category, Collection<Capability> capabilities, Collection<IRequirement> requirements) {
+    public IPetal updatePetal(int petalId, String groupId, String artifactId, String version, String description,
+            ICategory category, Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -45,39 +50,40 @@ public class DefaultPetal implements IPetal {
     }
 
     @Override
-    public Petal giveAccesToGroup(Group group) {
+    public IPetal giveAccesToGroup(IGroup group) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal removeAccesToGroup(Group group) {
+    public IPetal removeAccesToGroup(IGroup group) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal addCapability(Capability capability) {
+    public IPetal addCapability(ICapability capability) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal removeCapability(Capability capability) {
+    public IPetal removeCapability(ICapability capability) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal addRequirement(IRequirement requirement) {
+    public IPetal addRequirement(ISessionRequirement requirement) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Petal removeRequirement(IRequirement requirement) {
+    public IPetal removeRequirement(ISessionRequirement requirement) {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 }

@@ -4,15 +4,15 @@ import java.util.Collection;
 
 import javax.ejb.Stateless;
 
-import com.peergreen.store.db.client.ejb.entity.Category;
-import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.session.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 
 @Stateless
-public class DefaultCategory implements ICategory{
+public class DefaultCategory implements ISessionCategory{
 
     @Override
-    public Category addCategory(int categoryId, String name, String version) {
+    public com.peergreen.store.db.client.ejb.entity.api.ICategory addCategory(int categoryId, String name,
+            String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -24,25 +24,25 @@ public class DefaultCategory implements ICategory{
     }
 
     @Override
-    public Category findCategory(int categoryId) {
+    public com.peergreen.store.db.client.ejb.entity.api.ICategory findCategory(int categoryId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<Petal> collectPetals() {
+    public Collection<IPetal> collectPetals() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Category addPetal(Petal petal) {
+    public com.peergreen.store.db.client.ejb.entity.api.ICategory addPetal(IPetal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Category removePetal(Petal petal) {
+    public com.peergreen.store.db.client.ejb.entity.api.ICategory removePetal(IPetal petal) {
         // TODO Auto-generated method stub
         return null;
     }

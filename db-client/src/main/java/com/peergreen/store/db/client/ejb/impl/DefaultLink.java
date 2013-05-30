@@ -1,12 +1,12 @@
 package com.peergreen.store.db.client.ejb.impl;
 
-import com.peergreen.store.db.client.ejb.entity.Link;
-import com.peergreen.store.db.client.ejb.session.ILink;
+import com.peergreen.store.db.client.ejb.entity.api.ILink;
+import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 
-public class DefaultLink implements ILink {
+public class DefaultLink implements ISessionLink {
 
     @Override
-    public Link addLink(int linkId, String url, String description) {
+    public ILink addLink(int linkId, String url, String description) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -18,9 +18,8 @@ public class DefaultLink implements ILink {
     }
 
     @Override
-    public Link findLink(int linkId) {
+    public ILink findLink(int linkId) {
         // TODO Auto-generated method stub
         return null;
     }
-
 }
