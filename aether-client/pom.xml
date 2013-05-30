@@ -21,7 +21,12 @@
   <dependencies>
     <dependency>
       <groupId>com.peergreen.store</groupId>
-      <artifactId>db-client</artifactId>
+      <artifactId>aether-client-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.peergreen.store</groupId>
+      <artifactId>db-client-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
-import com.peergreen.store.db.client.ejb.entity.Capability;
-import com.peergreen.store.db.client.ejb.entity.Category;
-import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.api.Capability;
+import com.peergreen.store.db.client.ejb.entity.api.Category;
+import com.peergreen.store.db.client.ejb.entity.api.Requirement;
 
 
 /**
