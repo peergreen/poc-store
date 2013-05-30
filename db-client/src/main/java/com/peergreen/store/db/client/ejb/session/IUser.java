@@ -1,10 +1,10 @@
-package com.peergreen.db.ejb.session;
+package com.peergreen.store.db.client.ejb.session;
 
 import java.util.Collection;
 
-import com.peergreen.db.ejb.entity.Feature;
-import com.peergreen.db.ejb.entity.Group;
-import com.peergreen.db.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.User;
 
 public interface IUser {
 
@@ -17,6 +17,6 @@ public interface IUser {
     User addGroup(Group group);
     User deleteGroup(Group group);
     Collection<Group> retrieveGroups();
-    Collection<Feature> retrieveFeatures();
+    Collection<Petal> retrievePetals();
 
 }

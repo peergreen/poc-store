@@ -1,4 +1,4 @@
-package com.peergreen.db.ejb.entity;
+package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -6,7 +6,7 @@ import org.apache.felix.ipojo.annotations.Provides;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 
-import com.peergreen.aether.client.util.IAetherUtils;
+import com.peergreen.store.aether.client.util.IAetherUtils;
 
 
 @Component

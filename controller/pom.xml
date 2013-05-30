@@ -5,10 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.peergreen</groupId>
+    <groupId>com.peergreen.store</groupId>
     <artifactId>store</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
+  <packaging>bundle</packaging>
   <artifactId>controller</artifactId>
   <name>controller</name>
 

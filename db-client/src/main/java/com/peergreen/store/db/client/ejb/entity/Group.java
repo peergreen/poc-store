@@ -1,8 +1,7 @@
-package com.peergreen.db.ejb.entity;
+package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.Collection;
 import java.util.HashSet;
-
 
 import javax.persistence.*;
 
@@ -14,7 +13,7 @@ public class Group {
 	@ManyToMany(mappedBy="groupSet")
 	private Collection<User> users = new HashSet<User>();
 	@ManyToMany(mappedBy="groupSet")
-	private Collection<Feature> features = new HashSet<Feature>();
+	private Collection<Petal> petals = new HashSet<Petal>();
 	
 	
 }

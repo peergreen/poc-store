@@ -1,6 +1,6 @@
-package com.peergreen.db.ejb.session;
+package com.peergreen.store.db.client.ejb.session;
 
-import com.peergreen.db.ejb.entity.Link;
+import com.peergreen.store.db.client.ejb.entity.Link;
 
 public interface ILink {
 

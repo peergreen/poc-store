@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.peergreen</groupId>
+    <groupId>com.peergreen.store</groupId>
     <artifactId>store</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
@@ -19,6 +19,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.peergreen</groupId>
+      <artifactId>db-client</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-api</artifactId>
