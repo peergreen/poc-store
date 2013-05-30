@@ -16,8 +16,6 @@ import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
  * <ul>
  * 		<li>retrieve petal's metadata</li>
  * 		<li>retrieve petal's binary</li>
- *      <li>retrieve a petal from its id</li>
- *      <li>retrieve a petal from its information</li>
  * 		<li>add a petal to the staging repository</li>
  * 		<li>add a petal to the local repository</li>
  * </ul>
