@@ -11,7 +11,7 @@
   </parent>
   <packaging>bundle</packaging>
   <artifactId>db-client</artifactId>
-  <name>db-client</name>
+  <name>Peergreen Store database client</name>
 
   <dependencies>
     <dependency>
