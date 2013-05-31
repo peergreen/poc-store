@@ -1,0 +1,2 @@
+Export-Package com.peergreen.store.db.client.ejb.entity.api,\
+               com.peergreen.store.db.client.ejb.session.api
