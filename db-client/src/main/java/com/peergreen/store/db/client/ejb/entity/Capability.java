@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.SequenceGenerator;
 
 
@@ -17,53 +19,58 @@ import javax.persistence.SequenceGenerator;
 @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
-    private int capabilityId;
-    private String namespace;
-    private Map<String, String> properties;
-    private List<Petal> petals;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
+	private int capabilityId;
 
-    /**
-     * @return the namespace
-     */
-    public String getNamespace() {
-        return namespace;
-    }
+	private String namespace;
+	private Map<String, String> properties;
 
-    /**
-     * @param namespace the namespace to set
-     */
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
+	@JoinTable(name = "CAPABILITY_PETAL_MAP",
+			joinColumns = {@JoinColumn(name = "capabilityId", referencedColumnName = "capabilityId")},
+			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
+	private List<Petal> petals;
 
-    /**
-     * @return the properties
-     */
-    public Map<String, String> getProperties() {
-        return properties;
-    }
+	/**
+	 * @return the namespace
+	 */
+	public String getNamespace() {
+		return namespace;
+	}
 
-    /**
-     * @param properties the properties to set
-     */
-    public void setProperties(Map<String, String> properties) {
-        this.properties = properties;
-    }
+	/**
+	 * @param namespace the namespace to set
+	 */
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
 
-    /**
-     * @return the petals
-     */
-    public List<Petal> getPetals() {
-        return petals;
-    }
+	/**
+	 * @return the properties
+	 */
+	public Map<String, String> getProperties() {
+		return properties;
+	}
 
-    /**
-     * @param petals the petals to set
-     */
-    public void setPetals(List<Petal> petals) {
-        this.petals = petals;
-    }
+	/**
+	 * @param properties the properties to set
+	 */
+	public void setProperties(Map<String, String> properties) {
+		this.properties = properties;
+	}
+
+	/**
+	 * @return the petals
+	 */
+	public List<Petal> getPetals() {
+		return petals;
+	}
+
+	/**
+	 * @param petals the petals to set
+	 */
+	public void setPetals(List<Petal> petals) {
+		this.petals = petals;
+	}
 
 }

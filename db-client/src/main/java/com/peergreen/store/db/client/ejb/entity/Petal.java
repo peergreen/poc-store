@@ -31,7 +31,7 @@ public class Petal {
     
     @ManyToMany(mappedBy="petals")
     private List<Requirement> requirements;
-    
+    @ManyToMany(mappedBy="petals")
     private List<Capability> capabilities;
 
     /**
