@@ -61,13 +61,13 @@ public class DefaultUser implements ISessionUser {
     }
 
     @Override
-    public Collection<IGroup> retrieveGroups() {
+    public Collection<IGroup> collectGroups() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IPetal> retrievePetals() {
+    public Collection<IPetal> collectPetals() {
         // TODO Auto-generated method stub
         return null;
     }

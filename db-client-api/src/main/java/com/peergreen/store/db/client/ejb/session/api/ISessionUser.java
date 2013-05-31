@@ -16,7 +16,7 @@ public interface ISessionUser {
     IUser updateUser(String pseudo, String password, String email);
     IUser addGroup(IGroup group);
     IUser deleteGroup(IGroup group);
-    Collection<IGroup> retrieveGroups();
-    Collection<IPetal> retrievePetals();
+    Collection<IGroup> collectGroups();
+    Collection<IPetal> collectPetals();
 
 }
