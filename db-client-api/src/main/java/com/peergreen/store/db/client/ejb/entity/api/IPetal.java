@@ -9,54 +9,6 @@ import java.util.List;
 public interface IPetal {
 
     /**
-     * @return the groupId
-     */
-    String getGroupId();
-
-
-    /**
-     * @param groupId the groupId to set
-     */
-    void setGroupId(String groupId);
-
-
-    /**
-     * @return the artifactid
-     */
-    String getArtifactid();
-
-
-    /**
-     * @param artifactid the artifactid to set
-     */
-    void setArtifactid(String artifactid);
-
-
-    /**
-     * @return the version
-     */
-    String getVersion();
-
-
-    /**
-     * @param version the version to set
-     */
-    void setVersion(String version);
-
-
-    /**
-     * @return the description
-     */
-    String getDescription();
-
-
-    /**
-     * @param description the description to set
-     */
-    void setDescription(String description);
-
-
-    /**
      * @return the category
      */
     ICategory getCategory();
