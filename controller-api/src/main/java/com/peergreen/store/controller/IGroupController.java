@@ -32,9 +32,10 @@ public interface IGroupController {
     /**
      * Method to collect all the group's users.
      * 
+     * @param groupName group's name
      * @return list of all the group's users
      */
-    List<IUser> collectUsers();
+    List<IUser> collectUsers(String groupName);
     
     /**
      * Method to add a user to a group.

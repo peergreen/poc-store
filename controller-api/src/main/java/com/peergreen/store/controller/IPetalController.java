@@ -21,36 +21,11 @@ public interface IPetalController {
     Map<String, String> getPetalMetadata(int petalId);
 
     /**
-     * Method to collect available petals.<br />
-     * Retrieve available petals only for user's group.
-     * 
-     * @return list of available petals
-     */
-    List<IPetal> collectPetals(); 
-
-    /**
-     * Method to collect all
+     * Method to collect all installed petals on server
      * 
      * @return
      */
     List<IPetal> collectInstalledPetals();
-
-    /**
-     * Method to modify a User instance.
-     * 
-     * @param pseudo user's pseudo
-     * @param password user's password
-     * @param email user's email
-     * @return User instance resulting of the changes
-     */
-    IUser manageAccount(String pseudo, String password, String email);
-
-    /**
-     * Collect all User instances on base
-     * 
-     * @return list of all the database's users
-     */
-    List<IUser> collectUsers();
 
     /**
      * Method to retrieve metadata related to a user.

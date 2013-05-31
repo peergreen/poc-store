@@ -9,23 +9,6 @@ import com.peergreen.store.db.client.ejb.entity.api.IUser;
 public interface IUserController {
     
     /**
-     * Method to modify a user account.
-     * 
-     * @param pseudo user's pseudo
-     * @param password user's password
-     * @param email user's email
-     * @return modified user
-     */
-    IUser modifyUser(String pseudo, String password, String email);
-    
-    /**
-     * Method to collect all existing users on database.
-     * 
-     * @return list of all server's users
-     */
-    List<IUser> collectUsers();
-    
-    /**
      * Method to retrieve user's information.
      * 
      * @return indexed collection of user's information.
@@ -49,10 +32,21 @@ public interface IUserController {
     void removeUser(String pseudo);
     
     /**
+     * Method to modify a user account.
+     * 
+     * @param pseudo user's pseudo
+     * @param password user's password
+     * @param email user's email
+     * @return modified user
+     */
+    IUser modifyUser(String pseudo, String password, String email);
+    
+    /**
      * Method to collect all user's groups.
      * 
+     * @param pseudo user's pseudo
      * @return list of all user's groups
      */
-    List<IGroup> collectGroups();
+    List<IGroup> collectGroups(String pseudo);
     
 }
