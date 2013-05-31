@@ -28,7 +28,7 @@ public interface IPetalsPersistence
      * @param id petal's id
      * @return collection containing all petal's metadata
      */
-    public Map<String, String> getMetadata(int id);
+    Map<String, String> getMetadata(int id);
 
     /**
      * Method to recover petal's metadata from its information
@@ -38,7 +38,7 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return collection containing all petal's metadata
      */
-    public Map<String, String> getMetadata(String groupId, String artifactId, String version);
+    Map<String, String> getMetadata(String groupId, String artifactId, String version);
 
     /**
      * Method to recover petal's binary from its id
@@ -46,7 +46,7 @@ public interface IPetalsPersistence
      * @param id
      * @return petal's binary
      */
-    public File getPetal(int id);
+    File getPetal(int id);
 
     /**
      * Method to recover petal's binary from its information
@@ -56,7 +56,7 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return petal's binary
      */
-    public File getPetal(String groupId, String artifactId, String version);
+    File getPetal(String groupId, String artifactId, String version);
 
     /**
      * Method to add a petal to the staging repository
@@ -71,7 +71,7 @@ public interface IPetalsPersistence
      * @param properties petal's additional properties
      * @param petal petal's binary
      */
-    public void addToStaging(
+    void addToStaging(
             String groupId,
             String artifactId,
             String version,
@@ -95,7 +95,7 @@ public interface IPetalsPersistence
      * @param properties petal's additional properties
      * @param petal petal's binary
      */
-    public void addToLocal(
+    void addToLocal(
             String groupId,
             String artifactId,
             String version,
