@@ -3,12 +3,17 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity
+@SequenceGenerator(name="idPetalSeq", initialValue=1, allocationSize=50)
 public class Petal {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idPetalSeq")
     private int petalId;
     private String groupId;
     private String artifactid;

@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 
 /**
  * Entity Bean representing in the database the capability of a petal
  */
 @Entity
+@SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
     private int capabilityId;
     private String namespace;
     private Map<String, String> properties;

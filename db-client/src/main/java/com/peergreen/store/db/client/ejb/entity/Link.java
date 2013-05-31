@@ -1,11 +1,16 @@
 package com.peergreen.store.db.client.ejb.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 @Entity
+@SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
 public class Link {
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
     private int linkId;
     private String url; 
     private String description;

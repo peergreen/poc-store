@@ -3,14 +3,19 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 
 /**
  * Entity Bean representing in the database the requirement of a petal  
  */
 @Entity
+@SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
 public class Requirement {
     @Id
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
     private int requirementId;
     private String filter;
     private List<Petal> petals;
