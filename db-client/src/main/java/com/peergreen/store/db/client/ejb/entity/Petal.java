@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,7 @@ public class Petal {
 	private String artifactid;
 	private String version;
 	private String description; 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="categoryId", referencedColumnName="categoryId")
 	private Category category;
 
@@ -32,9 +33,9 @@ public class Petal {
 			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
 	private List<Group> groupSet;
 
-	@ManyToMany(mappedBy="petals")
+	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private List<Requirement> requirements;
-	@ManyToMany(mappedBy="petals")
+	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private List<Capability> capabilities;
 
 	/**

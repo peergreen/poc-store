@@ -10,7 +10,7 @@ public class Group {
 
     @Id
     private String groupname;
-    @ManyToMany(mappedBy="groupSet")
+    @ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Collection<User> users = new HashSet<User>();
     @ManyToMany(mappedBy="groupSet")
     private Collection<Petal> petals = new HashSet<Petal>();

@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +22,7 @@ public class Category {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
 	private int categoryId;
 	private String categoryname;
-	@OneToMany(mappedBy="category")
+	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private List<Petal> petals;
 
 	/**
