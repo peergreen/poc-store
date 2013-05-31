@@ -20,6 +20,7 @@ public class Petal {
     private String version;
     private String description; 
     private Category category;
+    private List<Group> groupSet;
     private List<Requirement> requirements;
     private List<Capability> capabilities;
 
@@ -129,6 +130,14 @@ public class Petal {
      */
     public void setCapabilities(List<Capability> capabilities) {
         this.capabilities = capabilities;
-    } 
+    }
+
+	public List<Group> getGroupSet() {
+		return groupSet;
+	}
+
+	public void setGroupSet(List<Group> groupSet) {
+		this.groupSet = groupSet;
+	} 
 
 }
