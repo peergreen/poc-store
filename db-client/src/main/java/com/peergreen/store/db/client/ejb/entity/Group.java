@@ -12,7 +12,7 @@ public class Group {
     private String groupname;
     @ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Collection<User> users = new HashSet<User>();
-    @ManyToMany(mappedBy="groupSet")
+    @ManyToMany(mappedBy="groupSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Collection<Petal> petals = new HashSet<Petal>();
 
 }
