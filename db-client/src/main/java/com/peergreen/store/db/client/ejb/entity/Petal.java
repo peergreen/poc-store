@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -20,8 +23,15 @@ public class Petal {
     private String version;
     private String description; 
     private Category category;
+    
+    @JoinTable(name = "PETALS_GROUPS_MAP",
+            joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
+            inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
     private List<Group> groupSet;
+    
+    @ManyToMany(mappedBy="petals")
     private List<Requirement> requirements;
+    
     private List<Capability> capabilities;
 
     /**
