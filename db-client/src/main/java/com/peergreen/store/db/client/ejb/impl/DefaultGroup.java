@@ -70,7 +70,7 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Collection<IPetal> retrievePetals() {
+    public Collection<IPetal> collectPetals() {
         // TODO Auto-generated method stub
         return null;
     }

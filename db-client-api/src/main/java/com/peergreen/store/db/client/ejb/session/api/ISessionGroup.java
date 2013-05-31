@@ -17,6 +17,6 @@ public interface ISessionGroup {
     Collection<IUser> retrieveUsers();
     IGroup addPetal(IPetal petal);
     IGroup deletePetalById(int petalId);
-    Collection<IPetal> retrievePetals();
+    Collection<IPetal> collectPetals();
 
 }
