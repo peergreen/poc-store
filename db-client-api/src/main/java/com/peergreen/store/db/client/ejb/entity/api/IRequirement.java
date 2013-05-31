@@ -10,18 +10,6 @@ import java.util.List;
 public interface IRequirement {
 
     /**
-     * @return the requirementId
-     */
-    int getRequirementId();
-
-
-    /**
-     * @param requirementId the requirementId to set
-     */
-    void setRequirementId(int requirementId);
-
-
-    /**
      * @return the filter
      */
     String getFilter();

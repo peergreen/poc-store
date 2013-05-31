@@ -6,18 +6,6 @@ package com.peergreen.store.db.client.ejb.entity.api;
 public interface ILink {
 
     /**
-     * @return the linkId
-     */
-    int getLinkId();
-
-
-    /**
-     * @param linkId the linkId to set
-     */
-    void setLinkId(int linkId);
-
-
-    /**
      * @return the url
      */
     String getUrl();

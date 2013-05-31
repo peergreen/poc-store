@@ -8,18 +8,6 @@ import java.util.List;
  */
 
 public interface IUser {
-
-    /**
-     * @return the pseudo
-     */
-     String getPseudo();
-   
-    
-    /**
-     * @param pseudo the pseudo to set
-     */
-     void setPseudo(String pseudo);
-    
     
     /**
      * @return the password

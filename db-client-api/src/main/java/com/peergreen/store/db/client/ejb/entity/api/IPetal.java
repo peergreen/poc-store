@@ -8,19 +8,6 @@ import java.util.List;
 
 public interface IPetal {
 
-
-    /**
-     * @return the petalId
-     */
-   int getPetalId();
-
-
-    /**
-     * @param petalId the petalId to set
-     */
-    void setPetalId(int petalId);
-
-
     /**
      * @return the groupId
      */

@@ -10,18 +10,6 @@ import java.util.Map;
 public interface ICapability {
 
     /**
-     * @return the namespace
-     */
-    String getNamespace();
-
-
-    /**
-     * @param namespace the namespace to set
-     */
-    void setNamespace(String namespace);
-
-
-    /**
      * @return the properties
      */
     Map<String, String> getProperties() ;

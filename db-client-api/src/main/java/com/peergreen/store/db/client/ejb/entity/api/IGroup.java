@@ -8,18 +8,6 @@ import java.util.List;
 public interface IGroup {
 
     /**
-     * @return the groupname
-     */
-    String getGroupname() ;
-
-
-    /**
-     * @param groupname the groupname to set
-     */
-    void setGroupname(String groupname);
-
-
-    /**
      * @return the users
      */
     List<IUser> getUsers();

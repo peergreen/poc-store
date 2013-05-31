@@ -7,11 +7,11 @@ import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IUser;
 
 public interface ISessionGroup {
-    IGroup addGroup(String groupname);
-    IGroup findGroup(String groupname);
+    IGroup addGroup(String groupName);
+    IGroup findGroup(String groupName);
     Collection<IGroup> collectGroups();
-    IGroup updateGroup(String groupname);
-    void deleteGroup(String groupname);
+    IGroup updateGroup(String groupName);
+    void deleteGroup(String groupName);
     IGroup addUser(IUser myUser);     
     IGroup deleteUserbyPseudo(String pseudo);
     Collection<IUser> retrieveUsers();

@@ -9,18 +9,6 @@ import java.util.List;
 public interface ICategory {
 
     /**
-     * @return the categoryId
-     */
-    int getCategoryId();
-
-
-    /**
-     * @param categoryId the categoryId to set
-     */
-    void setCategoryId(int categoryId);
-
-
-    /**
      * @return the categoryname
      */
     String getCategoryname();
