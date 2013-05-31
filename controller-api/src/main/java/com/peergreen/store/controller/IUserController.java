@@ -9,17 +9,17 @@ import com.peergreen.store.db.client.ejb.entity.api.IUser;
 public interface IUserController {
     
     /**
-     * Method to update a user account.
+     * Method to modify a user account.
      * 
      * @param pseudo user's pseudo
      * @param password user's password
      * @param email user's email
      * @return modified user
      */
-    IUser updateUser(String pseudo, String password, String email);
+    IUser modifyUser(String pseudo, String password, String email);
     
     /**
-     * Method to collect all server's users.
+     * Method to collect all existing users on database.
      * 
      * @return list of all server's users
      */
@@ -33,7 +33,7 @@ public interface IUserController {
     Map<String, String> getUserMetadata();
     
     /**
-     * Method to add a new user on the server.
+     * Method to add a new user to the database.
      * 
      * @param pseudo user's pseudo
      * @param password user's password
@@ -42,7 +42,7 @@ public interface IUserController {
     void addUser(String pseudo, String password, String email);
     
     /**
-     * Method to remove a user from the server.
+     * Method to remove a user from the database.
      * 
      * @param pseudo user's pseudo
      */
