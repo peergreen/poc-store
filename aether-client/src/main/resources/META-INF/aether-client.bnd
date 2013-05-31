@@ -1,4 +1,3 @@
-Export-Package com.peergreen.store.aether.client
+Export-Package com.peergreen.store.aether.client.impl;version=${project.version}
 
-Private-Package com.peergreen.store.aether.client.util.*,\
-                com.peergreen.store.aether.client.internal
+Private-Package com.peergreen.store.aether.client.util.*
