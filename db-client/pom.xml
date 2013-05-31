@@ -29,7 +29,7 @@
     <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>db-client-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
