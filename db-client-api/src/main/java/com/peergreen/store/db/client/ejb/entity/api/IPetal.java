@@ -9,37 +9,49 @@ import java.util.List;
 public interface IPetal {
 
     /**
-     * @return the category
+     * Method to retrieve the petal's category
+     * 
+     * @return the category which belongs the petal
      */
     ICategory getCategory();
 
 
     /**
-     * @param category the category to set
+     * Method to set the petal's category
+     * 
+     * @param The category of the petal to set
      */
     void setCategory(ICategory category);
 
 
     /**
-     * @return the requirements
+     * Method to retrieve the petal's requirement
+     * 
+     * @return A list of requirements of the petal instance
      */
     List<IRequirement> getRequirements();
 
 
     /**
-     * @param requirements the requirements to set
+     * Method to add requirements to the petal
+     * 
+     * @param A list of requirements to add for the petal 
      */
     void setRequirements(List<IRequirement> requirements);
 
 
     /**
-     * @return the capabilities
+     * Method to retrieve the petal's capabilities
+     * 
+     * @return A list of capabilities of the petal instance
      */
     List<ICapability> getCapabilities();
 
 
     /**
-     * @param capabilities the capabilities to set
+     * Method to set the petal's capabilities
+     * 
+     * @param A list of capabilities to add for the petal 
      */
     void setCapabilities(List<ICapability> capabilities);
 

@@ -7,28 +7,39 @@ import java.util.List;
  */
 public interface IGroup {
 
-    /**
-     * @return the users
-     */
-    List<IUser> getUsers();
+	/**
+	 * Method to retrieve all the users that belongs to this group
+	 * 
+	 * @return List of users of the group
+	 */
+	List<IUser> getUsers();
 
 
-    /**
-     * @param users the users to set
-     */
-    void setUsers(List<IUser> users);
+	/**
+	 * Method to add users into the group 
+	 * 
+	 * @param List of users to add into the group
+	 */
+	void setUsers(List<IUser> users);
 
 
-    /**
-     * @return the petals
-     */
-    List<IPetal> getPetals();
+	/**
+	 * Method to retrieve all the petals which the users of the group have 
+	 * access
+	 * 
+	 * @return List containing the petals attainable via the group instance
+	 */
+	List<IPetal> getPetals();
 
 
-    /**
-     * @param petals the petals to set
-     */
-    void setPetals(List<IPetal> petals);
+	/**
+	 * Method to add petals to the list of petals which the users of the 
+	 * group have access
+	 * 
+	 * @param List of petals to add, for making it attainable via the group
+	 * instance
+	 */
+	void setPetals(List<IPetal> petals);
 
 
 }

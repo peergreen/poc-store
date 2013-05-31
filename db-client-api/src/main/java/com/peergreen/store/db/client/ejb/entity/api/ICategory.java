@@ -9,25 +9,33 @@ import java.util.List;
 public interface ICategory {
 
     /**
-     * @return the categoryname
+     * Method to retrieve the name of the category instance
+     * 
+     * @return the category's name
      */
     String getCategoryname();
 
 
     /**
-     * @param categoryname the categoryname to set
+     * Method to give the name of the category instance 
+     * 
+     * @param  the category's name to set
      */
     void setCategoryname(String categoryname);
 
 
     /**
-     * @return the petals
+     * Method for retrieve all the petals that belongs to this category
+     * 
+     * @return List containing petals that belongs to this category
      */
     List<IPetal> getPetals();
 
 
     /**
-     * @param petals the petals to set
+     * Method to add petals to the list of petals that belongs to this category
+     * 
+     * @param List containing the petals to set
      */
     void setPetals(List<IPetal> petals);
 }

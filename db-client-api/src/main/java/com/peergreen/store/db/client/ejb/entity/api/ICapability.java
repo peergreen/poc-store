@@ -9,26 +9,35 @@ import java.util.Map;
 
 public interface ICapability {
 
-    /**
-     * @return the properties
-     */
-    Map<String, String> getProperties() ;
+	/**
+	 * Method for retrieve the properties of the capability instance
+	 * 
+	 * @return Map containing all the properties of the capability
+	 */
+	Map<String, String> getProperties() ;
 
 
-    /**
-     * @param properties the properties to set
-     */
-    void setProperties(Map<String, String> properties) ;
+	/**
+	 * Method for set the properties of the capability instance
+	 * 
+	 * @param the properties to set
+	 */
+	void setProperties(Map<String, String> properties) ;
 
 
-    /**
-     * @return the petals
-     */
-    List<IPetal> getPetals();
+	/**
+	 * Method to retrieve the petals which provides this capability instance
+	 * 
+	 * @return List containing petals 
+	 */
+	List<IPetal> getPetals();
 
 
-    /**
-     * @param petals the petals to set
-     */
-    void setPetals(List<IPetal> petals) ;
+	/**
+	 * Method for add others petals to the list of petals which provides
+	 * this capability instance
+	 * 
+	 * @param List containing petals to set
+	 */
+	void setPetals(List<IPetal> petals) ;
 }
