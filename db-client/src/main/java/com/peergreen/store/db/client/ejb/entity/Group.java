@@ -1,9 +1,11 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Group {
@@ -11,8 +13,8 @@ public class Group {
     @Id
     private String groupname;
     @ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private Collection<User> users = new HashSet<User>();
+    private List<User> users ;
     @ManyToMany(mappedBy="groupSet", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    private Collection<Petal> petals = new HashSet<Petal>();
+    private List<Petal> petals ;
 
 }
