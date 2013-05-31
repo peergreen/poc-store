@@ -9,138 +9,141 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
 @SequenceGenerator(name="idPetalSeq", initialValue=1, allocationSize=50)
 public class Petal {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idPetalSeq")
-    private int petalId;
-    private String groupId;
-    private String artifactid;
-    private String version;
-    private String description; 
-    private Category category;
-    
-    @JoinTable(name = "PETALS_GROUPS_MAP",
-            joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
-            inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
-    private List<Group> groupSet;
-    
-    @ManyToMany(mappedBy="petals")
-    private List<Requirement> requirements;
-    @ManyToMany(mappedBy="petals")
-    private List<Capability> capabilities;
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idPetalSeq")
+	private int petalId;
+	private String groupId;
+	private String artifactid;
+	private String version;
+	private String description; 
+	@OneToOne
+	@JoinColumn(name="categoryId", referencedColumnName="categoryId")
+	private Category category;
 
-    /**
-     * @return the petalId
-     */
-    public int getPetalId() {
-        return petalId;
-    }
+	@JoinTable(name = "PETALS_GROUPS_MAP",
+			joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
+			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
+	private List<Group> groupSet;
 
-    /**
-     * @param petalId the petalId to set
-     */
-    public void setPetalId(int petalId) {
-        this.petalId = petalId;
-    }
+	@ManyToMany(mappedBy="petals")
+	private List<Requirement> requirements;
+	@ManyToMany(mappedBy="petals")
+	private List<Capability> capabilities;
 
-    /**
-     * @return the groupId
-     */
-    public String getGroupId() {
-        return groupId;
-    }
+	/**
+	 * @return the petalId
+	 */
+	public int getPetalId() {
+		return petalId;
+	}
 
-    /**
-     * @param groupId the groupId to set
-     */
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
+	/**
+	 * @param petalId the petalId to set
+	 */
+	public void setPetalId(int petalId) {
+		this.petalId = petalId;
+	}
 
-    /**
-     * @return the artifactid
-     */
-    public String getArtifactid() {
-        return artifactid;
-    }
+	/**
+	 * @return the groupId
+	 */
+	public String getGroupId() {
+		return groupId;
+	}
 
-    /**
-     * @param artifactid the artifactid to set
-     */
-    public void setArtifactid(String artifactid) {
-        this.artifactid = artifactid;
-    }
+	/**
+	 * @param groupId the groupId to set
+	 */
+	public void setGroupId(String groupId) {
+		this.groupId = groupId;
+	}
 
-    /**
-     * @return the version
-     */
-    public String getVersion() {
-        return version;
-    }
+	/**
+	 * @return the artifactid
+	 */
+	public String getArtifactid() {
+		return artifactid;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-    /**
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-    /**
-     * @return the category
-     */
-    public Category getCategory() {
-        return category;
-    }
-    /**
-     * @param category the category to set
-     */
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+	/**
+	 * @param artifactid the artifactid to set
+	 */
+	public void setArtifactid(String artifactid) {
+		this.artifactid = artifactid;
+	}
 
-    /**
-     * @return the requirements
-     */
-    public List<Requirement> getRequirements() {
-        return requirements;
-    }
+	/**
+	 * @return the version
+	 */
+	public String getVersion() {
+		return version;
+	}
 
-    /**
-     * @param requirements the requirements to set
-     */
-    public void setRequirements(List<Requirement> requirements) {
-        this.requirements = requirements;
-    }
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	/**
+	 * @return the category
+	 */
+	public Category getCategory() {
+		return category;
+	}
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 
-    /**
-     * @return the capabilities
-     */
-    public List<Capability> getCapabilities() {
-        return capabilities;
-    }
+	/**
+	 * @return the requirements
+	 */
+	public List<Requirement> getRequirements() {
+		return requirements;
+	}
 
-    /**
-     * @param capabilities the capabilities to set
-     */
-    public void setCapabilities(List<Capability> capabilities) {
-        this.capabilities = capabilities;
-    }
+	/**
+	 * @param requirements the requirements to set
+	 */
+	public void setRequirements(List<Requirement> requirements) {
+		this.requirements = requirements;
+	}
+
+	/**
+	 * @return the capabilities
+	 */
+	public List<Capability> getCapabilities() {
+		return capabilities;
+	}
+
+	/**
+	 * @param capabilities the capabilities to set
+	 */
+	public void setCapabilities(List<Capability> capabilities) {
+		this.capabilities = capabilities;
+	}
 
 	public List<Group> getGroupSet() {
 		return groupSet;
