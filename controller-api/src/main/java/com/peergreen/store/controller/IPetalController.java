@@ -36,42 +36,6 @@ public interface IPetalController {
     Map<String, String> getUserMetadata(String pseudo);
 
     /**
-     * Method to submit a petal for an add in the store.<br />
-     * Submitted petals needs to be validated to effectively added to the store.
-     * 
-     * @param groupId petal's groupId
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @param description petal's description
-     * @param category petal's category
-     * @param requirements petal's requirements
-     * @param capabilities petal's exported capabilities
-     * @param properties petal's additional properties
-     * @param petalBinary petal's binary file
-     */
-    void submitPetal(String groupId, String artifactId,
-            String version, String description, ICategory category,
-            List<IRequirement> requirements, List<ICapability> capabilities,
-            Map<String, String> properties, File petalBinary);
-
-    /**
-     * Method to validate a petal's submission thanks to its id.<br />
-     * This method make the petal persistence in the store.
-     * 
-     * @param petalId petal's id
-     */
-    void validatePetal(int petalId);
-
-    /**
-     * Method to validate a petal's submission thanks to its information.<br />
-     * This method make the petal persistent in the store.
-     * @param groupId petal's groupId
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     */
-    void validatePetal(String groupId, String artifactId, String version);
-
-    /**
      * Method to directly add a petal to the store.<br />
      * This method make the petal persistent in the store.
      * 
