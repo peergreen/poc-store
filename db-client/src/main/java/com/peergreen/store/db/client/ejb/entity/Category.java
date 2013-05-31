@@ -3,6 +3,7 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
  * Entity Bean representing the category of a petal  
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
 @Entity
 public class Category {
 
+    @Id
     private int categoryId;
     private String categoryname;
     private List<Petal> petals;

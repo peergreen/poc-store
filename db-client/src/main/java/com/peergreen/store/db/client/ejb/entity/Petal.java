@@ -3,10 +3,12 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 public class Petal {
 
+    @Id
     private int petalId;
     private String groupId;
     private String artifactid;
