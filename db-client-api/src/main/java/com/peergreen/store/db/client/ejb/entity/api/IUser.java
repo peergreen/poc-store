@@ -12,49 +12,48 @@ public interface IUser {
     /**
      * @return the pseudo
      */
-    public String getPseudo();
+     String getPseudo();
    
     
     /**
      * @param pseudo the pseudo to set
      */
-    public void setPseudo(String pseudo);
+     void setPseudo(String pseudo);
     
     
     /**
      * @return the password
      */
-    public String getPassword();
+    String getPassword();
     
     
     /**
      * @param password the password to set
      */
-    public void setPassword(String password) ;
+    void setPassword(String password) ;
     
     
     /**
      * @return the email
      */
-    public String getEmail();
+    String getEmail();
     
     
     /**
      * @param email the email to set
      */
-    public void setEmail(String email);
+    void setEmail(String email);
     
     
     /**
      * @return the groupSet
      */
-    public List<IGroup> getGroupSet();
+    List<IGroup> getGroupSet();
     
     
     /**
      * @param groupSet the groupSet to set
      */
-    public void setGroupSet(List<IGroup> groupSet) ;
-
+    void setGroupSet(List<IGroup> groupSet) ;
 
 }

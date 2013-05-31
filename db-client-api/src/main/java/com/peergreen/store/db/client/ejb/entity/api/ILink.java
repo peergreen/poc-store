@@ -8,35 +8,35 @@ public interface ILink {
     /**
      * @return the linkId
      */
-    public int getLinkId();
+    int getLinkId();
 
 
     /**
      * @param linkId the linkId to set
      */
-    public void setLinkId(int linkId);
+    void setLinkId(int linkId);
 
 
     /**
      * @return the url
      */
-    public String getUrl();
+    String getUrl();
 
 
     /**
      * @param url the url to set
      */
-    public void setUrl(String url);
+    void setUrl(String url);
 
 
     /**
      * @return the description
      */
-    public String getDescription();
+    String getDescription();
 
 
     /**
      * @param description the description to set
      */
-    public void setDescription(String description);
+    void setDescription(String description);
 }

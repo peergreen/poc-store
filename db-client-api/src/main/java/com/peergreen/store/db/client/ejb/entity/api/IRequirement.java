@@ -12,36 +12,36 @@ public interface IRequirement {
     /**
      * @return the requirementId
      */
-    public int getRequirementId();
+    int getRequirementId();
 
 
     /**
      * @param requirementId the requirementId to set
      */
-    public void setRequirementId(int requirementId);
+    void setRequirementId(int requirementId);
 
 
     /**
      * @return the filter
      */
-    public String getFilter();
+    String getFilter();
 
 
     /**
      * @param filter the filter to set
      */
-    public void setFilter(String filter);
+    void setFilter(String filter);
 
 
     /**
      * @return the petals
      */
-    public List<IPetal> getPetals();
+    List<IPetal> getPetals();
 
 
     /**
      * @param petals the petals to set
      */
-    public void setPetals(List<IPetal> petals);
+    void setPetals(List<IPetal> petals);
 
 }

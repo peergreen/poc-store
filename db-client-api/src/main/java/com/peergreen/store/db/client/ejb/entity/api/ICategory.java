@@ -11,35 +11,35 @@ public interface ICategory {
     /**
      * @return the categoryId
      */
-    public int getCategoryId();
+    int getCategoryId();
 
 
     /**
      * @param categoryId the categoryId to set
      */
-    public void setCategoryId(int categoryId);
+    void setCategoryId(int categoryId);
 
 
     /**
      * @return the categoryname
      */
-    public String getCategoryname();
+    String getCategoryname();
 
 
     /**
      * @param categoryname the categoryname to set
      */
-    public void setCategoryname(String categoryname);
+    void setCategoryname(String categoryname);
 
 
     /**
      * @return the petals
      */
-    public List<IPetal> getPetals();
+    List<IPetal> getPetals();
 
 
     /**
      * @param petals the petals to set
      */
-    public void setPetals(List<IPetal> petals);
+    void setPetals(List<IPetal> petals);
 }
