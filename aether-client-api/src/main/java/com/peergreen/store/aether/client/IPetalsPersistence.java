@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 
 
@@ -68,6 +69,16 @@ public interface IPetalsPersistence
             File petal);
 
     /**
+     * Method to retrieve a petal from the local repository
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return corresponding petal
+     */
+    IPetal getPetalFromLocal(String vendor, String artifactId, String version);
+    
+    /**
      * Method to add a petal to the staging repository
      * 
      * @param vendor petal's vendor
@@ -90,4 +101,14 @@ public interface IPetalsPersistence
             List<ICapability> capabilities,
             Map<String, String> properties,
             File petal);
+    
+    /**
+     * Method to retrieve a petal from the staging repository
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return corresponding petal
+     */
+    IPetal getPetalFromStaging(String vendor, String artifactId, String version);
 }
