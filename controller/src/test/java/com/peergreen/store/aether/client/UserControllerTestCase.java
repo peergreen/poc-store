@@ -8,8 +8,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.api.IUser;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 public class UserControllerTestCase {
@@ -27,12 +27,20 @@ public class UserControllerTestCase {
     @Test
     public void getUser() {
         User u = new User();
-        u.setPseudo("toto");
+        u.setPseudo(PSEUDO);
         u.setPassword("1234");
         u.setEmail("toto@turc.fr");
         doReturn(u).when(userSession).findUserByPseudo(PSEUDO);
         
-        Assert.assertNotNull(userSession.findUserByPseudo(PSEUDO));
+        IUser u2 = userSession.findUserByPseudo(PSEUDO);
+        Assert.assertTrue(u2 != null && u2.getPseudo().equals(PSEUDO));
+    }
+    
+    @Test
+    public void getNotExistingUser() {
+        doReturn(null).when(userSession).findUserByPseudo(PSEUDO);
+        
+        Assert.assertNull(userSession.findUserByPseudo(PSEUDO));
     }
 
 }
