@@ -41,4 +41,10 @@ public class Vendor implements IVendor {
 
 	}
 
+	@Override
+	public String getVendorName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

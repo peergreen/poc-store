@@ -6,6 +6,13 @@ import java.util.List;
  * Interface defining a vendor for a petal
  */
 public interface IVendor {
+	
+	/**
+	 * Method to get the name of the  vendor
+	 * 
+	 * @return the vendorDescription
+	 */
+	String getVendorName();
 
 	/**
 	 * Method to get the description's vendor
