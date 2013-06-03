@@ -9,7 +9,6 @@ import com.peergreen.store.db.client.ejb.entity.api.IUser;
 public interface ISessionGroup {
     IGroup addGroup(String groupName);
     IGroup findGroup(String groupName);
-    Collection<IGroup> collectGroups();
     IGroup updateGroup(String groupName);
     void deleteGroup(String groupName);
     IGroup addUser(IUser myUser);     

@@ -22,12 +22,6 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Collection<IGroup> collectGroups() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public IGroup updateGroup(String groupname) {
         // TODO Auto-generated method stub
         return null;
