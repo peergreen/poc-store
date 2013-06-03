@@ -8,6 +8,7 @@ import java.util.Map;
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 
 
@@ -93,6 +94,18 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
             Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public IPetal getPetalFromLocal(String vendor, String artifactId, String version) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public IPetal getPetalFromStaging(String vendor, String artifactId, String version) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
