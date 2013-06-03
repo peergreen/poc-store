@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.User;
 
-public class IUserControllerTestCase {
+public class UserControllerTestCase {
 
     @Mock
     private IUserController userController;
