@@ -22,6 +22,16 @@ public interface IPetalController {
     Map<String, String> getPetalMetadata(String vendor, String artifactId, String version);
 
     /**
+     * Method to retrieve a petal from the local store.
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return corresponding petal or <em>null</em> if not available
+     */
+    IPetal getPetal(String vendor, String artifactId, String version);
+    
+    /**
      * Method to directly add a petal to the store.<br />
      * This method make the petal persistent in the store.
      * 
