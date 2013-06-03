@@ -3,33 +3,25 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 
 import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IGroup;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
+import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 @Entity
-@SequenceGenerator(name="idPetalSeq", initialValue=1, allocationSize=50)
 public class Petal implements IPetal {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idPetalSeq")
-	private int petalId;
-	private String groupId;
-	private String artifactid;
-	private String version;
-	private String description; 
+	@EmbeddedId
+	private PetalId petalId;
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="categoryId", referencedColumnName="categoryId")
 	private ICategory category;
