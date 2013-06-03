@@ -1,5 +1,6 @@
 package com.peergreen.store.aether.client;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -25,7 +26,7 @@ public class UserControllerTestCase {
     @BeforeClass
     public void oneTimeSetUp() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController();
+        userController = new UserController(userSession);
     }
     
     @Test
@@ -47,8 +48,9 @@ public class UserControllerTestCase {
         Assert.assertNull(userSession.findUserByPseudo(PSEUDO));
     }
     
-    @Test(expectedExceptions = NullPointerException.class)
+    @Test
     public void removeUser() {
+        doNothing().when(userSession).deleteUserbyPseudo(PSEUDO);
         userController.removeUser(PSEUDO);
         verify(userSession).deleteUserbyPseudo(PSEUDO);
     }
