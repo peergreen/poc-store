@@ -10,25 +10,33 @@ import java.util.List;
 public interface IRequirement {
 
     /**
-     * @return the filter
+     * Method to retrieve the requirement's filter 
+     * 
+     * @return the filter of the requirement instance
      */
     String getFilter();
 
 
     /**
-     * @param filter the filter to set
+     * Method to set the requiremeent's filter
+     * 
+     * @param The filter to set
      */
     void setFilter(String filter);
 
 
     /**
-     * @return the petals
+     * Method to retrieve the petals which had this requirement
+     * 
+     * @return A list containing all the petals which had this requirement 
      */
     List<IPetal> getPetals();
 
 
     /**
-     * @param petals the petals to set
+     * Method to add new petals that have this requirement
+     * 
+     * @param A list of new petals that have this requirement
      */
     void setPetals(List<IPetal> petals);
 
