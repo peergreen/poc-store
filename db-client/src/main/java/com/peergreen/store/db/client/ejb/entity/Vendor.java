@@ -2,11 +2,13 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.List;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 
+@Entity
 public class Vendor implements IVendor {
 	
 	@Id
