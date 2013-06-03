@@ -15,6 +15,7 @@ import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IGroup;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
+import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 @Entity
@@ -36,7 +37,41 @@ public class Petal implements IPetal {
 	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private List<ICapability> capabilities;
 
-	
+
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="vendor", referencedColumnName="vendorName")
+	public IVendor getVendor() {
+		return this.petalId.getVendor();
+	}
+
+
+	public void setVendor(IVendor vendor) {
+
+		petalId.setVendor(vendor);
+
+	}
+
+
+	public String getArtifactId() {
+
+		return petalId.getArtifactId();
+	}
+
+
+	public void setArtifactId(String artifactId) {
+		petalId.setArtifactId(artifactId);
+	}
+
+
+	public String getVersion() {
+		return petalId.getVersion();
+	}
+
+
+	public void setVersion(String version) {
+		petalId.setVersion(version);
+	} 
+
 	/**
 	 * @return the category
 	 */
@@ -84,6 +119,6 @@ public class Petal implements IPetal {
 
 	public void setGroupSet(List<IGroup> groupSet) {
 		this.groupSet = groupSet;
-	} 
+	}
 
 }

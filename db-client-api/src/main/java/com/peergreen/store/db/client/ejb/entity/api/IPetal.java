@@ -7,6 +7,50 @@ import java.util.List;
  */
 
 public interface IPetal {
+	
+	 /**
+     * Method to retrieve the petal's vendor
+     * 
+     * @return the vendor which provides the petal
+     */
+	IVendor getVendor();
+	
+	/**
+     * Method to set the petal's vendor
+     * 
+     * @param vendor The vendor of the petal to set
+     */
+	void setVendor(IVendor vendor);
+	
+	
+	 /**
+     * Method to retrieve the petal's artifactId
+     * 
+     * @return the artifactId of the petal
+     */
+	String getArtifactId();
+	
+	/**
+     * Method to set the petal's artifactId
+     * 
+     * @param artifactId The artifactId of the petal to set
+     */
+	void setArtifactId(String artifactId);
+	
+	
+	/**
+     * Method to retrieve the petal's version
+     * 
+     * @return the version of the petal
+     */
+	String getVersion();
+	
+	/**
+     * Method to set the petal's version
+     * 
+     * @param version The version of the petal to set
+     */
+	void setVersion(String version);
 
     /**
      * Method to retrieve the petal's category
