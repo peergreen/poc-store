@@ -10,7 +10,7 @@ public interface ISessionRequirement {
     IRequirement addRequirement( String namespace, Collection<String> properties);
     void deleteRequirement (int requirementId);
     IRequirement findRequirement (int requirementId);
-    Collection<IPetal> collectPetals();
+    Collection<IPetal> collectPetals(int requirementId);
     IRequirement addPetal(IPetal petal);
     IRequirement removePetal(IPetal petal);
 

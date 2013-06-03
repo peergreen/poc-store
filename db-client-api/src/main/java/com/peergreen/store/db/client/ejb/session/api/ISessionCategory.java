@@ -10,7 +10,7 @@ public interface ISessionCategory {
     ICategory addCategory(int categoryId, String name, String version);
     void deleteCategory(int categoryId);
     ICategory findCategory(int categoryId);
-    Collection<IPetal> collectPetals();
+    Collection<IPetal> collectPetals(int categoryId);
     ICategory addPetal(IPetal petal);
     ICategory removePetal(IPetal petal);
 }

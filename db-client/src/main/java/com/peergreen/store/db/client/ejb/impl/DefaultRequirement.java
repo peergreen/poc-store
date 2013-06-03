@@ -27,7 +27,7 @@ public class DefaultRequirement implements ISessionRequirement {
     }
 
     @Override
-    public Collection<IPetal> collectPetals() {
+    public Collection<IPetal> collectPetals(int requirementId) {
         // TODO Auto-generated method stub
         return null;
     }

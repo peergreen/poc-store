@@ -46,7 +46,7 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Collection<IUser> collectUsers() {
+    public Collection<IUser> collectUsers(String groupName) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -64,7 +64,7 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Collection<IPetal> collectPetals() {
+    public Collection<IPetal> collectPetals(String groupName) {
         // TODO Auto-generated method stub
         return null;
     }

@@ -30,7 +30,7 @@ public class DefaultCategory implements ISessionCategory{
     }
 
     @Override
-    public Collection<IPetal> collectPetals() {
+    public Collection<IPetal> collectPetals(int categoryId) {
         // TODO Auto-generated method stub
         return null;
     }

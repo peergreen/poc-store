@@ -10,7 +10,7 @@ public interface ISessionCapability {
     ICapability addCapability( String namespace, Collection<String> properties);
     void deleteCapability (int capabilityId);
     ICapability findCapability (int capabilityId);
-    Collection<IPetal> collectPetals();
+    Collection<IPetal> collectPetals(int capabilityId);
     ICapability addPetal(IPetal petal);
     ICapability removePetal (IPetal petal);
 

@@ -30,7 +30,7 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     @Override
-    public Collection<IPetal> collectPetals() {
+    public Collection<IPetal> collectPetals(int capabilityId) {
         // TODO Auto-generated method stub
         return null;
     }

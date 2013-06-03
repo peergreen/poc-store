@@ -13,9 +13,9 @@ public interface ISessionGroup {
     void deleteGroup(String groupName);
     IGroup addUser(IUser myUser);     
     IGroup deleteUserbyPseudo(String pseudo);
-    Collection<IUser> collectUsers();
+    Collection<IUser> collectUsers(String groupName);
     IGroup addPetal(IPetal petal);
     IGroup deletePetalById(int petalId);
-    Collection<IPetal> collectPetals();
+    Collection<IPetal> collectPetals(String groupName);
 
 }
