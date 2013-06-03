@@ -5,34 +5,43 @@ package com.peergreen.store.db.client.ejb.entity.api;
  */
 public interface ILink {
 
-    /**
-     * Method to retrieve the link's url 
-     * 
-     * @return the url of the link instance 
-     */
-    String getUrl();
+
+	/**
+	 * Method to retrieve the link's id
+	 * 
+	 * @return the Id of the link instance
+	 */
+	int getLinkId();
 
 
-    /**
-     * Method to set the link's url 
-     * 
-     * @param the url of link to set
-     */
-    void setUrl(String url);
+	/**
+	 * Method to retrieve the link's url 
+	 * 
+	 * @return the url of the link instance 
+	 */
+	String getUrl();
 
 
-    /**
-     * Method to retrieve the link's description 
-     * 
-     * @return the description of the link instance
-     */
-    String getDescription();
+	/**
+	 * Method to set the link's url 
+	 * 
+	 * @param the url of link to set
+	 */
+	void setUrl(String url);
 
 
-    /**
-     * Method to set a description to the link instance 
-     * 
-     * @param the description of link to set
-     */
-    void setDescription(String description);
+	/**
+	 * Method to retrieve the link's description 
+	 * 
+	 * @return the description of the link instance
+	 */
+	String getDescription();
+
+
+	/**
+	 * Method to set a description to the link instance 
+	 * 
+	 * @param the description of link to set
+	 */
+	void setDescription(String description);
 }

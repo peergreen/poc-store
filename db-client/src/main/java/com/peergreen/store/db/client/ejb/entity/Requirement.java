@@ -36,13 +36,6 @@ public class Requirement implements IRequirement {
 	}
 
 	/**
-	 * @param requirementId the requirementId to set
-	 */
-	public void setRequirementId(int requirementId) {
-		this.requirementId = requirementId;
-	}
-
-	/**
 	 * @return the filter
 	 */
 	public String getFilter() {

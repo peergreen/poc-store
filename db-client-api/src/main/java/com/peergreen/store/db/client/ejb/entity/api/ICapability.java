@@ -8,6 +8,14 @@ import java.util.Map;
  */
 
 public interface ICapability {
+	
+
+	/**
+	 * Method to get the id of the capability instance
+	 * 
+	 * @return the id of the capability
+	 */
+	int getCapabilityId() ;
 
 	/**
 	 * Method for retrieve the properties of the capability instance

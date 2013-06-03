@@ -10,41 +10,43 @@ import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 
 @Entity
 public class Vendor implements IVendor {
-	
+
 	@Id
 	private String vendorName;
 	private String vendorDescription;
-	private List<Petal> petals;
+	private List<IPetal> petals;
+
+
+	@Override
+	public String getVendorName() {
+		return vendorName;
+	}
+
+	@Override
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
+	}
 
 
 	@Override
 	public String getVendorDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return vendorDescription;
 	}
 
 	@Override
 	public void setVendorDescription(String vendorDescription) {
-		// TODO Auto-generated method stub
-
+		this.vendorDescription = vendorDescription;
 	}
 
 	@Override
 	public List<IPetal> getPetals() {
-		// TODO Auto-generated method stub
-		return null;
+		return petals;
 	}
 
 	@Override
 	public void setPetals(List<IPetal> petals) {
-		// TODO Auto-generated method stub
-
+		this.petals = petals;
 	}
 
-	@Override
-	public String getVendorName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

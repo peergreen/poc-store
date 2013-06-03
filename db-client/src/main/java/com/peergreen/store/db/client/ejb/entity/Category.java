@@ -36,13 +36,6 @@ public class Category implements ICategory {
 	}
 
 	/**
-	 * @param categoryId the categoryId to set
-	 */
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	/**
 	 * @return the categoryname
 	 */
 	public String getCategoryname() {

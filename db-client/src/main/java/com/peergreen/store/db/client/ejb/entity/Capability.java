@@ -33,6 +33,12 @@ public class Capability implements ICapability {
 			joinColumns = {@JoinColumn(name = "capabilityId", referencedColumnName = "capabilityId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
 	private List<IPetal> petals;
+	
+	@Override
+	public int getCapabilityId() {
+		// TODO Auto-generated method stub
+		return this.capabilityId;
+	}
 
 	/**
 	 * @return the namespace
@@ -76,4 +82,5 @@ public class Capability implements ICapability {
 		this.petals = petals;
 	}
 
+	
 }

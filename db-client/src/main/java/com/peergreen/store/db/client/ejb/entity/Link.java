@@ -28,13 +28,6 @@ public class Link implements ILink {
 	}
 
 	/**
-	 * @param linkId the linkId to set
-	 */
-	public void setLinkId(int linkId) {
-		this.linkId = linkId;
-	}
-
-	/**
 	 * @return the url
 	 */
 	public String getUrl() {

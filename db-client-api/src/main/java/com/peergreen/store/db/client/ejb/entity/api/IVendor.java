@@ -13,6 +13,14 @@ public interface IVendor {
 	 * @return the vendorDescription
 	 */
 	String getVendorName();
+	
+	/**
+	 * Method to set a name for the vendor 
+	 * 
+	 * @param  the name to set for the vendor
+	 */
+	
+	void setVendorName(String vendorName);
 
 	/**
 	 * Method to get the description's vendor
@@ -24,7 +32,7 @@ public interface IVendor {
 	/**
 	 * Method to set a description for the vendor 
 	 * 
-	 * @param vendorDescription the vendorDescription to set
+	 * @param the description to set for the vendor
 	 */
 	void setVendorDescription(String vendorDescription);
 	
@@ -42,5 +50,7 @@ public interface IVendor {
 	 * @param List containing the petals to set
 	 */
 	void setPetals(List<IPetal> petals);
+
+	
 
 }
