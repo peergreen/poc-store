@@ -10,11 +10,12 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 public class UserControllerTestCase {
 
     @Mock
-    private IUserController userController;
+    private ISessionUser userSession;
     
     private static final String PSEUDO = "toto";
     
@@ -29,9 +30,9 @@ public class UserControllerTestCase {
         u.setPseudo("toto");
         u.setPassword("1234");
         u.setEmail("toto@turc.fr");
-        doReturn(u).when(userController).getUser(PSEUDO);
+        doReturn(u).when(userSession).findUserByPseudo(PSEUDO);
         
-        Assert.assertNotNull(userController.getUser(PSEUDO));
+        Assert.assertNotNull(userSession.findUserByPseudo(PSEUDO));
     }
 
 }
