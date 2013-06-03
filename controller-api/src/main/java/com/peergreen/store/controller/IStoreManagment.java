@@ -6,7 +6,11 @@ import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
+import com.peergreen.store.db.client.ejb.entity.api.IGroup;
+import com.peergreen.store.db.client.ejb.entity.api.ILink;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
+import com.peergreen.store.db.client.ejb.entity.api.IUser;
 
 /**
  * Interface defining high level operations to manage server.
@@ -19,6 +23,72 @@ import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
  */
 public interface IStoreManagment {
 
+    /**
+     * Method to a link between a remote store and the current one.
+     * 
+     * @param url path to the remote store
+     * @param description link's description
+     */
+    void addLink(String url, String description);
+    
+    /**
+     * Method to remove a link between a remote store and the current one.
+     * 
+     * @param linkId link's id
+     */
+    void removeLink(int linkId);
+    
+    /**
+     * Method to collect all existing links in database.
+     * 
+     * @return list of all existing links in database
+     */
+    List<ILink> collectLinks();
+    
+    /**
+     * Method to collect available petals.<br />
+     * Browse all links and staging.
+     * 
+     * @return list of available petals
+     */
+    List<IPetal> collectPetals();
+    
+    /**
+     * Method to collect available petals.<br />
+     * Retrieve available petals only for a specific user.
+     * 
+     * @return list of available petals for a specific user
+     */
+    List<IPetal> collectPetalsForUser(String pseudo);
+    
+    /**
+     * Method to collect petals in the staging repository.
+     * 
+     * @return list of available petals in staging repository
+     */
+    List<IPetal> collectPetalsFromStaging();
+    
+    /**
+     * Method to collect petals in the local repository.
+     * 
+     * @return list of available petals in local repository
+     */
+    List<IPetal> collectPetalsFromLocal();
+    
+    /**
+     * Method to collect all existing users on database.
+     * 
+     * @return list of all database's users
+     */
+    List<IUser> collectUsers();
+    
+    /**
+     * Method to collect all existing groups on database.
+     * 
+     * @return list of all database's groups
+     */
+    List<IGroup> collectGroups();
+    
     /**
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
