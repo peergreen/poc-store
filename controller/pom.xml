@@ -23,5 +23,11 @@
       <artifactId>controller-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.peergreen.store</groupId>
+      <artifactId>db-client</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
