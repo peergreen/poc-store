@@ -8,38 +8,24 @@ import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
 
 public interface IPetalController {
 
     /**
-     * Method to retrieve metadata related to a petal
+     * Method to retrieve metadata related to a petal.
      * 
-     * @param petalId petal's id
-     * @return petal's metadata
+     * @param pseudo petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return petal related metadata
      */
-    Map<String, String> getPetalMetadata(int petalId);
-
-    /**
-     * Method to collect all installed petals on server
-     * 
-     * @return
-     */
-    List<IPetal> collectInstalledPetals();
-
-    /**
-     * Method to retrieve metadata related to a user.
-     * 
-     * @param pseudo user's pseudo
-     * @return user related metadata
-     */
-    Map<String, String> getUserMetadata(String pseudo);
+    Map<String, String> getPetalMetadata(String vendor, String artifactId, String version);
 
     /**
      * Method to directly add a petal to the store.<br />
      * This method make the petal persistent in the store.
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -49,31 +35,24 @@ public interface IPetalController {
      * @param properties petal's additional properties
      * @param petalBinary petal's binary
      */
-    void addPetal(String groupId, String artifactId,
+    void addPetal(String vendor, String artifactId,
             String version, String description, ICategory category,
             List<IRequirement> requirements, List<ICapability> capabilities,
             Map<String, String> properties, File petalBinary);
 
     /**
-     * Method to remove a petal from the store thanks to its id.
-     * 
-     * @param petalId petal's id
-     */
-    void removePetal(int petalId);
-
-    /**
      * Method to remove a petal from the store thanks to its information.
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
-    void removePetal(String groupId, String artifactId, String version);
+    void removePetal(String vendor, String artifactId, String version);
 
     /**
      * Method to update a petal.
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -84,7 +63,7 @@ public interface IPetalController {
      * @param petalBinary petal's petalBinary
      * @return
      */
-    IPetal updatePetal(String groupId, String artifactId,
+    IPetal updatePetal(String vendor, String artifactId,
             String version, String description, ICategory category,
             List<IRequirement> requirements, List<ICapability> capabilities,
             Map<String, String> properties, File petalBinary);

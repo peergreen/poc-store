@@ -22,46 +22,31 @@ import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
  */
 public interface IPetalsPersistence 
 {
-    /**
-     * Method to recover petal's metadata from its id
-     * 
-     * @param id petal's id
-     * @return collection containing all petal's metadata
-     */
-    Map<String, String> getMetadata(int id);
 
     /**
      * Method to recover petal's metadata from its information
      * 
-     * @param groupId petal's group id
+     * @param vendor petal's group id
      * @param artifactId petal's artifact id
      * @param version petal's version
      * @return collection containing all petal's metadata
      */
-    Map<String, String> getMetadata(String groupId, String artifactId, String version);
-
-    /**
-     * Method to recover petal's binary from its id
-     * 
-     * @param id
-     * @return petal's binary
-     */
-    File getPetal(int id);
+    Map<String, String> getMetadata(String vendor, String artifactId, String version);
 
     /**
      * Method to recover petal's binary from its information
      * 
-     * @param groupId petal's group id
+     * @param vendor petal's group id
      * @param artifactId petal's artifact id
      * @param version petal's version
      * @return petal's binary
      */
-    File getPetal(String groupId, String artifactId, String version);
+    File getPetal(String vendor, String artifactId, String version);
 
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -72,7 +57,7 @@ public interface IPetalsPersistence
      * @param petal petal's binary
      */
     void addToStaging(
-            String groupId,
+            String vendor,
             String artifactId,
             String version,
             String description,
@@ -85,7 +70,7 @@ public interface IPetalsPersistence
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -96,7 +81,7 @@ public interface IPetalsPersistence
      * @param petal petal's binary
      */
     void addToLocal(
-            String groupId,
+            String vendor,
             String artifactId,
             String version,
             String description,

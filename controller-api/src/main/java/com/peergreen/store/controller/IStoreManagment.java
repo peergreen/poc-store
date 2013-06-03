@@ -39,14 +39,6 @@ public interface IStoreManagment {
             Map<String, String> properties, File petalBinary);
 
     /**
-     * Method to validate a petal's submission thanks to its id.<br />
-     * This method make the petal persistence in the store.
-     * 
-     * @param petalId petal's id
-     */
-    void validatePetal(int petalId);
-    
-    /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
      * @param groupId petal's groupId

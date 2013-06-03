@@ -26,40 +26,15 @@ import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
     /**
-     * Method to recover petal's metadata from its id
-     * 
-     * @param id petal's id
-     * @return collection containing all petal's metadata
-     */
-    @Override
-    public HashMap<String, String> getMetadata(int id) {
-        HashMap<String, String> metadata = new HashMap<String, String>();
-        
-        return metadata;
-    }
-
-    /**
      * Method to recover petal's metadata from its information
      * 
-     * @param groupId petal's group id
-     * @param artifactId petal's artifact id
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
      * @param version petal's version
      * @return collection containing all petal's metadata
      */
     @Override
-    public HashMap<String, String> getMetadata(String groupId, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
-     * Method to recover petal's binary from its id
-     * 
-     * @param id
-     * @return petal's binary
-     */
-    @Override
-    public File getPetal(int id) {
+    public HashMap<String, String> getMetadata(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -67,13 +42,13 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     /**
      * Method to recover petal's binary from its information
      * 
-     * @param groupId petal's group id
-     * @param artifactId petal's artifact id
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
      * @param version petal's version
      * @return petal's binary
      */
     @Override
-    public File getPetal(String groupId, String artifactId, String version) {
+    public File getPetal(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -81,7 +56,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -92,7 +67,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToStaging(String groupId, String artifactId, String version, String description, ICategory category,
+    public void addToStaging(String vendor, String artifactId, String version, String description, ICategory category,
             List<IRequirement> requirements, List<ICapability> capabilities,
             Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
@@ -102,7 +77,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -113,7 +88,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToLocal(String groupId, String artifactId, String version, String description, ICategory category,
+    public void addToLocal(String vendor, String artifactId, String version, String description, ICategory category,
             List<IRequirement> requirements, List<ICapability> capabilities,
             Map<String, String> properties, File petal) {
         // TODO Auto-generated method stub
