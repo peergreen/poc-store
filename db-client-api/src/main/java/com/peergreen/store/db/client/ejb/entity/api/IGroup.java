@@ -17,7 +17,7 @@ public interface IGroup {
 	/**
 	 * Method to set the group's name
 	 * 
-	 * @param the name to set
+	 * @param groupname the name to set
 	 */
 	void setGroupname(String groupname);
 
@@ -32,7 +32,7 @@ public interface IGroup {
 	/**
 	 * Method to add users into the group 
 	 * 
-	 * @param List of users to add into the group
+	 * @param users List of users to add into the group
 	 */
 	void setUsers(List<IUser> users);
 
@@ -50,7 +50,7 @@ public interface IGroup {
 	 * Method to add petals to the list of petals which the users of the 
 	 * group have access
 	 * 
-	 * @param List of petals to add, for making it attainable via the group
+	 * @param petals List of petals to add, for making it attainable via the group
 	 * instance
 	 */
 	void setPetals(List<IPetal> petals);

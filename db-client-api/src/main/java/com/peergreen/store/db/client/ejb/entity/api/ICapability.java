@@ -28,7 +28,7 @@ public interface ICapability {
 	/**
 	 * Method for set the properties of the capability instance
 	 * 
-	 * @param the properties to set
+	 * @param properties the properties to set
 	 */
 	void setProperties(Map<String, String> properties) ;
 
@@ -45,7 +45,7 @@ public interface ICapability {
 	 * Method for add others petals to the list of petals which provides
 	 * this capability instance
 	 * 
-	 * @param List containing petals to set
+	 * @param petals List containing petals to set
 	 */
 	void setPetals(List<IPetal> petals) ;
 }

@@ -17,7 +17,7 @@ public interface IVendor {
 	/**
 	 * Method to set a name for the vendor 
 	 * 
-	 * @param  the name to set for the vendor
+	 * @param vendorName the name to set for the vendor
 	 */
 	
 	void setVendorName(String vendorName);
@@ -32,7 +32,7 @@ public interface IVendor {
 	/**
 	 * Method to set a description for the vendor 
 	 * 
-	 * @param the description to set for the vendor
+	 * @param vendorDescription the description to set for the vendor
 	 */
 	void setVendorDescription(String vendorDescription);
 	
@@ -47,7 +47,7 @@ public interface IVendor {
 	/**
 	 * Method to add petals to the list of petals that are provided by the vendor instance
 	 * 
-	 * @param List containing the petals to set
+	 * @param petals List containing the petals to set
 	 */
 	void setPetals(List<IPetal> petals);
 

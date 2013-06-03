@@ -25,7 +25,7 @@ public interface ILink {
 	/**
 	 * Method to set the link's url 
 	 * 
-	 * @param the url of link to set
+	 * @param url the url of link to set
 	 */
 	void setUrl(String url);
 
@@ -41,7 +41,7 @@ public interface ILink {
 	/**
 	 * Method to set a description to the link instance 
 	 * 
-	 * @param the description of link to set
+	 * @param description the description of link to set
 	 */
 	void setDescription(String description);
 }

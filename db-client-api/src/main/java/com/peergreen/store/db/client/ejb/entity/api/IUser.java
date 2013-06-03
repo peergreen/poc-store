@@ -19,7 +19,7 @@ public interface IUser {
 	/**
 	 * Method to set the user's pseudonyme
 	 * 
-	 * @param the pseudonyme of the user to set
+	 * @param pseudo the pseudonyme of the user to set
 	 */
 	void setPseudo(String pseudo);
 
@@ -34,7 +34,7 @@ public interface IUser {
 	/**
 	 * Method to set the user's password
 	 * 
-	 * @param the password to set
+	 * @param password the password to set
 	 */
 	void setPassword(String password) ;
 
@@ -50,7 +50,7 @@ public interface IUser {
 	/**
 	 * Method to set the user's email 
 	 * 
-	 * @param the email to set
+	 * @param email the email to set
 	 */
 	void setEmail(String email);
 
@@ -66,7 +66,7 @@ public interface IUser {
 	/**
 	 * Method to add the user to new groups
 	 * 
-	 * @param A List of new group to which the user is added
+	 * @param groupSet A List of new group to which the user is added
 	 */
 	void setGroupSet(List<IGroup> groupSet) ;
 

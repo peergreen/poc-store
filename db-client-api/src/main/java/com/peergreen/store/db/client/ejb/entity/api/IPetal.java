@@ -19,7 +19,7 @@ public interface IPetal {
     /**
      * Method to set the petal's category
      * 
-     * @param The category of the petal to set
+     * @param category The category of the petal to set
      */
     void setCategory(ICategory category);
 
@@ -35,7 +35,7 @@ public interface IPetal {
     /**
      * Method to add requirements to the petal
      * 
-     * @param A list of requirements to add for the petal 
+     * @param requirement A list of requirements to add for the petal 
      */
     void setRequirements(List<IRequirement> requirements);
 
@@ -51,7 +51,7 @@ public interface IPetal {
     /**
      * Method to set the petal's capabilities
      * 
-     * @param A list of capabilities to add for the petal 
+     * @param capabilities A list of capabilities to add for the petal 
      */
     void setCapabilities(List<ICapability> capabilities);
 

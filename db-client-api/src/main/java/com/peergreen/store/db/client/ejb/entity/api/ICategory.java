@@ -26,7 +26,7 @@ public interface ICategory {
 	/**
 	 * Method to give the name of the category instance 
 	 * 
-	 * @param  the category's name to set
+	 * @param categoryname the category's name to set
 	 */
 	void setCategoryname(String categoryname);
 
@@ -42,7 +42,7 @@ public interface ICategory {
 	/**
 	 * Method to add petals to the list of petals that belongs to this category
 	 * 
-	 * @param List containing the petals to set
+	 * @param petals List containing the petals to set
 	 */
 	void setPetals(List<IPetal> petals);
 }

@@ -27,7 +27,7 @@ public interface IRequirement {
 	/**
 	 * Method to set the requiremeent's filter
 	 * 
-	 * @param The filter to set
+	 * @param filter The filter to set
 	 */
 	void setFilter(String filter);
 
@@ -43,7 +43,7 @@ public interface IRequirement {
 	/**
 	 * Method to add new petals that have this requirement
 	 * 
-	 * @param A list of new petals that have this requirement
+	 * @param petals A list of new petals that have this requirement
 	 */
 	void setPetals(List<IPetal> petals);
 
