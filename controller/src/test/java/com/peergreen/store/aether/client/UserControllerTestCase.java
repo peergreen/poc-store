@@ -1,6 +1,7 @@
 package com.peergreen.store.aether.client;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -8,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.peergreen.store.controller.UserController;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.api.IUser;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
@@ -17,11 +19,13 @@ public class UserControllerTestCase {
     @Mock
     private ISessionUser userSession;
     
+    private UserController userController;
     private static final String PSEUDO = "toto";
     
     @BeforeClass
     public void oneTimeSetUp() {
         MockitoAnnotations.initMocks(this);
+        userController = new UserController();
     }
     
     @Test
@@ -41,6 +45,12 @@ public class UserControllerTestCase {
         doReturn(null).when(userSession).findUserByPseudo(PSEUDO);
         
         Assert.assertNull(userSession.findUserByPseudo(PSEUDO));
+    }
+    
+    @Test(expectedExceptions = NullPointerException.class)
+    public void removeUser() {
+        userController.removeUser(PSEUDO);
+        verify(userSession).deleteUserbyPseudo(PSEUDO);
     }
 
 }
