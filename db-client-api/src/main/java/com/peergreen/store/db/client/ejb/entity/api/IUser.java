@@ -8,6 +8,20 @@ import java.util.List;
  */
 
 public interface IUser {
+	
+	/**
+	 * Method to get the user's pseudonyme
+	 * 
+	 * @return the pseudonyme of the user
+	 */
+	String getPseudo();
+	
+	/**
+	 * Method to set the user's pseudonyme
+	 * 
+	 * @param the pseudonyme of the user to set
+	 */
+	void setPseudo(String pseudo);
 
 	/**
 	 * Method to get the user's password
