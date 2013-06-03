@@ -19,17 +19,24 @@ public class PetalId implements IPetalId, Serializable {
 	String artifactId;
 	String version; 
 
-	public PetalId()
-	{
 
-	}
-
-	public PetalId(IVendor vendor, String artifactId,String version)
-	{
+	public PetalId(IVendor vendor, String artifactId,String version){
 		this.vendor = vendor;
 		this.artifactId = artifactId;
 		this.version = version;
 
+	}
+	
+	public void setVendor(IVendor vendor2) {
+		this.vendor = vendor2;
+	}
+
+	public void setArtifactId(String artifactId2) {
+		this.artifactId = artifactId2;
+	}
+
+	public void setVersion(String version2) {
+		this.version = version2;		
 	}
 
 	public IVendor getVendor()
@@ -42,14 +49,12 @@ public class PetalId implements IPetalId, Serializable {
 		return this.artifactId;
 	}
 
-	public String getVersion()
-	{
+	public String getVersion() {
 		return this.version;
 	}
 
 	public boolean equals(Object obj) {
 		boolean resultat = false;
-
 		return resultat;
 	}
 

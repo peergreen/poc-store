@@ -9,9 +9,13 @@ public interface IPetalId {
 	String getArtifactId();
 
 	String getVersion();
+	
+	void setVendor(IVendor vendor);
+	void setArtifactId(String artifactId);
+	void setVersion(String version);
 
 	boolean equals(Object obj);
-	
+
 	int hashCode();
 
 }
