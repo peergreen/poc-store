@@ -11,13 +11,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.SequenceGenerator;
 
+import com.peergreen.store.db.client.ejb.entity.api.ICapability;
+import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+
 
 /**
  * Entity Bean representing in the database the capability of a petal
  */
 @Entity
 @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
-public class Capability {
+public class Capability implements ICapability {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
@@ -29,7 +32,7 @@ public class Capability {
 	@JoinTable(name = "CAPABILITY_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "capabilityId", referencedColumnName = "capabilityId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
-	private List<Petal> petals;
+	private List<IPetal> petals;
 
 	/**
 	 * @return the namespace
@@ -62,14 +65,14 @@ public class Capability {
 	/**
 	 * @return the petals
 	 */
-	public List<Petal> getPetals() {
+	public List<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
 	 * @param petals the petals to set
 	 */
-	public void setPetals(List<Petal> petals) {
+	public void setPetals(List<IPetal> petals) {
 		this.petals = petals;
 	}
 
