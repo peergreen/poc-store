@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity.api;
 
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -35,16 +35,16 @@ public interface IRequirement {
 	/**
 	 * Method to retrieve the petals which had this requirement
 	 * 
-	 * @return A list containing all the petals which had this requirement 
+	 * @return A Set containing all the petals which had this requirement 
 	 */
-	List<IPetal> getPetals();
+	Set<IPetal> getPetals();
 
 
 	/**
 	 * Method to add new petals that have this requirement
 	 * 
-	 * @param petals A list of new petals that have this requirement
+	 * @param petals A Set of new petals that have this requirement
 	 */
-	void setPetals(List<IPetal> petals);
+	void setPetals(Set<IPetal> petals);
 
 }

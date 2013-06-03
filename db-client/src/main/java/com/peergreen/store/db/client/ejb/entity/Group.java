@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,9 +20,9 @@ public class Group implements IGroup{
 	@Id
 	private String groupname;
 	@ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private List<IUser> users ;
+	private Set<IUser> users ;
 	@ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private List<IPetal> petals ;
+	private Set<IPetal> petals ;
 	/**
 	 * @return the groupname
 	 */
@@ -38,25 +38,25 @@ public class Group implements IGroup{
 	/**
 	 * @return the users
 	 */
-	public List<IUser> getUsers() {
+	public Set<IUser> getUsers() {
 		return users;
 	}
 	/**
 	 * @param users the users to set
 	 */
-	public void setUsers(List<IUser> users) {
+	public void setUsers(Set<IUser> users) {
 		this.users = users;
 	}
 	/**
 	 * @return the petals
 	 */
-	public List<IPetal> getPetals() {
+	public Set<IPetal> getPetals() {
 		return petals;
 	}
 	/**
 	 * @param petals the petals to set
 	 */
-	public void setPetals(List<IPetal> petals) {
+	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}
 

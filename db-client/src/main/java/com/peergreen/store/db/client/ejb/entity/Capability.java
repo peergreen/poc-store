@@ -1,7 +1,7 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +32,7 @@ public class Capability implements ICapability {
 	@JoinTable(name = "CAPABILITY_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "capabilityId", referencedColumnName = "capabilityId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
-	private List<IPetal> petals;
+	private Set<IPetal> petals;
 	
 	@Override
 	public int getCapabilityId() {
@@ -71,14 +71,14 @@ public class Capability implements ICapability {
 	/**
 	 * @return the petals
 	 */
-	public List<IPetal> getPetals() {
+	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
 	 * @param petals the petals to set
 	 */
-	public void setPetals(List<IPetal> petals) {
+	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}
 

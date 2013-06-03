@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity.api;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Interface defining a vendor for a petal
@@ -39,17 +39,17 @@ public interface IVendor {
 	/**
 	 * Method for retrieve all the petals provided by the vendor instance
 	 * 
-	 * @return List containing petals that are provided by the vendor instance
+	 * @return Set containing petals that are provided by the vendor instance
 	 */
-	List<IPetal> getPetals();
+	Set<IPetal> getPetals();
 
 
 	/**
-	 * Method to add petals to the list of petals that are provided by the vendor instance
+	 * Method to add petals to the Set of petals that are provided by the vendor instance
 	 * 
-	 * @param petals List containing the petals to set
+	 * @param petals Set containing the petals to set
 	 */
-	void setPetals(List<IPetal> petals);
+	void setPetals(Set<IPetal> petals);
 
 	
 

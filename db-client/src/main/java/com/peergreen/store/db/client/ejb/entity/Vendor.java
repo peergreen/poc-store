@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,7 +17,7 @@ public class Vendor implements IVendor {
 	private String vendorName;
 	private String vendorDescription;
 	@OneToMany(mappedBy="vendor", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private List<IPetal> petals;
+	private Set<IPetal> petals;
 
 
 	@Override
@@ -42,12 +42,12 @@ public class Vendor implements IVendor {
 	}
 
 	@Override
-	public List<IPetal> getPetals() {
+	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	@Override
-	public void setPetals(List<IPetal> petals) {
+	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}
 

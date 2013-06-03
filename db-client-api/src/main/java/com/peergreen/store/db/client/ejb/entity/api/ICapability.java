@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity.api;
 
-import java.util.List;
+import java.util.Set;
 import java.util.Map;
 
 /**
@@ -36,16 +36,16 @@ public interface ICapability {
 	/**
 	 * Method to retrieve the petals which provides this capability instance
 	 * 
-	 * @return List containing petals 
+	 * @return Set containing petals 
 	 */
-	List<IPetal> getPetals();
+	Set<IPetal> getPetals();
 
 
 	/**
-	 * Method for add others petals to the list of petals which provides
+	 * Method for add others petals to the Set of petals which provides
 	 * this capability instance
 	 * 
-	 * @param petals List containing petals to set
+	 * @param petals Set containing petals to set
 	 */
-	void setPetals(List<IPetal> petals) ;
+	void setPetals(Set<IPetal> petals) ;
 }

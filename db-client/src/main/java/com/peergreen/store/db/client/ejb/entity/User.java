@@ -1,7 +1,7 @@
 package com.peergreen.store.db.client.ejb.entity;
 
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,7 +24,7 @@ public class User implements IUser {
     @JoinTable(name = "USERS_GROUPS_MAP",
             joinColumns = {@JoinColumn(name = "personnePseudo", referencedColumnName = "pseudo")},
             inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
-    private List<IGroup> groupSet;
+    private Set<IGroup> groupSet;
 
     /**
      * @return the pseudo
@@ -71,14 +71,14 @@ public class User implements IUser {
     /**
      * @return the groupSet
      */
-    public List<IGroup> getGroupSet() {
+    public Set<IGroup> getGroupSet() {
         return groupSet;
     }
 
     /**
      * @param groupSet the groupSet to set
      */
-    public void setGroupSet(List<IGroup> groupSet) {
+    public void setGroupSet(Set<IGroup> groupSet) {
         this.groupSet = groupSet;
     } 
 

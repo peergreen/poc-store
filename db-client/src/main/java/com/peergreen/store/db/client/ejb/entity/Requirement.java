@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +26,7 @@ public class Requirement implements IRequirement {
 	@JoinTable(name = "REQUIREMENT_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "requirementId", referencedColumnName = "requirementId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
-	private List<IPetal> petals;
+	private Set<IPetal> petals;
 
 	/**
 	 * @return the requirementId
@@ -52,14 +52,14 @@ public class Requirement implements IRequirement {
 	/**
 	 * @return the petals
 	 */
-	public List<IPetal> getPetals() {
+	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
 	 * @param petals the petals to set
 	 */
-	public void setPetals(List<IPetal> petals) {
+	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}
 

@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity.api;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Interface defining an entity bean representing a group of users
@@ -24,36 +24,36 @@ public interface IGroup {
 	/**
 	 * Method to retrieve all the users that belongs to this group
 	 * 
-	 * @return List of users of the group
+	 * @return Set of users of the group
 	 */
-	List<IUser> getUsers();
+	Set<IUser> getUsers();
 
 
 	/**
 	 * Method to add users into the group 
 	 * 
-	 * @param users List of users to add into the group
+	 * @param users Set of users to add into the group
 	 */
-	void setUsers(List<IUser> users);
+	void setUsers(Set<IUser> users);
 
 
 	/**
 	 * Method to retrieve all the petals which the users of the group have 
 	 * access
 	 * 
-	 * @return List containing the petals attainable via the group instance
+	 * @return Set containing the petals attainable via the group instance
 	 */
-	List<IPetal> getPetals();
+	Set<IPetal> getPetals();
 
 
 	/**
-	 * Method to add petals to the list of petals which the users of the 
+	 * Method to add petals to the Set of petals which the users of the 
 	 * group have access
 	 * 
-	 * @param petals List of petals to add, for making it attainable via the group
+	 * @param petals Set of petals to add, for making it attainable via the group
 	 * instance
 	 */
-	void setPetals(List<IPetal> petals);
+	void setPetals(Set<IPetal> petals);
 
 
 }

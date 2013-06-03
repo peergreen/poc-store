@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ public class Category implements ICategory {
 	private int categoryId;
 	private String categoryname;
 	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private List<IPetal> petals;
+	private Set<IPetal> petals;
 
 	/**
 	 * @return the categoryId
@@ -52,14 +52,14 @@ public class Category implements ICategory {
 	/**
 	 * @return the petals
 	 */
-	public List<IPetal> getPetals() {
+	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
 	 * @param petals the petals to set
 	 */
-	public void setPetals(List<IPetal> petals) {
+	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}
 }

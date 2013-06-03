@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity.api;
 
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -34,15 +34,15 @@ public interface ICategory {
 	/**
 	 * Method for retrieve all the petals that belongs to this category
 	 * 
-	 * @return List containing petals that belongs to this category
+	 * @return Set containing petals that belongs to this category
 	 */
-	List<IPetal> getPetals();
+	Set<IPetal> getPetals();
 
 
 	/**
-	 * Method to add petals to the list of petals that belongs to this category
+	 * Method to add petals to the Set of petals that belongs to this category
 	 * 
-	 * @param petals List containing the petals to set
+	 * @param petals Set containing the petals to set
 	 */
-	void setPetals(List<IPetal> petals);
+	void setPetals(Set<IPetal> petals);
 }

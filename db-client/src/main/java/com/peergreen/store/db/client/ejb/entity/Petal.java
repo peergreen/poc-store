@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
@@ -30,12 +30,12 @@ public class Petal implements IPetal {
 	@JoinTable(name = "PETALS_GROUPS_MAP",
 			joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
 			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
-	private List<IGroup> groupSet;
+	private Set<IGroup> groupSet;
 
 	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private List<IRequirement> requirements;
+	private Set<IRequirement> requirements;
 	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private List<ICapability> capabilities;
+	private Set<ICapability> capabilities;
 
 
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
@@ -88,36 +88,36 @@ public class Petal implements IPetal {
 	/**
 	 * @return the requirements
 	 */
-	public List<IRequirement> getRequirements() {
+	public Set<IRequirement> getRequirements() {
 		return requirements;
 	}
 
 	/**
 	 * @param requirements the requirements to set
 	 */
-	public void setRequirements(List<IRequirement> requirements) {
+	public void setRequirements(Set<IRequirement> requirements) {
 		this.requirements = requirements;
 	}
 
 	/**
 	 * @return the capabilities
 	 */
-	public List<ICapability> getCapabilities() {
+	public Set<ICapability> getCapabilities() {
 		return capabilities;
 	}
 
 	/**
 	 * @param capabilities the capabilities to set
 	 */
-	public void setCapabilities(List<ICapability> capabilities) {
+	public void setCapabilities(Set<ICapability> capabilities) {
 		this.capabilities = capabilities;
 	}
 
-	public List<IGroup> getGroupSet() {
+	public Set<IGroup> getGroupSet() {
 		return groupSet;
 	}
 
-	public void setGroupSet(List<IGroup> groupSet) {
+	public void setGroupSet(Set<IGroup> groupSet) {
 		this.groupSet = groupSet;
 	}
 
