@@ -4,7 +4,7 @@ import com.peergreen.store.db.client.ejb.entity.api.ILink;
 
 public interface ISessionLink {
 
-    ILink addLink(int linkId, String url, String description);
+    ILink addLink(String url, String description);
     void deleteLink(int linkId);
     ILink findLink(int linkId);
 

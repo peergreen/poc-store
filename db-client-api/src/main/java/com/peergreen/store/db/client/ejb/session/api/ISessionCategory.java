@@ -7,7 +7,7 @@ import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 
 public interface ISessionCategory {
 
-    ICategory addCategory(int categoryId, String name, String version);
+    ICategory addCategory(String name, String version);
     void deleteCategory(int categoryId);
     ICategory findCategory(int categoryId);
     Collection<IPetal> collectPetals(int categoryId);

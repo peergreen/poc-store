@@ -11,7 +11,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 public class DefaultCategory implements ISessionCategory{
 
     @Override
-    public com.peergreen.store.db.client.ejb.entity.api.ICategory addCategory(int categoryId, String name,
+    public com.peergreen.store.db.client.ejb.entity.api.ICategory addCategory(String name,
             String version) {
         // TODO Auto-generated method stub
         return null;

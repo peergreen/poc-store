@@ -7,7 +7,7 @@ import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 
 public interface ISessionRequirement {
 
-    IRequirement addRequirement( String namespace, Collection<String> properties);
+    IRequirement addRequirement(String namespace, Collection<String> properties);
     void deleteRequirement (int requirementId);
     IRequirement findRequirement (int requirementId);
     Collection<IPetal> collectPetals(int requirementId);

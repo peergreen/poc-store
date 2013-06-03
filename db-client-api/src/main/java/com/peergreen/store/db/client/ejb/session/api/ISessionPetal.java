@@ -9,27 +9,30 @@ import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 
 public interface ISessionPetal {
 
-    IPetal addPetal(int petalId, String groupId, String artifactId, 
-            String version, String description, ICategory category, 
-            Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
+	IPetal addPetal(int petalId, String groupId, String artifactId, 
+			String version, String description, ICategory category, 
+			Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
 
-    IPetal findPetal(int petalId);
+	IPetal findPetal(int petalId);
 
-    Collection <IPetal> collectPetalsByGroup(IGroup group); 
+	Collection <IPetal> collectPetalsByGroup(IGroup group); 
 
-    IPetal updatePetal(int petalId, String groupId, String artifactId, 
-            String version, String description, ICategory category, 
-            Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
+	IPetal updatePetal(int petalId, String groupId, String artifactId, 
+			String version, String description, ICategory category, 
+			Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
 
-    void deletePetal(int petalId); 
+	void deletePetal(int petalId); 
 
-    IPetal giveAccesToGroup(IGroup group);
+	IPetal giveAccesToGroup(IGroup group);
 
-    IPetal removeAccesToGroup(IGroup group);
+	IPetal removeAccesToGroup(IGroup group);
 
-    IPetal addCapability(ICapability capability);
-    IPetal removeCapability(ICapability capability);
+	IPetal addCapability(ICapability capability);
+	
+	IPetal removeCapability(ICapability capability);
 
-    IPetal addRequirement(ISessionRequirement requirement);
-    IPetal removeRequirement(ISessionRequirement requirement);
+	IPetal addRequirement(ISessionRequirement requirement);
+	
+	IPetal removeRequirement(ISessionRequirement requirement);
+
 }

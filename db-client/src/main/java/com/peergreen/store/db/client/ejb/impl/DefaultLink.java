@@ -6,7 +6,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 public class DefaultLink implements ISessionLink {
 
     @Override
-    public ILink addLink(int linkId, String url, String description) {
+    public ILink addLink(String url, String description) {
         // TODO Auto-generated method stub
         return null;
     }
