@@ -52,7 +52,7 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Collection<IUser> retrieveUsers() {
+    public Collection<IUser> collectUsers() {
         // TODO Auto-generated method stub
         return null;
     }
