@@ -11,9 +11,18 @@ public interface IUserController {
     /**
      * Method to retrieve user's information.
      * 
-     * @return indexed collection of user's information.
+     * @return indexed collection of user's information or
+     * <em>null</em> if user doesn't exist.
      */
-    Map<String, String> getUserMetadata();
+    Map<String, String> getUserMetadata(String pseudo);
+    
+    /**
+     * Method to retrieve a user instance from its pseudo.
+     * 
+     * @param pseudo user's pseudo
+     * @return corresponding User instance
+     */
+    IUser getUser(String pseudo);
     
     /**
      * Method to add a new user to the database.
