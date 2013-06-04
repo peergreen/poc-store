@@ -12,39 +12,45 @@ import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 public interface ISessionPetal {
 
-	Petal addPetal(PetalId petalId, String description, Category category, 
-			Collection<Capability> capabilities, Collection<Requirement> requirements);
+    Petal addPetal(PetalId petalId, String description, Category category, 
+            Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-	Petal addPetal(Vendor vendor, String artifactId, 
-			String version, String description, Category category, 
-			Collection<Capability> capabilities, Collection<Requirement> requirements);
+    Petal addPetal(Vendor vendor, String artifactId, 
+            String version, String description, Category category, 
+            Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-	Petal findPetal(PetalId petalId);
+    Petal findPetal(PetalId petalId);
 
-	Petal findPetal(Vendor vendor, String artifactId,String version);
-	
-	Collection<Group> collectGroups(Petal petal); 
-	
-	Collection<Capability> collectCapabilities(Petal petal); 
-		
-	Collection<Requirement> collectRequirements(Petal petal); 
+    Petal findPetal(Vendor vendor, String artifactId,String version);
 
-	Petal updatePetal(Vendor vendor, String artifactId, 
-			String version, String description, Category category, 
-			Collection<Capability> capabilities, Collection<Requirement> requirements);
+    Collection<Group> collectGroups(Petal petal); 
 
-	void deletePetal(Petal petal); 
+    Collection<Capability> collectCapabilities(Petal petal); 
 
-	Petal giveAccesToGroup(Petal petal, Group group);
+    Collection<Requirement> collectRequirements(Petal petal); 
 
-	Petal removeAccesToGroup(Petal petal, Group group);
+    Petal updatePetal(Vendor vendor, String artifactId, 
+            String version, String description, Category category, 
+            Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-	Petal addCapability(Petal petal, Capability capability);
-	
-	Petal removeCapability(Petal petal, Capability capability);
+    void deletePetal(Petal petal); 
 
-	Petal addRequirement(Petal petal, Requirement requirement);
+    Petal giveAccesToGroup(Petal petal, Group group);
 
-	Petal removeRequirement(Petal petal, Requirement requirement);
+    Petal removeAccesToGroup(Petal petal, Group group);
+
+    Petal addCategory(Petal petal, Category category);
+
+    Petal removeCategory(Petal petal, Category category);
+
+    Category getCategory(Petal petal);
+
+    Petal addCapability(Petal petal, Capability capability);
+
+    Petal removeCapability(Petal petal, Capability capability);
+
+    Petal addRequirement(Petal petal, Requirement requirement);
+
+    Petal removeRequirement(Petal petal, Requirement requirement);
 
 }
