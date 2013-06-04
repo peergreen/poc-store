@@ -7,51 +7,51 @@ import java.util.Set;
  */
 
 public interface IPetal {
-	
-	 /**
-     * Method to retrieve the petal's vendor
-     * 
-     * @return the vendor which provides the petal
-     */
+
+	/**
+	 * Method to retrieve the petal's vendor
+	 * 
+	 * @return the vendor which provides the petal
+	 */
 	IVendor getVendor();
-	
+
 	/**
-     * Method to set the petal's vendor
-     * 
-     * @param vendor The vendor of the petal to set
-     */
+	 * Method to set the petal's vendor
+	 * 
+	 * @param vendor The vendor of the petal to set
+	 */
 	void setVendor(IVendor vendor);
-	
-	
-	 /**
-     * Method to retrieve the petal's artifactId
-     * 
-     * @return the artifactId of the petal
-     */
+
+
+	/**
+	 * Method to retrieve the petal's artifactId
+	 * 
+	 * @return the artifactId of the petal
+	 */
 	String getArtifactId();
-	
+
 	/**
-     * Method to set the petal's artifactId
-     * 
-     * @param artifactId The artifactId of the petal to set
-     */
+	 * Method to set the petal's artifactId
+	 * 
+	 * @param artifactId The artifactId of the petal to set
+	 */
 	void setArtifactId(String artifactId);
-	
-	
+
+
 	/**
-     * Method to retrieve the petal's version
-     * 
-     * @return the version of the petal
-     */
+	 * Method to retrieve the petal's version
+	 * 
+	 * @return the version of the petal
+	 */
 	String getVersion();
-	
+
 	/**
-     * Method to set the petal's version
-     * 
-     * @param version The version of the petal to set
-     */
+	 * Method to set the petal's version
+	 * 
+	 * @param version The version of the petal to set
+	 */
 	void setVersion(String version);
-	
+
 	/**
 	 * Method to retrieve the petal's description
 	 * 
@@ -67,68 +67,68 @@ public interface IPetal {
 	 */
 	void setDescription(String description);
 
-    /**
-     * Method to retrieve the petal's category
-     * 
-     * @return the category which belongs the petal
-     */
-    ICategory getCategory();
+	/**
+	 * Method to retrieve the petal's category
+	 * 
+	 * @return the category which belongs the petal
+	 */
+	ICategory getCategory();
 
 
-    /**
-     * Method to set the petal's category
-     * 
-     * @param category The category of the petal to set
-     */
-    void setCategory(ICategory category);
+	/**
+	 * Method to set the petal's category
+	 * 
+	 * @param category The category of the petal to set
+	 */
+	void setCategory(ICategory category);
 
 
-    /**
-     * Method to retrieve the petal's requirement
-     * 
-     * @return A Set of requirements of the petal instance
-     */
-    Set<IRequirement> getRequirements();
+	/**
+	 * Method to retrieve the petal's requirement
+	 * 
+	 * @return A Set of requirements of the petal instance
+	 */
+	Set<IRequirement> getRequirements();
 
 
-    /**
-     * Method to add requirements to the petal
-     * 
-     * @param requirement A Set of requirements to add for the petal 
-     */
-    void setRequirements(Set<IRequirement> requirements);
+	/**
+	 * Method to add requirements to the petal
+	 * 
+	 * @param requirement A Set of requirements to add for the petal 
+	 */
+	void setRequirements(Set<IRequirement> requirements);
 
 
-    /**
-     * Method to retrieve the petal's capabilities
-     * 
-     * @return A Set of capabilities of the petal instance
-     */
-    Set<ICapability> getCapabilities();
+	/**
+	 * Method to retrieve the petal's capabilities
+	 * 
+	 * @return A Set of capabilities of the petal instance
+	 */
+	Set<ICapability> getCapabilities();
 
 
-    /**
-     * Method to set the petal's capabilities
-     * 
-     * @param capabilities A Set of capabilities to add for the petal 
-     */
-    void setCapabilities(Set<ICapability> capabilities);
+	/**
+	 * Method to set the petal's capabilities
+	 * 
+	 * @param capabilities A Set of capabilities to add for the petal 
+	 */
+	void setCapabilities(Set<ICapability> capabilities);
 
-    
-    /**
-     * Method to retrieve the petal's group
-     * 
-     * @return A Set of group which belongs the petal instance
-     */
-    
-    Set<IGroup> getGroupSet();
-    
-    
-    /**
-     * Method to set the petal's groups
-     * 
-     * @param groupSet A Set of group to add for the petal 
-     */
-	 void setGroupSet(Set<IGroup> groupSet);
+
+	/**
+	 * Method to retrieve the petal's group
+	 * 
+	 * @return A Set of group which belongs the petal instance
+	 */
+
+	Set<IGroup> getGroupSet();
+
+
+	/**
+	 * Method to set the petal's groups
+	 * 
+	 * @param groupSet A Set of group to add for the petal 
+	 */
+	void setGroupSet(Set<IGroup> groupSet);
 
 }

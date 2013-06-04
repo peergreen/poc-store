@@ -8,14 +8,14 @@ import java.util.Set;
  */
 
 public interface IUser {
-	
+
 	/**
 	 * Method to get the user's pseudonyme
 	 * 
 	 * @return the pseudonyme of the user
 	 */
 	String getPseudo();
-	
+
 	/**
 	 * Method to set the user's pseudonyme
 	 * 

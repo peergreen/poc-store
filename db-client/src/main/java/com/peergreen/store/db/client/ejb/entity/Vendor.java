@@ -15,38 +15,63 @@ public class Vendor implements IVendor {
 
 	@Id
 	private String vendorName;
+
 	private String vendorDescription;
+
 	@OneToMany(mappedBy="vendor", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Set<IPetal> petals;
 
 
-	@Override
+	/**
+	 * Method to get the name of the  vendor
+	 * 
+	 * @return the vendorDescription
+	 */
 	public String getVendorName() {
 		return vendorName;
 	}
 
-	@Override
+	/**
+	 * Method to set a name for the vendor 
+	 * 
+	 * @param vendorName the name to set for the vendor
+	 */
 	public void setVendorName(String vendorName) {
 		this.vendorName = vendorName;
 	}
 
-
-	@Override
+	/**
+	 * Method to get the description's vendor
+	 * 
+	 * @return the vendorDescription
+	 */
 	public String getVendorDescription() {
 		return vendorDescription;
 	}
 
-	@Override
+	/**
+	 * Method to set a description for the vendor 
+	 * 
+	 * @param vendorDescription the description to set for the vendor
+	 */
 	public void setVendorDescription(String vendorDescription) {
 		this.vendorDescription = vendorDescription;
 	}
 
-	@Override
+	/**
+	 * Method for retrieve all the petals provided by the vendor instance
+	 * 
+	 * @return Set containing petals that are provided by the vendor instance
+	 */
 	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
-	@Override
+	/**
+	 * Method to add petals to the Set of petals that are provided by the vendor instance
+	 * 
+	 * @param petals Set containing the petals to set
+	 */
 	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}

@@ -6,20 +6,20 @@ import java.util.Set;
  * Interface defining a vendor for a petal
  */
 public interface IVendor {
-	
+
 	/**
 	 * Method to get the name of the  vendor
 	 * 
 	 * @return the vendorDescription
 	 */
 	String getVendorName();
-	
+
 	/**
 	 * Method to set a name for the vendor 
 	 * 
 	 * @param vendorName the name to set for the vendor
 	 */
-	
+
 	void setVendorName(String vendorName);
 
 	/**
@@ -35,7 +35,7 @@ public interface IVendor {
 	 * @param vendorDescription the description to set for the vendor
 	 */
 	void setVendorDescription(String vendorDescription);
-	
+
 	/**
 	 * Method for retrieve all the petals provided by the vendor instance
 	 * 
@@ -51,6 +51,6 @@ public interface IVendor {
 	 */
 	void setPetals(Set<IPetal> petals);
 
-	
+
 
 }

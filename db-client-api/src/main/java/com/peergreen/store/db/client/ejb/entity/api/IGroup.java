@@ -6,14 +6,14 @@ import java.util.Set;
  * Interface defining an entity bean representing a group of users
  */
 public interface IGroup {
-	
+
 	/**
 	 * Method to retrieve the group's name
 	 * 
 	 * @return the groupname
 	 */
 	String getGroupname();
-	
+
 	/**
 	 * Method to set the group's name
 	 * 

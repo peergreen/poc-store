@@ -17,39 +17,51 @@ public class Link implements ILink {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
 	private int linkId;
+
 	private String url; 
+
 	private String description;
 
 	/**
-	 * @return the linkId
+	 * Method to retrieve the link's id
+	 * 
+	 * @return the Id of the link instance
 	 */
 	public int getLinkId() {
 		return linkId;
 	}
 
 	/**
-	 * @return the url
+	 * Method to retrieve the link's url 
+	 * 
+	 * @return the url of the link instance 
 	 */
 	public String getUrl() {
 		return url;
 	}
 
 	/**
-	 * @param url the url to set
+	 * Method to set the link's url 
+	 * 
+	 * @param url the url of link to set
 	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}
 
 	/**
-	 * @return the description
+	 * Method to retrieve the link's description 
+	 * 
+	 * @return the description of the link instance
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * @param description the description to set
+	 * Method to set a description to the link instance 
+	 * 
+	 * @param description the description of link to set
 	 */
 	public void setDescription(String description) {
 		this.description = description;

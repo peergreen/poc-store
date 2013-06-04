@@ -24,39 +24,53 @@ public class Category implements ICategory {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
 	private int categoryId;
+
 	private String categoryname;
+
 	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Set<IPetal> petals;
 
 	/**
-	 * @return the categoryId
+	 * Method to retrieve the id of the category instance
+	 * 
+	 * @return the category's id
 	 */
 	public int getCategoryId() {
 		return categoryId;
 	}
 
 	/**
-	 * @return the categoryname
+	 * Method to retrieve the name of the category instance
+	 * 
+	 * @return the category's name
 	 */
 	public String getCategoryname() {
 		return categoryname;
 	}
 
 	/**
-	 * @param categoryname the categoryname to set
+	 * Method to give the name of the category instance 
+	 * 
+	 * @param categoryname the category's name to set
 	 */
 	public void setCategoryname(String categoryname) {
 		this.categoryname = categoryname;
 	}
 
 	/**
-	 * @return the petals
+	 * Method for retrieve all the petals that belongs to this category
+	 * 
+	 * @return Set containing petals that belongs to this category
 	 */
 	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
+	 * Method to add petals to the Set of petals that belongs to this category
+	 * 
+	 * @param petals Set containing the petals to set
+	 *//**
 	 * @param petals the petals to set
 	 */
 	public void setPetals(Set<IPetal> petals) {

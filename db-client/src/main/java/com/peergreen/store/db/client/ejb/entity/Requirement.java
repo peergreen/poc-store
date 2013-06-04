@@ -22,42 +22,54 @@ public class Requirement implements IRequirement {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
 	private int requirementId;
+
 	private String filter;
+
 	@JoinTable(name = "REQUIREMENT_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "requirementId", referencedColumnName = "requirementId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
 	private Set<IPetal> petals;
 
 	/**
-	 * @return the requirementId
+	 * Method to retrieve the requirement's Id
+	 * 
+	 * @return the id of the requirement instance
 	 */
 	public int getRequirementId() {
 		return requirementId;
 	}
 
 	/**
-	 * @return the filter
+	 * Method to retrieve the requirement's filter 
+	 * 
+	 * @return the filter of the requirement instance
 	 */
 	public String getFilter() {
 		return filter;
 	}
 
 	/**
-	 * @param filter the filter to set
+	 * Method to set the requiremeent's filter
+	 * 
+	 * @param filter The filter to set
 	 */
 	public void setFilter(String filter) {
 		this.filter = filter;
 	}
 
 	/**
-	 * @return the petals
+	 * Method to retrieve the petals which had this requirement
+	 * 
+	 * @return A Set containing all the petals which had this requirement 
 	 */
 	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
-	 * @param petals the petals to set
+	 * Method to add new petals that have this requirement
+	 * 
+	 * @param petals A Set of new petals that have this requirement
 	 */
 	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
