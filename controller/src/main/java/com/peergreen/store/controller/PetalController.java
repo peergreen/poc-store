@@ -174,7 +174,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public IPetal removeCapability(IVendor vendor, String artifactId, String version, ICapability capability) {
-        return petalSession.removeCapability(capability);
+        IPetal petal = petalSession.findPetal(vendor, artifactId, version);
+    	return petalSession.removeCapability(petal, capability);
     }
 
     /**
@@ -197,7 +198,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public List<IRequirement> collectRequirements(IVendor vendor, String artifactId, String version) {
-        return (List<IRequirement>) petalSession.collectRequirements(vendor, artifactId, version);
+    	IPetal petal = petalSession.findPetal(vendor, artifactId, version);
+        return (List<IRequirement>) petalSession.collectRequirements(petal);
     }
 
     /**
