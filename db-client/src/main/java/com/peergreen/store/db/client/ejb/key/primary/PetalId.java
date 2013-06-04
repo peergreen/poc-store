@@ -15,9 +15,9 @@ public class PetalId implements IPetalId, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	IVendor vendor;
-	String artifactId;
-	String version; 
+	private IVendor vendor;
+	private String artifactId;
+	private String version; 
 
 
 	public PetalId(IVendor vendor, String artifactId,String version){
@@ -27,32 +27,68 @@ public class PetalId implements IPetalId, Serializable {
 
 	}
 	
+	/**
+	 * Method to set the petal's vendor
+	 * 
+	 * @param vendor the vendor to set for the petal
+	 */
 	public void setVendor(IVendor vendor2) {
 		this.vendor = vendor2;
 	}
 
+	/**
+	 * Method to set the petal's artifactId
+	 * 
+	 * @param artifactid An artifactId to set for the petal
+	 */
 	public void setArtifactId(String artifactId2) {
 		this.artifactId = artifactId2;
 	}
 
+	/**
+	 * Method to set the petal's version
+	 * 
+	 * @param version A version to set for the petal
+	 */
 	public void setVersion(String version2) {
 		this.version = version2;		
 	}
 
+	/**
+	 * Method to get the attribute Vendor
+	 * 
+	 * @return the vendor of the petal
+	 */
 	public IVendor getVendor()
 	{
 		return this.vendor;
 	}
-
+	
+	/**
+	 * Method to get the attribute ArtifactId
+	 * 
+	 * @return the artifactid of the petal 
+	 */
 	public String getArtifactId()
 	{
 		return this.artifactId;
 	}
 
+	/**
+	 * Method to get the attribut version 
+	 * 
+	 * @return the version of the petal
+	 */
 	public String getVersion() {
 		return this.version;
 	}
 
+	/**
+	 * Method for comparing an object with an instance of petalId
+	 * 
+	 * @param obj the object to compare to the petalId instance
+	 * @return the comparison result
+	 */
 	public boolean equals(Object obj) {
 		boolean resultat = false;
 		return resultat;

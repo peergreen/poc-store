@@ -14,49 +14,48 @@ public interface IPetalId {
 	/**
 	 * Method to get the attribute ArtifactId
 	 * 
-	 * @param the artifactid of the petal 
+	 * @return the artifactid of the petal 
 	 */
 	String getArtifactId();
 
 	/**
-	 * Method to add petals to the Set of petals that are provided by the vendor instance
+	 * Method to get the attribut version 
 	 * 
-	 * @param petals Set containing the petals to set
+	 * @return the version of the petal
 	 */
 	String getVersion();
 	
 	/**
-	 * Method to add petals to the Set of petals that are provided by the vendor instance
+	 * Method to set the petal's vendor
 	 * 
-	 * @param petals Set containing the petals to set
+	 * @param vendor the vendor to set for the petal
 	 */
 	void setVendor(IVendor vendor);
 	
 	/**
-	 * Method to add petals to the Set of petals that are provided by the vendor instance
+	 * Method to set the petal's artifactId
 	 * 
-	 * @param petals Set containing the petals to set
+	 * @param artifactid An artifactId to set for the petal
 	 */
 	void setArtifactId(String artifactId);
 	
 	/**
-	 * Method to add petals to the Set of petals that are provided by the vendor instance
+	 * Method to set the petal's version
 	 * 
-	 * @param petals Set containing the petals to set
+	 * @param version A version to set for the petal
 	 */
 	void setVersion(String version);
 
 	/**
-	 * Method to add petals to the Set of petals that are provided by the vendor instance
+	 * Method for comparing an object with an instance of petalId
 	 * 
-	 * @param petals Set containing the petals to set
+	 * @param obj the object to compare to the petalId instance
+	 * @return the comparison result
 	 */
 	boolean equals(Object obj);
 	
-	/**
-	 * Method to add petals to the Set of petals that are provided by the vendor instance
-	 * 
-	 * @param petals Set containing the petals to set
+	/** 
+	 * @return 
 	 */
 	int hashCode();
 
