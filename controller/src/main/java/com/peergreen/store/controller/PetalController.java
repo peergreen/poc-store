@@ -29,7 +29,11 @@ public class PetalController implements IPetalController {
     private ISessionCategory categorySession;
     private ISessionPetal petalSession;
     private ISessionRequirement requirementSession;
+    /** reference to the aether client for petal persistence */
     private IPetalsPersistence petalPersistence;
+    /** reference to store management interface to permit
+     * access to store related methods */
+    private IStoreManagment storeManagment;
 
     /**
      * Method to retrieve metadata related to a petal.
