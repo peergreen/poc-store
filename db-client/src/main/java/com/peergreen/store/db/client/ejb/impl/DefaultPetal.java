@@ -44,6 +44,24 @@ public class DefaultPetal implements ISessionPetal {
 	}
 
 	@Override
+	public Collection<IGroup> collectGroups(IPetal petal) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<ICapability> collectCapabilities(IPetal petal) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IRequirement> collectRequirements(IPetal petal) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public IPetal updatePetal(IVendor vendor, String artifactId,
 			String version, String description, ICategory category,
 			Collection<ICapability> capabilities,
@@ -53,88 +71,43 @@ public class DefaultPetal implements ISessionPetal {
 	}
 
 	@Override
-	public void deletePetal(IPetalId petalId) {
+	public void deletePetal(IPetal petal) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void deletePetal(IVendor vendor, String artifactId, String version) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public IPetal giveAccesToGroup(IGroup group) {
+	public IPetal giveAccesToGroup(IPetal petal, IGroup group) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeAccesToGroup(IGroup group) {
+	public IPetal removeAccesToGroup(IPetal petal, IGroup group) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal addCapability(ICapability capability) {
+	public IPetal addCapability(IPetal petal, ICapability capability) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeCapability(ICapability capability) {
+	public IPetal removeCapability(IPetal petal, ICapability capability) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal addRequirement(IRequirement requirement) {
+	public IPetal addRequirement(IPetal petal, IRequirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeRequirement(IRequirement requirement) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IGroup> collectGroups(IPetalId petalId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IGroup> collectGroups(IVendor vendor, String artifactId,
-			String version) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<ICapability> collectCapabilities(IPetalId petalId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<ICapability> collectCapabilities(IVendor vendor,
-			String artifactId, String version) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IRequirement> collectRequirements(IPetalId petalId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Collection<IRequirement> collectRequirements(IVendor vendor,
-			String artifactId, String version) {
+	public IPetal removeRequirement(IPetal petal, IRequirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}

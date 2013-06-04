@@ -23,36 +23,28 @@ public interface ISessionPetal {
 
 	IPetal findPetal(IVendor vendor, String artifactId,String version);
 	
-	Collection<IGroup> collectGroups(IPetalId petalId); 
-
-	Collection<IGroup> collectGroups(IVendor vendor, String artifactId,String version); 
+	Collection<IGroup> collectGroups(IPetal petal); 
 	
-	Collection<ICapability> collectCapabilities(IPetalId petalId); 
-	
-	Collection<ICapability> collectCapabilities(IVendor vendor, String artifactId,String version); 
-	
-	Collection<IRequirement> collectRequirements(IPetalId petalId); 
-
-	Collection<IRequirement> collectRequirements(IVendor vendor, String artifactId,String version); 
+	Collection<ICapability> collectCapabilities(IPetal petal); 
+		
+	Collection<IRequirement> collectRequirements(IPetal petal); 
 
 	IPetal updatePetal(IVendor vendor, String artifactId, 
 			String version, String description, ICategory category, 
 			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
 
-	void deletePetal(IPetalId petalId); 
+	void deletePetal(IPetal petal); 
 
-	void deletePetal (IVendor vendor, String artifactId, String version);
+	IPetal giveAccesToGroup(IPetal petal, IGroup group);
 
-	IPetal giveAccesToGroup(IGroup group);
+	IPetal removeAccesToGroup(IPetal petal, IGroup group);
 
-	IPetal removeAccesToGroup(IGroup group);
+	IPetal addCapability(IPetal petal, ICapability capability);
+	
+	IPetal removeCapability(IPetal petal, ICapability capability);
 
-	IPetal addCapability(ICapability capability);
+	IPetal addRequirement(IPetal petal, IRequirement requirement);
 
-	IPetal removeCapability(ICapability capability);
-
-	IPetal addRequirement(IRequirement requirement);
-
-	IPetal removeRequirement(IRequirement requirement);
+	IPetal removeRequirement(IPetal petal, IRequirement requirement);
 
 }
