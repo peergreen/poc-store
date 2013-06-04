@@ -19,7 +19,10 @@ public class PetalId implements IPetalId, Serializable {
 	private String artifactId;
 	private String version; 
 
-
+	public PetalId(){
+		
+	}
+	
 	public PetalId(IVendor vendor, String artifactId,String version){
 		this.vendor = vendor;
 		this.artifactId = artifactId;
