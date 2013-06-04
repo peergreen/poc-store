@@ -1,15 +1,14 @@
 package com.peergreen.store.aether.client.impl;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
+import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 
 
 /**
@@ -27,20 +26,6 @@ import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
     /**
-     * Method to recover petal's metadata from its information
-     * 
-     * @param vendor petal's vendor
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @return collection containing all petal's metadata
-     */
-    @Override
-    public HashMap<String, String> getMetadata(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
      * Method to recover petal's binary from its information
      * 
      * @param vendor petal's vendor
@@ -49,7 +34,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return petal's binary
      */
     @Override
-    public File getPetal(String vendor, String artifactId, String version) {
+    public File getPetal(IVendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -68,11 +53,24 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToStaging(String vendor, String artifactId, String version, String description, ICategory category,
-            List<IRequirement> requirements, List<ICapability> capabilities,
-            Map<String, String> properties, File petal) {
+    public void addToLocal(IVendor vendor, String artifactId, String version, String description, ICategory category,
+            Set<IRequirement> requirements, Set<ICapability> capabilities, File petal) {
         // TODO Auto-generated method stub
         
+    }
+
+    /**
+     * Method to retrieve a petal from the local repository
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return corresponding petal
+     */
+    @Override
+    public IPetal getPetalFromLocal(IVendor vendor, String artifactId, String version) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -89,21 +87,22 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToLocal(String vendor, String artifactId, String version, String description, ICategory category,
-            List<IRequirement> requirements, List<ICapability> capabilities,
-            Map<String, String> properties, File petal) {
+    public void addToStaging(IVendor vendor, String artifactId, String version, String description, ICategory category,
+            Set<IRequirement> requirements, Set<ICapability> capabilities, File petal) {
         // TODO Auto-generated method stub
         
     }
-
+    
+    /**
+     * Method to retrieve a petal from the staging repository
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return corresponding petal
+     */
     @Override
-    public IPetal getPetalFromLocal(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public IPetal getPetalFromStaging(String vendor, String artifactId, String version) {
+    public IPetal getPetalFromStaging(IVendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
