@@ -23,5 +23,10 @@
       <artifactId>db-client-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.peergreen.store</groupId>
+      <artifactId>aether-client-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
