@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 
@@ -12,7 +13,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 public class DefaultCapability implements ISessionCapability{
 
     @Override
-    public ICapability addCapability(String namespace, Collection<String> properties) {
+    public ICapability addCapability(String namespace, Map<String, String> properties) {
         // TODO Auto-generated method stub
         return null;
     }
