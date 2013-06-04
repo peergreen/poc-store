@@ -51,6 +51,21 @@ public interface IPetal {
      * @param version The version of the petal to set
      */
 	void setVersion(String version);
+	
+	/**
+	 * Method to retrieve the petal's description
+	 * 
+	 * @return the description of the petal
+	 */
+	String getDescription();
+
+
+	/**
+	 * Method to set a description to the petal 
+	 * 
+	 * @param description The description of the petal to set
+	 */
+	void setDescription(String description);
 
     /**
      * Method to retrieve the petal's category
@@ -98,5 +113,22 @@ public interface IPetal {
      * @param capabilities A Set of capabilities to add for the petal 
      */
     void setCapabilities(Set<ICapability> capabilities);
+
+    
+    /**
+     * Method to retrieve the petal's group
+     * 
+     * @return A Set of group which belongs the petal instance
+     */
+    
+    Set<IGroup> getGroupSet();
+    
+    
+    /**
+     * Method to set the petal's groups
+     * 
+     * @param groupSet A Set of group to add for the petal 
+     */
+	 void setGroupSet(Set<IGroup> groupSet);
 
 }
