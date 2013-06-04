@@ -113,6 +113,32 @@ public class DefaultPetal implements ISessionPetal {
 		return null;
 	}
 
+	@Override
+	public Collection<ICapability> collectCapabilities(IPetalId petalId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<ICapability> collectCapabilities(IVendor vendor,
+			String artifactId, String version) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IRequirement> collectRequirements(IPetalId petalId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IRequirement> collectRequirements(IVendor vendor,
+			String artifactId, String version) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

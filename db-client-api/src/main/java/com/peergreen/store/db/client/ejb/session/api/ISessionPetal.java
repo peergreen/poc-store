@@ -26,6 +26,14 @@ public interface ISessionPetal {
 	Collection<IGroup> collectGroups(IPetalId petalId); 
 
 	Collection<IGroup> collectGroups(IVendor vendor, String artifactId,String version); 
+	
+	Collection<ICapability> collectCapabilities(IPetalId petalId); 
+	
+	Collection<ICapability> collectCapabilities(IVendor vendor, String artifactId,String version); 
+	
+	Collection<IRequirement> collectRequirements(IPetalId petalId); 
+
+	Collection<IRequirement> collectRequirements(IVendor vendor, String artifactId,String version); 
 
 	IPetal updatePetal(IVendor vendor, String artifactId, 
 			String version, String description, ICategory category, 
