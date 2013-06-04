@@ -6,17 +6,18 @@ import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IGroup;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 import com.peergreen.store.db.client.ejb.key.primary.api.IPetalId;
 
 public interface ISessionPetal {
 
 	IPetal addPetal(IPetalId petalId, String description, ICategory category, 
-			Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
+			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
 
 	IPetal addPetal(IVendor vendor, String artifactId, 
 			String version, String description, ICategory category, 
-			Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
+			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
 
 	IPetal findPetal(IPetalId petalId);
 
@@ -26,7 +27,7 @@ public interface ISessionPetal {
 
 	IPetal updatePetal(IVendor vendor, String artifactId, 
 			String version, String description, ICategory category, 
-			Collection<ICapability> capabilities, Collection<ISessionRequirement> requirements);
+			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
 
 	void deletePetal(IPetalId petalId); 
 
@@ -40,8 +41,8 @@ public interface ISessionPetal {
 
 	IPetal removeCapability(ICapability capability);
 
-	IPetal addRequirement(ISessionRequirement requirement);
+	IPetal addRequirement(IRequirement requirement);
 
-	IPetal removeRequirement(ISessionRequirement requirement);
+	IPetal removeRequirement(IRequirement requirement);
 
 }
