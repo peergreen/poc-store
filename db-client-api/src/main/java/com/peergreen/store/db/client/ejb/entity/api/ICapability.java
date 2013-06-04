@@ -8,7 +8,7 @@ import java.util.Map;
  */
 
 public interface ICapability {
-	
+
 
 	/**
 	 * Method to get the id of the capability instance
@@ -16,6 +16,20 @@ public interface ICapability {
 	 * @return the id of the capability
 	 */
 	int getCapabilityId() ;
+
+	/**
+	 * Method to get the namespace of the capability instance
+	 * 
+	 * @return the namespace of the capability
+	 */
+	String getNamespace();
+
+	/**
+	 * Method to set the id of the capability instance
+	 * 
+	 * @param namespace the namespace to set
+	 */
+	public void setNamespace(String namespace);
 
 	/**
 	 * Method for retrieve the properties of the capability instance

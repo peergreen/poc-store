@@ -27,27 +27,35 @@ public class Capability implements ICapability {
 	private int capabilityId;
 
 	private String namespace;
+
 	private Map<String, String> properties;
 
 	@JoinTable(name = "CAPABILITY_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "capabilityId", referencedColumnName = "capabilityId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
 	private Set<IPetal> petals;
-	
-	@Override
+
+	/**
+	 * Method to get the id of the capability instance
+	 * 
+	 * @return the id of the capability
+	 */
 	public int getCapabilityId() {
-		// TODO Auto-generated method stub
 		return this.capabilityId;
 	}
 
 	/**
-	 * @return the namespace
+	 * Method to get the namespace of the capability instance
+	 * 
+	 * @return the namespace of the capability
 	 */
 	public String getNamespace() {
 		return namespace;
 	}
 
 	/**
+	 * Method to set the id of the capability instance
+	 * 
 	 * @param namespace the namespace to set
 	 */
 	public void setNamespace(String namespace) {
@@ -55,13 +63,17 @@ public class Capability implements ICapability {
 	}
 
 	/**
-	 * @return the properties
+	 * Method for retrieve the properties of the capability instance
+	 * 
+	 * @return Map containing all the properties of the capability
 	 */
 	public Map<String, String> getProperties() {
 		return properties;
 	}
 
 	/**
+	 * Method for set the properties of the capability instance
+	 * 
 	 * @param properties the properties to set
 	 */
 	public void setProperties(Map<String, String> properties) {
@@ -69,18 +81,23 @@ public class Capability implements ICapability {
 	}
 
 	/**
-	 * @return the petals
+	 * Method to retrieve the petals which provides this capability instance
+	 * 
+	 * @return Set containing petals 
 	 */
 	public Set<IPetal> getPetals() {
 		return petals;
 	}
 
 	/**
-	 * @param petals the petals to set
+	 * Method for add others petals to the Set of petals which provides
+	 * this capability instance
+	 * 
+	 * @param petals Set containing petals to set
 	 */
 	public void setPetals(Set<IPetal> petals) {
 		this.petals = petals;
 	}
 
-	
+
 }
