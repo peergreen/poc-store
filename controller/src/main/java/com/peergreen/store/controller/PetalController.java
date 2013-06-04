@@ -1,6 +1,8 @@
 package com.peergreen.store.controller;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +14,7 @@ import org.apache.felix.ipojo.annotations.Provides;
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
@@ -19,6 +22,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
+import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 
 @Component
 @Instantiate
@@ -29,6 +33,7 @@ public class PetalController implements IPetalController {
     private ISessionCategory categorySession;
     private ISessionPetal petalSession;
     private ISessionRequirement requirementSession;
+    private ISessionVendor vendorSession;
     /** reference to the aether client for petal persistence */
     private IPetalsPersistence petalPersistence;
     /** reference to store management interface to permit
@@ -45,8 +50,15 @@ public class PetalController implements IPetalController {
      */
     @Override
     public Map<String, String> getPetalMetadata(Vendor vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO change <String, String> to <String, Object> to embbed requirements and capabilities
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+
+        HashMap<String, String> metadata = new HashMap<String, String>();
+        metadata.put("vendor", vendor.getVendorName());
+        metadata.put("artifactId", artifactId);
+        metadata.put("version", version);
+        
+        return metadata;
     }
 
     /**
@@ -97,8 +109,16 @@ public class PetalController implements IPetalController {
          * except admin group.
          * 
          */
-//        petalSession.
-        // TODO
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        List<Group> groups = (List<Group>) petalSession.collectGroups(petal);
+        Iterator<Group> it = groups.iterator();
+
+        while (it.hasNext()) {
+            Group group = it.next();
+            if (!group.getGroupname().equals("admin")) {
+                petalSession.removeAccesToGroup(petal, group);
+            }
+        }
     }
 
     /**
@@ -143,9 +163,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public List<Capability> collectCapabilities(Vendor vendor, String artifactId, String version) {
-        // TODO
-//        return petalSession.;
-        return null;
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return (List<Capability>) petalSession.collectCapabilities(petal);
     }
 
     /**
@@ -159,8 +178,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public Petal addCapability(Vendor vendor, String artifactId, String version, Capability capability) {
-        // TODO Auto-generated method stub
-        return null;
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return petalSession.addCapability(petal, capability);
     }
 
     /**
@@ -175,7 +194,7 @@ public class PetalController implements IPetalController {
     @Override
     public Petal removeCapability(Vendor vendor, String artifactId, String version, Capability capability) {
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-    	return petalSession.removeCapability(petal, capability);
+        return petalSession.removeCapability(petal, capability);
     }
 
     /**
@@ -198,7 +217,7 @@ public class PetalController implements IPetalController {
      */
     @Override
     public List<Requirement> collectRequirements(Vendor vendor, String artifactId, String version) {
-    	Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
         return (List<Requirement>) petalSession.collectRequirements(petal);
     }
 
@@ -213,8 +232,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public Petal addRequirement(Vendor vendor, String artifactId, String version, Requirement requirement) {
-        // TODO Auto-generated method stub
-        return null;
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return petalSession.addRequirement(petal, requirement);
     }
 
     /**
@@ -228,8 +247,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public Petal removeRequirement(Vendor vendor, String artifactId, String version, Requirement requirement) {
-        // TODO Auto-generated method stub
-        return null;
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return petalSession.removeRequirement(petal, requirement);
     }
 
     /**
@@ -239,8 +258,7 @@ public class PetalController implements IPetalController {
      */
     @Override
     public void createCategory(String categoryName) {
-        // TODO Auto-generated method stub
-
+        categorySession.addCategory(categoryName);
     }
 
     /**
@@ -253,8 +271,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public Category getCategory(Vendor vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return petalSession.getCategory(petal);
     }
 
     /**
@@ -268,8 +286,8 @@ public class PetalController implements IPetalController {
      */
     @Override
     public Petal setCategory(Vendor vendor, String artifactId, String version, Category category) {
-        // TODO Auto-generated method stub
-        return null;
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return petalSession.addCategory(petal, category);
     }
 
     /**
@@ -280,8 +298,7 @@ public class PetalController implements IPetalController {
      */
     @Override
     public void createVendor(String vendorName, String vendorDescription) {
-        // TODO Auto-generated method stub
-
+        vendorSession.addVendor(vendorName, vendorDescription);
     }
 
 }
