@@ -52,8 +52,7 @@ public class UserController implements IUserController {
 
     @Override
     public IUser modifyUser(String pseudo, String password, String email) {
-        IUser user = userSession.updateUser(pseudo, password, email);
-        return user;
+        return userSession.updateUser(pseudo, password, email);
     }
 
     @Override
