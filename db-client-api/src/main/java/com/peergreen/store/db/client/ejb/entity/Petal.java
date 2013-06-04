@@ -10,35 +10,29 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 @Entity
-public class Petal implements IPetal {
+public class Petal {
 
 	@EmbeddedId
 	private PetalId petalId;
 
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="categoryId", referencedColumnName="categoryId")
-	private ICategory category;
+	private Category category;
 
 	private String description;
 
 	@JoinTable(name = "PETALS_GROUPS_MAP",
 			joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
 			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
-	private Set<IGroup> groupSet;
+	private Set<Group> groupSet;
 
 	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private Set<IRequirement> requirements;
+	private Set<Requirement> requirements;
 	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private Set<ICapability> capabilities;
+	private Set<Capability> capabilities;
 
 
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
@@ -48,7 +42,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @return the vendor which provides the petal
 	 */
-	public IVendor getVendor() {
+	public Vendor getVendor() {
 		return this.petalId.getVendor();
 	}
 
@@ -57,7 +51,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @param vendor The vendor of the petal to set
 	 */
-	public void setVendor(IVendor vendor) {
+	public void setVendor(Vendor vendor) {
 		petalId.setVendor(vendor);
 	}
 
@@ -120,7 +114,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @return the category which belongs the petal
 	 */
-	public ICategory getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
@@ -129,7 +123,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @param category The category of the petal to set
 	 */
-	public void setCategory(ICategory category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
@@ -138,7 +132,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @return A Set of requirements of the petal instance
 	 */
-	public Set<IRequirement> getRequirements() {
+	public Set<Requirement> getRequirements() {
 		return requirements;
 	}
 
@@ -147,7 +141,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @param requirement A Set of requirements to add for the petal 
 	 */
-	public void setRequirements(Set<IRequirement> requirements) {
+	public void setRequirements(Set<Requirement> requirements) {
 		this.requirements = requirements;
 	}
 
@@ -156,7 +150,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @return A Set of capabilities of the petal instance
 	 */
-	public Set<ICapability> getCapabilities() {
+	public Set<Capability> getCapabilities() {
 		return capabilities;
 	}
 
@@ -165,7 +159,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @param capabilities A Set of capabilities to add for the petal 
 	 */
-	public void setCapabilities(Set<ICapability> capabilities) {
+	public void setCapabilities(Set<Capability> capabilities) {
 		this.capabilities = capabilities;
 	}
 
@@ -174,7 +168,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @return A Set of group which belongs the petal instance
 	 */
-	public Set<IGroup> getGroupSet() {
+	public Set<Group> getGroupSet() {
 		return groupSet;
 	}
 
@@ -183,7 +177,7 @@ public class Petal implements IPetal {
 	 * 
 	 * @param groupSet A Set of group to add for the petal 
 	 */
-	public void setGroupSet(Set<IGroup> groupSet) {
+	public void setGroupSet(Set<Group> groupSet) {
 		this.groupSet = groupSet;
 	}
 

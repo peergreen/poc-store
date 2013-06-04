@@ -2,21 +2,21 @@ package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.User;
 
 public interface ISessionUser {
     
-    IUser addUser(String pseudo, String password, String email);
-    IUser findUserByPseudo(String pseudo);
-    Collection <IUser> collectUsers();
+    User addUser(String pseudo, String password, String email);
+    User findUserByPseudo(String pseudo);
+    Collection <User> collectUsers();
     void deleteUserbyPseudo(String pseudo);
-    void deleteUser(IUser myUser);
-    IUser updateUser(String pseudo, String password, String email);
-    IUser addGroup(IGroup group);
-    IUser deleteGroup(IGroup group);
-    Collection<IGroup> collectGroups(String pseudo);
-    Collection<IPetal> collectPetals(String pseudo);
+    void deleteUser(User myUser);
+    User updateUser(String pseudo, String password, String email);
+    User addGroup(Group group);
+    User deleteGroup(Group group);
+    Collection<Group> collectGroups(String pseudo);
+    Collection<Petal> collectPetals(String pseudo);
 
 }

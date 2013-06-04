@@ -4,15 +4,15 @@ import java.util.Collection;
 
 import javax.ejb.Stateless;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 
 @Stateless
 public class DefaultCategory implements ISessionCategory{
 
     @Override
-    public com.peergreen.store.db.client.ejb.entity.api.ICategory addCategory(String name,
-            String version) {
+    public Category addCategory(String name, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -24,27 +24,28 @@ public class DefaultCategory implements ISessionCategory{
     }
 
     @Override
-    public com.peergreen.store.db.client.ejb.entity.api.ICategory findCategory(int categoryId) {
+    public Category findCategory(int categoryId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IPetal> collectPetals(int categoryId) {
+    public Collection<Petal> collectPetals(int categoryId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public com.peergreen.store.db.client.ejb.entity.api.ICategory addPetal(IPetal petal) {
+    public Category addPetal(Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public com.peergreen.store.db.client.ejb.entity.api.ICategory removePetal(IPetal petal) {
+    public Category removePetal(Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
+   
 }

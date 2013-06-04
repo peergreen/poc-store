@@ -10,15 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.SequenceGenerator;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-
 /**
  * Entity Bean representing in the database the requirement of a petal  
  */
 @Entity
 @SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
-public class Requirement implements IRequirement {
+public class Requirement {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
 	private int requirementId;
@@ -28,7 +25,7 @@ public class Requirement implements IRequirement {
 	@JoinTable(name = "REQUIREMENT_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "requirementId", referencedColumnName = "requirementId")},
 			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
-	private Set<IPetal> petals;
+	private Set<Petal> petals;
 
 	/**
 	 * Method to retrieve the requirement's Id
@@ -62,7 +59,7 @@ public class Requirement implements IRequirement {
 	 * 
 	 * @return A Set containing all the petals which had this requirement 
 	 */
-	public Set<IPetal> getPetals() {
+	public Set<Petal> getPetals() {
 		return petals;
 	}
 
@@ -71,7 +68,7 @@ public class Requirement implements IRequirement {
 	 * 
 	 * @param petals A Set of new petals that have this requirement
 	 */
-	public void setPetals(Set<IPetal> petals) {
+	public void setPetals(Set<Petal> petals) {
 		this.petals = petals;
 	}
 

@@ -2,17 +2,17 @@ package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 
 public interface ISessionVendor {
 
-	IVendor addVendor(String vendorName, String vendorDescription);
+	Vendor addVendor(String vendorName, String vendorDescription);
 	void deleteVendor(String vendorName);
-	IVendor findVendor(String vendorName);
-	Collection<IPetal> collectPetals(String vendorName);
-	IVendor addPetal(IPetal petal);
-	IVendor removePetal(IPetal petal);
+	Vendor findVendor(String vendorName);
+	Collection<Petal> collectPetals(String vendorName);
+	Vendor addPetal(Petal petal);
+	Vendor removePetal(Petal petal);
 
 }

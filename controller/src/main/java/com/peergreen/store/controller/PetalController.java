@@ -10,11 +10,11 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -44,7 +44,7 @@ public class PetalController implements IPetalController {
      * @return petal related metadata
      */
     @Override
-    public Map<String, String> getPetalMetadata(IVendor vendor, String artifactId, String version) {
+    public Map<String, String> getPetalMetadata(Vendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -58,7 +58,7 @@ public class PetalController implements IPetalController {
      * @return corresponding petal or <em>null</em> if not available
      */
     @Override
-    public IPetal getPetal(IVendor vendor, String artifactId, String version) {
+    public Petal getPetal(Vendor vendor, String artifactId, String version) {
         return petalSession.findPetal(vendor, artifactId, version);
     }
 
@@ -76,8 +76,8 @@ public class PetalController implements IPetalController {
      * @param petalBinary petal's binary
      */
     @Override
-    public void addPetal(IVendor vendor, String artifactId, String version, String description, ICategory category,
-            Set<IRequirement> requirements, Set<ICapability> capabilities, File petalBinary) {
+    public void addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
+            Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
         petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements);
         petalPersistence.addToLocal(vendor, artifactId, version, description, category, requirements, capabilities, petalBinary);
     }
@@ -90,7 +90,7 @@ public class PetalController implements IPetalController {
      * @param version petal's version
      */
     @Override
-    public void removePetal(IVendor vendor, String artifactId, String version) {
+    public void removePetal(Vendor vendor, String artifactId, String version) {
         /* 
          * Can't remove petal from Maven repository.
          * So remove all group's permission on it
@@ -116,8 +116,8 @@ public class PetalController implements IPetalController {
      * @return updated petal
      */
     @Override
-    public IPetal updatePetal(IVendor vendor, String artifactId, String version, String description,
-            ICategory category, Set<IRequirement> requirements, Set<ICapability> capabilities,
+    public Petal updatePetal(Vendor vendor, String artifactId, String version, String description,
+            Category category, Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary) {
         return null;
     }
@@ -142,7 +142,7 @@ public class PetalController implements IPetalController {
      * @return list of all the capabilities provided by a petal
      */
     @Override
-    public List<ICapability> collectCapabilities(IVendor vendor, String artifactId, String version) {
+    public List<Capability> collectCapabilities(Vendor vendor, String artifactId, String version) {
         // TODO
 //        return petalSession.;
         return null;
@@ -158,7 +158,7 @@ public class PetalController implements IPetalController {
      * @return updated petal
      */
     @Override
-    public IPetal addCapability(IVendor vendor, String artifactId, String version, ICapability capability) {
+    public Petal addCapability(Vendor vendor, String artifactId, String version, Capability capability) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -173,8 +173,8 @@ public class PetalController implements IPetalController {
      * @return updated petal
      */
     @Override
-    public IPetal removeCapability(IVendor vendor, String artifactId, String version, ICapability capability) {
-        IPetal petal = petalSession.findPetal(vendor, artifactId, version);
+    public Petal removeCapability(Vendor vendor, String artifactId, String version, Capability capability) {
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
     	return petalSession.removeCapability(petal, capability);
     }
 
@@ -197,9 +197,9 @@ public class PetalController implements IPetalController {
      * @param version petal's version
      */
     @Override
-    public List<IRequirement> collectRequirements(IVendor vendor, String artifactId, String version) {
-    	IPetal petal = petalSession.findPetal(vendor, artifactId, version);
-        return (List<IRequirement>) petalSession.collectRequirements(petal);
+    public List<Requirement> collectRequirements(Vendor vendor, String artifactId, String version) {
+    	Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        return (List<Requirement>) petalSession.collectRequirements(petal);
     }
 
     /**
@@ -212,7 +212,7 @@ public class PetalController implements IPetalController {
      * @return updated petal
      */
     @Override
-    public IPetal addRequirement(IVendor vendor, String artifactId, String version, IRequirement requirement) {
+    public Petal addRequirement(Vendor vendor, String artifactId, String version, Requirement requirement) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -227,7 +227,7 @@ public class PetalController implements IPetalController {
      * @return updated petal
      */
     @Override
-    public IPetal removeRequirement(IVendor vendor, String artifactId, String version, IRequirement requirement) {
+    public Petal removeRequirement(Vendor vendor, String artifactId, String version, Requirement requirement) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -252,7 +252,7 @@ public class PetalController implements IPetalController {
      * @return petal's category
      */
     @Override
-    public ICategory getCategory(IVendor vendor, String artifactId, String version) {
+    public Category getCategory(Vendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -267,7 +267,7 @@ public class PetalController implements IPetalController {
      * @return updated category
      */
     @Override
-    public IPetal setCategory(IVendor vendor, String artifactId, String version, ICategory category) {
+    public Petal setCategory(Vendor vendor, String artifactId, String version, Category category) {
         // TODO Auto-generated method stub
         return null;
     }

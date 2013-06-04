@@ -3,16 +3,16 @@ package com.peergreen.store.db.client.ejb.session.api;
 import java.util.Collection;
 import java.util.Map;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
 
 public interface ISessionRequirement {
 
-    IRequirement addRequirement(String namespace, Map<String, String> properties);
+    Requirement addRequirement(String namespace, Map<String, String> properties);
     void deleteRequirement (int requirementId);
-    IRequirement findRequirement (int requirementId);
-    Collection<IPetal> collectPetals(int requirementId);
-    IRequirement addPetal(IPetal petal);
-    IRequirement removePetal(IPetal petal);
+    Requirement findRequirement (int requirementId);
+    Collection<Petal> collectPetals(int requirementId);
+    Requirement addPetal(Petal petal);
+    Requirement removePetal(Petal petal);
 
 }

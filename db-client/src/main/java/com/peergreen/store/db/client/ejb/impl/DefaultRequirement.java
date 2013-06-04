@@ -3,14 +3,14 @@ package com.peergreen.store.db.client.ejb.impl;
 import java.util.Collection;
 import java.util.Map;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 
 public class DefaultRequirement implements ISessionRequirement {
 
     @Override
-    public IRequirement addRequirement(String namespace, Map<String, String> properties) {
+    public Requirement addRequirement(String namespace, Map<String, String> properties) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -22,25 +22,25 @@ public class DefaultRequirement implements ISessionRequirement {
     }
 
     @Override
-    public IRequirement findRequirement(int requirementId) {
+    public Requirement findRequirement(int requirementId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IPetal> collectPetals(int requirementId) {
+    public Collection<Petal> collectPetals(int requirementId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public IRequirement addPetal(IPetal petal) {
+    public Requirement addPetal(Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public IRequirement removePetal(IPetal petal) {
+    public Requirement removePetal(Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }

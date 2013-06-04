@@ -4,18 +4,17 @@ import java.io.Serializable;
 
 import javax.persistence.Embeddable;
 
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
-import com.peergreen.store.db.client.ejb.key.primary.api.IPetalId;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 @Embeddable
-public class PetalId implements IPetalId, Serializable {
+public class PetalId implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private IVendor vendor;
+	private Vendor vendor;
 	private String artifactId;
 	private String version; 
 
@@ -23,7 +22,7 @@ public class PetalId implements IPetalId, Serializable {
 		
 	}
 	
-	public PetalId(IVendor vendor, String artifactId,String version){
+	public PetalId(Vendor vendor, String artifactId,String version){
 		this.vendor = vendor;
 		this.artifactId = artifactId;
 		this.version = version;
@@ -35,7 +34,7 @@ public class PetalId implements IPetalId, Serializable {
 	 * 
 	 * @param vendor the vendor to set for the petal
 	 */
-	public void setVendor(IVendor vendor2) {
+	public void setVendor(Vendor vendor2) {
 		this.vendor = vendor2;
 	}
 
@@ -62,7 +61,7 @@ public class PetalId implements IPetalId, Serializable {
 	 * 
 	 * @return the vendor of the petal
 	 */
-	public IVendor getVendor()
+	public Vendor getVendor()
 	{
 		return this.vendor;
 	}

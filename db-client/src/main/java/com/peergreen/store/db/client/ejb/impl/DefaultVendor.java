@@ -2,14 +2,14 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 
 public class DefaultVendor implements ISessionVendor {
 
 	@Override
-	public IVendor addVendor(String vendorName, String vendorDescription) {
+	public Vendor addVendor(String vendorName, String vendorDescription) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -21,25 +21,25 @@ public class DefaultVendor implements ISessionVendor {
 	}
 
 	@Override
-	public IVendor findVendor(String vendorName) {
+	public Vendor findVendor(String vendorName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<IPetal> collectPetals(String vendorName) {
+	public Collection<Petal> collectPetals(String vendorName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IVendor addPetal(IPetal petal) {
+	public Vendor addPetal(Petal petal) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IVendor removePetal(IPetal petal) {
+	public Vendor removePetal(Petal petal) {
 		// TODO Auto-generated method stub
 		return null;
 	}

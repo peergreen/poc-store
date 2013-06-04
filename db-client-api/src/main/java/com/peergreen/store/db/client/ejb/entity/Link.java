@@ -6,14 +6,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
-import com.peergreen.store.db.client.ejb.entity.api.ILink;
-
 /**
  * Entity Bean representing in the database a link between two stores
  */
 @Entity
 @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
-public class Link implements ILink {
+public class Link {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
 	private int linkId;

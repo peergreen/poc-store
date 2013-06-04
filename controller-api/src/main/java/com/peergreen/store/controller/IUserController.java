@@ -3,8 +3,8 @@ package com.peergreen.store.controller;
 import java.util.List;
 import java.util.Map;
 
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.User;
 
 /**
  * Interface defining all user related operations:
@@ -34,7 +34,7 @@ public interface IUserController {
      * @param pseudo user's pseudo
      * @return corresponding User instance
      */
-    IUser getUser(String pseudo);
+    User getUser(String pseudo);
     
     /**
      * Method to add a new user to the database.
@@ -60,7 +60,7 @@ public interface IUserController {
      * @param email user's email
      * @return modified user
      */
-    IUser modifyUser(String pseudo, String password, String email);
+    User modifyUser(String pseudo, String password, String email);
     
     /**
      * Method to collect all user's groups.
@@ -68,6 +68,6 @@ public interface IUserController {
      * @param pseudo user's pseudo
      * @return list of all user's groups
      */
-    List<IGroup> collectGroups(String pseudo);
+    List<Group> collectGroups(String pseudo);
     
 }

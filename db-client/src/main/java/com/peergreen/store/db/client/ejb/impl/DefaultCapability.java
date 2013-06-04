@@ -5,15 +5,15 @@ import java.util.Map;
 
 import javax.ejb.Stateless;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 
 @Stateless
 public class DefaultCapability implements ISessionCapability{
 
     @Override
-    public ICapability addCapability(String namespace, Map<String, String> properties) {
+    public Capability addCapability(String namespace, Map<String, String> properties) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -25,29 +25,28 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     @Override
-    public ICapability findCapability(int capabilityId) {
+    public Capability findCapability(int capabilityId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IPetal> collectPetals(int capabilityId) {
+    public Collection<Petal> collectPetals(int capabilityId) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public ICapability addPetal(IPetal petal) {
+    public Capability addPetal(Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public ICapability removePetal(IPetal petal) {
+    public Capability removePetal(Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
    
-
 }

@@ -7,11 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
-
 @Entity
-public class Vendor implements IVendor {
+public class Vendor {
 
 	@Id
 	private String vendorName;
@@ -19,7 +16,7 @@ public class Vendor implements IVendor {
 	private String vendorDescription;
 
 	@OneToMany(mappedBy="vendor", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private Set<IPetal> petals;
+	private Set<Petal> petals;
 
 
 	/**
@@ -63,7 +60,7 @@ public class Vendor implements IVendor {
 	 * 
 	 * @return Set containing petals that are provided by the vendor instance
 	 */
-	public Set<IPetal> getPetals() {
+	public Set<Petal> getPetals() {
 		return petals;
 	}
 
@@ -72,7 +69,7 @@ public class Vendor implements IVendor {
 	 * 
 	 * @param petals Set containing the petals to set
 	 */
-	public void setPetals(Set<IPetal> petals) {
+	public void setPetals(Set<Petal> petals) {
 		this.petals = petals;
 	}
 

@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.controller.UserController;
 import com.peergreen.store.db.client.ejb.entity.User;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 public class UserControllerTestCase {
@@ -37,7 +36,7 @@ public class UserControllerTestCase {
         u.setEmail("toto@turc.fr");
         doReturn(u).when(userSession).findUserByPseudo(PSEUDO);
         
-        IUser u2 = userSession.findUserByPseudo(PSEUDO);
+        User u2 = userSession.findUserByPseudo(PSEUDO);
         Assert.assertTrue(u2 != null && u2.getPseudo().equals(PSEUDO));
     }
     

@@ -3,11 +3,11 @@ package com.peergreen.store.aether.client;
 import java.io.File;
 import java.util.Set;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 
 /**
@@ -33,7 +33,7 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return petal's binary
      */
-    File getPetal(IVendor vendor, String artifactId, String version);
+    File getPetal(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to add a petal to the local repository
@@ -48,13 +48,13 @@ public interface IPetalsPersistence
      * @param petal petal's binary
      */
     void addToLocal(
-            IVendor vendor,
+            Vendor vendor,
             String artifactId,
             String version,
             String description,
-            ICategory category,
-            Set<IRequirement> requirements,
-            Set<ICapability> capabilities,
+            Category category,
+            Set<Requirement> requirements,
+            Set<Capability> capabilities,
             File petal);
 
     /**
@@ -65,7 +65,7 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return corresponding petal
      */
-    IPetal getPetalFromLocal(IVendor vendor, String artifactId, String version);
+    Petal getPetalFromLocal(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to add a petal to the staging repository
@@ -80,13 +80,13 @@ public interface IPetalsPersistence
      * @param petal petal's binary
      */
     void addToStaging(
-            IVendor vendor,
+            Vendor vendor,
             String artifactId,
             String version,
             String description,
-            ICategory category,
-            Set<IRequirement> requirements,
-            Set<ICapability> capabilities,
+            Category category,
+            Set<Requirement> requirements,
+            Set<Capability> capabilities,
             File petal);
 
     /**
@@ -97,5 +97,5 @@ public interface IPetalsPersistence
      * @param version petal's version
      * @return corresponding petal
      */
-    IPetal getPetalFromStaging(IVendor vendor, String artifactId, String version);
+    Petal getPetalFromStaging(Vendor vendor, String artifactId, String version);
 }

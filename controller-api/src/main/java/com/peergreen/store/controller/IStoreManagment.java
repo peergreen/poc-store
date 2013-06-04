@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.List;
 import java.util.Set;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.ILink;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Link;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.User;
 
 /**
  * Interface defining high level operations to manage server.
@@ -47,7 +47,7 @@ public interface IStoreManagment {
      * 
      * @return list of all existing links in database
      */
-    List<ILink> collectLinks();
+    List<Link> collectLinks();
 
     /**
      * Method to collect available petals.<br />
@@ -55,7 +55,7 @@ public interface IStoreManagment {
      * 
      * @return list of available petals
      */
-    List<IPetal> collectPetals();
+    List<Petal> collectPetals();
 
     /**
      * Method to collect available petals.<br />
@@ -63,35 +63,35 @@ public interface IStoreManagment {
      * 
      * @return list of available petals for a specific user
      */
-    List<IPetal> collectPetalsForUser(String pseudo);
+    List<Petal> collectPetalsForUser(String pseudo);
 
     /**
      * Method to collect petals in the staging repository.
      * 
      * @return list of available petals in staging repository
      */
-    List<IPetal> collectPetalsFromStaging();
+    List<Petal> collectPetalsFromStaging();
 
     /**
      * Method to collect petals in the local repository.
      * 
      * @return list of available petals in local repository
      */
-    List<IPetal> collectPetalsFromLocal();
+    List<Petal> collectPetalsFromLocal();
 
     /**
      * Method to collect all existing users on database.
      * 
      * @return list of all database's users
      */
-    List<IUser> collectUsers();
+    List<User> collectUsers();
 
     /**
      * Method to collect all existing groups on database.
      * 
      * @return list of all database's groups
      */
-    List<IGroup> collectGroups();
+    List<Group> collectGroups();
 
     /**
      * Method to submit a petal for an add in the store.<br />
@@ -107,8 +107,8 @@ public interface IStoreManagment {
      * @param petalBinary petal's binary file
      */
     void submitPetal(String groupId, String artifactId,
-            String version, String description, ICategory category,
-            Set<IRequirement> requirements, Set<ICapability> capabilities,
+            String version, String description, Category category,
+            Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary);
 
     /**

@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.Set;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 
 /**
@@ -34,7 +34,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return petal's binary
      */
     @Override
-    public File getPetal(IVendor vendor, String artifactId, String version) {
+    public File getPetal(Vendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -53,8 +53,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToLocal(IVendor vendor, String artifactId, String version, String description, ICategory category,
-            Set<IRequirement> requirements, Set<ICapability> capabilities, File petal) {
+    public void addToLocal(Vendor vendor, String artifactId, String version, String description, Category category,
+            Set<Requirement> requirements, Set<Capability> capabilities, File petal) {
         // TODO Auto-generated method stub
         
     }
@@ -68,7 +68,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal
      */
     @Override
-    public IPetal getPetalFromLocal(IVendor vendor, String artifactId, String version) {
+    public Petal getPetalFromLocal(Vendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -87,8 +87,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param petal petal's binary
      */
     @Override
-    public void addToStaging(IVendor vendor, String artifactId, String version, String description, ICategory category,
-            Set<IRequirement> requirements, Set<ICapability> capabilities, File petal) {
+    public void addToStaging(Vendor vendor, String artifactId, String version, String description, Category category,
+            Set<Requirement> requirements, Set<Capability> capabilities, File petal) {
         // TODO Auto-generated method stub
         
     }
@@ -102,7 +102,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal
      */
     @Override
-    public IPetal getPetalFromStaging(IVendor vendor, String artifactId, String version) {
+    public Petal getPetalFromStaging(Vendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }

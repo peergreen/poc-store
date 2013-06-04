@@ -2,8 +2,8 @@ package com.peergreen.store.controller;
 
 import java.util.List;
 
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.User;
 
 public interface IGroupController {
 
@@ -20,7 +20,7 @@ public interface IGroupController {
      * @param groupName group's name
      * @return
      */
-    IGroup modifyGroup(String groupName);
+    Group modifyGroup(String groupName);
     
     /**
      * Method to remove a group from the database.
@@ -35,7 +35,7 @@ public interface IGroupController {
      * @param groupName group's name
      * @return list of all the group's users
      */
-    List<IUser> collectUsers(String groupName);
+    List<User> collectUsers(String groupName);
     
     /**
      * Method to add a user to a group.

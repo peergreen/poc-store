@@ -4,28 +4,28 @@ import java.util.Collection;
 
 import javax.ejb.Stateless;
 
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 @Stateless
 public class DefaultUser implements ISessionUser {
 
     @Override
-    public IUser addUser(String pseudo, String password, String email) {
+    public User addUser(String pseudo, String password, String email) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public IUser findUserByPseudo(String pseudo) {
+    public User findUserByPseudo(String pseudo) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IUser> collectUsers() {
+    public Collection<User> collectUsers() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -37,37 +37,37 @@ public class DefaultUser implements ISessionUser {
     }
 
     @Override
-    public void deleteUser(IUser myUser) {
+    public void deleteUser(User myUser) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public IUser updateUser(String pseudo, String password, String email) {
+    public User updateUser(String pseudo, String password, String email) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public IUser addGroup(IGroup group) {
+    public User addGroup(Group group) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public IUser deleteGroup(IGroup group) {
+    public User deleteGroup(Group group) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IGroup> collectGroups(String pseudo) {
+    public Collection<Group> collectGroups(String pseudo) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<IPetal> collectPetals(String pseudo) {
+    public Collection<Petal> collectPetals(String pseudo) {
         // TODO Auto-generated method stub
         return null;
     }

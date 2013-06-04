@@ -2,112 +2,112 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
-import com.peergreen.store.db.client.ejb.key.primary.api.IPetalId;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 
 
 public class DefaultPetal implements ISessionPetal {
 
 	@Override
-	public IPetal addPetal(IPetalId petalId, String description,
-			ICategory category, Collection<ICapability> capabilities,
-			Collection<IRequirement> requirements) {
+	public Petal addPetal(PetalId petalId, String description,
+			Category category, Collection<Capability> capabilities,
+			Collection<Requirement> requirements) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal addPetal(IVendor vendor, String artifactId, String version,
-			String description, ICategory category,
-			Collection<ICapability> capabilities,
-			Collection<IRequirement> requirements) {
+	public Petal addPetal(Vendor vendor, String artifactId, String version,
+			String description, Category category,
+			Collection<Capability> capabilities,
+			Collection<Requirement> requirements) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal findPetal(IPetalId petalId) {
+	public Petal findPetal(PetalId petalId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal findPetal(IVendor vendor, String artifactId, String version) {
+	public Petal findPetal(Vendor vendor, String artifactId, String version) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<IGroup> collectGroups(IPetal petal) {
+	public Collection<Group> collectGroups(Petal petal) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<ICapability> collectCapabilities(IPetal petal) {
+	public Collection<Capability> collectCapabilities(Petal petal) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<IRequirement> collectRequirements(IPetal petal) {
+	public Collection<Requirement> collectRequirements(Petal petal) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal updatePetal(IVendor vendor, String artifactId,
-			String version, String description, ICategory category,
-			Collection<ICapability> capabilities,
-			Collection<IRequirement> requirements) {
+	public Petal updatePetal(Vendor vendor, String artifactId,
+			String version, String description, Category category,
+			Collection<Capability> capabilities,
+			Collection<Requirement> requirements) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void deletePetal(IPetal petal) {
+	public void deletePetal(Petal petal) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public IPetal giveAccesToGroup(IPetal petal, IGroup group) {
+	public Petal giveAccesToGroup(Petal petal, Group group) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeAccesToGroup(IPetal petal, IGroup group) {
+	public Petal removeAccesToGroup(Petal petal, Group group) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal addCapability(IPetal petal, ICapability capability) {
+	public Petal addCapability(Petal petal, Capability capability) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeCapability(IPetal petal, ICapability capability) {
+	public Petal removeCapability(Petal petal, Capability capability) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal addRequirement(IPetal petal, IRequirement requirement) {
+	public Petal addRequirement(Petal petal, Requirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeRequirement(IPetal petal, IRequirement requirement) {
+	public Petal removeRequirement(Petal petal, Requirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}

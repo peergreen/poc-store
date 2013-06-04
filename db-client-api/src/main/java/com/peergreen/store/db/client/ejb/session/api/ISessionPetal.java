@@ -2,49 +2,49 @@ package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICapability;
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
-import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
-import com.peergreen.store.db.client.ejb.entity.api.IVendor;
-import com.peergreen.store.db.client.ejb.key.primary.api.IPetalId;
+import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 public interface ISessionPetal {
 
-	IPetal addPetal(IPetalId petalId, String description, ICategory category, 
-			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
+	Petal addPetal(PetalId petalId, String description, Category category, 
+			Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-	IPetal addPetal(IVendor vendor, String artifactId, 
-			String version, String description, ICategory category, 
-			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
+	Petal addPetal(Vendor vendor, String artifactId, 
+			String version, String description, Category category, 
+			Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-	IPetal findPetal(IPetalId petalId);
+	Petal findPetal(PetalId petalId);
 
-	IPetal findPetal(IVendor vendor, String artifactId,String version);
+	Petal findPetal(Vendor vendor, String artifactId,String version);
 	
-	Collection<IGroup> collectGroups(IPetal petal); 
+	Collection<Group> collectGroups(Petal petal); 
 	
-	Collection<ICapability> collectCapabilities(IPetal petal); 
+	Collection<Capability> collectCapabilities(Petal petal); 
 		
-	Collection<IRequirement> collectRequirements(IPetal petal); 
+	Collection<Requirement> collectRequirements(Petal petal); 
 
-	IPetal updatePetal(IVendor vendor, String artifactId, 
-			String version, String description, ICategory category, 
-			Collection<ICapability> capabilities, Collection<IRequirement> requirements);
+	Petal updatePetal(Vendor vendor, String artifactId, 
+			String version, String description, Category category, 
+			Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-	void deletePetal(IPetal petal); 
+	void deletePetal(Petal petal); 
 
-	IPetal giveAccesToGroup(IPetal petal, IGroup group);
+	Petal giveAccesToGroup(Petal petal, Group group);
 
-	IPetal removeAccesToGroup(IPetal petal, IGroup group);
+	Petal removeAccesToGroup(Petal petal, Group group);
 
-	IPetal addCapability(IPetal petal, ICapability capability);
+	Petal addCapability(Petal petal, Capability capability);
 	
-	IPetal removeCapability(IPetal petal, ICapability capability);
+	Petal removeCapability(Petal petal, Capability capability);
 
-	IPetal addRequirement(IPetal petal, IRequirement requirement);
+	Petal addRequirement(Petal petal, Requirement requirement);
 
-	IPetal removeRequirement(IPetal petal, IRequirement requirement);
+	Petal removeRequirement(Petal petal, Requirement requirement);
 
 }

@@ -10,16 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
-import com.peergreen.store.db.client.ejb.entity.api.ICategory;
-import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 
 /**
  * Entity Bean representing the category of a petal  
  */
-
 @Entity
 @SequenceGenerator(name="idCategorySeq", initialValue=1, allocationSize=50)
-public class Category implements ICategory {
+public class Category{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
@@ -28,7 +26,7 @@ public class Category implements ICategory {
 	private String categoryname;
 
 	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private Set<IPetal> petals;
+	private Set<Petal> petals;
 
 	/**
 	 * Method to retrieve the id of the category instance
@@ -62,7 +60,7 @@ public class Category implements ICategory {
 	 * 
 	 * @return Set containing petals that belongs to this category
 	 */
-	public Set<IPetal> getPetals() {
+	public Set<Petal> getPetals() {
 		return petals;
 	}
 
@@ -73,7 +71,7 @@ public class Category implements ICategory {
 	 *//**
 	 * @param petals the petals to set
 	 */
-	public void setPetals(Set<IPetal> petals) {
+	public void setPetals(Set<Petal> petals) {
 		this.petals = petals;
 	}
 }

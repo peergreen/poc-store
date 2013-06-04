@@ -9,8 +9,8 @@ import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
+import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 @Component
@@ -32,7 +32,7 @@ public class UserController implements IUserController {
      */
     @Override
     public Map<String, String> getUserMetadata(String pseudo) {
-        IUser user = userSession.findUserByPseudo(pseudo);
+        User user = userSession.findUserByPseudo(pseudo);
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("pseudo", user.getPseudo());
         metadata.put("password", user.getPassword());
@@ -48,7 +48,7 @@ public class UserController implements IUserController {
      * @return corresponding User instance
      */
     @Override
-    public IUser getUser(String pseudo) {
+    public User getUser(String pseudo) {
         return userSession.findUserByPseudo(pseudo);
     }
 
@@ -83,7 +83,7 @@ public class UserController implements IUserController {
      * @return modified user
      */
     @Override
-    public IUser modifyUser(String pseudo, String password, String email) {
+    public User modifyUser(String pseudo, String password, String email) {
         return userSession.updateUser(pseudo, password, email);
     }
 
@@ -94,8 +94,8 @@ public class UserController implements IUserController {
      * @return list of all user's groups
      */
     @Override
-    public List<IGroup> collectGroups(String pseudo) {
-        return (List<IGroup>) userSession.collectGroups(pseudo);
+    public List<Group> collectGroups(String pseudo) {
+        return (List<Group>) userSession.collectGroups(pseudo);
     }
 
 }

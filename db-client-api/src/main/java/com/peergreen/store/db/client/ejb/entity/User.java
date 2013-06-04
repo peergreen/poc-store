@@ -8,14 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 
-import com.peergreen.store.db.client.ejb.entity.api.IGroup;
-import com.peergreen.store.db.client.ejb.entity.api.IUser;
-
 /**
  * Entity Bean representing in the database the user
  */
 @Entity
-public class User implements IUser {
+public class User {
 
 	@Id
 	private String pseudo;
@@ -27,7 +24,7 @@ public class User implements IUser {
 	@JoinTable(name = "USERS_GROUPS_MAP",
 			joinColumns = {@JoinColumn(name = "personnePseudo", referencedColumnName = "pseudo")},
 			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
-	private Set<IGroup> groupSet;
+	private Set<Group> groupSet;
 
 	/**
 	 * Method to get the user's pseudonyme
@@ -88,7 +85,7 @@ public class User implements IUser {
 	 * 
 	 * @return A Set containing all the groups to which the user belongs
 	 */
-	public Set<IGroup> getGroupSet() {
+	public Set<Group> getGroupSet() {
 		return groupSet;
 	}
 
@@ -97,7 +94,7 @@ public class User implements IUser {
 	 * 
 	 * @param groupSet A Set of new group to which the user is added
 	 */
-	public void setGroupSet(Set<IGroup> groupSet) {
+	public void setGroupSet(Set<Group> groupSet) {
 		this.groupSet = groupSet;
 	} 
 
