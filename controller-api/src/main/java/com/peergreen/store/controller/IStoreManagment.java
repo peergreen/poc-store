@@ -17,8 +17,12 @@ import com.peergreen.store.db.client.ejb.entity.api.IUser;
  * <p>
  * Provided functionalities:
  * <ul>
- *     <li>Petal submission</li>
- *     <li>Petal submission validation</li>
+ *      <li>Add, remove and retrieve links to remote stores</li>
+ *      <li>Retrieve available petals for a specific user,
+ *          from local store or from staging store</li>
+ *      <li>Retrieve all users</li>
+ *      <li>Retrieve all groups</li>
+ *      <li>Petal submission and validation</li>
  * </ul>
  */
 public interface IStoreManagment {
