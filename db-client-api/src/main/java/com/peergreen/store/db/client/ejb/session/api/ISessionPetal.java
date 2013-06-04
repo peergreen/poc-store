@@ -22,8 +22,10 @@ public interface ISessionPetal {
 	IPetal findPetal(IPetalId petalId);
 
 	IPetal findPetal(IVendor vendor, String artifactId,String version);
+	
+	Collection<IGroup> collectGroups(IPetalId petalId); 
 
-	Collection <IPetal> collectPetalsByGroup(IGroup group); 
+	Collection<IGroup> collectGroups(IVendor vendor, String artifactId,String version); 
 
 	IPetal updatePetal(IVendor vendor, String artifactId, 
 			String version, String description, ICategory category, 

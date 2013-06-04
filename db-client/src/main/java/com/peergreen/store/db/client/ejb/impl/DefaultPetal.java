@@ -44,12 +44,6 @@ public class DefaultPetal implements ISessionPetal {
 	}
 
 	@Override
-	public Collection<IPetal> collectPetalsByGroup(IGroup group) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public IPetal updatePetal(IVendor vendor, String artifactId,
 			String version, String description, ICategory category,
 			Collection<ICapability> capabilities,
@@ -61,13 +55,13 @@ public class DefaultPetal implements ISessionPetal {
 	@Override
 	public void deletePetal(IPetalId petalId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deletePetal(IVendor vendor, String artifactId, String version) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -106,6 +100,19 @@ public class DefaultPetal implements ISessionPetal {
 		return null;
 	}
 
-	
+	@Override
+	public Collection<IGroup> collectGroups(IPetalId petalId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<IGroup> collectGroups(IVendor vendor, String artifactId,
+			String version) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }
