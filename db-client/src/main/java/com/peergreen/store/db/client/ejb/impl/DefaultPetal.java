@@ -6,10 +6,10 @@ import com.peergreen.store.db.client.ejb.entity.api.ICapability;
 import com.peergreen.store.db.client.ejb.entity.api.ICategory;
 import com.peergreen.store.db.client.ejb.entity.api.IGroup;
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
+import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
 import com.peergreen.store.db.client.ejb.entity.api.IVendor;
 import com.peergreen.store.db.client.ejb.key.primary.api.IPetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
-import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 
 
 public class DefaultPetal implements ISessionPetal {
@@ -17,7 +17,7 @@ public class DefaultPetal implements ISessionPetal {
 	@Override
 	public IPetal addPetal(IPetalId petalId, String description,
 			ICategory category, Collection<ICapability> capabilities,
-			Collection<ISessionRequirement> requirements) {
+			Collection<IRequirement> requirements) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -26,7 +26,7 @@ public class DefaultPetal implements ISessionPetal {
 	public IPetal addPetal(IVendor vendor, String artifactId, String version,
 			String description, ICategory category,
 			Collection<ICapability> capabilities,
-			Collection<ISessionRequirement> requirements) {
+			Collection<IRequirement> requirements) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -53,7 +53,7 @@ public class DefaultPetal implements ISessionPetal {
 	public IPetal updatePetal(IVendor vendor, String artifactId,
 			String version, String description, ICategory category,
 			Collection<ICapability> capabilities,
-			Collection<ISessionRequirement> requirements) {
+			Collection<IRequirement> requirements) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -95,13 +95,13 @@ public class DefaultPetal implements ISessionPetal {
 	}
 
 	@Override
-	public IPetal addRequirement(ISessionRequirement requirement) {
+	public IPetal addRequirement(IRequirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IPetal removeRequirement(ISessionRequirement requirement) {
+	public IPetal removeRequirement(IRequirement requirement) {
 		// TODO Auto-generated method stub
 		return null;
 	}
