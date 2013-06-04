@@ -23,10 +23,13 @@ public class Petal implements IPetal {
 
 	@EmbeddedId
 	private PetalId petalId;
+	
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="categoryId", referencedColumnName="categoryId")
 	private ICategory category;
 
+	private String description;
+	
 	@JoinTable(name = "PETALS_GROUPS_MAP",
 			joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
 			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
