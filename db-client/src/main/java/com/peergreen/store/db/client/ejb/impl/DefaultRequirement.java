@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.api.IPetal;
 import com.peergreen.store.db.client.ejb.entity.api.IRequirement;
@@ -9,7 +10,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 public class DefaultRequirement implements ISessionRequirement {
 
     @Override
-    public IRequirement addRequirement(String namespace, Collection<String> properties) {
+    public IRequirement addRequirement(String namespace, Map<String, String> properties) {
         // TODO Auto-generated method stub
         return null;
     }
