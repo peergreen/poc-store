@@ -12,7 +12,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 public class DefaultCategory implements ISessionCategory{
 
     @Override
-    public Category addCategory(String name, String version) {
+    public Category addCategory(String name) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -47,5 +47,4 @@ public class DefaultCategory implements ISessionCategory{
         return null;
     }
 
-   
 }

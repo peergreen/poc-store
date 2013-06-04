@@ -7,11 +7,11 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 
 public interface ISessionCategory {
 
-    Category addCategory(String name, String version);
+    Category addCategory(String name);
     void deleteCategory(int categoryId);
     Category findCategory(int categoryId);
     Collection<Petal> collectPetals(int categoryId);
     Category addPetal(Petal petal);
     Category removePetal(Petal petal);
-    
+
 }
