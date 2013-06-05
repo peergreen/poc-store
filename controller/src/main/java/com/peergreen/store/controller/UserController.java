@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -110,4 +111,8 @@ public class UserController implements IUserController {
         return userSession.collectGroups(pseudo);
     }
 
+    @Bind
+    private void bindUserSession(ISessionUser userSession) {
+        this.userSession = userSession;
+    }
 }
