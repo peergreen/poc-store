@@ -12,14 +12,16 @@ public class DefaultLink implements ISessionLink {
     }
 
     @Override
-    public void deleteLink(int linkId) {
+    public void deleteLink(String linkUrl) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public Link findLink(int linkId) {
+    public Link findLink(String linkUrl) {
         // TODO Auto-generated method stub
         return null;
     }
+
+    
 }
