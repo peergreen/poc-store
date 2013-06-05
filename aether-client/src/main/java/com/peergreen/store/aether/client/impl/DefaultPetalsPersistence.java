@@ -1,15 +1,8 @@
 package com.peergreen.store.aether.client.impl;
 
 import java.io.File;
-import java.util.Set;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
-import com.peergreen.store.db.client.ejb.entity.Capability;
-import com.peergreen.store.db.client.ejb.entity.Category;
-import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.entity.Requirement;
-import com.peergreen.store.db.client.ejb.entity.Vendor;
-
 
 /**
  * Class to handle petal's persistence relative functionalities.<br />
@@ -35,7 +28,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public File getPetal(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
+        // TODO
         return null;
     }
 
@@ -62,7 +55,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal
      */
     @Override
-    public Petal getPetalFromLocal(String vendor, String artifactId, String version) {
+    public File getPetalFromLocal(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -90,7 +83,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal
      */
     @Override
-    public Petal getPetalFromStaging(String vendor, String artifactId, String version) {
+    public File getPetalFromStaging(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }

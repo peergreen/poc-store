@@ -2,9 +2,6 @@ package com.peergreen.store.aether.client;
 
 import java.io.File;
 
-import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.entity.Vendor;
-
 
 /**
  * Interface defining petal's persistence relative functionalities.
@@ -51,9 +48,9 @@ public interface IPetalsPersistence
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @return corresponding petal
+     * @return corresponding petal's binary
      */
-    Petal getPetalFromLocal(String vendor, String artifactId, String version);
+    File getPetalFromLocal(String vendor, String artifactId, String version);
 
     /**
      * Method to add a petal to the staging repository
@@ -75,7 +72,7 @@ public interface IPetalsPersistence
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @return corresponding petal
+     * @return corresponding petal's binary
      */
-    Petal getPetalFromStaging(String vendor, String artifactId, String version);
+    File getPetalFromStaging(String vendor, String artifactId, String version);
 }
