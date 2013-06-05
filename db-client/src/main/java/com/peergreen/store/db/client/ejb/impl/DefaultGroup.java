@@ -22,7 +22,7 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Group updateGroup(String groupName) {
+    public Group updateGroup(String oldGroupName, String groupName) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -34,13 +34,13 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Group addUser(User myUser) {
+    public Group addUser(Group group, User myUser) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Group deleteUserbyPseudo(String pseudo) {
+    public Group removeUser(Group group, User user) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -52,13 +52,13 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     @Override
-    public Group addPetal(Petal petal) {
+    public Group addPetal(Group group, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Group deletePetalById(int petalId) {
+    public Group removePetal(Group group, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -70,5 +70,4 @@ public class DefaultGroup implements ISessionGroup {
     }
 
   
-    
 }
