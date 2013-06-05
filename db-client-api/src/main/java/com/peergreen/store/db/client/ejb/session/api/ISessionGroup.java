@@ -5,7 +5,6 @@ import java.util.Collection;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
-import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 public interface ISessionGroup {
 
