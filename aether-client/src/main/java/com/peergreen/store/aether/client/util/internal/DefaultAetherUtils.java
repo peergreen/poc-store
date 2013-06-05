@@ -20,7 +20,7 @@ import com.peergreen.store.aether.client.util.IAetherUtils;
 @Component
 @Instantiate
 @Provides
-public class DeafultAetherUtils implements IAetherUtils {
+public class DefaultAetherUtils implements IAetherUtils {
 
     private String path;
     
