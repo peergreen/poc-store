@@ -1,7 +1,7 @@
 package com.peergreen.store.controller;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
@@ -47,7 +47,7 @@ public interface IStoreManagment {
      * 
      * @return list of all existing links in database
      */
-    List<Link> collectLinks();
+    Collection<Link> collectLinks();
 
     /**
      * Method to collect available petals.<br />
@@ -55,7 +55,7 @@ public interface IStoreManagment {
      * 
      * @return list of available petals
      */
-    List<Petal> collectPetals();
+    Collection<Petal> collectPetals();
 
     /**
      * Method to collect available petals.<br />
@@ -63,35 +63,35 @@ public interface IStoreManagment {
      * 
      * @return list of available petals for a specific user
      */
-    List<Petal> collectPetalsForUser(String pseudo);
+    Collection<Petal> collectPetalsForUser(String pseudo);
 
     /**
      * Method to collect petals in the staging repository.
      * 
      * @return list of available petals in staging repository
      */
-    List<Petal> collectPetalsFromStaging();
+    Collection<Petal> collectPetalsFromStaging();
 
     /**
      * Method to collect petals in the local repository.
      * 
      * @return list of available petals in local repository
      */
-    List<Petal> collectPetalsFromLocal();
+    Collection<Petal> collectPetalsFromLocal();
 
     /**
      * Method to collect all existing users on database.
      * 
      * @return list of all database's users
      */
-    List<User> collectUsers();
+    Collection<User> collectUsers();
 
     /**
      * Method to collect all existing groups on database.
      * 
      * @return list of all database's groups
      */
-    List<Group> collectGroups();
+    Collection<Group> collectGroups();
 
     /**
      * Method to submit a petal for an add in the store.<br />
