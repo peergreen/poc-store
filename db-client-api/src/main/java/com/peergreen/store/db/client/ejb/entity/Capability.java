@@ -16,13 +16,11 @@ import javax.persistence.SequenceGenerator;
  * Entity Bean representing in the database the capability of a petal
  */
 @Entity
-@SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability{
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
-	private int capabilityId;
-
+	private String name; 
+	
 	private String namespace;
 
 	private Map<String, String> properties;
@@ -33,13 +31,22 @@ public class Capability{
 	private Set<Petal> petals;
 
 	/**
-	 * Method to get the id of the capability instance
+	 * Method to get the name of the capability instance
 	 * 
-	 * @return the id of the capability
+	 * @return the name of the capability
 	 */
-	public int getCapabilityId() {
-		return this.capabilityId;
+	public String getName() {
+		return this.name;
 	}
+	
+	/**
+     * Method to set the name of the capability instance
+     * 
+     * @param name the name to set
+     */
+	 public void setName(String name) {
+        this.name = name;
+    }
 
 	/**
 	 * Method to get the namespace of the capability instance
