@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -36,9 +37,6 @@ public class PetalController implements IPetalController {
     private ISessionVendor vendorSession;
     /** reference to the aether client for petal persistence */
     private IPetalsPersistence petalPersistence;
-    /** reference to store management interface to permit
-     * access to store related methods */
-    private IStoreManagment storeManagment;
 
     /**
      * Method to retrieve metadata related to a petal.
@@ -49,15 +47,18 @@ public class PetalController implements IPetalController {
      * @return petal related metadata
      */
     @Override
-    public Map<String, String> getPetalMetadata(Vendor vendor, String artifactId, String version) {
-        // TODO change <String, String> to <String, Object> to embbed requirements and capabilities
+    public Map<String, Object> getPetalMetadata(Vendor vendor, String artifactId, String version) {
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
 
-        HashMap<String, String> metadata = new HashMap<String, String>();
-        metadata.put("vendor", vendor.getVendorName());
+        HashMap<String, Object> metadata = new HashMap<String, Object>();
+        metadata.put("vendor", vendor);
         metadata.put("artifactId", artifactId);
         metadata.put("version", version);
-        
+        metadata.put("description", petal.getDescription());
+        metadata.put("categorie", petalSession.getCategory(petal));
+        metadata.put("requirements", petalSession.collectRequirements(petal));
+        metadata.put("capabilities", petalSession.collectCapabilities(petal));
+
         return metadata;
     }
 
@@ -299,6 +300,36 @@ public class PetalController implements IPetalController {
     @Override
     public void createVendor(String vendorName, String vendorDescription) {
         vendorSession.addVendor(vendorName, vendorDescription);
+    }
+
+    @Bind
+    public void bindCapabilitySession(ISessionCapability capabilitySession) {
+        this.capabilitySession = capabilitySession;
+    }
+
+    @Bind
+    public void bindCategorySession(ISessionCategory categorySession) {
+        this.categorySession = categorySession;
+    }
+
+    @Bind
+    public void bindPetalSession(ISessionPetal petalSession) {
+        this.petalSession = petalSession;
+    }
+
+    @Bind
+    public void bindRequirementSession(ISessionRequirement requirementSession) {
+        this.requirementSession = requirementSession;
+    }
+
+    @Bind
+    public void bindVendorSession(ISessionVendor vendorSession) {
+        this.vendorSession = vendorSession;
+    }
+
+    @Bind
+    public void bindPetalPersistence(IPetalsPersistence petalPersistence) {
+        this.petalPersistence = petalPersistence;
     }
 
 }

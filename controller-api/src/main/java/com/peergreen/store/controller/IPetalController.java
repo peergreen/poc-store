@@ -35,7 +35,7 @@ public interface IPetalController {
      * @param version petal's version
      * @return petal related metadata
      */
-    Map<String, String> getPetalMetadata(Vendor vendor, String artifactId, String version);
+    Map<String, Object> getPetalMetadata(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to retrieve a petal from the local store.
