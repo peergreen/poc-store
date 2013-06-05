@@ -1,6 +1,6 @@
 package com.peergreen.store.controller;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
@@ -68,6 +68,6 @@ public interface IUserController {
      * @param pseudo user's pseudo
      * @return list of all user's groups
      */
-    List<Group> collectGroups(String pseudo);
+    Collection<Group> collectGroups(String pseudo);
     
 }

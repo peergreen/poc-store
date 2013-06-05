@@ -1,7 +1,7 @@
 package com.peergreen.store.controller;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -13,6 +13,18 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
+/**
+ * Class defining all user related operations:
+ * <ul>
+ *      <li>retrieve metadata</li>
+ *      <li>retrieve instance</li>
+ *      <li>add instance on database</li>
+ *      <li>remove instance from database</li>
+ *      <li>modify instance on database</li>
+ *      <li>collect all the user's groups</li>
+ * </ul>
+ *
+ */
 @Component
 @Instantiate
 @Provides
@@ -94,8 +106,8 @@ public class UserController implements IUserController {
      * @return list of all user's groups
      */
     @Override
-    public List<Group> collectGroups(String pseudo) {
-        return (List<Group>) userSession.collectGroups(pseudo);
+    public Collection<Group> collectGroups(String pseudo) {
+        return userSession.collectGroups(pseudo);
     }
 
 }
