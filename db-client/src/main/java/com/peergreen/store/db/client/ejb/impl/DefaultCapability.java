@@ -37,17 +37,16 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     @Override
-    public Capability addPetal(String capabilityName, Petal petal) {
+    public Capability addPetal(Capability capability, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Capability removePetal(Petal petal) {
+    public Capability removePetal(Capability capability, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
-   
    
 }

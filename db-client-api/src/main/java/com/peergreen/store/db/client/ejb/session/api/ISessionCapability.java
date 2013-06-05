@@ -11,7 +11,7 @@ public interface ISessionCapability {
     /**
      * Method to add a new capability in the database.
      * 
-     * @param name the capability's name
+     * @param capabilityName the capability's name
      * @param namespace the capability's namespace
      * @param properties the caability's properties
      * @return The capability creates
@@ -21,14 +21,14 @@ public interface ISessionCapability {
     /**
      * Method to delete a capability in the database
      * 
-     * @param name the capability's name
+     * @param capabilityName the capability's name
      */
     void deleteCapability (String capabilityName);
     
     /**
      * Method to find a capability in the database
      * 
-     * @param name the capability's name
+     * @param capabilityName the capability's name
      * @return the capacity with the name 'capabilityName'
      */
     Capability findCapability (String capabilityName);
@@ -43,22 +43,22 @@ public interface ISessionCapability {
     
     /**
      * Method to add a petal to the list of petals which give the capability
-     * with the name 'capabilityName'
      * 
-     * @param name the capability's name
+     * @param capability the capability that is given by the petal
      * @param petal the petal to add 
+     * 
      * @return A new capability with a new list of petals 
      */
-    Capability addPetal(String capabilityName, Petal petal);
+    Capability addPetal(Capability capability, Petal petal);
     
     /**
      * Method to remove a petal to the list of petals which give the capability
-     * with the name 'capabilityName'
      * 
-     * @param name the capability's name
+     * @param capability the capability that is given by the petal
      * @param petal the petal to remove
+     * 
      * @return A new capability with a new list of petals 
      */
-    Capability removePetal (Petal petal);
+    Capability removePetal (Capability capability, Petal petal);
 
 }

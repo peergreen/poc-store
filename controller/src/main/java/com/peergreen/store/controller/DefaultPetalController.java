@@ -217,12 +217,12 @@ public class DefaultPetalController implements IPetalController {
     /**
      * Method to add a new Requirement to the database.
      * 
-     * @param namespace requirement's related namespace
-     * @param properties requirement's properties (metadata)
+     * @param requirementName requirement's name
+     * @param filter requirement's filter
      */
     @Override
-    public void createRequirement(String namespace, Map<String, String> properties) {
-        requirementSession.addRequirement(namespace, properties);
+    public void createRequirement(String requirementName, String filter) {
+        requirementSession.addRequirement(requirementName, filter);
     }
 
     /**

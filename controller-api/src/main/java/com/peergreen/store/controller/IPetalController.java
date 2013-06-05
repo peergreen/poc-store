@@ -136,10 +136,10 @@ public interface IPetalController {
     /**
      * Method to add a new Requirement to the database.
      * 
-     * @param namespace requirement's related namespace
-     * @param properties requirement's properties (metadata)
+     * @param requirementName requirement's name
+     * @param filter requirement's filter
      */
-    void createRequirement(String namespace, Map<String, String> properties);
+    void createRequirement(String requirementName, String filter);
 
     /**
      * Method to collect all the petal's requirements.

@@ -1,18 +1,63 @@
 package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
-import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 
 public interface ISessionRequirement {
 
-    Requirement addRequirement(String namespace, Map<String, String> properties);
-    void deleteRequirement (int requirementId);
-    Requirement findRequirement (int requirementId);
-    Collection<Petal> collectPetals(int requirementId);
-    Requirement addPetal(Petal petal);
-    Requirement removePetal(Petal petal);
+    /**
+     *  Method to add a new requirement in the database.
+     *  
+     * @param requirementName
+     * @param filter
+     * 
+     * @return A new instance of requirement
+     */
+    Requirement addRequirement(String requirementName, String filter);
+
+    /**
+     * Method to delete a requirement in the database
+     * 
+     * @param requirementName the requirement's name
+     */
+    void deleteRequirement (String requirementName);
+
+    /**
+     * Method to find a requirement in the database
+     * 
+     * @param requirementName the requirement's name
+     * @return the capacity with the name 'requirementName'
+     */
+    Requirement findRequirement (String requirementName);
+    
+    /**
+     * Method to collect the petals which give the requirement with the name 'requirementName'
+     * 
+     * @param name the requirement's name
+     * @return A collection of all the petals which give this requirement
+     */
+    Collection<Petal> collectPetals(String requirementName);
+    
+    /**
+     * Method to add a petal to the list of petals which give the requirement
+     * 
+     * @param requirement the requirement that is given by the petal
+     * @param petal the petal to add 
+     * 
+     * @return A new requirement with a new list of petals 
+     */
+    Requirement addPetal(Requirement requirement,Petal petal);
+   
+    /**
+     * Method to remove a petal to the list of petals which give the requirement
+     * 
+     * @param requirement the requirement that is given by the petal
+     * @param petal the petal to remove
+     * 
+     * @return A new requirement with a new list of petals 
+     */
+    Requirement removePetal(Requirement requirement, Petal petal);
 
 }
