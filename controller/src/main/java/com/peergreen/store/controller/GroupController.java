@@ -2,6 +2,7 @@ package com.peergreen.store.controller;
 
 import java.util.Collection;
 
+import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
@@ -9,6 +10,7 @@ import org.apache.felix.ipojo.annotations.Provides;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
+import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 /**
  * Class defining all group related operations:
@@ -28,6 +30,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 public class GroupController implements IGroupController {
 
     private ISessionGroup groupSession;
+    private ISessionUser userSession;
     
     /**
      * Method to add a new group in database.
@@ -42,14 +45,13 @@ public class GroupController implements IGroupController {
     /**
      * Method to modify an existing Group entity.
      * 
-     * @param groupName group's name
-     * @return
+     * @param groupName old group's name
+     * @param groupName new group's name
+     * @return updated group
      */
     @Override
-    public Group modifyGroup(String groupName) {
-        // TODO
-        return null;
-//        return groupSession.updateGroup(groupName);
+    public Group modifyGroup(String oldGroupName, String newGroupName) {
+        return groupSession.updateGroup(oldGroupName, newGroupName);
     }
 
     /**
@@ -78,23 +80,37 @@ public class GroupController implements IGroupController {
      * 
      * @param pseudo user's pseudo
      * @param groupName group's name
+     * @return updated group
      */
     @Override
-    public void addUser(String pseudo, String groupName) {
-        // TODO Auto-generated method stub
-
+    public Group addUser(String groupName, String pseudo) {
+        Group group = groupSession.findGroup(groupName);
+        User user = userSession.findUserByPseudo(pseudo);
+        return groupSession.addUser(group, user);
     }
 
     /**
      * Method to remove a user from a group.
-     * 
-     * @param pseudo user's pseudo
+     *
      * @param groupName group's name
+     * @param pseudo user's pseudo
+     * @return updated group
      */
     @Override
-    public void removeUser(String pseudo, String groupName) {
-        // TODO Auto-generated method stub
-
+    public Group removeUser(String groupName, String pseudo) {
+        Group group = groupSession.findGroup(groupName);
+        User user = userSession.findUserByPseudo(pseudo);
+        return groupSession.removeUser(group, user);
     }
 
+    @Bind
+    private void bindGroupSession(ISessionGroup groupSession) {
+        this.groupSession = groupSession;
+    }
+    
+    @Bind
+    private void bindUserSession(ISessionUser userSession) {
+        this.userSession = userSession;
+    }
+    
 }

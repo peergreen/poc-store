@@ -29,10 +29,11 @@ public interface IGroupController {
     /**
      * Method to modify an existing Group entity.
      * 
-     * @param groupName group's name
-     * @return
+     * @param groupName old group's name
+     * @param groupName new group's name
+     * @return updated group
      */
-    Group modifyGroup(String groupName);
+    Group modifyGroup(String oldGroupName, String newGroupName);
     
     /**
      * Method to remove a group from the database.
@@ -52,17 +53,19 @@ public interface IGroupController {
     /**
      * Method to add a user to a group.
      * 
-     * @param pseudo user's pseudo
      * @param groupName group's name
+     * @param pseudo user's pseudo
+     * @return updated group
      */
-    void addUser(String pseudo, String groupName);
+    Group addUser(String groupName, String pseudo);
     
     /**
      * Method to remove a user from a group.
      * 
-     * @param pseudo user's pseudo
      * @param groupName group's name
+     * @param pseudo user's pseudo
+     * @return updated group
      */
-    void removeUser(String pseudo, String groupName);
+    Group removeUser(String groupName, String pseudo);
     
 }
