@@ -25,6 +25,20 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 
+/**
+ * Interface defining all petal related operations:
+ * <ul>
+ *      <li>Retrieve petal metadata or binary</li>
+ *      <li>Create, remove or modify petals on database</li>
+ *      <li>Create, retireve capabilities on database</li>
+ *      <li>Add or remove capabilities to petals</li>
+ *      <li>Create, retrieve requirements</li>
+ *      <li>Add or remove requirements to petals</li>
+ *      <li>Create, retrieve categories on database</li>
+ *      <li>Create vendors on database</li>
+ * </ul>
+ * 
+ */
 @Component
 @Instantiate
 @Provides
