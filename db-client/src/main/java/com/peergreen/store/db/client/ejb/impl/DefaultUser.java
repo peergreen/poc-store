@@ -31,31 +31,31 @@ public class DefaultUser implements ISessionUser {
     }
 
     @Override
-    public void deleteUserbyPseudo(String pseudo) {
+    public void removeUserbyPseudo(String pseudo) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void deleteUser(User myUser) {
+    public void removeUser(User myUser) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public User updateUser(String pseudo, String password, String email) {
+    public User updateUser(User oldUser, String pseudo, String password, String email) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public User addGroup(Group group) {
+    public User addGroup(User user, Group group) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public User deleteGroup(Group group) {
+    public User removeGroup(User user, Group group) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -71,5 +71,6 @@ public class DefaultUser implements ISessionUser {
         // TODO Auto-generated method stub
         return null;
     }
+
 
 }

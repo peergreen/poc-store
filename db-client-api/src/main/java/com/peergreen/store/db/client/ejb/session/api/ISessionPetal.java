@@ -12,24 +12,71 @@ import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 public interface ISessionPetal {
 
+    /**
+     * 
+     * @param petalId
+     * @param description
+     * @param category
+     * @param capabilities
+     * @param requirements
+     * @return
+     */
     Petal addPetal(PetalId petalId, String description, Category category, 
             Collection<Capability> capabilities, Collection<Requirement> requirements);
 
+    /**
+     * 
+     * @param vendor
+     * @param artifactId
+     * @param version
+     * @param description
+     * @param category
+     * @param capabilities
+     * @param requirements
+     * @return
+     */
     Petal addPetal(Vendor vendor, String artifactId, 
             String version, String description, Category category, 
             Collection<Capability> capabilities, Collection<Requirement> requirements);
 
+    /**
+     * 
+     * @param petalId
+     * @return
+     */
     Petal findPetal(PetalId petalId);
 
+    /**
+     * 
+     * @param vendor
+     * @param artifactId
+     * @param version
+     * @return
+     */
     Petal findPetal(Vendor vendor, String artifactId,String version);
 
+    /**
+     * 
+     * @param petal
+     * @return
+     */
     Collection<Group> collectGroups(Petal petal); 
 
+    /**
+     * 
+     * @param petal
+     * @return
+     */
     Collection<Capability> collectCapabilities(Petal petal); 
 
+    /**
+     * 
+     * @param petal
+     * @return
+     */
     Collection<Requirement> collectRequirements(Petal petal); 
 
-    Petal updatePetal(Vendor vendor, String artifactId, 
+    Petal updatePetal(Petal oldpetal,Vendor vendor, String artifactId, 
             String version, String description, Category category, 
             Collection<Capability> capabilities, Collection<Requirement> requirements);
 

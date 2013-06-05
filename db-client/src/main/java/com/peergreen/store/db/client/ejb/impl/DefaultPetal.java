@@ -59,8 +59,8 @@ public class DefaultPetal implements ISessionPetal {
     }
 
     @Override
-    public Petal updatePetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Collection<Capability> capabilities, Collection<Requirement> requirements) {
+    public Petal updatePetal(Petal oldpetal, Vendor vendor, String artifactId, String version, String description,
+            Category category, Collection<Capability> capabilities, Collection<Requirement> requirements) {
         // TODO Auto-generated method stub
         return null;
     }

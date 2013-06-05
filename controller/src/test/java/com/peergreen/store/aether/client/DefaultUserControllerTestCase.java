@@ -49,9 +49,9 @@ public class DefaultUserControllerTestCase {
     
     @Test
     public void removeUser() {
-        doNothing().when(userSession).deleteUserbyPseudo(PSEUDO);
+        doNothing().when(userSession).removeUserbyPseudo(PSEUDO);
         userController.removeUser(PSEUDO);
-        verify(userSession).deleteUserbyPseudo(PSEUDO);
+        verify(userSession).removeUserbyPseudo(PSEUDO);
     }
 
 }

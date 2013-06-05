@@ -84,20 +84,21 @@ public class DefaultUserController implements IUserController {
      */
     @Override
     public void removeUser(String pseudo) {
-        userSession.deleteUserbyPseudo(pseudo);
+        userSession.removeUserbyPseudo(pseudo);
     }
 
     /**
      * Method to modify a user account.
      * 
+     * @param oldUser the user to modify
      * @param pseudo user's pseudo
      * @param password user's password
      * @param email user's email
      * @return modified user
      */
     @Override
-    public User modifyUser(String pseudo, String password, String email) {
-        return userSession.updateUser(pseudo, password, email);
+    public User modifyUser(User oldUser, String pseudo, String password, String email) {
+        return userSession.updateUser(oldUser, pseudo, password, email);
     }
 
     /**
