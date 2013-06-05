@@ -10,22 +10,22 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.peergreen.store.controller.UserController;
+import com.peergreen.store.controller.DefaultUserController;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
-public class UserControllerTestCase {
+public class DefaultUserControllerTestCase {
 
     @Mock
     private ISessionUser userSession;
     
-    private UserController userController;
+    private DefaultUserController userController;
     private static final String PSEUDO = "toto";
     
     @BeforeClass
     public void oneTimeSetUp() {
         MockitoAnnotations.initMocks(this);
-        userController = new UserController(userSession);
+        userController = new DefaultUserController(userSession);
     }
     
     @Test

@@ -29,11 +29,11 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 @Component
 @Instantiate
 @Provides
-public class UserController implements IUserController {
+public class DefaultUserController implements IUserController {
 
     private ISessionUser userSession;
     
-    public UserController(@Requires ISessionUser userSession) {
+    public DefaultUserController(@Requires ISessionUser userSession) {
         this.userSession = userSession;
     }
     

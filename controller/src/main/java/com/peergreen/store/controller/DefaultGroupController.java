@@ -27,7 +27,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 @Component
 @Instantiate
 @Provides
-public class GroupController implements IGroupController {
+public class DefaultGroupController implements IGroupController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;

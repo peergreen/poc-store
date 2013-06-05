@@ -25,7 +25,7 @@ import com.peergreen.store.db.client.ejb.entity.User;
  *      <li>Petal submission and validation</li>
  * </ul>
  */
-public class StoreManagement implements IStoreManagment {
+public class DefaultStoreManagement implements IStoreManagment {
 
     /**
      * Method to a link between a remote store and the current one.

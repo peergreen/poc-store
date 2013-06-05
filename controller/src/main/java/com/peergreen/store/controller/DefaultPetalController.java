@@ -42,7 +42,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 @Component
 @Instantiate
 @Provides
-public class PetalController implements IPetalController {
+public class DefaultPetalController implements IPetalController {
 
     private ISessionCapability capabilitySession;
     private ISessionCategory categorySession;
