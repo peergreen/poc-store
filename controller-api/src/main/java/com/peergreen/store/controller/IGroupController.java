@@ -1,10 +1,22 @@
 package com.peergreen.store.controller;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 
+/**
+ * Interface defining all group related operations:
+ * <ul>
+ *      <li>Create group on database</li>
+ *      <li>Modify existing group on database</li>
+ *      <li>Remove group from database</li>
+ *      <li>Retrieve group's member list</li>
+ *      <li>Add a user to group</li>
+ *      <li>Remove user from group</li>
+ * </ul>
+ * 
+ */
 public interface IGroupController {
 
     /**
@@ -35,7 +47,7 @@ public interface IGroupController {
      * @param groupName group's name
      * @return list of all the group's users
      */
-    List<User> collectUsers(String groupName);
+    Collection<User> collectUsers(String groupName);
     
     /**
      * Method to add a user to a group.
