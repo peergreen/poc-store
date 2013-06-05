@@ -13,31 +13,31 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 public class DefaultCapability implements ISessionCapability{
 
     @Override
-    public Capability addCapability(String namespace, Map<String, String> properties) {
+    public Capability addCapability(String capabilityName, String namespace, Map<String, String> properties) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void deleteCapability(int capabilityId) {
+    public void deleteCapability(String capabilityName) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public Capability findCapability(int capabilityId) {
+    public Capability findCapability(String capabilityName) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<Petal> collectPetals(int capabilityId) {
+    public Collection<Petal> collectPetals(String capabilityName) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Capability addPetal(Petal petal) {
+    public Capability addPetal(String capabilityName, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -48,5 +48,6 @@ public class DefaultCapability implements ISessionCapability{
         return null;
     }
 
+   
    
 }
