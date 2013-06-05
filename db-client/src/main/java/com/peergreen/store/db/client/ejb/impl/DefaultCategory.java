@@ -12,37 +12,37 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 public class DefaultCategory implements ISessionCategory{
 
     @Override
-    public Category addCategory(String name) {
+    public Category addCategory(String categoryName) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void deleteCategory(int categoryId) {
+    public void deleteCategory(String categoryName) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public Category findCategory(int categoryId) {
+    public Category findCategory(String categoryName) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Collection<Petal> collectPetals(int categoryId) {
+    public Collection<Petal> collectPetals(String categoryName) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Category addPetal(Petal petal) {
+    public Category addPetal(Category category, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Category removePetal(Petal petal) {
+    public Category removePetal(Category category, Petal petal) {
         // TODO Auto-generated method stub
         return null;
     }
