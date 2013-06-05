@@ -15,14 +15,14 @@ public interface ISessionCategory {
      * @return A new instance of Category
      */
     Category addCategory(String categoryName);
-    
+
     /**
      * Method to delete the category with the name categoryName
      * 
      * @param categoryName the name of the category to delete
      */
     void deleteCategory(String categoryName);
-    
+
     /**
      * Method to find the category with the name categoryName
      * 
@@ -31,7 +31,7 @@ public interface ISessionCategory {
      * @return the category with the name categoryName
      */
     Category findCategory(String categoryName);
-    
+
     /**
      * Method to collect all the petals which belongs to the category
      * with the name categoryName
@@ -41,7 +41,7 @@ public interface ISessionCategory {
      * @return A collection of petals which belongs to this category
      */
     Collection<Petal> collectPetals(String categoryName);
-    
+
     /**
      * Method to add a new petal to a category
      * 
@@ -51,7 +51,7 @@ public interface ISessionCategory {
      * @return A new category with new petals included the petal added 
      */
     Category addPetal(Category category, Petal petal);
-    
+
     /**
      * Method to remove a petal from a category
      * 

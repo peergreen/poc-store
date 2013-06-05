@@ -7,7 +7,7 @@ import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 
 public interface ISessionCapability {
-    
+
     /**
      * Method to add a new capability in the database.
      * 
@@ -17,14 +17,14 @@ public interface ISessionCapability {
      * @return The capability creates
      */
     Capability addCapability(String capabilityName, String namespace, Map<String, String> properties);
-    
+
     /**
      * Method to delete a capability in the database
      * 
      * @param capabilityName the capability's name
      */
     void deleteCapability (String capabilityName);
-    
+
     /**
      * Method to find a capability in the database
      * 
@@ -32,7 +32,7 @@ public interface ISessionCapability {
      * @return the capacity with the name 'capabilityName'
      */
     Capability findCapability (String capabilityName);
-    
+
     /**
      * Method to collect the petals which give the capability with the name 'capabilityName'
      * 
@@ -40,7 +40,7 @@ public interface ISessionCapability {
      * @return A collection of all the petals which give this capability
      */
     Collection<Petal> collectPetals(String capabilityName);
-    
+
     /**
      * Method to add a petal to the list of petals which give the capability
      * 
@@ -50,7 +50,7 @@ public interface ISessionCapability {
      * @return A new capability with a new list of petals 
      */
     Capability addPetal(Capability capability, Petal petal);
-    
+
     /**
      * Method to remove a petal to the list of petals which give the capability
      * 

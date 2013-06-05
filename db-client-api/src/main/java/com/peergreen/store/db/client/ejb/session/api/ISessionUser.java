@@ -7,7 +7,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 
 public interface ISessionUser {
-    
+
     /**
      * Method to create a new instance of user and add it in the database
      * Others attributes are null when creating the user
@@ -18,7 +18,7 @@ public interface ISessionUser {
      * @return
      */
     User addUser(String pseudo, String password, String email);
-    
+
     /**
      * Method to find a user
      * 
@@ -27,28 +27,28 @@ public interface ISessionUser {
      * @return the user with the pseudo 'pseudo'
      */
     User findUserByPseudo(String pseudo);
-    
+
     /**
      * Method to collect all the users in the database
      * 
      * @return A collection of all the users 
      */
     Collection <User> collectUsers();
-    
+
     /**
      * Method to remove a user using his pseudo
      * 
      * @param pseudo The pseudo of the user to remove from the database
      */
     void removeUserbyPseudo(String pseudo);
-    
+
     /**
      * Method to remove a user
      * 
      * @param myUser The user to remove from the database
      */
     void removeUser(User myUser);
-    
+
     /**
      * Method to modify a user 
      * 
@@ -60,7 +60,7 @@ public interface ISessionUser {
      * @return The oldUser modify with the new informations
      */
     User updateUser( User oldUser, String pseudo, String password, String email);
-    
+
     /**
      * Method to add a group to the list of groups to which a user belongs 
      * 
@@ -70,7 +70,7 @@ public interface ISessionUser {
      * @return A user with new list of groups 
      */
     User addGroup(User user, Group group);
-    
+
     /**
      * Method to remove a group from the list of groups to which a user belongs 
      * 
@@ -80,7 +80,7 @@ public interface ISessionUser {
      * @return A user with new list of groups
      */
     User removeGroup(User user, Group group);
-    
+
     /**
      * Method to collect all the groups to which a user belongs
      * 
@@ -89,7 +89,7 @@ public interface ISessionUser {
      * @return A collection with the groups to which the user with the pseudo 'pseudo' belongs
      */
     Collection<Group> collectGroups(String pseudo);
-    
+
     /**
      * Method to collect all the petals to which a user has access 
      * 

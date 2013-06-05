@@ -13,14 +13,14 @@ public interface ISessionLink {
      * @return A new instance of link
      */
     Link addLink(String url, String description);
-    
+
     /**
      * Method to delete an instance ok link with the url 'linkUrl'
      * 
      * @param linkUrl the url of the link to delete
      */
     void deleteLink(String linkUrl);
-    
+
     /**
      * Method to find the link with the url 'linkUrl'
      * 

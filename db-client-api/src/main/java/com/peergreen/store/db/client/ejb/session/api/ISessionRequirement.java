@@ -31,29 +31,29 @@ public interface ISessionRequirement {
      * @return the capacity with the name 'requirementName'
      */
     Requirement findRequirement (String requirementName);
-    
+
     /**
-     * Method to collect the petals which give the requirement with the name 'requirementName'
+     * Method to collect the petals which have the requirement with the name 'requirementName'
      * 
      * @param name the requirement's name
-     * @return A collection of all the petals which give this requirement
+     * @return A collection of all the petals which have this requirement
      */
     Collection<Petal> collectPetals(String requirementName);
-    
+
     /**
-     * Method to add a petal to the list of petals which give the requirement
+     * Method to add a petal to the list of petals which have the requirement
      * 
-     * @param requirement the requirement that is given by the petal
+     * @param requirement the requirement that is needed for the petal
      * @param petal the petal to add 
      * 
      * @return A new requirement with a new list of petals 
      */
     Requirement addPetal(Requirement requirement,Petal petal);
-   
+
     /**
-     * Method to remove a petal to the list of petals which give the requirement
+     * Method to remove a petal to the list of petals which have the requirement
      * 
-     * @param requirement the requirement that is given by the petal
+     * @param requirement the requirement that is needed for the petal
      * @param petal the petal to remove
      * 
      * @return A new requirement with a new list of petals 
