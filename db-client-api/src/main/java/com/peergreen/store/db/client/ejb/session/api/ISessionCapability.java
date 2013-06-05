@@ -7,12 +7,58 @@ import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 
 public interface ISessionCapability {
-
-    Capability addCapability(String namespace, Map<String, String> properties);
-    void deleteCapability (int capabilityId);
-    Capability findCapability (int capabilityId);
-    Collection<Petal> collectPetals(int capabilityId);
-    Capability addPetal(Petal petal);
+    
+    /**
+     * Method to add a new capability in the database.
+     * 
+     * @param name the capability's name
+     * @param namespace the capability's namespace
+     * @param properties the caability's properties
+     * @return The capability creates
+     */
+    Capability addCapability(String capabilityName, String namespace, Map<String, String> properties);
+    
+    /**
+     * Method to delete a capability in the database
+     * 
+     * @param name the capability's name
+     */
+    void deleteCapability (String capabilityName);
+    
+    /**
+     * Method to find a capability in the database
+     * 
+     * @param name the capability's name
+     * @return the capacity with the name 'capabilityName'
+     */
+    Capability findCapability (String capabilityName);
+    
+    /**
+     * Method to collect the petals which give the capability with the name 'capabilityName'
+     * 
+     * @param name the capability's name
+     * @return A collection of all the petals which give this capability
+     */
+    Collection<Petal> collectPetals(String capabilityName);
+    
+    /**
+     * Method to add a petal to the list of petals which give the capability
+     * with the name 'capabilityName'
+     * 
+     * @param name the capability's name
+     * @param petal the petal to add 
+     * @return A new capability with a new list of petals 
+     */
+    Capability addPetal(String capabilityName, Petal petal);
+    
+    /**
+     * Method to remove a petal to the list of petals which give the capability
+     * with the name 'capabilityName'
+     * 
+     * @param name the capability's name
+     * @param petal the petal to remove
+     * @return A new capability with a new list of petals 
+     */
     Capability removePetal (Petal petal);
 
 }
