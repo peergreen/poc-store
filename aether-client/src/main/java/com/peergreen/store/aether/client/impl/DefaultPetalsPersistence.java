@@ -34,7 +34,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return petal's binary
      */
     @Override
-    public File getPetal(Vendor vendor, String artifactId, String version) {
+    public File getPetal(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -45,16 +45,10 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param description petal's description
-     * @param category petal's category
-     * @param requirements requirements list
-     * @param capabilities exported capabilities list
-     * @param properties petal's additional properties
      * @param petal petal's binary
      */
     @Override
-    public void addToLocal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities, File petal) {
+    public void addToLocal(String vendor, String artifactId, String version, File petal) {
         // TODO Auto-generated method stub
         
     }
@@ -68,7 +62,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal
      */
     @Override
-    public Petal getPetalFromLocal(Vendor vendor, String artifactId, String version) {
+    public Petal getPetalFromLocal(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -79,16 +73,10 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param description petal's description
-     * @param category petal's category
-     * @param requirements requirements list
-     * @param capabilities exported capabilities list
-     * @param properties petal's additional properties
      * @param petal petal's binary
      */
     @Override
-    public void addToStaging(Vendor vendor, String artifactId, String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities, File petal) {
+    public void addToStaging(String vendor, String artifactId, String version, File petal) {
         // TODO Auto-generated method stub
         
     }
@@ -102,7 +90,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal
      */
     @Override
-    public Petal getPetalFromStaging(Vendor vendor, String artifactId, String version) {
+    public Petal getPetalFromStaging(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
         return null;
     }
