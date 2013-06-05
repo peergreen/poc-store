@@ -4,46 +4,29 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-
-import com.peergreen.store.db.client.ejb.entity.Petal;
 
 /**
  * Entity Bean representing the category of a petal  
  */
 @Entity
-@SequenceGenerator(name="idCategorySeq", initialValue=1, allocationSize=50)
 public class Category{
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
-	private int categoryId;
-
-	private String categoryname;
+	private String categoryName;
 
 	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Set<Petal> petals;
 
-	/**
-	 * Method to retrieve the id of the category instance
-	 * 
-	 * @return the category's id
-	 */
-	public int getCategoryId() {
-		return categoryId;
-	}
-
+	
 	/**
 	 * Method to retrieve the name of the category instance
 	 * 
 	 * @return the category's name
 	 */
-	public String getCategoryname() {
-		return categoryname;
+	public String getCategoryName() {
+		return categoryName;
 	}
 
 	/**
@@ -51,8 +34,8 @@ public class Category{
 	 * 
 	 * @param categoryname the category's name to set
 	 */
-	public void setCategoryname(String categoryname) {
-		this.categoryname = categoryname;
+	public void setCategoryName(String categoryname) {
+		this.categoryName = categoryname;
 	}
 
 	/**
