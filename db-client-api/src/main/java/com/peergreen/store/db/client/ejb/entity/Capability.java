@@ -19,7 +19,7 @@ import javax.persistence.SequenceGenerator;
 public class Capability{
 
 	@Id
-	private String name; 
+	private String capabilityName; 
 	
 	private String namespace;
 
@@ -35,8 +35,8 @@ public class Capability{
 	 * 
 	 * @return the name of the capability
 	 */
-	public String getName() {
-		return this.name;
+	public String getcapabilityName() {
+		return this.capabilityName;
 	}
 	
 	/**
@@ -45,7 +45,7 @@ public class Capability{
      * @param name the name to set
      */
 	 public void setName(String name) {
-        this.name = name;
+        this.capabilityName = name;
     }
 
 	/**
