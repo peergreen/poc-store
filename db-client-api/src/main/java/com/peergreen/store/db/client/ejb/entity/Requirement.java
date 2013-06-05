@@ -19,6 +19,8 @@ public class Requirement {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
 	private int requirementId;
+	
+	private String requirementName;
 
 	private String filter;
 
@@ -37,6 +39,20 @@ public class Requirement {
 	}
 
 	/**
+     * @return the requirementName
+     */
+    public String getRequirementName() {
+        return requirementName;
+    }
+
+    /**
+     * @param requirementName the requirementName to set
+     */
+    public void setRequirementName(String requirementName) {
+        this.requirementName = requirementName;
+    }
+
+    /**
 	 * Method to retrieve the requirement's filter 
 	 * 
 	 * @return the filter of the requirement instance
