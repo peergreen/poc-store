@@ -106,7 +106,7 @@ public class PetalController implements IPetalController {
     public void addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
         petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements);
-        petalPersistence.addToLocal(vendor, artifactId, version, description, category, requirements, capabilities, petalBinary);
+        petalPersistence.addToLocal(vendor.getVendorName(), artifactId, version, petalBinary);
     }
 
     /**
@@ -154,6 +154,7 @@ public class PetalController implements IPetalController {
     public Petal updatePetal(Vendor vendor, String artifactId, String version, String description,
             Category category, Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary) {
+        // TODO
         return null;
     }
 
