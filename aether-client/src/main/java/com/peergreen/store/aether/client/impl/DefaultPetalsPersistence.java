@@ -1,11 +1,20 @@
 package com.peergreen.store.aether.client.impl;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Unbind;
 import org.apache.felix.ipojo.annotations.Validate;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.aether.provider.IRepositoryProvider;
@@ -24,9 +33,9 @@ import com.peergreen.store.aether.provider.IRepositoryProvider;
  */
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
-    private IRepositoryProvider localProvider;
-    private IRepositoryProvider stagingProvider;
-    private Set<IRepositoryProvider> remoteProviders;
+    private IRepositoryProvider<LocalRepository> localProvider;
+    private IRepositoryProvider<LocalRepository> stagingProvider;
+    private Set<IRepositoryProvider<RemoteRepository>> remoteProviders;
 
     @Validate
     private void validate() {
@@ -66,20 +75,20 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     @Override
     public File getPetal(String vendor, String artifactId, String version) {
         // TODO
-        /*
-        Artifact artifact = new DefaultArtifact(vendor+":"+artifactId+":"+version);
-        ArtifactRequest artifactRequest = new ArtifactRequest();
-        artifactRequest.setArtifact(artifact);
-        ArtifactResult artifactResult = null;
-        try {
-            artifactResult = system.resolveArtifact(session,artifactRequest);
-        } catch (ArtifactResolutionException e) {
-            e.printStackTrace();
+        File petal = null;
+
+        // search in local repository
+        petal = localProvider.retrievePetal(vendor, artifactId, version);
+
+        // if not found locally, browse remote repositories
+        if (petal == null) {
+            Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();
+            while (petal == null && it.hasNext()) {
+                petal = it.next().retrievePetal(vendor, artifactId, version);
+            }
         }
-        artifact = artifactResult.getArtifact();
-        return artifact.getFile();
-        */
-        return null;
+        
+        return petal;
     }
 
     /**
@@ -93,19 +102,6 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     @Override
     public void addToLocal(String vendor, String artifactId, String version, File petal) {
         // TODO
-        /*
-        Artifact jarArtifact = new DefaultArtifact(vendor, artifactId, "", "", version);
-        jarArtifact = jarArtifact.setFile(petal);
-//        Artifact pomArtifact = new SubArtifact( jarArtifact, "", "pom" );
-//        pomArtifact = pomArtifact.setFile( new File( "pom.xml" ) );
-        InstallRequest installRequest = new InstallRequest();
-        installRequest.addArtifact(jarArtifact);
-        try {
-            system.install(session, installRequest);
-        } catch (InstallationException e) {
-            e.printStackTrace();
-        }
-        */
     }
 
     /**
@@ -165,37 +161,37 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     }
 
     @Bind
-    public void bindLocalRepository(IRepositoryProvider provider) {
+    public void bindLocalRepository(IRepositoryProvider<LocalRepository> provider) {
         
     }
     
-    @Bind(filter="(&(local=true)(staging=false))")
-    public void bindLocalProvider(IRepositoryProvider provider) {
+    @Bind(filter="(staging=false)")
+    public void bindLocalProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = provider;
     }
     
     @Unbind
-    public void unbindLocalProvider(IRepositoryProvider provider) {
+    public void unbindLocalProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = null;
     }
     
-    @Bind(filter="(&(local=true)(staging=true))")
-    public void bindStagingProvider(IRepositoryProvider provider) {
+    @Bind(filter="(staging=true)")
+    public void bindStagingProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = provider;
     }
     
     @Unbind
-    public void unbindStagingProvider(IRepositoryProvider provider) {
+    public void unbindStagingProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = null;
     }
     
-    @Bind(optional=true, aggregate=true, filter="(local=false)")
-    public void bindRemoteProvider(IRepositoryProvider provider) {
+    @Bind(optional=true, aggregate=true)
+    public void bindRemoteProvider(IRepositoryProvider<RemoteRepository> provider) {
         remoteProviders.add(provider);
     }
     
     @Unbind
-    public void unbindRemoteProvider(IRepositoryProvider provider) {
+    public void unbindRemoteProvider(IRepositoryProvider<RemoteRepository> provider) {
         remoteProviders.remove(provider);
     }
     
