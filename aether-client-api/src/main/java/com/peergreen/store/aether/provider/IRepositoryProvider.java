@@ -5,8 +5,13 @@ import java.io.File;
 /**
  * Interface defining methods for repository provider.
  */
-public interface IRepositoryProvider {
-    
+public interface IRepositoryProvider<T> {
+
+    /**
+     * Method to build up context.
+     */
+    void init();
+
     /**
      * Method to add a petal to the repository.
      * 
@@ -16,7 +21,7 @@ public interface IRepositoryProvider {
      * @param binary petal's binary
      */
     void addPetal(String vendor, String artifactId, String version, File binary);
-    
+
     /**
      * Method to retrieve a petal's binary from the repository.
      * 
@@ -26,5 +31,5 @@ public interface IRepositoryProvider {
      * @return
      */
     File retrievePetal(String vendor, String artifactId, String version);
-    
+
 }
