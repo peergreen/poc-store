@@ -2,57 +2,71 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 @Entity
+@IdClass(PetalId.class)
+@Table(name = "Petals")
 public class Petal {
 
-	@EmbeddedId
-	private PetalId petalId;
+	@Id
+    @Column(name = "vendor_Name")
+	private String vendorName;
+    @Id
+	private String artifactId;
+    @Id
+    private String version;
 
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinColumn(name="categoryId", referencedColumnName="categoryId")
+/*	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="categoryId", referencedColumnName="categoryId")*/
+	@ManyToOne
 	private Category category;
 
 	private String description;
 
-	@JoinTable(name = "PETALS_GROUPS_MAP",
+	/*@JoinTable(name = "PETALS_GROUPS_MAP",
 			joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
-			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
+			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})*/
+	@ManyToMany(mappedBy="petals")
 	private Set<Group> groupSet;
 
-	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	//@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToMany
 	private Set<Requirement> requirements;
-	@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	
+	//@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToMany
 	private Set<Capability> capabilities;
 
-
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinColumn(name="vendor", referencedColumnName="vendorName")
+	@ManyToOne
+    @JoinColumn(name = "vendor_Name", referencedColumnName = "vendor_Name")
+	private Vendor vendor;
+	
 	/**
-	 * Method to retrieve the petal's vendor
+	 * Method to retrieve the petal's vendor name
 	 * 
-	 * @return the vendor which provides the petal
+	 * @return the vendor's name which provides the petal
 	 */
-	public Vendor getVendor() {
-		return this.petalId.getVendor();
+	public String getVendorName() {
+		return this.vendorName;
 	}
 
 	/**
-	 * Method to set the petal's vendor
+	 * Method to set the petal's vendor name
 	 * 
-	 * @param vendor The vendor of the petal to set
+	 * @param vendor The vendor's name of the petal to set
 	 */
-	public void setVendor(Vendor vendor) {
-		petalId.setVendor(vendor);
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
 	}
 
 	/**
@@ -61,7 +75,7 @@ public class Petal {
 	 * @return the artifactId of the petal
 	 */
 	public String getArtifactId() {
-		return petalId.getArtifactId();
+		return this.artifactId;
 	}
 
 	/**
@@ -70,7 +84,7 @@ public class Petal {
 	 * @param artifactId The artifactId of the petal to set
 	 */
 	public void setArtifactId(String artifactId) {
-		petalId.setArtifactId(artifactId);
+		this.artifactId = artifactId;
 	}
 
 	/**
@@ -79,7 +93,7 @@ public class Petal {
 	 * @return the version of the petal
 	 */
 	public String getVersion() {
-		return petalId.getVersion();
+		return this.version;
 	}
 
 	/**
@@ -88,7 +102,7 @@ public class Petal {
 	 * @param version The version of the petal to set
 	 */
 	public void setVersion(String version) {
-		petalId.setVersion(version);
+		this.version = version;
 	} 
 
 	/**
@@ -180,5 +194,23 @@ public class Petal {
 	public void setGroupSet(Set<Group> groupSet) {
 		this.groupSet = groupSet;
 	}
+	
+	/**
+     * Method to retrieve the petal's vendor 
+     * 
+     * @return the vendor which provides the petal
+     */
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    /**
+     * Method to set the petal's vendor
+     * 
+     * @param vendor The vendor of the petal to set
+     */
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
 
 }

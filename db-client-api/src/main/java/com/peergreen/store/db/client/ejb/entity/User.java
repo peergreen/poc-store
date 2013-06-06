@@ -5,13 +5,14 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database the user
  */
 @Entity
+@Table(name="Users")
 public class User {
 
 	@Id
@@ -21,9 +22,10 @@ public class User {
 
 	private String email;
 
-	@JoinTable(name = "USERS_GROUPS_MAP",
+	/*@JoinTable(name = "USERS_GROUPS_MAP",
 			joinColumns = {@JoinColumn(name = "personnePseudo", referencedColumnName = "pseudo")},
-			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})
+			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})*/
+	@ManyToMany(mappedBy="users")
 	private Set<Group> groupSet;
 
 	/**

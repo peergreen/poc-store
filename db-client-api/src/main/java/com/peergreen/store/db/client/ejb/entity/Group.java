@@ -2,24 +2,25 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database group of users
  */
 @Entity
+@Table(name="Groups")
 public class Group {
 
     @Id
     private String groupname;
 
-    @ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany
     private Set<User> users ;
 
-    @ManyToMany(mappedBy="groupSet",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany
     private Set<Petal> petals ;
 
     /**

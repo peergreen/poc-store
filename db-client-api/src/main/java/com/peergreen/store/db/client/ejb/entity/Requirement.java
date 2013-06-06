@@ -6,14 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database the requirement of a petal  
  */
 @Entity
+@Table(name="Requirements")
 @SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
 public class Requirement {
 	@Id
@@ -24,9 +25,10 @@ public class Requirement {
 
 	private String filter;
 
-	@JoinTable(name = "REQUIREMENT_PETAL_MAP",
+	/*@JoinTable(name = "REQUIREMENT_PETAL_MAP",
 			joinColumns = {@JoinColumn(name = "requirementId", referencedColumnName = "requirementId")},
-			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})
+			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})*/
+	@ManyToMany(mappedBy="requirements")
 	private Set<Petal> petals;
 
 	/**

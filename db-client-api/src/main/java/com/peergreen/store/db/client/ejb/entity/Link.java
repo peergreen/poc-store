@@ -5,11 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database a link between two stores
  */
 @Entity
+@Table(name="Links")
 @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
 public class Link {
 	@Id
