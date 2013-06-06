@@ -1,5 +1,6 @@
 Bundle-Activator org.ow2.easybeans.osgi.ejbjar.Activator
 DynamicImport-Package *
 
-Export-Package com.peergreen.store.db.client.ejb.entity.api,\
-               com.peergreen.store.db.client.ejb.session.api
+Export-Package com.peergreen.store.db.client.ejb.entity,\
+               com.peergreen.store.db.client.ejb.session.api,\
+               com.peergreen.store.db.client.ejb.key.primary
