@@ -2,20 +2,9 @@ package com.peergreen.store.aether.client.impl;
 
 import java.io.File;
 
-import org.apache.felix.ipojo.annotations.Requires;
 import org.apache.felix.ipojo.annotations.Validate;
-import org.eclipse.aether.DefaultRepositorySystemSession;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.installation.InstallRequest;
-import org.eclipse.aether.installation.InstallationException;
-import org.eclipse.aether.resolution.ArtifactRequest;
-import org.eclipse.aether.resolution.ArtifactResolutionException;
-import org.eclipse.aether.resolution.ArtifactResult;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
-import com.peergreen.store.aether.client.util.IAetherUtils;
 
 /**
  * Class to handle petal's persistence relative functionalities.<br />
@@ -31,15 +20,10 @@ import com.peergreen.store.aether.client.util.IAetherUtils;
  */
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
-    @Requires
-    private IAetherUtils utils;
-    private RepositorySystem system;
-    private DefaultRepositorySystemSession session;
 
     @Validate
     private void validate() {
-        system = utils.newRepositorySystem();
-        session = utils.newRepositorySystemSession(system);
+        
     }
 
     /**
@@ -74,6 +58,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public File getPetal(String vendor, String artifactId, String version) {
+        // TODO
+        /*
         Artifact artifact = new DefaultArtifact(vendor+":"+artifactId+":"+version);
         ArtifactRequest artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(artifact);
@@ -85,6 +71,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         }
         artifact = artifactResult.getArtifact();
         return artifact.getFile();
+        */
+        return null;
     }
 
     /**
@@ -97,6 +85,8 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public void addToLocal(String vendor, String artifactId, String version, File petal) {
+        // TODO
+        /*
         Artifact jarArtifact = new DefaultArtifact(vendor, artifactId, "", "", version);
         jarArtifact = jarArtifact.setFile(petal);
 //        Artifact pomArtifact = new SubArtifact( jarArtifact, "", "pom" );
@@ -108,6 +98,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         } catch (InstallationException e) {
             e.printStackTrace();
         }
+        */
     }
 
     /**
