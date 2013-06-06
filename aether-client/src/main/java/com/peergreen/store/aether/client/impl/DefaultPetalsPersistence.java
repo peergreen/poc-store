@@ -1,10 +1,14 @@
 package com.peergreen.store.aether.client.impl;
 
 import java.io.File;
+import java.util.Set;
 
+import org.apache.felix.ipojo.annotations.Bind;
+import org.apache.felix.ipojo.annotations.Unbind;
 import org.apache.felix.ipojo.annotations.Validate;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
+import com.peergreen.store.aether.provider.IRepositoryProvider;
 
 /**
  * Class to handle petal's persistence relative functionalities.<br />
@@ -20,6 +24,9 @@ import com.peergreen.store.aether.client.IPetalsPersistence;
  */
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
+    private IRepositoryProvider localProvider;
+    private IRepositoryProvider stagingProvider;
+    private Set<IRepositoryProvider> remoteProviders;
 
     @Validate
     private void validate() {
@@ -157,4 +164,39 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         return null;
     }
 
+    @Bind
+    public void bindLocalRepository(IRepositoryProvider provider) {
+        
+    }
+    
+    @Bind(filter="(&(local=true)(staging=false))")
+    public void bindLocalProvider(IRepositoryProvider provider) {
+        localProvider = provider;
+    }
+    
+    @Unbind
+    public void unbindLocalProvider(IRepositoryProvider provider) {
+        localProvider = null;
+    }
+    
+    @Bind(filter="(&(local=true)(staging=true))")
+    public void bindStagingProvider(IRepositoryProvider provider) {
+        localProvider = provider;
+    }
+    
+    @Unbind
+    public void unbindStagingProvider(IRepositoryProvider provider) {
+        localProvider = null;
+    }
+    
+    @Bind(optional=true, aggregate=true, filter="(local=false)")
+    public void bindRemoteProvider(IRepositoryProvider provider) {
+        remoteProviders.add(provider);
+    }
+    
+    @Unbind
+    public void unbindRemoteProvider(IRepositoryProvider provider) {
+        remoteProviders.remove(provider);
+    }
+    
 }
