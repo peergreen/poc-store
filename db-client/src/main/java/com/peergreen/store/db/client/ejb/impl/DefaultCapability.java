@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -23,6 +25,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
  */
 @Stateless
 public class DefaultCapability implements ISessionCapability{
+    
+    @PersistenceContext
+    private EntityManager entityManager = null;
 
     /**
      * Method to add a new capability in the database.

@@ -3,6 +3,8 @@ package com.peergreen.store.db.client.ejb.impl;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
@@ -36,6 +38,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
  */
 @Stateless
 public class DefaultPetal implements ISessionPetal {
+    
+    @PersistenceContext
+    private EntityManager entityManager = null;
 
     /**
      * Method to create an instance of a petal and add it in the database

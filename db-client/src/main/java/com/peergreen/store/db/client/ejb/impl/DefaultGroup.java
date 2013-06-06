@@ -3,6 +3,8 @@ package com.peergreen.store.db.client.ejb.impl;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -27,6 +29,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
  */
 @Stateless
 public class DefaultGroup implements ISessionGroup {
+    
+    @PersistenceContext
+    private EntityManager entityManager = null;
 
     /**
      * Method to add a new group in the database.

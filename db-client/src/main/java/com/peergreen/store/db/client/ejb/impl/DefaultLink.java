@@ -1,6 +1,8 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
@@ -16,6 +18,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
  */
 @Stateless
 public class DefaultLink implements ISessionLink {
+    
+    @PersistenceContext
+    private EntityManager entityManager = null;
 
     /**
      * Method to add a new instance of Link in the database

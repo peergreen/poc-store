@@ -3,6 +3,8 @@ package com.peergreen.store.db.client.ejb.impl;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -27,6 +29,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
  */
 @Stateless
 public class DefaultUser implements ISessionUser {
+    
+    @PersistenceContext
+    private EntityManager entityManager = null;
 
     /**
      * Method to create a new instance of user and add it in the database

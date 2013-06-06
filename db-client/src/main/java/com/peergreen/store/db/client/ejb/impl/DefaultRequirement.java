@@ -3,6 +3,8 @@ package com.peergreen.store.db.client.ejb.impl;
 import java.util.Collection;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
@@ -23,6 +25,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 @Stateless
 public class DefaultRequirement implements ISessionRequirement {
 
+    @PersistenceContext
+    private EntityManager entityManager = null;
+    
     /**
      *  Method to add a new requirement in the database.
      *  
