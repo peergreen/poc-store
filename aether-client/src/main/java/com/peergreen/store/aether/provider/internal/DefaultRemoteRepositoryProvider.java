@@ -62,5 +62,9 @@ public class DefaultRemoteRepositoryProvider<T> extends DefaultRepositoryProvide
         
         return artifact.getFile();
     }
+
+    public String getPath() {
+        return path;
+    }
     
 }

@@ -62,6 +62,10 @@ public class DefaultLocalRepositoryProvider<T> extends DefaultRepositoryProvider
         return artifact.getFile();
     }
     
+    public String getPath() {
+        return path;
+    }
+    
     public boolean isStaging() {
         return staging;
     }
