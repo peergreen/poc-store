@@ -3,6 +3,7 @@ package com.peergreen.store.controller;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
@@ -98,8 +99,9 @@ public interface IPetalController {
      * @param capabilityName capability's name
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
+     * @param petal the petal which provides this capability
      */
-    void createCapability(String capabilityName, String namespace, Map<String, String> properties);
+    void createCapability(String capabilityName, String namespace, Properties properties, Petal petal);
 
     /**
      * Method to collect all the capabilities provided by a petal.

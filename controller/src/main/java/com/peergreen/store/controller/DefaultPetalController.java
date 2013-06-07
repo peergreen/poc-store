@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Bind;
@@ -164,10 +165,11 @@ public class DefaultPetalController implements IPetalController {
      * @param capabilityName capability's name
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
+     * @param petal the petal which provides this capability
      */
     @Override
-    public void createCapability(String capabilityName, String namespace, Map<String, String> properties) {
-        capabilitySession.addCapability(capabilityName, namespace, properties);
+    public void createCapability(String capabilityName, String namespace, Properties properties, Petal petal) {
+        capabilitySession.addCapability(capabilityName, namespace, properties, petal);
     }
 
     /**
