@@ -13,10 +13,6 @@
   <artifactId>controller-api</artifactId>
   <name>Peergreen Store controller API</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>com.peergreen.store</groupId>

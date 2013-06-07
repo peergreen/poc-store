@@ -13,11 +13,6 @@
   <artifactId>aether-client</artifactId>
   <name>Peergreen Store Aether client</name>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <aetherVersion>0.9.0.M2</aetherVersion>
-  </properties>
-
   <dependencies>
     <!-- Aether dependencies -->
     <dependency>
