@@ -1,6 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
-import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -21,11 +21,8 @@ public class Capability{
 
     private String namespace;
 
-    private Map<String, String> properties;
+    private Properties properties; 
 
-    /*@JoinTable(name = "CAPABILITY_PETAL_MAP",
-			joinColumns = {@JoinColumn(name = "capabilityId", referencedColumnName = "capabilityId")},
-			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})*/
     @ManyToMany(mappedBy="capabilities")
     private Set<Petal> petals;
 
@@ -70,7 +67,7 @@ public class Capability{
      * 
      * @return Map containing all the properties of the capability
      */
-    public Map<String, String> getProperties() {
+    public Properties getProperties() {
         return properties;
     }
 
@@ -79,7 +76,7 @@ public class Capability{
      * 
      * @param properties the properties to set
      */
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(Properties properties) {
         this.properties = properties;
     }
 
