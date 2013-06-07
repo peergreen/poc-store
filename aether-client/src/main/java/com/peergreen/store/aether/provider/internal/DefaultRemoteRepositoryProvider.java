@@ -63,8 +63,20 @@ public class DefaultRemoteRepositoryProvider<T> extends DefaultRepositoryProvide
         return artifact.getFile();
     }
 
+    public void setRepository(RemoteRepository repository) {
+        this.repository = repository;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getPath() {
         return path;
+    }
+    
+    public void setPath(String path) {
+        this.path = path;
     }
     
 }
