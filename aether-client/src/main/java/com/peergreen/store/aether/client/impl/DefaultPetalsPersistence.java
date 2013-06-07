@@ -190,6 +190,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         return petal;
     }
 
+    // bindings 
     @Bind(filter="(staging=false)")
     public void bindLocalProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = provider;
@@ -218,6 +219,32 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     @Unbind
     public void unbindRemoteProvider(IRepositoryProvider<RemoteRepository> provider) {
         remoteProviders.remove(provider);
+    }
+
+    
+    // getter / setter
+    public IRepositoryProvider<LocalRepository> getLocalProvider() {
+        return localProvider;
+    }
+
+    public void setLocalProvider(IRepositoryProvider<LocalRepository> localProvider) {
+        this.localProvider = localProvider;
+    }
+
+    public IRepositoryProvider<LocalRepository> getStagingProvider() {
+        return stagingProvider;
+    }
+
+    public void setStagingProvider(IRepositoryProvider<LocalRepository> stagingProvider) {
+        this.stagingProvider = stagingProvider;
+    }
+
+    public CopyOnWriteArraySet<IRepositoryProvider<RemoteRepository>> getRemoteProviders() {
+        return remoteProviders;
+    }
+    
+    public void setRemoteProviders(CopyOnWriteArraySet<IRepositoryProvider<RemoteRepository>> providers) {
+        this.remoteProviders = providers;
     }
 
 }
