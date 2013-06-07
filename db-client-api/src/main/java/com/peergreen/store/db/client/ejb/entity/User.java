@@ -22,9 +22,6 @@ public class User {
 
 	private String email;
 
-	/*@JoinTable(name = "USERS_GROUPS_MAP",
-			joinColumns = {@JoinColumn(name = "personnePseudo", referencedColumnName = "pseudo")},
-			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})*/
 	@ManyToMany(mappedBy="users")
 	private Set<Group> groupSet;
 

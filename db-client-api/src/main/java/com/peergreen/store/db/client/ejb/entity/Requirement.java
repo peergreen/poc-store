@@ -25,9 +25,6 @@ public class Requirement {
 
 	private String filter;
 
-	/*@JoinTable(name = "REQUIREMENT_PETAL_MAP",
-			joinColumns = {@JoinColumn(name = "requirementId", referencedColumnName = "requirementId")},
-			inverseJoinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")})*/
 	@ManyToMany(mappedBy="requirements")
 	private Set<Petal> petals;
 
