@@ -11,6 +11,13 @@ public interface IRepositoryProvider<T> {
      * Method to build up context.
      */
     void init();
+    
+    /**
+     * Method to retrieve repository path.
+     * 
+     * @return path to the repository (remote or local)
+     */
+    String getPath();
 
     /**
      * Method to add a petal to the repository.
