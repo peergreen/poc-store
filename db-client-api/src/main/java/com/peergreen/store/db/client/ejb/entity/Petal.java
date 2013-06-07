@@ -19,36 +19,29 @@ import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 public class Petal {
 
 	@Id
-    @Column(name = "vendor_Name")
+    @Column(name = "vendorName",insertable=false, updatable=false)
 	private String vendorName;
     @Id
 	private String artifactId;
     @Id
     private String version;
 
-/*	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinColumn(name="categoryId", referencedColumnName="categoryId")*/
 	@ManyToOne
 	private Category category;
 
 	private String description;
 
-	/*@JoinTable(name = "PETALS_GROUPS_MAP",
-			joinColumns = {@JoinColumn(name = "petalId", referencedColumnName = "petalId")},
-			inverseJoinColumns = {@JoinColumn(name = "groupName", referencedColumnName = "groupname")})*/
 	@ManyToMany(mappedBy="petals")
 	private Set<Group> groupSet;
 
-	//@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@ManyToMany
 	private Set<Requirement> requirements;
 	
-	//@ManyToMany(mappedBy="petals", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	@ManyToMany
 	private Set<Capability> capabilities;
 
 	@ManyToOne
-    @JoinColumn(name = "vendor_Name", referencedColumnName = "vendor_Name")
+    @JoinColumn(name = "vendorName", referencedColumnName = "name")
 	private Vendor vendor;
 	
 	/**
