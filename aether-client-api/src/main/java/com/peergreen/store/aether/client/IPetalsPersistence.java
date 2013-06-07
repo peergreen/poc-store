@@ -23,9 +23,10 @@ public interface IPetalsPersistence
     /**
      * Method to add a repository to the list of remote repositories.
      * 
+     * @param name remote repository name
      * @param url remote repository url
      */
-    public void addRemoteRepository(String url);
+    public void addRemoteRepository(String name, String url);
     
     /**
      * Method to remove a repository from the list of remote repositories.
