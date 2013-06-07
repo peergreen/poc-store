@@ -8,23 +8,8 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
 public interface ISessionPetal {
-
-    /**
-     * Method to create an instance of a petal and add it in the database
-     *  
-     * @param petalId The petal's id
-     * @param description The petal's description
-     * @param category The petal's category
-     * @param capabilities The petal's capabilities 
-     * @param requirements The petal's requirements
-     * 
-     * @return A new instance of petal
-     */
-    Petal addPetal(PetalId petalId, String description, Category category, 
-            Collection<Capability> capabilities, Collection<Requirement> requirements);
 
     /**
      * Method to create an instance of a petal and add it in the database
@@ -43,14 +28,6 @@ public interface ISessionPetal {
             String version, String description, Category category, 
             Collection<Capability> capabilities, Collection<Requirement> requirements);
 
-    /**
-     * Method to find a petal using his Id
-     * 
-     * @param petalId The petal's id 
-     * 
-     * @return The petal with the id given in parameters
-     */
-    Petal findPetal(PetalId petalId);
 
     /**
      * Method to find a petal 
