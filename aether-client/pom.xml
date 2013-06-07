@@ -101,6 +101,11 @@
 
     <!-- Project dependency -->
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.enterprise</artifactId>
+      <version>5.0.0</version>
+    </dependency>
+    <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>aether-client-api</artifactId>
       <version>${project.version}</version>
