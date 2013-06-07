@@ -86,8 +86,8 @@ public class DefaultPetalController implements IPetalController {
      * @return corresponding petal or <em>null</em> if not available
      */
     @Override
-    public Petal getPetal(Vendor vendor, String artifactId, String version) {
-        return petalSession.findPetal(vendor, artifactId, version);
+    public File getPetal(Vendor vendor, String artifactId, String version) {
+        return petalPersistence.getPetalFromLocal(vendor.getVendorName(), artifactId, version);
     }
 
     /**

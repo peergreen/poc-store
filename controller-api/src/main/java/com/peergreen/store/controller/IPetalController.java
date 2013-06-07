@@ -46,7 +46,7 @@ public interface IPetalController {
      * @param version petal's version
      * @return corresponding petal or <em>null</em> if not available
      */
-    Petal getPetal(Vendor vendor, String artifactId, String version);
+    File getPetal(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to directly add a petal to the store.<br />
