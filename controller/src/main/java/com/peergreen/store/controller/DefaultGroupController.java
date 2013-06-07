@@ -104,12 +104,12 @@ public class DefaultGroupController implements IGroupController {
     }
 
     @Bind
-    private void bindGroupSession(ISessionGroup groupSession) {
+    public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;
     }
     
     @Bind
-    private void bindUserSession(ISessionUser userSession) {
+    public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
     }
     
