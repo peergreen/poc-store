@@ -1,20 +1,20 @@
 package com.peergreen.store.aether.client.impl;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.felix.ipojo.annotations.Bind;
+import org.apache.felix.ipojo.annotations.Requires;
 import org.apache.felix.ipojo.annotations.Unbind;
 import org.apache.felix.ipojo.annotations.Validate;
-import org.eclipse.aether.DefaultRepositorySystemSession;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.aether.resolution.ArtifactRequest;
-import org.eclipse.aether.resolution.ArtifactResolutionException;
-import org.eclipse.aether.resolution.ArtifactResult;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.aether.provider.IRepositoryProvider;
@@ -33,24 +33,41 @@ import com.peergreen.store.aether.provider.IRepositoryProvider;
  */
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
+    @Requires
+    private ConfigurationAdmin configAmdin;
+    private Configuration config = null;
     private IRepositoryProvider<LocalRepository> localProvider;
     private IRepositoryProvider<LocalRepository> stagingProvider;
-    private Set<IRepositoryProvider<RemoteRepository>> remoteProviders;
+    private CopyOnWriteArraySet<IRepositoryProvider<RemoteRepository>> remoteProviders;
 
     @Validate
     private void validate() {
-        
+        try {
+            config = configAmdin.createFactoryConfiguration("factoryRemoteRepository", "DefaultRemoteRepositoryProvider");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Method to add a repository to the list of remote repositories.
      * 
+     * @param name remote repository name
      * @param url remote repository url
      */
     @Override
-    public void addRemoteRepository(String url) {
-        // TODO Auto-generated method stub
+    public void addRemoteRepository(String name, String url) {
+        // create a new configuration
+        Dictionary<String, String> dict = new Hashtable<String, String>();
+        dict.put("name", name);
+        dict.put("path", url);
         
+        // push configuration to Configuration Admin to generate iPOJO instance
+        try {
+            config.update(dict);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -60,12 +77,21 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public void removeRemoteRepository(String url) {
-        // TODO Auto-generated method stub
-        
+        boolean found = false;
+        Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();
+        while (!found && it.hasNext()) {
+            IRepositoryProvider<RemoteRepository> current = it.next();
+            
+            // if corresponding instance found, remove it
+            if (found = current.getPath().equals(url)) {
+                remoteProviders.remove(current);
+            }
+        }
     }
-    
+
     /**
-     * Method to recover petal's binary from its information
+     * Method to recover petal's binary from its information.<br />
+     * Browse all repositories.
      * 
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
@@ -74,20 +100,21 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public File getPetal(String vendor, String artifactId, String version) {
-        // TODO
         File petal = null;
 
         // search in local repository
         petal = localProvider.retrievePetal(vendor, artifactId, version);
 
-        // if not found locally, browse remote repositories
+        // if not found locally, try to retrieve from remote repositories
         if (petal == null) {
-            Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();
-            while (petal == null && it.hasNext()) {
-                petal = it.next().retrievePetal(vendor, artifactId, version);
-            }
+            petal = getPetalFromRemote(vendor, artifactId, version);
         }
         
+        // if still not found, try to retrieve from staging repository
+        if (petal == null) {
+            petal = getPetalFromStaging(vendor, artifactId, version);
+        }
+
         return petal;
     }
 
@@ -101,7 +128,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public void addToLocal(String vendor, String artifactId, String version, File petal) {
-        // TODO
+        localProvider.addPetal(vendor, artifactId, version, petal);
     }
 
     /**
@@ -114,8 +141,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public File getPetalFromLocal(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
+        return localProvider.retrievePetal(vendor, artifactId, version);
     }
 
     /**
@@ -128,8 +154,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public void addToStaging(String vendor, String artifactId, String version, File petal) {
-        // TODO Auto-generated method stub
-
+        stagingProvider.addPetal(vendor, artifactId, version, petal);
     }
 
     /**
@@ -142,8 +167,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public File getPetalFromStaging(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
+        return stagingProvider.retrievePetal(vendor, artifactId, version);
     }
 
     /**
@@ -156,43 +180,44 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      */
     @Override
     public File getPetalFromRemote(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
+        File petal = null;
+
+        Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();
+        while (petal == null && it.hasNext()) {
+            petal = it.next().retrievePetal(vendor, artifactId, version);
+        }
+
+        return petal;
     }
 
-    @Bind
-    public void bindLocalRepository(IRepositoryProvider<LocalRepository> provider) {
-        
-    }
-    
     @Bind(filter="(staging=false)")
     public void bindLocalProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = provider;
     }
-    
+
     @Unbind
     public void unbindLocalProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = null;
     }
-    
+
     @Bind(filter="(staging=true)")
     public void bindStagingProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = provider;
     }
-    
+
     @Unbind
     public void unbindStagingProvider(IRepositoryProvider<LocalRepository> provider) {
         localProvider = null;
     }
-    
+
     @Bind(optional=true, aggregate=true)
     public void bindRemoteProvider(IRepositoryProvider<RemoteRepository> provider) {
         remoteProviders.add(provider);
     }
-    
+
     @Unbind
     public void unbindRemoteProvider(IRepositoryProvider<RemoteRepository> provider) {
         remoteProviders.remove(provider);
     }
-    
+
 }
