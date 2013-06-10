@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
+import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class Capability{
     private Properties properties; 
 
     @ManyToMany(mappedBy="capabilities")
-    private Set<Petal> petals;
+    private Set<Petal> petals = new HashSet<>();
 
     /**
      * Method to get the name of the capability instance
@@ -95,8 +96,8 @@ public class Capability{
      * 
      * @param petals Set containing petals to set
      */
-    public void setPetals(Set<Petal> petals) {
-        this.petals = petals;
+    public void setPetal(Petal petal) {
+        this.petals.add(petal);
     }
 
 
