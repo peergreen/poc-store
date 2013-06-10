@@ -117,7 +117,6 @@ public class DefaultPetalControllerTestCase {
         vendor.setVendorName(vendorName);
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        File binary = new File("/home/toto/petal.jar");
 
         // manage group part
         Group group1 = new Group();
