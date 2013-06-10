@@ -48,7 +48,7 @@ public class DefaultPetal implements ISessionPetal {
     /**
      * Method to create an instance of a petal and add it in the database
      * 
-     * @param vendor The petal's vendor
+     * @param vendorName The petal's vendor name
      * @param artifactId The petal's artifactId
      * @param version The petal's version
      * @param description The petal's description
@@ -60,7 +60,7 @@ public class DefaultPetal implements ISessionPetal {
      * @return A new instance of petal 
      */
     @Override
-    public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
+    public Petal addPetal(String VendorName, String artifactId, String version, String description, Category category,
             Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin) {
         // TODO Auto-generated method stub
         return null;

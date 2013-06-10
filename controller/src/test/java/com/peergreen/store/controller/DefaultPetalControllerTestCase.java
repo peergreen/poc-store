@@ -102,7 +102,7 @@ public class DefaultPetalControllerTestCase {
         // nothing to mock, void return
 
         // verify petalPersitence.addToLocal is called
-        petalController.addPetal(vendor, artifactId,
+        petalController.addPetal(vendorName, artifactId,
                 version, "", new Category(),
                 new HashSet<Requirement>(),
                 new HashSet<Capability>(),

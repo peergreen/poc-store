@@ -96,7 +96,7 @@ public class DefaultPetalController implements IPetalController {
      * Method to directly add a petal to the store.<br />
      * This method make the petal persistent in the store.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -107,10 +107,10 @@ public class DefaultPetalController implements IPetalController {
      * @param Origin the petal's origin 
      */
     @Override
-    public void addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
+    public void addPetal(String vendorName, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) {
-        petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin);
-        petalPersistence.addToLocal(vendor.getVendorName(), artifactId, version, petalBinary);
+        petalSession.addPetal(vendorName, artifactId, version, description, category, capabilities, requirements,origin);
+        petalPersistence.addToLocal(vendorName, artifactId, version, petalBinary);
     }
 
     /**

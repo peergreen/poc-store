@@ -53,7 +53,7 @@ public interface IPetalController {
      * Method to directly add a petal to the store.<br />
      * This method make the petal persistent in the store.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -63,7 +63,7 @@ public interface IPetalController {
      * @param petalBinary petal's binary
      * @param Origin the petal's origin 
      */
-    void addPetal(Vendor vendor, String artifactId,
+    void addPetal(String vendorName, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
             Origin origin, File petalBinary);

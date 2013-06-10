@@ -15,7 +15,7 @@ public interface ISessionPetal {
     /**
      * Method to create an instance of a petal and add it in the database
      * 
-     * @param vendor The petal's vendor
+     * @param vendorName The petal's vendor name
      * @param artifactId The petal's artifactId
      * @param version The petal's version
      * @param description The petal's description
@@ -26,7 +26,7 @@ public interface ISessionPetal {
      * 
      * @return A new instance of petal 
      */
-    Petal addPetal(Vendor vendor, String artifactId, 
+    Petal addPetal(String vendorName, String artifactId, 
             String version, String description, Category category, 
             Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin);
 
