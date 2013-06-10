@@ -25,5 +25,10 @@
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.peergreen.store</groupId>
+      <artifactId>aether-client</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
