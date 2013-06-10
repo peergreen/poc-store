@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Bind;
 
+import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
@@ -13,7 +14,10 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 /**
  * Class defining high level operations to manage server.
@@ -30,8 +34,12 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
  */
 public class DefaultStoreManagement implements IStoreManagment {
 
+    private IPetalsPersistence petalsPersistence;
+    private ISessionGroup groupSession;
     private ISessionLink linkSession;
-    
+    private ISessionPetal petalSession;
+    private ISessionUser userSession;
+
     /**
      * Method to a link between a remote store and the current one.
      * 
@@ -138,7 +146,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
      * 
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -148,7 +156,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param petalBinary petal's binary file
      */
     @Override
-    public void submitPetal(String groupId, String artifactId, String version, String description, Category category,
+    public void submitPetal(String vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
         // TODO Auto-generated method stub
 
@@ -157,19 +165,39 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
-     * @param groupId petal's groupId
+     * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
     @Override
-    public void validatePetal(String groupId, String artifactId, String version) {
+    public void validatePetal(String vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Bind
+    public void bindPetalsPersistence(IPetalsPersistence petalsPersistence) {
+        this.petalsPersistence = petalsPersistence;
+    }
+    
+    @Bind
+    public void bindGroupSession(ISessionGroup groupSession) {
+        this.groupSession = groupSession;
     }
 
     @Bind
     public void bindLinkSession(ISessionLink linkSession) {
         this.linkSession = linkSession;
     }
-    
+
+    @Bind
+    public void bindPetalSession(ISessionPetal petalSession) {
+        this.petalSession = petalSession;
+    }
+
+    @Bind
+    public void bindUserSession(ISessionUser userSession) {
+        this.userSession = userSession;
+    }
+
 }
