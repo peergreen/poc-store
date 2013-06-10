@@ -42,6 +42,7 @@ public interface IUserController {
      * @param pseudo user's pseudo
      * @param password user's password
      * @param email user's email
+     * @return created user
      */
     User addUser(String pseudo, String password, String email);
     
