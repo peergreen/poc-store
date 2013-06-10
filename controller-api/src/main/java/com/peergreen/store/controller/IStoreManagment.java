@@ -38,9 +38,9 @@ public interface IStoreManagment {
     /**
      * Method to remove a link between a remote store and the current one.
      * 
-     * @param linkId link's id
+     * @param linkId link's url
      */
-    void removeLink(int linkId);
+    void removeLink(String linkUrl);
 
     /**
      * Method to collect all existing links in database.
