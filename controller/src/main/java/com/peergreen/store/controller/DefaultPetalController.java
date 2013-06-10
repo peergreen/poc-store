@@ -1,6 +1,7 @@
 package com.peergreen.store.controller;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -126,7 +127,7 @@ public class DefaultPetalController implements IPetalController {
          * 
          */
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        List<Group> groups = (List<Group>) petalSession.collectGroups(petal);
+        Collection<Group> groups = petalSession.collectGroups(petal);
         Iterator<Group> it = groups.iterator();
 
         while (it.hasNext()) {
@@ -155,7 +156,6 @@ public class DefaultPetalController implements IPetalController {
     public Petal updatePetal(Vendor vendor, String artifactId, String version, String description,
             Category category, Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary) {
-        // TODO
         return null;
     }
 

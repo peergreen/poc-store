@@ -1,7 +1,7 @@
 package com.peergreen.store.controller;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -111,7 +111,7 @@ public interface IPetalController {
      * @param version petal's version
      * @return list of all the capabilities provided by a petal
      */
-    List<Capability> collectCapabilities(Vendor vendor, String artifactId, String version);
+    Collection<Capability> collectCapabilities(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to add a capability to a petal's provided capabilities list.
@@ -150,7 +150,7 @@ public interface IPetalController {
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
-    List<Requirement> collectRequirements(Vendor vendor, String artifactId, String version);
+    Collection<Requirement> collectRequirements(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to add a requirement to a petal's requirements list.
