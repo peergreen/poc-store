@@ -32,12 +32,14 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
  *      <li>Add a capability to those which are given by a petal</li>
  *      <li>Remove a capability given by a petal</li>
  *      <li>Add a requirement to those which are needed by a petal</li>
- *      <li>Remove a requirement needed by a petal</li> * </ul>
+ *      <li>Remove a requirement needed by a petal</li>
+ *      <li>Collect all existing petals on database</li>
+ * </ul>
  * 
  */
 @Stateless
 public class DefaultPetal implements ISessionPetal {
-    
+
     @PersistenceContext
     private EntityManager entityManager = null;
 
@@ -62,7 +64,7 @@ public class DefaultPetal implements ISessionPetal {
         return null;
     }
 
-  
+
     /**
      * Method to find a petal 
      * 
@@ -274,5 +276,15 @@ public class DefaultPetal implements ISessionPetal {
         return null;
     }
 
+    /**
+     * Method to collect all existing petals on database.
+     * 
+     * @return petals list
+     */
+    @Override
+    public Collection<Petal> collectPetals() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

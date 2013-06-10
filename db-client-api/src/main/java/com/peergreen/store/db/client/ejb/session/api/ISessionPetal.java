@@ -181,4 +181,11 @@ public interface ISessionPetal {
      */
     Petal removeRequirement(Petal petal, Requirement requirement);
 
+    /**
+     * Method to collect all existing petals on database.
+     * 
+     * @return petals list
+     */
+    Collection<Petal> collectPetals();
+
 }
