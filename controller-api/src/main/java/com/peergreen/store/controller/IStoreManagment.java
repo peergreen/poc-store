@@ -97,7 +97,7 @@ public interface IStoreManagment {
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
      * 
-     * @param groupId petal's groupId
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -106,7 +106,7 @@ public interface IStoreManagment {
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
      */
-    void submitPetal(String groupId, String artifactId,
+    void submitPetal(String vendorName, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary);
@@ -114,10 +114,10 @@ public interface IStoreManagment {
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
-     * @param groupId petal's groupId
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
-    void validatePetal(String groupId, String artifactId, String version);
+    void validatePetal(String vendorName, String artifactId, String version);
 
 }

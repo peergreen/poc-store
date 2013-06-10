@@ -93,7 +93,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * Method to recover petal's binary from its information.<br />
      * Browse all repositories.
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendorName vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return petal's binary
@@ -121,7 +121,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param petal petal's binary
@@ -147,7 +147,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param petal petal's binary
