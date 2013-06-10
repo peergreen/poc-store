@@ -61,9 +61,9 @@ public interface IPetalController {
      * @param requirements petal's requirements
      * @param capabilities petal's capabilities
      * @param petalBinary petal's binary
-     * @param Origin the petal's origin 
+     * @param origin the petal's origin 
      */
-    void addPetal(String vendorName, String artifactId,
+    Petal addPetal(String vendorName, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
             Origin origin, File petalBinary);
@@ -103,7 +103,7 @@ public interface IPetalController {
      * @param properties capability's properties (metadata)
      * @param petal the petal which provides this capability
      */
-    void createCapability(String capabilityName, String namespace, Properties properties, Petal petal);
+    Capability createCapability(String capabilityName, String namespace, Properties properties, Petal petal);
 
     /**
      * Method to collect all the capabilities provided by a petal.
@@ -143,7 +143,7 @@ public interface IPetalController {
      * @param requirementName requirement's name
      * @param filter requirement's filter
      */
-    void createRequirement(String requirementName, String filter);
+    Requirement createRequirement(String requirementName, String filter);
 
     /**
      * Method to collect all the petal's requirements.
@@ -181,7 +181,7 @@ public interface IPetalController {
      * 
      * @param categoryName cetegory's name
      */
-    void createCategory(String categoryName);
+    Category createCategory(String categoryName);
 
     /**
      * Method to retrieve a petal's category.
@@ -209,7 +209,8 @@ public interface IPetalController {
      * 
      * @param vendorName vendor's name
      * @param vendorDescription vendor's description
+     * @return created vendor instance
      */
-    void createVendor(String vendorName, String vendorDescription);
+    Vendor createVendor(String vendorName, String vendorDescription);
 
 }

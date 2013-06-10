@@ -107,10 +107,10 @@ public class DefaultPetalController implements IPetalController {
      * @param Origin the petal's origin 
      */
     @Override
-    public void addPetal(String vendorName, String artifactId, String version, String description, Category category,
+    public Petal addPetal(String vendorName, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) {
-        petalSession.addPetal(vendorName, artifactId, version, description, category, capabilities, requirements,origin);
         petalPersistence.addToLocal(vendorName, artifactId, version, petalBinary);
+        return petalSession.addPetal(vendorName, artifactId, version, description, category, capabilities, requirements,origin);
     }
 
     /**
@@ -170,8 +170,8 @@ public class DefaultPetalController implements IPetalController {
      * @param petal the petal which provides this capability
      */
     @Override
-    public void createCapability(String capabilityName, String namespace, Properties properties, Petal petal) {
-        capabilitySession.addCapability(capabilityName, namespace, properties, petal);
+    public Capability createCapability(String capabilityName, String namespace, Properties properties, Petal petal) {
+        return capabilitySession.addCapability(capabilityName, namespace, properties, petal);
     }
 
     /**
@@ -225,8 +225,8 @@ public class DefaultPetalController implements IPetalController {
      * @param filter requirement's filter
      */
     @Override
-    public void createRequirement(String requirementName, String filter) {
-        requirementSession.addRequirement(requirementName, filter);
+    public Requirement createRequirement(String requirementName, String filter) {
+        return requirementSession.addRequirement(requirementName, filter);
     }
 
     /**
@@ -278,8 +278,8 @@ public class DefaultPetalController implements IPetalController {
      * @param categoryName cetegory's name
      */
     @Override
-    public void createCategory(String categoryName) {
-        categorySession.addCategory(categoryName);
+    public Category createCategory(String categoryName) {
+        return categorySession.addCategory(categoryName);
     }
 
     /**
@@ -318,8 +318,8 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorDescription vendor's description
      */
     @Override
-    public void createVendor(String vendorName, String vendorDescription) {
-        vendorSession.addVendor(vendorName, vendorDescription);
+    public Vendor createVendor(String vendorName, String vendorDescription) {
+        return vendorSession.addVendor(vendorName, vendorDescription);
     }
 
     @Bind
