@@ -30,6 +30,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
+import com.peergreen.store.db.client.enumeration.Origin;
 
 public class DefaultPetalControllerTestCase {
 
@@ -105,6 +106,7 @@ public class DefaultPetalControllerTestCase {
                 version, "", new Category(),
                 new HashSet<Requirement>(),
                 new HashSet<Capability>(),
+                Origin.LOCAL,
                 petal);
         verify(petalPersistence).addToLocal(vendorName, artifactId, version, petal);
     }

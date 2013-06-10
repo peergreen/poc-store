@@ -11,6 +11,7 @@ import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
  * Interface defining all petal related operations:
@@ -60,11 +61,12 @@ public interface IPetalController {
      * @param requirements petal's requirements
      * @param capabilities petal's capabilities
      * @param petalBinary petal's binary
+     * @param Origin the petal's origin 
      */
     void addPetal(Vendor vendor, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
-            File petalBinary);
+            Origin origin, File petalBinary);
 
     /**
      * Method to remove a petal from the store thanks to its information.

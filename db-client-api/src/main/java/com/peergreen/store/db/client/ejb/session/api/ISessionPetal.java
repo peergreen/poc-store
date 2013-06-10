@@ -8,6 +8,7 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.enumeration.Origin;
 
 public interface ISessionPetal {
 
@@ -21,12 +22,13 @@ public interface ISessionPetal {
      * @param category The petal's category
      * @param capabilities The petal's capabilities 
      * @param requirements The petal's requirements
+     * @param Origin the petal's origin 
      * 
      * @return A new instance of petal 
      */
     Petal addPetal(Vendor vendor, String artifactId, 
             String version, String description, Category category, 
-            Collection<Capability> capabilities, Collection<Requirement> requirements);
+            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin);
 
 
     /**
@@ -177,5 +179,27 @@ public interface ISessionPetal {
      * @return petals list
      */
     Collection<Petal> collectPetals();
+    
+    /**
+     * Method to collect all the petals in the local repository 
+     * 
+     * @return A collection of petals coming from the local repository
+     */
+    Collection<Petal> collectPetalsFromLocal();
+    
+    /**
+     * Method to collect all the petals in the staging repository 
+     * 
+     * @return A collection of petals coming from the staging repository
+     */
+    Collection<Petal> collectPetalsFromStaging();
+    
+    /**
+     * Method to collect all the petals in the remote repository 
+     * 
+     * @return A collection of petals coming from the remote repository
+     */
+    Collection<Petal> collectPetalsFromRemote();
+    
 
 }

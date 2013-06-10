@@ -26,6 +26,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
+import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
  * Interface defining all petal related operations:
@@ -103,11 +104,12 @@ public class DefaultPetalController implements IPetalController {
      * @param requirements petal's requirements
      * @param capabilities petal's capabilities
      * @param petalBinary petal's binary
+     * @param Origin the petal's origin 
      */
     @Override
     public void addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
-        petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements);
+            Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) {
+        petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin);
         petalPersistence.addToLocal(vendor.getVendorName(), artifactId, version, petalBinary);
     }
 
