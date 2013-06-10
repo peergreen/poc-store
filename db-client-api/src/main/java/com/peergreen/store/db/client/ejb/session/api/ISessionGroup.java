@@ -6,6 +6,23 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 
+/**
+ * Interface defining an entity session to manage the entity Group
+ * <ul>
+ *      <li>Create a group in a database</li>
+ *      <li>Find a group from the database</li>
+ *      <li>Modify a group</li>
+ *      <li>Remove a group from the database</li>
+ *      <li>Add a user to a group</li>
+ *      <li>Remove a user from a group</li>
+ *      <li>Collect all the users of a group</li>
+ *      <li>Add a petal to those which are accessible from a group</li>
+ *      <li>Remove an access to a petal from a group</li>
+ *      <li>Collect all the petals which the group have access</li>
+ *      <li>Collect all existing groups on database</li>
+ * </ul>
+ * 
+ */
 public interface ISessionGroup {
 
     /**
@@ -97,5 +114,12 @@ public interface ISessionGroup {
      * @return A collection of petals which are accessible from the group
      */
     Collection<Petal> collectPetals(String groupName);
+
+    /**
+     * Method to collect all existing groups on database.
+     * 
+     * @return groups list
+     */
+    Collection<Group> collectGroups();
 
 }

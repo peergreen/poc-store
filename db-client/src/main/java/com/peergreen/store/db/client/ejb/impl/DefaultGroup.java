@@ -24,12 +24,13 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
  *      <li>Add a petal to those which are accessible from a group</li>
  *      <li>Remove an access to a petal from a group</li>
  *      <li>Collect all the petals which the group have access</li>
+ *      <li>Collect all existing groups on database</li>
  * </ul>
  * 
  */
 @Stateless
 public class DefaultGroup implements ISessionGroup {
-    
+
     @PersistenceContext
     private EntityManager entityManager = null;
 
@@ -163,5 +164,15 @@ public class DefaultGroup implements ISessionGroup {
         return null;
     }
 
+    /**
+     * Method to collect all existing groups on database.
+     * 
+     * @return groups list
+     */
+    @Override
+    public Collection<Group> collectGroups() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }
