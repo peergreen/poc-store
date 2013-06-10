@@ -126,6 +126,7 @@ public interface IStoreManagment {
      * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
+     * @return corresponding petal on database
      */
     Petal validatePetal(String vendorName, String artifactId, String version);
 
