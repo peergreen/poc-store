@@ -201,5 +201,20 @@ public interface ISessionPetal {
      */
     Collection<Petal> collectPetalsFromRemote();
     
-
+    /**
+     * Method to retrieve petal's origin.
+     * 
+     * @param petal to which retrieve origin
+     * @return petal's origin {LOCAL, STAGING, REMOTE}
+     */
+    Origin getOrigin(Petal petal);
+    
+    /**
+     * Method to set petal's origin.
+     * 
+     * @param petal to which set origin
+     * @param origin petal's origin {LOCAL, STAGING, REMOTE}
+     */
+    void setOrigin(Petal petal, Origin origin);
+    
 }

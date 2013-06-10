@@ -35,6 +35,8 @@ import com.peergreen.store.db.client.enumeration.Origin;
  *      <li>Add a requirement to those which are needed by a petal</li>
  *      <li>Remove a requirement needed by a petal</li>
  *      <li>Collect all existing petals on database</li>
+ *      <li>Retrieve petal's origin {LOCAL, STAGING, REMOTE}</li>
+ *      <li>Set petal's origin {LOCAL, STAGING, REMOTE}</li>
  * </ul>
  * 
  */
@@ -65,7 +67,6 @@ public class DefaultPetal implements ISessionPetal {
         // TODO Auto-generated method stub
         return null;
     }
-
 
     /**
      * Method to find a petal 
@@ -275,25 +276,61 @@ public class DefaultPetal implements ISessionPetal {
         return null;
     }
 
-
+    /**
+     * Method to collect all the petals in the local repository 
+     * 
+     * @return A collection of petals coming from the local repository
+     */
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
         // TODO Auto-generated method stub
         return null;
     }
 
-
+    /**
+     * Method to collect all the petals in the staging repository 
+     * 
+     * @return A collection of petals coming from the staging repository
+     */
     @Override
     public Collection<Petal> collectPetalsFromStaging() {
         // TODO Auto-generated method stub
         return null;
     }
 
-
+    /**
+     * Method to collect all the petals in the remote repository 
+     * 
+     * @return A collection of petals coming from the remote repository
+     */
     @Override
     public Collection<Petal> collectPetalsFromRemote() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    /**
+     * Method to retrieve petal's origin.
+     * 
+     * @param petal to which retrieve origin
+     * @return petal's origin {LOCAL, STAGING, REMOTE}
+     */
+    @Override
+    public Origin getOrigin(Petal petal) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * Method to set petal's origin.
+     * 
+     * @param petal to which set origin
+     * @param origin of the petal {LOCAL, STAGING, REMOTE}
+     */
+    @Override
+    public void setOrigin(Petal petal, Origin origin) {
+        // TODO Auto-generated method stub
+        
     }
 
 }
