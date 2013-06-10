@@ -24,9 +24,18 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
  */
 @Stateless
 public class DefaultCategory implements ISessionCategory{
-    
-    @PersistenceContext
+
+
     private EntityManager entityManager = null;
+
+    @PersistenceContext
+    EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     /**
      * Method to add a new category in the database
