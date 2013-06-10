@@ -13,6 +13,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
  * Class defining an entity session to manage the entity Petal
@@ -54,12 +55,13 @@ public class DefaultPetal implements ISessionPetal {
      * @param category The petal's category
      * @param capabilities The petal's capabilities 
      * @param requirements The petal's requirements
+     * @param Origin the petal's origin 
      * 
      * @return A new instance of petal 
      */
     @Override
     public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Collection<Capability> capabilities, Collection<Requirement> requirements) {
+            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -269,6 +271,27 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetals() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public Collection<Petal> collectPetalsFromLocal() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public Collection<Petal> collectPetalsFromStaging() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public Collection<Petal> collectPetalsFromRemote() {
         // TODO Auto-generated method stub
         return null;
     }
