@@ -73,8 +73,8 @@ public class DefaultUserController implements IUserController {
      * @param email user's email
      */
     @Override
-    public void addUser(String pseudo, String password, String email) {
-        userSession.addUser(pseudo, password, email);
+    public User addUser(String pseudo, String password, String email) {
+        return userSession.addUser(pseudo, password, email);
     }
 
     /**

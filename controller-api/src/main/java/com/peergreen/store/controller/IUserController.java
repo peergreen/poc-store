@@ -43,7 +43,7 @@ public interface IUserController {
      * @param password user's password
      * @param email user's email
      */
-    void addUser(String pseudo, String password, String email);
+    User addUser(String pseudo, String password, String email);
     
     /**
      * Method to remove a user from the database.
