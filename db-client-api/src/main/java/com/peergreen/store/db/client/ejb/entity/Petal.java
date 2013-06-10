@@ -12,13 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
-
-enum Origin {
-    LOCAL,
-    STAGING,
-    REMOTE;
-    
-}
+import com.peergreen.store.db.client.enumeration.Origin;
 
 @Entity
 @IdClass(PetalId.class)
