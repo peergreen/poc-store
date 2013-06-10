@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.felix.ipojo.annotations.Bind;
+
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
@@ -11,6 +13,7 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 
 /**
  * Class defining high level operations to manage server.
@@ -27,6 +30,8 @@ import com.peergreen.store.db.client.ejb.entity.User;
  */
 public class DefaultStoreManagement implements IStoreManagment {
 
+    private ISessionLink linkSession;
+    
     /**
      * Method to a link between a remote store and the current one.
      * 
@@ -162,4 +167,9 @@ public class DefaultStoreManagement implements IStoreManagment {
 
     }
 
+    @Bind
+    public void bindLinkSession(ISessionLink linkSession) {
+        this.linkSession = linkSession;
+    }
+    
 }
