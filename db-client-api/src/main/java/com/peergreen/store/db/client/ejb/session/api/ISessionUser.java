@@ -9,13 +9,13 @@ import com.peergreen.store.db.client.ejb.entity.User;
 public interface ISessionUser {
 
     /**
-     * Method to create a new instance of user and add it in the database
-     * Others attributes are null when creating the user
+     * Method to create a new instance of user and add it in the database.
+     * Others attributes are null when creating the user.
      * 
      * @param pseudo the user's pseudo
      * @param password the user's password
      * @param email the user's mail 
-     * @return
+     * @return created user instance
      */
     User addUser(String pseudo, String password, String email);
 

@@ -40,7 +40,7 @@ public class DefaultUser implements ISessionUser {
      * @param pseudo the user's pseudo
      * @param password the user's password
      * @param email the user's mail 
-     * @return
+     * @return created user instance
      */
     @Override
     public User addUser(String pseudo, String password, String email) {
