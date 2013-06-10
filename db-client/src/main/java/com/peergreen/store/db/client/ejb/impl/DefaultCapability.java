@@ -81,8 +81,8 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public void deleteCapability(String capabilityName) {
         // TODO Auto-generated method stub
-      Capability temp = entityManager.find(Capability.class, capabilityName);
-      entityManager.remove(temp);
+        Capability temp = entityManager.find(Capability.class, capabilityName);
+        entityManager.remove(temp);
     }
 
     /**
@@ -141,8 +141,19 @@ public class DefaultCapability implements ISessionCapability{
         // TODO Auto-generated method stub
         Set<Petal> petals = capability.getPetals();
         petals.remove(petal);
-        entityManager.merge(capability);
-        return capability;
+        /**
+         * If any petal doesn't give this capability no longer
+         * so we can delete it
+         */
+        if(petals.isEmpty()){
+            deleteCapability(capability.getcapabilityName());
+            return null;
+        }
+        else{
+            entityManager.merge(capability);
+            return capability;
+
+        }
     }
 
 
