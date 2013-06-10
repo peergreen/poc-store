@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,9 +26,20 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
  */
 @Stateless
 public class DefaultCapability implements ISessionCapability{
-    
+
+
+    private EntityManager entityManager;
+
     @PersistenceContext
-    private EntityManager entityManager = null;
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+
 
     /**
      * Method to add a new capability in the database.
@@ -39,11 +51,27 @@ public class DefaultCapability implements ISessionCapability{
      * @return The capability creates
      */
     @Override
-    public Capability addCapability(String capabilityName, String namespace, Properties properties,Petal Petal ) {
-        // TODO Auto-generated method stub
-       
-        return null;
+    public Capability addCapability(String capabilityName, String namespace, Properties properties,Petal petal ) {
+        Capability capability;
+
+        if(entityManager.find(Capability.class, capabilityName)== null){
+            capability = new Capability();
+            capability.setName(capabilityName);
+            capability.setNamespace(namespace);
+            capability.setProperties(properties);
+            capability.setPetal(petal);
+            entityManager.persist(capability); 
+        }
+        else{
+            capability = entityManager.find(Capability.class, capabilityName);
+            addPetal(capability, petal);
+        }
+
+
+        return capability;
     }
+
+
 
     /**
      * Method to delete a capability in the database
@@ -53,7 +81,8 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public void deleteCapability(String capabilityName) {
         // TODO Auto-generated method stub
-
+      Capability temp = entityManager.find(Capability.class, capabilityName);
+      entityManager.remove(temp);
     }
 
     /**
@@ -65,7 +94,8 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Capability findCapability(String capabilityName) {
         // TODO Auto-generated method stub
-        return null;
+        Capability capability = entityManager.find(Capability.class, capabilityName);
+        return capability;
     }
 
     /**
@@ -77,7 +107,9 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Collection<Petal> collectPetals(String capabilityName) {
         // TODO Auto-generated method stub
-        return null;
+        Capability capability = entityManager.find(Capability.class, capabilityName);
+
+        return capability.getPetals();
     }
 
     /**
@@ -91,7 +123,9 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Capability addPetal(Capability capability, Petal petal) {
         // TODO Auto-generated method stub
-        return null;
+        capability.setPetal(petal);
+        entityManager.merge(capability);
+        return capability;
     }
 
     /**
@@ -105,7 +139,10 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Capability removePetal(Capability capability, Petal petal) {
         // TODO Auto-generated method stub
-        return null;
+        Set<Petal> petals = capability.getPetals();
+        petals.remove(petal);
+        entityManager.merge(capability);
+        return capability;
     }
 
 
