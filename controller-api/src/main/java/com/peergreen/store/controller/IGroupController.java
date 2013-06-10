@@ -23,8 +23,9 @@ public interface IGroupController {
      * Method to add a new group in database.
      * 
      * @param groupName group's name
+     * @return created group instance
      */
-    void addGroup(String groupName);
+    Group addGroup(String groupName);
     
     /**
      * Method to modify an existing Group entity.

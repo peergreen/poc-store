@@ -36,10 +36,11 @@ public class DefaultGroupController implements IGroupController {
      * Method to add a new group in database.
      * 
      * @param groupName group's name
+     * @return created group instance
      */
     @Override
-    public void addGroup(String groupName) {
-        groupSession.addGroup(groupName);
+    public Group addGroup(String groupName) {
+        return groupSession.addGroup(groupName);
     }
 
     /**

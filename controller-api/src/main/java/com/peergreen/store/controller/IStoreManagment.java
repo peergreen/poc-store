@@ -32,8 +32,9 @@ public interface IStoreManagment {
      * 
      * @param url path to the remote store
      * @param description link's description
+     * @param created link instance
      */
-    void addLink(String url, String description);
+    Link addLink(String url, String description);
 
     /**
      * Method to remove a link between a remote store and the current one.
@@ -112,8 +113,9 @@ public interface IStoreManagment {
      * @param requirements petal's requirements
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
+     * @return corresponding petal on database
      */
-    void submitPetal(String vendorName, String artifactId,
+    Petal submitPetal(String vendorName, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary);
@@ -125,6 +127,6 @@ public interface IStoreManagment {
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
-    void validatePetal(String vendorName, String artifactId, String version);
+    Petal validatePetal(String vendorName, String artifactId, String version);
 
 }

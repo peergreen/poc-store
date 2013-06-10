@@ -52,10 +52,11 @@ public class DefaultStoreManagement implements IStoreManagment {
      * 
      * @param url path to the remote store
      * @param description link's description
+     * @param created link instance
      */
     @Override
-    public void addLink(String url, String description) {
-        linkSession.addLink(url, description);
+    public Link addLink(String url, String description) {
+        return linkSession.addLink(url, description);
     }
 
     /**
@@ -170,7 +171,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -178,13 +179,18 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param requirements petal's requirements
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
+     * @return corresponding petal on database
      */
     @Override
-    public void submitPetal(String vendor, String artifactId, String version, String description, Category category,
+    public Petal submitPetal(String vendorName, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
-        petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
-        petalSession.addPetal(vendor, artifactId, version, description,
+        petalsPersistence.addToStaging(vendorName, artifactId, version, petalBinary);
+        petalSession.addPetal(vendorName, artifactId, version, description,
                 category, capabilities, requirements, Origin.STAGING);
+        
+        Vendor vendor = vendorSession.findVendor(vendorName);
+        
+        return petalSession.findPetal(vendor, artifactId, version);
     }
 
     /**
@@ -194,9 +200,10 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
+     * @return corresponding petal on database
      */
     @Override
-    public void validatePetal(String vendorName, String artifactId, String version) {
+    public Petal validatePetal(String vendorName, String artifactId, String version) {
         // retrieve petal from staging repository
         File binary = petalsPersistence.getPetalFromStaging(vendorName, artifactId, version);
         // add this petal in local repository
@@ -205,6 +212,8 @@ public class DefaultStoreManagement implements IStoreManagment {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         petalSession.setOrigin(petal, Origin.LOCAL);
+        
+        return petal;
     }
 
     @Bind
