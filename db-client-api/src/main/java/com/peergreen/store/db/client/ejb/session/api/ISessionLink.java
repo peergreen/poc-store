@@ -1,5 +1,7 @@
 package com.peergreen.store.db.client.ejb.session.api;
 
+import java.util.Collection;
+
 import com.peergreen.store.db.client.ejb.entity.Link;
 
 public interface ISessionLink {
@@ -29,5 +31,12 @@ public interface ISessionLink {
      * @return The link with the url linkUrl
      */
     Link findLink(String linkUrl);
+    
+    /**
+     * Method to collect all existing links on database.
+     * 
+     * @return links list
+     */
+    Collection<Link> collectLinks();
 
 }

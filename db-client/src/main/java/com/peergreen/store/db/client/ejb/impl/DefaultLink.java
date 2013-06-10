@@ -1,5 +1,7 @@
 package com.peergreen.store.db.client.ejb.impl;
 
+import java.util.Collection;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,7 +20,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
  */
 @Stateless
 public class DefaultLink implements ISessionLink {
-    
+
     @PersistenceContext
     private EntityManager entityManager = null;
 
@@ -60,5 +62,15 @@ public class DefaultLink implements ISessionLink {
         return null;
     }
 
+    /**
+     * Method to collect all existing links on database.
+     * 
+     * @return links list
+     */
+    @Override
+    public Collection<Link> collectLinks() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }
