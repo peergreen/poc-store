@@ -4,6 +4,16 @@ import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
 
+/**
+ * Interface defining an entity session to manage the entity Link:
+ * <ul>
+ *      <li>Create a link on database</li>
+ *      <li>Remove a link from the database</li>
+ *      <li>Find a link from the database</li>
+ *      <li>Collect all existing links on database</li>
+ * </ul>
+ * 
+ */
 public interface ISessionLink {
 
     /**

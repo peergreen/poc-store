@@ -10,11 +10,12 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 
 /**
- * Class defining an entity session to manage the entity Link
+ * Class defining an entity session to manage the entity Link:
  * <ul>
  *      <li>Create a link on database</li>
  *      <li>Remove a link from the database</li>
  *      <li>Find a link from the database</li>
+ *      <li>Collect all existing links on database</li>
  * </ul>
  * 
  */
