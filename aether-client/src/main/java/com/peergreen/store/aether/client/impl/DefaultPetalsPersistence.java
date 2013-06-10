@@ -93,26 +93,26 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * Method to recover petal's binary from its information.<br />
      * Browse all repositories.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return petal's binary
      */
     @Override
-    public File getPetal(String vendor, String artifactId, String version) {
+    public File getPetal(String vendorName, String artifactId, String version) {
         File petal = null;
 
         // search in local repository
-        petal = localProvider.retrievePetal(vendor, artifactId, version);
+        petal = localProvider.retrievePetal(vendorName, artifactId, version);
 
         // if not found locally, try to retrieve from remote repositories
         if (petal == null) {
-            petal = getPetalFromRemote(vendor, artifactId, version);
+            petal = getPetalFromRemote(vendorName, artifactId, version);
         }
         
         // if still not found, try to retrieve from staging repository
         if (petal == null) {
-            petal = getPetalFromStaging(vendor, artifactId, version);
+            petal = getPetalFromStaging(vendorName, artifactId, version);
         }
 
         return petal;
@@ -121,70 +121,70 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param petal petal's binary
      */
     @Override
-    public void addToLocal(String vendor, String artifactId, String version, File petal) {
-        localProvider.addPetal(vendor, artifactId, version, petal);
+    public void addToLocal(String vendorName, String artifactId, String version, File petal) {
+        localProvider.addPetal(vendorName, artifactId, version, petal);
     }
 
     /**
      * Method to retrieve a petal from the local repository
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal
      */
     @Override
-    public File getPetalFromLocal(String vendor, String artifactId, String version) {
-        return localProvider.retrievePetal(vendor, artifactId, version);
+    public File getPetalFromLocal(String vendorName, String artifactId, String version) {
+        return localProvider.retrievePetal(vendorName, artifactId, version);
     }
 
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param petal petal's binary
      */
     @Override
-    public void addToStaging(String vendor, String artifactId, String version, File petal) {
-        stagingProvider.addPetal(vendor, artifactId, version, petal);
+    public void addToStaging(String vendorName, String artifactId, String version, File petal) {
+        stagingProvider.addPetal(vendorName, artifactId, version, petal);
     }
 
     /**
      * Method to retrieve a petal from the staging repository
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal
      */
     @Override
-    public File getPetalFromStaging(String vendor, String artifactId, String version) {
-        return stagingProvider.retrievePetal(vendor, artifactId, version);
+    public File getPetalFromStaging(String vendorName, String artifactId, String version) {
+        return stagingProvider.retrievePetal(vendorName, artifactId, version);
     }
 
     /**
      * Method to retrieve a petal from all remote repositories
      * 
-     * @param vendor petal's vendor
+     * @param vendorName petal's vendor's name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal's binary
      */
     @Override
-    public File getPetalFromRemote(String vendor, String artifactId, String version) {
+    public File getPetalFromRemote(String vendorName, String artifactId, String version) {
         File petal = null;
 
         Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();
         while (petal == null && it.hasNext()) {
-            petal = it.next().retrievePetal(vendor, artifactId, version);
+            petal = it.next().retrievePetal(vendorName, artifactId, version);
         }
 
         return petal;
