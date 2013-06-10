@@ -16,10 +16,12 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
@@ -43,6 +45,7 @@ public class DefaultStoreManagement implements IStoreManagment {
     private ISessionLink linkSession;
     private ISessionPetal petalSession;
     private ISessionUser userSession;
+    private ISessionVendor vendorSession;
 
     /**
      * Method to a link between a remote store and the current one.
@@ -180,21 +183,28 @@ public class DefaultStoreManagement implements IStoreManagment {
     public void submitPetal(String vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
         petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
-//        petalSession.addPetal(vendor, artifactId, version, description,
-//                category, capabilities, requirements, Origin.STAGING);
+        petalSession.addPetal(vendor, artifactId, version, description,
+                category, capabilities, requirements, Origin.STAGING);
     }
 
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
-     * @param vendor petal's vendor
+     * 
+     * @param vendorName petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
     @Override
-    public void validatePetal(String vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-
+    public void validatePetal(String vendorName, String artifactId, String version) {
+        // retrieve petal from staging repository
+        File binary = petalsPersistence.getPetalFromStaging(vendorName, artifactId, version);
+        // add this petal in local repository
+        petalsPersistence.addToLocal(vendorName, artifactId, version, binary);
+        // change origin attribute to LOCAL
+        Vendor vendor = vendorSession.findVendor(vendorName);
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        petalSession.setOrigin(petal, Origin.LOCAL);
     }
 
     @Bind
@@ -220,6 +230,11 @@ public class DefaultStoreManagement implements IStoreManagment {
     @Bind
     public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
+    }
+    
+    @Bind
+    public void bindVendorSession(ISessionVendor vendorSession) {
+        this.vendorSession = vendorSession;
     }
 
 }
