@@ -13,6 +13,13 @@ import javax.persistence.Table;
 
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 
+enum Origin {
+    LOCAL,
+    STAGING,
+    REMOTE;
+    
+}
+
 @Entity
 @IdClass(PetalId.class)
 @Table(name = "Petals")
@@ -43,6 +50,8 @@ public class Petal {
 	@ManyToOne
     @JoinColumn(name = "vendorName", referencedColumnName = "name")
 	private Vendor vendor;
+	
+	private Origin origin;
 	
 	/**
 	 * Method to retrieve the petal's vendor name
@@ -204,6 +213,24 @@ public class Petal {
      */
     public void setVendor(Vendor vendor) {
         this.vendor = vendor;
+    }
+
+    /**
+     * Method to get the petal's origin
+     * 
+     * @return the origin of the petal 
+     */
+    public Origin getOrigin() {
+        return origin;
+    }
+
+    /**
+     * Method to set the petal origin
+     * 
+     * @param origin the origin to set
+     */
+    public void setOrigin(Origin origin) {
+        this.origin = origin;
     }
 
 }
