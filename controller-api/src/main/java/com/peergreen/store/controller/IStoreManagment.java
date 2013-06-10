@@ -66,18 +66,25 @@ public interface IStoreManagment {
     Collection<Petal> collectPetalsForUser(String pseudo);
 
     /**
-     * Method to collect petals in the staging repository.
-     * 
-     * @return list of available petals in staging repository
-     */
-    Collection<Petal> collectPetalsFromStaging();
-
-    /**
      * Method to collect petals in the local repository.
      * 
      * @return list of available petals in local repository
      */
     Collection<Petal> collectPetalsFromLocal();
+    
+    /**
+     * Method to collect petals in the staging repository.
+     * 
+     * @return list of available petals in staging repository
+     */
+    Collection<Petal> collectPetalsFromStaging();
+    
+    /**
+     * Method to collect petals in all associated remote repositories.
+     * 
+     * @return list of available petals in associated remote repositories
+     */
+    Collection<Petal> collectPetalsFromRemote();
 
     /**
      * Method to collect all existing users on database.

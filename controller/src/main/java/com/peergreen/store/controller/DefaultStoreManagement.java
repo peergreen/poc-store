@@ -20,6 +20,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
  * Class defining high level operations to manage server.
@@ -28,7 +29,8 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
  * <ul>
  *      <li>Add, remove and retrieve links to remote stores</li>
  *      <li>Retrieve available petals for a specific user,
- *          from local store or from staging store</li>
+ *          from local store, from staging store or from
+ *          associated remote repositories</li>
  *      <li>Retrieve all users</li>
  *      <li>Retrieve all groups</li>
  *      <li>Petal submission and validation</li>
@@ -112,25 +114,33 @@ public class DefaultStoreManagement implements IStoreManagment {
     }
 
     /**
-     * Method to collect petals in the staging repository.
-     * 
-     * @return list of available petals in staging repository
-     */
-    @Override
-    public Collection<Petal> collectPetalsFromStaging() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
      * Method to collect petals in the local repository.
      * 
      * @return list of available petals in local repository
      */
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
-        // TODO Auto-generated method stub
-        return null;
+        return petalSession.collectPetalsFromLocal();
+    }
+    
+    /**
+     * Method to collect petals in the staging repository.
+     * 
+     * @return list of available petals in staging repository
+     */
+    @Override
+    public Collection<Petal> collectPetalsFromStaging() {
+        return petalSession.collectPetalsFromStaging();
+    }
+    
+    /**
+     * Method to collect petals in all associated remote repositories.
+     * 
+     * @return list of available petals in associated remote repositories
+     */
+    @Override
+    public Collection<Petal> collectPetalsFromRemote() {
+        return petalSession.collectPetalsFromRemote();
     }
 
     /**
@@ -169,8 +179,9 @@ public class DefaultStoreManagement implements IStoreManagment {
     @Override
     public void submitPetal(String vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
-        // TODO Auto-generated method stub
-
+        petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
+//        petalSession.addPetal(vendor, artifactId, version, description,
+//                category, capabilities, requirements, Origin.STAGING);
     }
 
     /**
