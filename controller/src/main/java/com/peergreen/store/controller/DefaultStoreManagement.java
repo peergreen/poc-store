@@ -1,7 +1,9 @@
 package com.peergreen.store.controller;
 
+
 import java.io.File;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Bind;
@@ -48,8 +50,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public void addLink(String url, String description) {
-        // TODO Auto-generated method stub
-
+        linkSession.addLink(url, description);
     }
 
     /**
@@ -58,9 +59,8 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param linkId link's id
      */
     @Override
-    public void removeLink(int linkId) {
-        // TODO Auto-generated method stub
-
+    public void removeLink(String linkUrl) {
+        linkSession.deleteLink(linkUrl);
     }
 
     /**
@@ -70,8 +70,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Collection<Link> collectLinks() {
-        // TODO Auto-generated method stub
-        return null;
+        return linkSession.collectLinks();
     }
 
     /**
@@ -82,8 +81,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Collection<Petal> collectPetals() {
-        // TODO Auto-generated method stub
-        return null;
+        return petalSession.collectPetals();
     }
 
     /**
@@ -94,8 +92,23 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Collection<Petal> collectPetalsForUser(String pseudo) {
-        // TODO Auto-generated method stub
-        return null;
+        Collection<Group> groups = userSession.collectGroups(pseudo);
+        Iterator<Group> it = groups.iterator();
+        
+        Collection<Petal> petals = null;
+        
+        // retrieve all petals for each group
+        while (it.hasNext()) {
+            Group g = it.next();
+            Collection<Petal> p = groupSession.collectPetals(g.getGroupname());
+            if (petals != null) {
+                petals.addAll(p);
+            } else {
+                petals = p;
+            }
+        }
+        
+        return petals;
     }
 
     /**
@@ -127,8 +140,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Collection<User> collectUsers() {
-        // TODO Auto-generated method stub
-        return null;
+        return userSession.collectUsers();
     }
 
     /**
@@ -138,8 +150,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Collection<Group> collectGroups() {
-        // TODO Auto-generated method stub
-        return null;
+        return groupSession.collectGroups();
     }
 
     /**
