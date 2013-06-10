@@ -123,16 +123,6 @@ public interface ISessionPetal {
     Petal addCategory(Petal petal, Category category);
 
     /**
-     * Method to change a petal's category
-     *  
-     * @param petal An instance of petal 
-     * @param category The new category of the petal
-     * 
-     * @return A new petal with his new category
-     */
-    Petal changeCategory(Petal petal, Category category);
-
-    /**
      * Method to get a category of a petal
      * 
      * @param petal An instance of petal

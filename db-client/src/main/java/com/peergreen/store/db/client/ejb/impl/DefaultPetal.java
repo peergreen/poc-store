@@ -194,20 +194,6 @@ public class DefaultPetal implements ISessionPetal {
     }
 
     /**
-     * Method to change a petal's category
-     *  
-     * @param petal An instance of petal 
-     * @param category The new category of the petal
-     * 
-     * @return A new petal with his new category
-     */
-    @Override
-    public Petal changeCategory(Petal petal, Category category) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
      * Method to get a category of a petal
      * 
      * @param petal An instance of petal
