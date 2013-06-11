@@ -16,7 +16,6 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
