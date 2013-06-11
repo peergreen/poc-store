@@ -29,8 +29,8 @@ public class DefaultVendor implements ISessionVendor {
     private EntityManager entityManager = null;
     
     /**
-     * Method to add a new instance of vendor in the database 
-     * The attribute petals are null when creating the group
+     * Method to add a new instance of vendor in the database.<br />
+     * The attribute petals are null when creating the group.
      * 
      * @param vendorName the vendor's name
      * @param vendorDescription the vendor's description
@@ -109,5 +109,13 @@ public class DefaultVendor implements ISessionVendor {
         return null;
     }
 
-
+    /**
+     * Method to set manually the entity manager.
+     * 
+     * @param entityManager used
+     */
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+    
 }
