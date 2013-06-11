@@ -65,7 +65,7 @@ public class Vendor {
      * @return Set containing petals that are provided by the vendor instance
      */
     public Set<Petal> getPetals() {
-        return petals;
+        return this.petals;
     }
 
     /**
@@ -76,6 +76,5 @@ public class Vendor {
     public void setPetals(Set<Petal> petals) {
         this.petals = petals;
     }
-
 
 }

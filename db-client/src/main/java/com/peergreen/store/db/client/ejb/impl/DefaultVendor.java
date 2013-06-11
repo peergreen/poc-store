@@ -1,8 +1,11 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -25,9 +28,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 @Stateless
 public class DefaultVendor implements ISessionVendor {
 
-    @PersistenceContext
-    private EntityManager entityManager = null;
-    
+
+    private EntityManager entityManager;
+
     /**
      * Method to add a new instance of vendor in the database.<br />
      * The attribute petals are null when creating the group.
@@ -38,9 +41,17 @@ public class DefaultVendor implements ISessionVendor {
      * @return A new instance of Vendor
      */
     @Override
-    public Vendor addVendor(String vendorName, String vendorDescription) {
-        // TODO Auto-generated method stub
-        return null;
+    public Vendor addVendor(String vendorName, String vendorDescription) throws EntityExistsException{
+
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
+        vendor.setVendorDescription(vendorDescription);
+        Set<Petal> petals = new HashSet<Petal>();
+        vendor.setPetals(petals);
+
+        entityManager.persist(vendor);
+
+        return vendor;
     }
 
     /**
@@ -50,8 +61,8 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public void deleteVendor(String vendorName) {
-        // TODO Auto-generated method stub
-
+        Vendor temp = entityManager.find(Vendor.class, vendorName);
+        entityManager.remove(temp);
     }
 
     /**
@@ -63,8 +74,8 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public Vendor findVendor(String vendorName) {
-        // TODO Auto-generated method stub
-        return null;
+        Vendor vendor = entityManager.find(Vendor.class, vendorName);
+        return vendor;
     }
 
     /**
@@ -77,8 +88,10 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public Collection<Petal> collectPetals(String vendorName) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Vendor vendor = entityManager.find(Vendor.class, vendorName);
+
+        return vendor.getPetals();
     }
 
     /**
@@ -91,8 +104,12 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public Vendor addPetal(Vendor vendor, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Set<Petal> petals = vendor.getPetals();
+        petals.add(petal);
+        vendor.setPetals(petals);     
+        vendor = entityManager.merge(vendor);
+        return vendor;
     }
 
     /**
@@ -105,8 +122,13 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public Vendor removePetal(Vendor vendor, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Set<Petal> petals = vendor.getPetals();
+        petals.remove(petal);
+        vendor.setPetals(petals);
+
+        entityManager.merge(vendor);
+        return vendor;
     }
 
     /**
@@ -117,5 +139,10 @@ public class DefaultVendor implements ISessionVendor {
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    
+
+    @PersistenceContext
+    public EntityManager getEntityManager() {
+        return this.entityManager;
+    }
+
 }
