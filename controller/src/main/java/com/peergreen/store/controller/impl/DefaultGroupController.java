@@ -1,4 +1,4 @@
-package com.peergreen.store.controller;
+package com.peergreen.store.controller.impl;
 
 import java.util.Collection;
 
@@ -7,6 +7,7 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 
+import com.peergreen.store.controller.IGroupController;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;

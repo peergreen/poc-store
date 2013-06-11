@@ -1,4 +1,4 @@
-package com.peergreen.store.aether.provider.internal;
+package com.peergreen.store.aether.provider.impl;
 
 import java.io.File;
 

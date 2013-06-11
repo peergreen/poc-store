@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.aether.client.impl.DefaultPetalsPersistence;
 import com.peergreen.store.aether.provider.IRepositoryProvider;
-import com.peergreen.store.aether.provider.internal.DefaultRemoteRepositoryProvider;
+import com.peergreen.store.aether.provider.impl.DefaultRemoteRepositoryProvider;
 
 public class DefaultPetalsPersistenceTestCase {
     private DefaultPetalsPersistence petalsPersistence = null;

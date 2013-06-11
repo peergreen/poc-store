@@ -1,4 +1,4 @@
-package com.peergreen.store.controller;
+package com.peergreen.store.controller.impl;
 
 
 import java.io.File;
@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.felix.ipojo.annotations.Bind;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
+import com.peergreen.store.controller.IStoreManagment;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
