@@ -43,8 +43,18 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Stateless
 public class DefaultPetal implements ISessionPetal {
 
+    
+    private EntityManager entityManager;
+
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
     @PersistenceContext
-    private EntityManager entityManager = null;
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
 
     /**

@@ -25,9 +25,18 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 @Stateless
 public class DefaultRequirement implements ISessionRequirement {
 
-    @PersistenceContext
-    private EntityManager entityManager = null;
     
+    private EntityManager entityManager;
+    
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
+    @PersistenceContext
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
     /**
      *  Method to add a new requirement in the database.
      *  

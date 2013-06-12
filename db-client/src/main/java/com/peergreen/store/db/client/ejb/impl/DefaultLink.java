@@ -22,8 +22,17 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 @Stateless
 public class DefaultLink implements ISessionLink {
 
+    
+    private EntityManager entityManager;
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
     @PersistenceContext
-    private EntityManager entityManager = null;
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     /**
      * Method to add a new instance of Link in the database

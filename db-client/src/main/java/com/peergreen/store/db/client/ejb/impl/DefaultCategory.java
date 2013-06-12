@@ -1,8 +1,11 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -28,11 +31,10 @@ public class DefaultCategory implements ISessionCategory{
 
     private EntityManager entityManager = null;
 
-    @PersistenceContext
     EntityManager getEntityManager() {
         return entityManager;
     }
-
+    @PersistenceContext 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -45,9 +47,13 @@ public class DefaultCategory implements ISessionCategory{
      * @return A new instance of Category
      */
     @Override
-    public Category addCategory(String categoryName) {
-        // TODO Auto-generated method stub
-        return null;
+    public Category addCategory(String categoryName) throws EntityExistsException {
+        Category category = new Category();
+        category.setCategoryName(categoryName);
+        Set<Petal> petals = new HashSet<Petal>(); 
+        category.setPetals(petals);
+        entityManager.persist(category);    
+        return category;
     }
 
     /**
@@ -57,8 +63,8 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public void deleteCategory(String categoryName) {
-        // TODO Auto-generated method stub
-
+        Category temp = entityManager.find(Category.class, categoryName);
+        entityManager.remove(temp);
     }
 
     /**
@@ -70,8 +76,7 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category findCategory(String categoryName) {
-        // TODO Auto-generated method stub
-        return null;
+        return entityManager.find(Category.class, categoryName);
     }
 
     /**
@@ -84,8 +89,9 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Collection<Petal> collectPetals(String categoryName) {
-        // TODO Auto-generated method stub
-        return null;
+        Category category = entityManager.find(Category.class, categoryName);
+
+        return category.getPetals();
     }
 
     /**
@@ -98,8 +104,10 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category addPetal(Category category, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+        Set<Petal> petals = category.getPetals();
+        petals.add(petal);
+        category =  entityManager.merge(category);
+        return category;
     }
 
     /**
@@ -113,8 +121,9 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category removePetal(Category category, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+        category.getPetals().remove(petal);
+        category =  entityManager.merge(category);
+        return category;
     }
 
 }

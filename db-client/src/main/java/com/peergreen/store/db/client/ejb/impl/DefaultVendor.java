@@ -30,6 +30,7 @@ public class DefaultVendor implements ISessionVendor {
 
 
     private EntityManager entityManager;
+    
 
     /**
      * Method to add a new instance of vendor in the database.<br />
@@ -136,11 +137,11 @@ public class DefaultVendor implements ISessionVendor {
      * 
      * @param entityManager used
      */
+    @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-    @PersistenceContext
     public EntityManager getEntityManager() {
         return this.entityManager;
     }

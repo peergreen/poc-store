@@ -31,8 +31,16 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 @Stateless
 public class DefaultGroup implements ISessionGroup {
 
+    private EntityManager entityManager;
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+    
     @PersistenceContext
-    private EntityManager entityManager = null;
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     /**
      * Method to add a new group in the database.

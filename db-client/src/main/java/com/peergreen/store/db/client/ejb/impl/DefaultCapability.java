@@ -30,11 +30,12 @@ public class DefaultCapability implements ISessionCapability{
 
     private EntityManager entityManager;
 
-    @PersistenceContext
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
 
+    @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -80,7 +81,7 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public void deleteCapability(String capabilityName) {
-        // TODO Auto-generated method stub
+
         Capability temp = entityManager.find(Capability.class, capabilityName);
         entityManager.remove(temp);
     }
@@ -93,7 +94,7 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability findCapability(String capabilityName) {
-        // TODO Auto-generated method stub
+
         Capability capability = entityManager.find(Capability.class, capabilityName);
         return capability;
     }
@@ -106,7 +107,7 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Collection<Petal> collectPetals(String capabilityName) {
-        // TODO Auto-generated method stub
+
         Capability capability = entityManager.find(Capability.class, capabilityName);
 
         return capability.getPetals();
@@ -122,7 +123,7 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability addPetal(Capability capability, Petal petal) {
-        // TODO Auto-generated method stub
+
         capability.setPetal(petal);
         entityManager.merge(capability);
         return capability;
@@ -138,7 +139,7 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability removePetal(Capability capability, Petal petal) {
-        // TODO Auto-generated method stub
+
         Set<Petal> petals = capability.getPetals();
         petals.remove(petal);
         /**
