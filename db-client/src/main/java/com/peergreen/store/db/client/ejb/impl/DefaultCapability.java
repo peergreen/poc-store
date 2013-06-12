@@ -53,9 +53,10 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability addCapability(String capabilityName, String namespace, Properties properties,Petal petal ) {
-        Capability capability;
 
-        if(entityManager.find(Capability.class, capabilityName)== null){
+        Capability capability = entityManager.find(Capability.class, capabilityName);
+
+        if(capability == null){
             capability = new Capability();
             capability.setName(capabilityName);
             capability.setNamespace(namespace);
@@ -63,9 +64,10 @@ public class DefaultCapability implements ISessionCapability{
             capability.setPetal(petal);
             entityManager.persist(capability); 
         }
-        else{
-            capability = entityManager.find(Capability.class, capabilityName);
-            addPetal(capability, petal);
+        else {
+
+            capability.setPetal(petal);
+            capability = entityManager.merge(capability);
         }
 
 
@@ -147,14 +149,14 @@ public class DefaultCapability implements ISessionCapability{
          * so we can delete it
          */
         if(petals.isEmpty()){
-            deleteCapability(capability.getcapabilityName());
-            return null;
+            entityManager.remove(capability);
+            capability = null;
         }
-        else{
-            entityManager.merge(capability);
-            return capability;
+        else {
+            capability = entityManager.merge(capability);
 
         }
+        return capability;
     }
 
 
