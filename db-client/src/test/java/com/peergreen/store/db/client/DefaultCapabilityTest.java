@@ -1,25 +1,21 @@
 package com.peergreen.store.db.client;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -30,78 +26,47 @@ import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
 
 public class DefaultCapabilityTest {
 
-    private Capability capability;
-    private Map<String, Capability> capabilities;
     private DefaultCapability sessionCapability;
-    Properties properties;
 
     @Mock
     private EntityManager entityManager;  
     @Mock 
     private Capability mockcapability;
+    @Mock
+    private Properties properties;
+    @Mock
+    private Petal petal;
+    @Mock
+    private Set<Petal> petals;
+
+    ArgumentCaptor<Capability> capability1;
 
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         sessionCapability = new DefaultCapability();
-        sessionCapability.setEntityManager(entityManager);
-        properties = new Properties();
+        sessionCapability.setEntityManager(entityManager);       
+        capability1 = ArgumentCaptor.forClass(Capability.class);
 
-        this.capabilities = new HashMap<String, Capability>();
-
-        doAnswer(new Answer<Capability>() {
-            @Override
-            public Capability answer(InvocationOnMock invocation) throws Throwable {
-                // TODO Auto-generated method stub
-                Object[] args = invocation.getArguments();
-                capability = (Capability) args[0];
-                String key = capability.getcapabilityName();
-                capabilities.put(key, capability);
-                return capability; 
-            }
-        }).when(entityManager).persist(any(Capability.class));
-
-        doAnswer(new Answer<Capability>() {
-            @Override
-            public Capability answer(InvocationOnMock invocation) throws Throwable {
-                Object[] args = invocation.getArguments();
-                String key = (String) args[1];
-                if(capabilities.containsKey(key) == true){
-                    return capabilities.get(key);}
-                else
-                {
-                    return null;
-                }
-            }
-        }).when(entityManager).find(eq(Capability.class) ,anyString());
-
-        doAnswer(new Answer<Capability>() {
-            @Override
-            public Capability answer(InvocationOnMock invocation) throws Throwable {
-                Object[] args = invocation.getArguments();
-                capability = (Capability) args[0];
-                String key = capability.getcapabilityName();
-                capabilities.put(key, capability);
-                return capabilities.get(key);
-            }
-        }).when(entityManager).merge(any(Capability.class));
-        
-        doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(InvocationOnMock invocation) throws Throwable {
-                Object[] args = invocation.getArguments();
-                capability = (Capability) args[0];
-                String key = capability.getcapabilityName();
-                capabilities.remove(key);
-                return null;
-            }
-        }).when(entityManager).remove(any(Capability.class));
     }
 
-    @AfterMethod
-    public void tearDown()
-    {
 
+    @Test
+    /**
+     * Test to check that adding a capability     */
+    public void shouldAddCapabilityNonExistent() {
+        // Given        
+        when(entityManager.find(eq(Capability.class),anyString())).thenReturn(null);
+        //When we add it 
+        sessionCapability.addCapability("capabilityName", "namespace", properties, petal);
+
+        //Then 
+        verify(entityManager).find(eq(Capability.class),anyString());
+        verify(entityManager).persist(capability1.capture());
+        Assert.assertEquals("capabilityName", capability1.getValue().getcapabilityName());
+        Assert.assertEquals("namespace", capability1.getValue().getNamespace());
+        Assert.assertEquals(properties, capability1.getValue().getProperties());
+        Assert.assertEquals(petal, capability1.getValue().getPetals());
     }
 
     @Test
@@ -109,23 +74,22 @@ public class DefaultCapabilityTest {
      * Test to check that adding the same capability in database causes updating the list
      *  of petals in the first instance of capability and not the creation of a second instance
      */
-    public void shouldAddCapability() {
+    public void shouldUpdateCapabilityIfAlreadyExisting() {
         // Given two petals which give the same capability
-        Petal petal1 = new Petal();
-        Petal petal2 = new Petal();
-        Set<Petal> petals=new HashSet<Petal>();
+        Petal petal1 = mock(Petal.class);
+        Set<Petal> petals = new HashSet<Petal>();
         petals.add(petal1);
-        petals.add(petal2);
-
+        when(entityManager.find(eq(Capability.class),anyString())).thenReturn(mockcapability);
 
         //When we add it 
 
-       Capability capability1= sessionCapability.addCapability("capabilityName", "namespace", properties, petal1);
-        Capability capability2 = sessionCapability.addCapability("capabilityName", "namespace", properties, petal2);
+        sessionCapability.addCapability("capabilityName", "namespace", properties, petal1);
 
-        //Then the two instance of the capabilities are the same and have a collection of two petals in attribute  
-        Assert.assertSame(capability1, capability2);
-        Assert.assertEquals(sessionCapability.collectPetals("capabilityName"), petals);
+
+        //Then 
+        verify(entityManager).find(eq(Capability.class),anyString());
+        verify(mockcapability).setPetal(petal1);
+        verify(entityManager).merge(capability1.capture());
 
     }
 
@@ -134,30 +98,42 @@ public class DefaultCapabilityTest {
      * Test to check if the search of a capability non existent returns null 
      */
     public void shouldFindCapability(){
-        //Given a capability
-        Capability capability;
-        // When trying to find a capability non existent
-        capability = sessionCapability.findCapability("capabilityName");
+        //Given
+        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
+        //When 
+        sessionCapability.findCapability("capabilityName");
         //Then 
-        Assert.assertEquals(capability,null);
+        verify(entityManager).find(eq(Capability.class), name.capture());
+        Assert.assertEquals("capabilityName", name.getValue());
 
+    }
+
+    @Test
+    public void shouldReturnNullCauseOfMissingCapability(){
+        //Given
+        when(entityManager.find(eq(Capability.class), anyString())).thenReturn(null);
+        //When
+        mockcapability= sessionCapability.findCapability("InexistentCap");
+        //Then
+        Assert.assertEquals(mockcapability, null);
     }
 
     @Test
     /**
      *Test to check if the delete feature works well  
      */
-    public void shouldRemoveCapability(){
+    public void shouldRemoveCapabilityExistent(){
         //Given a petal that provided a capability
-        Petal petal1 = new Petal();
-
-        //When adding the capability, and remove it after 
-        sessionCapability.addCapability("capabilityName", "namespace", properties, petal1);
+        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
+        when(entityManager.find(eq(Capability.class), anyString())).thenReturn(mockcapability);
+        when(mockcapability.getcapabilityName()).thenReturn("capabilityName");
+        //When  
         sessionCapability.deleteCapability("capabilityName");
-
-        //Then it's not found in the database
-        Assert.assertEquals(sessionCapability.findCapability("capabilityName"),null);
-
+        //Then 
+        verify(entityManager).find(eq(Capability.class), name.capture());
+        Assert.assertEquals("capabilityName", name.getValue());
+        verify(entityManager).remove(capability1.capture());
+        Assert.assertEquals("capabilityName", capability1.getValue().getcapabilityName());
     }
 
     @Test
@@ -167,52 +143,68 @@ public class DefaultCapabilityTest {
     public void shouldAddPetalToCapability()
     {
         //Given petals that provided a capability existent in the database
-        Petal petal1 = new Petal();
-        Petal petal2 = new Petal();
-        Petal petal3 = new Petal();
-        Set<Petal> petals=new HashSet<Petal>();
-        petals.add(petal1);
-        petals.add(petal2);
+        ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
+
+        when(mockcapability.getcapabilityName()).thenReturn("capabilityName");
+
+        //When adding a new petal 
+        sessionCapability.addPetal(mockcapability, petal);
+
+        //Then  
+        verify(mockcapability).setPetal(petalArgument.capture());
+        Assert.assertSame(petal,petalArgument.getValue());
+    }
+
+
+    @Test
+    /**
+     *Test to check if the feature to remove petal from a capability works well  
+     */
+    public void shouldRemoveOnePetalGivenACapability()
+    {
+        //Given 
+        ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
+
         when(mockcapability.getPetals()).thenReturn(petals);
         when(mockcapability.getcapabilityName()).thenReturn("Mock");
 
-        //When adding a new petal 
-        mockcapability= sessionCapability.addPetal(mockcapability, petal3);
-       petals.add(petal3);
+        //When
+        sessionCapability.removePetal(mockcapability, petal);
 
-        //Then  
-        Assert.assertEquals(sessionCapability.collectPetals(mockcapability.getcapabilityName()),petals);
+        //Then 
+        verify(mockcapability).getPetals();
+        verify(petals).remove(petalArgument.capture());
+        Assert.assertEquals(petal,petalArgument.getValue());
+
+        when(petals.isEmpty()).thenReturn(false);
+        verify(entityManager).merge(capability1.capture());
+        Assert.assertEquals(mockcapability,capability1.getValue());
+
     }
 
     @Test
     /**
      *Test to check if the feature to remove petal from a capability works well  
      */
-    public void shouldRemovePetalFromCapability()
+    public void shouldRemoveTheOnlyPetalGivenACapability()
     {
         //Given 
-        Petal petal1 = new Petal();
-        Petal petal2 = new Petal();
-        Petal petal3 = new Petal();
+        ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
 
-        Set<Petal> petals=new HashSet<Petal>();
-        petals.add(petal1);
-        petals.add(petal2);
-
-        Set<Petal> petals2=new HashSet<Petal>();
-        petals2.add(petal1);
-        petals2.add(petal2);
-        petals2.add(petal3);
-
-        when(mockcapability.getPetals()).thenReturn(petals2);
+        when(mockcapability.getPetals()).thenReturn(petals);
         when(mockcapability.getcapabilityName()).thenReturn("Mock");
+        when(petals.isEmpty()).thenReturn(true);
 
         //When
-        mockcapability = sessionCapability.removePetal(mockcapability, petal3);
+        sessionCapability.removePetal(mockcapability, petal);
 
         //Then 
-        Assert.assertEquals(sessionCapability.collectPetals("Mock"),petals);
+        verify(mockcapability).getPetals();
+        verify(petals).remove(petalArgument.capture());
+        Assert.assertEquals(petal,petalArgument.getValue());
 
+        verify(entityManager).remove(capability1.capture());
+        Assert.assertEquals(mockcapability,capability1.getValue());
 
     }
 
@@ -222,23 +214,17 @@ public class DefaultCapabilityTest {
      */
     public void shouldCollectPetals(){
         //Given 
-        Petal petal1 = new Petal();
-        Petal petal2 = new Petal();
-        Petal petal3 = new Petal();
+        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
+        when(entityManager.find(eq(Capability.class), anyString())).thenReturn(mockcapability);
 
-        Set<Petal> petals=new HashSet<Petal>();
-        petals.add(petal1);
-        petals.add(petal2);
-        petals.add(petal3);
 
         //When
-        sessionCapability.addCapability("capabilityName", "namespace", properties, petal1);
-        sessionCapability.addCapability("capabilityName", "namespace", properties, petal2);
-        sessionCapability.addCapability("capabilityName", "namespace", properties, petal3);
+        sessionCapability.collectPetals("capabilityName");
 
         //Then
-        Assert.assertEquals(sessionCapability.collectPetals("capabilityName"),petals);
-
+        verify(entityManager).find(eq(Capability.class), name.capture());
+        Assert.assertEquals("capabilityName", name.getValue());
+        verify(mockcapability).getPetals();
 
     }
 }
