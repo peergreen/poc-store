@@ -106,23 +106,10 @@ public class DefaultCapabilityTest {
 
     @Test
     /**
-     * Test to check the entity in database when adding capacity
-     */
-    public void shouldAddCapability() {
-        // Given a petal which give a capability
-        Petal petal = new Petal();
-        //When we add it 
-        capability = sessionCapability.addCapability("capabilityName", "namespace", properties,petal);
-        //Then
-        Assert.assertSame(sessionCapability.findCapability("capabilityName"), capability);
-    }
-
-    @Test
-    /**
      * Test to check that adding the same capability in database causes updating the list
      *  of petals in the first instance of capability and not the creation of a second instance
      */
-    public void shouldAddCapability1() {
+    public void shouldAddCapability() {
         // Given two petals which give the same capability
         Petal petal1 = new Petal();
         Petal petal2 = new Petal();
@@ -144,24 +131,9 @@ public class DefaultCapabilityTest {
 
     @Test
     /**
-     * Test to check if the search of a capability added is ok 
-     */
-    public void shouldFindCapability(){
-        //Given the petal which provide the capability 
-        Petal petal1 = new Petal();
-        Capability capability;
-        // When add the capability before and search it after
-        capability = sessionCapability.addCapability("capabilityName", "namespace", properties, petal1);
-        Capability capability1 = sessionCapability.findCapability("capabilityName");
-        //Then 
-        Assert.assertSame(capability,capability1);
-    }
-
-    @Test
-    /**
      * Test to check if the search of a capability non existent returns null 
      */
-    public void shouldFindCapability1(){
+    public void shouldFindCapability(){
         //Given a capability
         Capability capability;
         // When trying to find a capability non existent
@@ -194,7 +166,7 @@ public class DefaultCapabilityTest {
      */
     public void shouldAddPetalToCapability()
     {
-        //Given a petal that provided a capability existent in the database
+        //Given petals that provided a capability existent in the database
         Petal petal1 = new Petal();
         Petal petal2 = new Petal();
         Petal petal3 = new Petal();
