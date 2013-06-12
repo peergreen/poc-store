@@ -6,11 +6,18 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database the user
  */
+@NamedQueries({
+    @NamedQuery(
+    name = "User.findAll",
+    query = "SELECT user FROM Users AS user")
+})
 @Entity
 @Table(name="Users")
 public class User {
