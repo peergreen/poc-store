@@ -104,8 +104,7 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category addPetal(Category category, Petal petal) {
-        Set<Petal> petals = category.getPetals();
-        petals.add(petal);
+        category.setPetal(petal);
         category =  entityManager.merge(category);
         return category;
     }
