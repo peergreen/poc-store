@@ -14,12 +14,10 @@ import org.eclipse.aether.resolution.ArtifactResult;
 
 /**
  * Class defining methods for remote repository provider.
- * 
- * @param <T> repository type (RemoteRepository)
  */
 @Component
 @Provides
-public class DefaultRemoteRepositoryProvider<T> extends DefaultRepositoryProvider<RemoteRepository> {
+public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<RemoteRepository> {
 
     private RemoteRepository repository;
     // retrieved from Config Admin

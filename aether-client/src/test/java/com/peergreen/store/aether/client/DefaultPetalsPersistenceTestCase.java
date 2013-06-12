@@ -27,15 +27,13 @@ public class DefaultPetalsPersistenceTestCase {
     @Test
     public void removeRemoteRepositoryTest() {
         // initialize list with 2 elements
-        DefaultRemoteRepositoryProvider<RemoteRepository> remoteRepoProvider1
-                = new DefaultRemoteRepositoryProvider<RemoteRepository>();
+        DefaultRemoteRepositoryProvider remoteRepoProvider1 = new DefaultRemoteRepositoryProvider();
         remoteRepoProvider1.setName("provider1");
         remoteRepoProvider1.setPath("toto");
         remoteRepoProvider1.setRepository(null);
         petalsPersistence.getRemoteProviders().add(remoteRepoProvider1);
 
-        DefaultRemoteRepositoryProvider<RemoteRepository> remoteRepoProvider2
-                = new DefaultRemoteRepositoryProvider<RemoteRepository>();
+        DefaultRemoteRepositoryProvider remoteRepoProvider2 = new DefaultRemoteRepositoryProvider();
         remoteRepoProvider2.setName("provider2");
         remoteRepoProvider2.setPath("/home/toto");
         remoteRepoProvider2.setRepository(null);

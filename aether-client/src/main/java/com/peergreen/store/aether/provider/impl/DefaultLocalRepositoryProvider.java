@@ -7,19 +7,16 @@ import org.apache.felix.ipojo.annotations.Provides;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
-import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
 
 /**
  * Class defining methods for local repository provider.
- * 
- * @param <T> repository type (LocalRepository)
  */
 @Component
 @Provides
-public class DefaultLocalRepositoryProvider<T> extends DefaultRepositoryProvider<RemoteRepository> {
+public class DefaultLocalRepositoryProvider extends DefaultRepositoryProvider<LocalRepository> {
 
     private LocalRepository repository;
     // retrieved from Config Admin
