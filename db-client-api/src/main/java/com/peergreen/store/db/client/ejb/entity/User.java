@@ -13,11 +13,11 @@ import javax.persistence.Table;
 /**
  * Entity Bean representing in the database the user
  */
-@NamedQueries({
-    @NamedQuery(
-    name = "User.findAll",
-    query = "SELECT user FROM Users AS user")
-})
+//@NamedQueries({
+//    @NamedQuery(
+//    name = "User.findAll",
+//    query = "SELECT user FROM Users AS user")
+//})
 @Entity
 @Table(name="Users")
 public class User {
