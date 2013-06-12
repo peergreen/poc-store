@@ -106,9 +106,7 @@ public class DefaultVendor implements ISessionVendor {
     @Override
     public Vendor addPetal(Vendor vendor, Petal petal) {
 
-        Set<Petal> petals = vendor.getPetals();
-        petals.add(petal);
-        vendor.setPetals(petals);     
+        vendor.setPetal(petal);     
         vendor = entityManager.merge(vendor);
         return vendor;
     }
