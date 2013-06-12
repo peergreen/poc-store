@@ -211,7 +211,6 @@ public class DefaultUser implements ISessionUser {
      * 
      * @return entity manager
      */
-    @PersistenceContext
     public EntityManager getEntityManager() {
         return this.entityManager;
     }
