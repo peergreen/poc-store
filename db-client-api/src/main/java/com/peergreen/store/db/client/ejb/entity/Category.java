@@ -59,4 +59,8 @@ public class Category{
 	public void setPetals(Set<Petal> petals) {
 		this.petals = petals;
 	}
+	
+	public void setPetal(Petal petal) {
+        this.petals.add(petal);
+    }
 }
