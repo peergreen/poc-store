@@ -1,5 +1,13 @@
 Export-Package com.peergreen.store.aether.client;version=${project.version},\
-               com.peergreen.store.aether.provider;version=${project.version}
+               com.peergreen.store.aether.provider;version=${project.version},\
+               org.apache.maven.wagon.*;version=3.1.2
 
 Private-Package com.peergreen.store.aether.provider.*,\
-                com.peergreen.store.aether.client.*
+                com.peergreen.store.aether.client.*,\
+                org.apache.maven.artifact.repository.*,\
+                org.apache.maven.model.*,\
+                org.apache.maven.repository.*,\
+                org.apache.maven.wagon.*,\
+                org.eclipse.aether.internal.*
+
+Import-Package !org.codehaus.plexus.*, *
