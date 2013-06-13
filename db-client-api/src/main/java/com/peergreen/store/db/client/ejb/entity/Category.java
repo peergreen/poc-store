@@ -4,8 +4,11 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -13,7 +16,10 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="Categories")
+@SequenceGenerator(name="idCategorySeq", initialValue=1, allocationSize=50)
 public class Category{
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
+    private int categoryId;
 
 	@Id
 	private String categoryName;
@@ -21,6 +27,13 @@ public class Category{
 	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Set<Petal> petals;
 
+	 /**
+     * Method to get Id of a category
+     * @return the category's id
+     */
+    public int getCategoryId() {
+        return categoryId;
+    }
 	
 	/**
 	 * Method to retrieve the name of the category instance
@@ -60,7 +73,5 @@ public class Category{
 		this.petals = petals;
 	}
 	
-	public void setPetal(Petal petal) {
-        this.petals.add(petal);
-    }
+	
 }
