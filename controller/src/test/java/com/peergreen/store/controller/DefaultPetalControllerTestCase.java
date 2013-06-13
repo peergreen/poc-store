@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.mockito.Mock;
@@ -160,12 +159,11 @@ public class DefaultPetalControllerTestCase {
     public void testCreateCapability() {
         String capabilityName = "my capability";
         String namespace = "service";
-        Map<String, Object> properties = new HashMap();
-        Petal petal = new Petal();
+        Map<String, Object> properties = new HashMap<String,Object>();
 
         // verify capabilitySession.addCapability(...) is called
-        petalController.createCapability(capabilityName, namespace, properties, petal);
-        verify(capabilitySession).addCapability(capabilityName, namespace, properties, petal);
+        petalController.createCapability(capabilityName, namespace, properties);
+        verify(capabilitySession).addCapability(capabilityName, namespace, properties);
     }
 
     @Test

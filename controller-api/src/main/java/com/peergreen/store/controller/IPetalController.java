@@ -111,9 +111,8 @@ public interface IPetalController {
      * @param capabilityName capability's name
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
-     * @param petal the petal which provides this capability
      */
-    Capability createCapability(String capabilityName, String namespace, Map<String,Object> properties, Petal petal);
+    Capability createCapability(String capabilityName, String namespace, Map<String,Object> properties);
 
     /**
      * Method to collect all the capabilities provided by a petal.

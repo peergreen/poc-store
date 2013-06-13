@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,25 +53,16 @@ public class DefaultCapability implements ISessionCapability{
      * @return The capability creates
      */
     @Override
-    public Capability addCapability(String capabilityName, String namespace, Map<String, Object> properties,Petal petal ) {
+    public Capability addCapability(String capabilityName, String namespace, Map<String, Object> properties) {
 
-        Capability capability = entityManager.find(Capability.class, capabilityName);
-
-        if(capability == null){
-            capability = new Capability();
+           Capability capability = new Capability();
             capability.setName(capabilityName);
             capability.setNamespace(namespace);
             capability.setProperties(properties);
-            capability.setPetal(petal);
+            Set<Petal> petals = new HashSet<Petal>();
+            capability.setPetals(petals);
             entityManager.persist(capability); 
-        }
-        else {
-
-            capability.setPetal(petal);
-            capability = entityManager.merge(capability);
-        }
-
-
+             
         return capability;
     }
 
@@ -126,7 +118,9 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Capability addPetal(Capability capability, Petal petal) {
 
-        capability.setPetal(petal);
+        Set<Petal> petals = capability.getPetals();
+        petals.add(petal);
+        capability.setPetals(petals);
         entityManager.merge(capability);
         return capability;
     }

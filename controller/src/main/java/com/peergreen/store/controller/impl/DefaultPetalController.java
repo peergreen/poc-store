@@ -182,11 +182,10 @@ public class DefaultPetalController implements IPetalController {
      * @param capabilityName capability's name
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
-     * @param petal the petal which provides this capability
      */
     @Override
-    public Capability createCapability(String capabilityName, String namespace, Map<String,Object> properties, Petal petal) {
-        return capabilitySession.addCapability(capabilityName, namespace, properties, petal);
+    public Capability createCapability(String capabilityName, String namespace, Map<String,Object> properties) {
+        return capabilitySession.addCapability(capabilityName, namespace, properties);
     }
 
     /**
