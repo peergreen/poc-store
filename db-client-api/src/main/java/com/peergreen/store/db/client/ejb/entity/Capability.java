@@ -2,12 +2,14 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -16,7 +18,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="Capabilities")
+@SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability{
+
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
+    private int capabilityId;
 
     @Id
     private String capabilityName; 
@@ -27,6 +33,14 @@ public class Capability{
 
     @ManyToMany(mappedBy="capabilities")
     private Set<Petal> petals = new HashSet<>();
+
+    /**
+     * Method to get Id of a capability
+     * @return the capability's id
+     */
+    public int getCapabilityId() {
+        return capabilityId;
+    }
 
     /**
      * Method to get the name of the capability instance
@@ -97,8 +111,8 @@ public class Capability{
      * 
      * @param petals Set containing petals to set
      */
-    public void setPetal(Petal petal) {
-        this.petals.add(petal);
+    public void setPetals(Set<Petal> petals) {
+        this.petals = petals;
     }
 
 
