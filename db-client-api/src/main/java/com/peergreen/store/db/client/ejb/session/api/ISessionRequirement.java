@@ -23,20 +23,20 @@ public interface ISessionRequirement {
      * 
      * @param requirementName the requirement's name
      */
-    void deleteRequirement (String requirementName);
+    void deleteRequirement (String requirementName );
 
     /**
      * Method to find a requirement in the database
      * 
      * @param requirementName the requirement's name
-     * @return the capacity with the name 'requirementName'
+     * @return the requirement with the name "nameRequirement"
      */
     Requirement findRequirement (String requirementName);
 
     /**
      * Method to collect the petals which have the requirement with the name 'requirementName'
      * 
-     * @param name the requirement's name
+     * @param requirementName the requirement's name
      * @return A collection of all the petals which have this requirement
      */
     Collection<Petal> collectPetals(String requirementName);
@@ -60,5 +60,12 @@ public interface ISessionRequirement {
      * @return A new requirement with a new list of petals 
      */
     Requirement removePetal(Requirement requirement, Petal petal);
+    
+    /**
+     * Method to collect all the requirement in the database
+     * 
+     * @return A collection of requirements in the database
+     */
+    Collection<Requirement> collectRequirements();
 
 }

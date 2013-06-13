@@ -153,5 +153,11 @@ public class DefaultCapability implements ISessionCapability{
         return capability;
     }
 
+    @Override
+    public Collection<Capability> collectcapabilities() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 }

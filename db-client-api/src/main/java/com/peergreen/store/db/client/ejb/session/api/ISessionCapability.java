@@ -61,5 +61,12 @@ public interface ISessionCapability {
      * @return A new capability with a new list of petals 
      */
     Capability removePetal (Capability capability, Petal petal);
+    
+    /**
+     * Method to collect all the capability in the database
+     * 
+     * @return A collection of capabilities in the database
+     */
+    Collection<Capability> collectcapabilities();
 
 }

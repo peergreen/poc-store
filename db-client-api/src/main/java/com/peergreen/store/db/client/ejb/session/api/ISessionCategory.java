@@ -62,5 +62,12 @@ public interface ISessionCategory {
      * @return A new category with petals excluded the petal removed 
      */
     Category removePetal(Category category, Petal petal);
+    
+    /**
+     * Method to collect all the category in the database
+     * 
+     * @return A collection of cetegories in the database
+     */
+    Collection<Category> collectCategories();
 
 }

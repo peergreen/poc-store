@@ -3,6 +3,7 @@ package com.peergreen.store.db.client.ejb.session.api;
 import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 
@@ -64,5 +65,12 @@ public interface ISessionVendor {
      * @return A new vendor with the petal removed from his list of petals provided
 	 */
 	Vendor removePetal(Vendor vendor, Petal petal);
+	
+	/**
+     * Method to collect all the vendor in the database
+     * 
+     * @return A collection of vendors in the database
+     */
+    Collection<Vendor> collectVendors();
 
 }

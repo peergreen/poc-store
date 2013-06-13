@@ -98,5 +98,12 @@ public interface ISessionUser {
      * @return A collection with the petals to which the user with the pseudo 'pseudo' has access
      */
     Collection<Petal> collectPetals(String pseudo);
+    
+    /**
+     * Method to collect all the group in the database
+     * 
+     * @return A collection of groups in the database
+     */
+    Collection<Group> collectGroups();
 
 }
