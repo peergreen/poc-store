@@ -34,7 +34,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 @Stateless
 public class DefaultUser implements ISessionUser {
 
-    
+
     private EntityManager entityManager;
 
     /**
@@ -82,7 +82,8 @@ public class DefaultUser implements ISessionUser {
         // TODO Auto-generated method stub
         Query users = entityManager.createNamedQuery("User.findAll");
         List<User> usersList = users.getResultList();
-        Set<User> userSet = new HashSet<User>(usersList);
+        Set<User> userSet = new HashSet<User>();
+        userSet.addAll(usersList);
         return userSet;
     }
 
@@ -124,9 +125,9 @@ public class DefaultUser implements ISessionUser {
 
         oldUser.setPassword(password);
         oldUser.setEmail(email);
-        
+
         entityManager.merge(oldUser);
-        
+
         return oldUser;
     }
 
@@ -140,10 +141,8 @@ public class DefaultUser implements ISessionUser {
      */
     @Override
     public User addGroup(User user, Group group) {
-        Set<Group> groups = new HashSet<Group>();
-        groups.add(group);
-        user.setGroupSet(groups);
-        
+
+        user.setGroup(group);
         user = entityManager.merge(user);
         return user;
     }
@@ -159,10 +158,10 @@ public class DefaultUser implements ISessionUser {
     @Override
     public User removeGroup(User user, Group group) {
 
-        Set<Group> groups = new HashSet<Group>();
+        Set<Group> groups = user.getGroupSet();
         groups.remove(group);
         user.setGroupSet(groups);
-        
+
         user = entityManager.merge(user);
         return user;
     }
@@ -178,7 +177,7 @@ public class DefaultUser implements ISessionUser {
     public Collection<Group> collectGroups(String pseudo) {
 
         User user = entityManager.find(User.class, pseudo);
-       
+
         return user.getGroupSet();
     }
 
@@ -193,16 +192,16 @@ public class DefaultUser implements ISessionUser {
     public Collection<Petal> collectPetals(String pseudo) {
         Set<Group> groups = new HashSet<Group>();
         Set<Petal> petals = new HashSet<Petal>();
-        
+
         User user = entityManager.find(User.class, pseudo);
         groups = user.getGroupSet();
-        
+
         Object [] groupsTab = groups.toArray();
         for(int i =0; i<groupsTab.length; i++)
         {
             petals.addAll(((Group) groupsTab[i]).getPetals());
         }
-        
+
         return petals;
     }
 
