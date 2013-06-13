@@ -1,10 +1,14 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
@@ -22,13 +26,13 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 @Stateless
 public class DefaultLink implements ISessionLink {
 
-    
+
     private EntityManager entityManager;
 
     public EntityManager getEntityManager() {
         return entityManager;
     }
-    
+
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -44,8 +48,11 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public Link addLink(String url, String description) {
-        // TODO Auto-generated method stub
-        return null;
+        Link link = new Link();
+        link.setUrl(url);
+        link.setDescription(description);
+        entityManager.persist(link);
+        return link;
     }
 
     /**
@@ -55,8 +62,9 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public void deleteLink(String linkUrl) {
-        // TODO Auto-generated method stub
 
+        Link temp = entityManager.find(Link.class, linkUrl);
+        entityManager.remove(temp);
     }
 
     /**
@@ -69,7 +77,9 @@ public class DefaultLink implements ISessionLink {
     @Override
     public Link findLink(String linkUrl) {
         // TODO Auto-generated method stub
-        return null;
+        Link link = entityManager.find(Link.class, linkUrl);
+
+        return link;
     }
 
     /**
@@ -80,7 +90,12 @@ public class DefaultLink implements ISessionLink {
     @Override
     public Collection<Link> collectLinks() {
         // TODO Auto-generated method stub
-        return null;
+        Query links = entityManager.createNamedQuery("Link.findAll");
+        List<Link> usersList = links.getResultList();
+        Set<Link> linkSet = new HashSet<Link>();
+        linkSet.addAll(usersList);
+        return linkSet;
     }
-
 }
+
+

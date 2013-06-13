@@ -106,8 +106,10 @@ public class DefaultVendor implements ISessionVendor {
     @Override
     public Vendor addPetal(Vendor vendor, Petal petal) {
 
-        vendor.setPetal(petal);     
-        vendor = entityManager.merge(vendor);
+        Set<Petal> petals = vendor.getPetals();
+        petals.add(petal);
+        vendor.setPetals(petals);
+        vendor =  entityManager.merge(vendor);
         return vendor;
     }
 
@@ -142,6 +144,12 @@ public class DefaultVendor implements ISessionVendor {
 
     public EntityManager getEntityManager() {
         return this.entityManager;
+    }
+
+    @Override
+    public Collection<Vendor> collectVendors() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

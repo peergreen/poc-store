@@ -104,7 +104,9 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category addPetal(Category category, Petal petal) {
-        category.setPetal(petal);
+        Set<Petal> petals = category.getPetals();
+        petals.add(petal);
+        category.setPetals(petals);
         category =  entityManager.merge(category);
         return category;
     }
@@ -123,6 +125,17 @@ public class DefaultCategory implements ISessionCategory{
         category.getPetals().remove(petal);
         category =  entityManager.merge(category);
         return category;
+    }
+
+    /**
+     * Method to collect all the category in the database
+     * 
+     * @return A collection of cetegories in the database
+     */
+    @Override
+    public Collection<Category> collectCategories() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

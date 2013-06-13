@@ -1,6 +1,8 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,13 +27,13 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 @Stateless
 public class DefaultRequirement implements ISessionRequirement {
 
-    
+
     private EntityManager entityManager;
-    
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
-    
+
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -47,8 +49,15 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement addRequirement(String requirementName,String namespace,String filter) {
-        // TODO Auto-generated method stub
-        return null;
+        Requirement requirement = new Requirement();
+        requirement.setRequirementName(requirementName);
+        requirement.setNamespace(namespace);
+        requirement.setFilter(filter);
+        Set<Petal> petals = new HashSet<Petal>();
+        requirement.setPetals(petals);
+
+        entityManager.persist(requirement);
+        return requirement;
     }
 
     /**
@@ -58,8 +67,8 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public void deleteRequirement(String requirementName) {
-        // TODO Auto-generated method stub
-
+        Requirement temp = entityManager.find(Requirement.class, requirementName);
+        entityManager.remove(temp);
     }
 
     /**
@@ -71,7 +80,8 @@ public class DefaultRequirement implements ISessionRequirement {
     @Override
     public Requirement findRequirement(String requirementName) {
         // TODO Auto-generated method stub
-        return null;
+        Requirement requirement = entityManager.find(Requirement.class, requirementName);
+        return requirement;
     }
 
     /**
@@ -82,8 +92,10 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Collection<Petal> collectPetals(String requirementName) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Requirement requirement = entityManager.find(Requirement.class,requirementName);
+        Set<Petal> petals = requirement.getPetals();
+        return petals;
     }
 
     /**
@@ -96,8 +108,12 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement addPetal(Requirement requirement, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Set<Petal> petals = requirement.getPetals();
+        petals.add(petal);
+        requirement.setPetals(petals);
+        requirement =  entityManager.merge(requirement);
+        return requirement;
     }
 
     /**
@@ -110,6 +126,16 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement removePetal(Requirement requirement, Petal petal) {
+        // TODO Auto-generated method stub
+        Set<Petal> petals = requirement.getPetals();
+        petals.remove(petal);
+        requirement.setPetals(petals);
+        requirement = entityManager.merge(requirement);
+        return requirement;
+    }
+
+    @Override
+    public Collection<Requirement> collectRequirements() {
         // TODO Auto-generated method stub
         return null;
     }

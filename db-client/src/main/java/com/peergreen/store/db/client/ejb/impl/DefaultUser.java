@@ -142,8 +142,10 @@ public class DefaultUser implements ISessionUser {
     @Override
     public User addGroup(User user, Group group) {
 
-        user.setGroup(group);
-        user = entityManager.merge(user);
+        Set<Group> groups = user.getGroupSet();
+        groups.add(group);
+        user.setGroupSet(groups);
+        user =  entityManager.merge(user);
         return user;
     }
 
@@ -222,6 +224,12 @@ public class DefaultUser implements ISessionUser {
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @Override
+    public Collection<Group> collectGroups() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
