@@ -109,13 +109,17 @@ public class DefaultVendorTest {
     }
 
     @Test
-    public void testAddPetal() {
+    public void shouldAddPetal() {
+        //Given
+        when(mockvendor.getPetals()).thenReturn(petals);
         //When
         vendorSession.addPetal(mockvendor, petal);
         //Then
-        verify(mockvendor).setPetal(petal);
-        verify(entityManager).merge(vendorArgument.capture());
-        Assert.assertEquals(mockvendor, vendorArgument.getValue());
+        verify(mockvendor).getPetals();
+        verify(petals).add(petalArgument.capture());
+        Assert.assertSame(petal,petalArgument.getValue());
+        verify(mockvendor).setPetals(petals);
+        verify(entityManager).merge(mockvendor);
         
            }
 
@@ -125,7 +129,7 @@ public class DefaultVendorTest {
     }
 
     @Test
-    public void testRemovePetal() {
+    public void shouldRemovePetal() {
         //Given
         when(mockvendor.getPetals()).thenReturn(petals);
         //When

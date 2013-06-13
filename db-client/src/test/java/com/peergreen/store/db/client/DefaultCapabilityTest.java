@@ -2,12 +2,10 @@ package com.peergreen.store.db.client;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,46 +54,18 @@ public class DefaultCapabilityTest {
     @Test
     /**
      * Test to check that adding a capability     
-     * */
-    void shouldAddCapability() {
-        // Given        
-        when(entityManager.find(eq(Capability.class),anyString())).thenReturn(null);
-        Set <Petal> petals = new HashSet<Petal>();
-        petals.add(petal);
-        //When we add it 
-        sessionCapability.addCapability("capabilityName", "namespace", properties, petal);
+     */
+    public void shouldAddMissingCapability() {
+      
+        //When 
+        sessionCapability.addCapability("capabilityName", "namespace", properties);
 
         //Then 
-        verify(entityManager).find(eq(Capability.class),anyString());
         verify(entityManager).persist(capability1.capture());
         Assert.assertEquals("capabilityName", capability1.getValue().getcapabilityName());
         Assert.assertEquals("namespace", capability1.getValue().getNamespace());
         Assert.assertEquals(properties, capability1.getValue().getProperties());
-        Assert.assertEquals(petals, capability1.getValue().getPetals());
-    }
-
-    @Test
-    /**
-     * Test to check that adding the same capability in database causes updating the list
-     *  of petals in the first instance of capability and not the creation of a second instance
-     */
-    public void shouldUpdateCapabilityIfAlreadyExisting() {
-        // Given two petals which give the same capability
-        Petal petal1 = mock(Petal.class);
-        Set<Petal> petals = new HashSet<Petal>();
-        petals.add(petal1);
-        when(entityManager.find(eq(Capability.class),anyString())).thenReturn(mockcapability);
-
-        //When we add it 
-
-        sessionCapability.addCapability("capabilityName", "namespace", properties, petal1);
-
-
-        //Then 
-        verify(entityManager).find(eq(Capability.class),anyString());
-        verify(mockcapability).setPetal(petal1);
-        verify(entityManager).merge(capability1.capture());
-
+        Assert.assertTrue(capability1.getValue().getPetals().isEmpty());
     }
 
     @Test
@@ -151,13 +121,18 @@ public class DefaultCapabilityTest {
         ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
 
         when(mockcapability.getcapabilityName()).thenReturn("capabilityName");
+        when(mockcapability.getPetals()).thenReturn(petals);
 
         //When adding a new petal 
         sessionCapability.addPetal(mockcapability, petal);
 
         //Then  
-        verify(mockcapability).setPetal(petalArgument.capture());
+        verify(mockcapability).getPetals();
+        verify(petals).add(petalArgument.capture());
         Assert.assertSame(petal,petalArgument.getValue());
+        verify(mockcapability).setPetals(petals);
+        verify(entityManager).merge(mockcapability);
+
     }
 
 
