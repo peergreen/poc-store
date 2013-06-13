@@ -6,8 +6,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -32,8 +33,8 @@ public class DefaultCapabilityTest {
     private EntityManager entityManager;  
     @Mock 
     private Capability mockcapability;
-    @Mock
-    private Properties properties;
+
+    private Map<String,Object> properties;
     @Mock
     private Petal petal;
     @Mock
@@ -47,16 +48,20 @@ public class DefaultCapabilityTest {
         sessionCapability = new DefaultCapability();
         sessionCapability.setEntityManager(entityManager);       
         capability1 = ArgumentCaptor.forClass(Capability.class);
+        properties = new HashMap<String,Object>();
 
     }
 
 
     @Test
     /**
-     * Test to check that adding a capability     */
-    public void shouldAddCapabilityNonExistent() {
+     * Test to check that adding a capability     
+     * */
+    void shouldAddCapability() {
         // Given        
         when(entityManager.find(eq(Capability.class),anyString())).thenReturn(null);
+        Set <Petal> petals = new HashSet<Petal>();
+        petals.add(petal);
         //When we add it 
         sessionCapability.addCapability("capabilityName", "namespace", properties, petal);
 
@@ -66,7 +71,7 @@ public class DefaultCapabilityTest {
         Assert.assertEquals("capabilityName", capability1.getValue().getcapabilityName());
         Assert.assertEquals("namespace", capability1.getValue().getNamespace());
         Assert.assertEquals(properties, capability1.getValue().getProperties());
-        Assert.assertEquals(petal, capability1.getValue().getPetals());
+        Assert.assertEquals(petals, capability1.getValue().getPetals());
     }
 
     @Test
