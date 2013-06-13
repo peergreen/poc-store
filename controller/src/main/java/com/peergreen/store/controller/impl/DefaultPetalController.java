@@ -21,6 +21,7 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -79,6 +80,20 @@ public class DefaultPetalController implements IPetalController {
         return metadata;
     }
 
+    /**
+     * Method to retrieve all needed petals to install the provided one.
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return list of all needed petals for installation of the provided petal
+     */
+    @Override
+    public Collection<PetalId> getTransitiveRequirements(Vendor vendor, String artifactId, String version) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     /**
      * Method to retrieve a petal from the local store.
      * 

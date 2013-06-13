@@ -10,6 +10,7 @@ import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
@@ -38,6 +39,16 @@ public interface IPetalController {
      */
     Map<String, Object> getPetalMetadata(Vendor vendor, String artifactId, String version);
 
+    /**
+     * Method to retrieve all needed petals to install the provided one.
+     * 
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return list of all needed petals for installation of the provided petal
+     */
+    Collection<PetalId> getTransitiveRequirements(Vendor vendor, String artifactId, String version);
+    
     /**
      * Method to retrieve a petal from the local store.
      * 
