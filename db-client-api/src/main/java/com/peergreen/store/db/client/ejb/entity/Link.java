@@ -14,10 +14,10 @@ import javax.persistence.Table;
 @Table(name="Links")
 @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
 public class Link {
-    @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
     private int linkId;
 
+    @Id
     private String url; 
 
     private String description;

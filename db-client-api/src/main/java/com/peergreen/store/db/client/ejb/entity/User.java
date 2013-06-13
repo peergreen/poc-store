@@ -103,15 +103,6 @@ public class User {
 	public void setGroupSet(Set<Group> groupSet) {
 		this.groupSet = groupSet;
 	}
-	
-	/**
-	 * Method to add a group to the user
-	 * @param group
-	 */
-	public void setGroup(Group group){
-	    this.groupSet.add(group);
-	}
-	
-
+		
 
 }
