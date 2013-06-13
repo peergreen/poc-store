@@ -46,7 +46,7 @@ public class DefaultRequirement implements ISessionRequirement {
      * @return A new instance of requirement
      */
     @Override
-    public Requirement addRequirement(String requirementName, String filter) {
+    public Requirement addRequirement(String requirementName,String namespace,String filter) {
         // TODO Auto-generated method stub
         return null;
     }

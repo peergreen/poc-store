@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
@@ -17,7 +18,7 @@ public interface ISessionCapability {
      * @param petal the petal which provides this capability
      * @return The capability creates
      */
-    Capability addCapability(String capabilityName, String namespace, Properties properties, Petal petal);
+    Capability addCapability(String capabilityName, String namespace, Map<String,Object> properties, Petal petal);
 
     /**
      * Method to delete a capability in the database

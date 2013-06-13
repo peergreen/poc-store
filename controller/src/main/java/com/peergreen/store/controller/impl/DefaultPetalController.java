@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Bind;
@@ -171,7 +170,7 @@ public class DefaultPetalController implements IPetalController {
      * @param petal the petal which provides this capability
      */
     @Override
-    public Capability createCapability(String capabilityName, String namespace, Properties properties, Petal petal) {
+    public Capability createCapability(String capabilityName, String namespace, Map<String,Object> properties, Petal petal) {
         return capabilitySession.addCapability(capabilityName, namespace, properties, petal);
     }
 
@@ -226,8 +225,8 @@ public class DefaultPetalController implements IPetalController {
      * @param filter requirement's filter
      */
     @Override
-    public Requirement createRequirement(String requirementName, String filter) {
-        return requirementSession.addRequirement(requirementName, filter);
+    public Requirement createRequirement(String requirementName, String namespace, String filter) {
+        return requirementSession.addRequirement(requirementName,namespace,filter);
     }
 
     /**

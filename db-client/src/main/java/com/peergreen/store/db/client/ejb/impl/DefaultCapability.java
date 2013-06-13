@@ -1,7 +1,7 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Stateless;
@@ -52,7 +52,7 @@ public class DefaultCapability implements ISessionCapability{
      * @return The capability creates
      */
     @Override
-    public Capability addCapability(String capabilityName, String namespace, Properties properties,Petal petal ) {
+    public Capability addCapability(String capabilityName, String namespace, Map<String, Object> properties,Petal petal ) {
 
         Capability capability = entityManager.find(Capability.class, capabilityName);
 

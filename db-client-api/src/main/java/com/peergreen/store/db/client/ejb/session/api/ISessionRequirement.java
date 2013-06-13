@@ -12,10 +12,11 @@ public interface ISessionRequirement {
      *  
      * @param requirementName
      * @param filter
+     * @param namespace
      * 
      * @return A new instance of requirement
      */
-    Requirement addRequirement(String requirementName, String filter);
+    Requirement addRequirement(String namespace, String requirementName, String filter);
 
     /**
      * Method to delete a requirement in the database

@@ -9,7 +9,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -158,7 +160,7 @@ public class DefaultPetalControllerTestCase {
     public void testCreateCapability() {
         String capabilityName = "my capability";
         String namespace = "service";
-        Properties properties = new Properties();
+        Map<String, Object> properties = new HashMap();
         Petal petal = new Petal();
 
         // verify capabilitySession.addCapability(...) is called
@@ -224,12 +226,13 @@ public class DefaultPetalControllerTestCase {
     @Test
     public void testCreateRequirement() {
         String requirementName = "my requirement";
+        String namespace = "";
         String filter = "namespace=service";
-
+        
 
         // verify requirementSession.addRequirement(...) is called
-        petalController.createRequirement(requirementName, filter);
-        verify(requirementSession).addRequirement(requirementName, filter);
+        petalController.createRequirement(requirementName,namespace, filter);
+        verify(requirementSession).addRequirement(requirementName,namespace, filter);
     }
 
     @Test

@@ -24,6 +24,8 @@ public class Requirement {
 	private String requirementName;
 
 	private String filter;
+	
+	private String namespace;
 
 	@ManyToMany(mappedBy="requirements")
 	private Set<Petal> petals;
@@ -86,5 +88,19 @@ public class Requirement {
 	public void setPetals(Set<Petal> petals) {
 		this.petals = petals;
 	}
+
+    /**
+     * @return the namespace
+     */
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * @param namespace the namespace to set
+     */
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
 
 }

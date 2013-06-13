@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class Capability{
 
     private String namespace;
 
-    private Properties properties; 
+    private Map<String, Object> properties; 
 
     @ManyToMany(mappedBy="capabilities")
     private Set<Petal> petals = new HashSet<>();
@@ -68,7 +69,7 @@ public class Capability{
      * 
      * @return Map containing all the properties of the capability
      */
-    public Properties getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 
@@ -77,7 +78,7 @@ public class Capability{
      * 
      * @param properties the properties to set
      */
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
 
