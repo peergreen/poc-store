@@ -19,9 +19,13 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Table(name = "Petals")
 public class Petal {
 
-	@Id
-    @Column(name = "vendorName",insertable=false, updatable=false)
-	private String vendorName;
+	
+  //  @Column(name = "vendorName",insertable=false, updatable=false)
+    private String vendorName;
+    @Id
+    @ManyToOne
+  //  @JoinColumn(name = "vendorName", referencedColumnName = "name")
+    private Vendor vendor;
     @Id
 	private String artifactId;
     @Id
@@ -40,10 +44,6 @@ public class Petal {
 	
 	@ManyToMany
 	private Set<Capability> capabilities;
-
-	@ManyToOne
-    @JoinColumn(name = "vendorName", referencedColumnName = "name")
-	private Vendor vendor;
 	
 	private Origin origin;
 	
