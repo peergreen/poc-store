@@ -5,11 +5,14 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -26,19 +29,24 @@ import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
 public class DefaultCapabilityTest {
 
     private DefaultCapability sessionCapability;
-
+    private String queryString;
+    private List<Capability> capabilityList;
+    private Map<String,String> properties;
+    ArgumentCaptor<Capability> capability1;
+    ArgumentCaptor<String> value;
+    ArgumentCaptor<Map<String,String>> propArgument;
+    
     @Mock
     private EntityManager entityManager;  
     @Mock 
     private Capability mockcapability;
-
-    private Map<String,Object> properties;
+    @Mock
+    private Query query;
     @Mock
     private Petal petal;
     @Mock
     private Set<Petal> petals;
 
-    ArgumentCaptor<Capability> capability1;
 
     @BeforeMethod
     public void setUp() {
@@ -46,7 +54,10 @@ public class DefaultCapabilityTest {
         sessionCapability = new DefaultCapability();
         sessionCapability.setEntityManager(entityManager);       
         capability1 = ArgumentCaptor.forClass(Capability.class);
-        properties = new HashMap<String,Object>();
+        value = ArgumentCaptor.forClass(String.class);
+        properties = new HashMap<String,String>();
+        queryString = "Capability.findAll";
+        capabilityList = new ArrayList<Capability>() ;
 
     }
 
@@ -55,8 +66,8 @@ public class DefaultCapabilityTest {
     /**
      * Test to check that adding a capability     
      */
-    public void shouldAddMissingCapability() {
-      
+    public void shouldAddCapability() {
+
         //When 
         sessionCapability.addCapability("capabilityName", "namespace", properties);
 
@@ -206,5 +217,39 @@ public class DefaultCapabilityTest {
         Assert.assertEquals("capabilityName", name.getValue());
         verify(mockcapability).getPetals();
 
+    }
+
+    @Test
+    public void shouldCollectAllCapabilities() {
+        //Given
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getResultList()).thenReturn(capabilityList);
+
+        //when
+        sessionCapability.collectcapabilities();
+        //Then
+        verify(entityManager).createNamedQuery(queryString);
+        verify(query).getResultList();
+    }
+    
+    @Test
+    public void shouldUpdateNamespace() {
+        
+        //when
+        sessionCapability.updateNamespace(mockcapability, "namespace");
+        //then
+        verify(mockcapability).setNamespace(value.capture());
+        Assert.assertEquals("namespace", value.getValue());
+        verify(entityManager).merge(mockcapability);
+    }
+    
+    @Test
+    public void shouldUpdateProperties() {
+        
+        //when
+        sessionCapability.updateProperties(mockcapability, properties);
+        //then
+        verify(mockcapability).setProperties(properties);
+        verify(entityManager).merge(mockcapability);
     }
 }
