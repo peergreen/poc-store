@@ -1,10 +1,14 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -36,7 +40,7 @@ public class DefaultGroup implements ISessionGroup {
     public EntityManager getEntityManager() {
         return entityManager;
     }
-    
+
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -51,8 +55,16 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group addGroup(String groupName) {
-        // TODO Auto-generated method stub
-        return null;
+        Group group = new Group();
+        group.setGroupname(groupName);
+        Set<User> users = new HashSet<User>();
+        Set<Petal> petals = new HashSet<Petal>();
+        group.setPetals(petals);
+        group.setUsers(users);
+        entityManager.persist(group);
+        
+
+        return group;
     }
 
     /**
@@ -63,8 +75,9 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group findGroup(String groupName) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO remove because we can't change the groupname which is the primary key
+        Group group = entityManager.find(Group.class, groupName);
+        return group;
     }
 
     /**
@@ -76,7 +89,6 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group updateGroup(String oldGroupName, String groupName) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -87,8 +99,8 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public void deleteGroup(String groupName) {
-        // TODO Auto-generated method stub
-
+        Group group = entityManager.find(Group.class, groupName);
+        entityManager.remove(group);
     }
 
     /**
@@ -101,8 +113,12 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group addUser(Group group, User myUser) {
-        // TODO Auto-generated method stub
-        return null;
+
+        Set<User> users = group.getUsers();
+        users.add(myUser);
+        group.setUsers(users);
+        group=  entityManager.merge(group);
+        return group;
     }
 
     /**
@@ -115,8 +131,11 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group removeUser(Group group, User user) {
-        // TODO Auto-generated method stub
-        return null;
+        Set<User> users = group.getUsers();
+        users.remove(user);
+        group.setUsers(users);
+        group=  entityManager.merge(group);
+        return group;
     }
 
     /**
@@ -128,8 +147,8 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Collection<User> collectUsers(String groupName) {
-        // TODO Auto-generated method stub
-        return null;
+        Group group = entityManager.find(Group.class, groupName);
+        return group.getUsers();
     }
 
     /**
@@ -142,8 +161,11 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group addPetal(Group group, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+        Set<Petal> petals = group.getPetals();
+        petals.add(petal);
+        group.setPetals(petals);
+        group=  entityManager.merge(group);
+        return group;
     }
 
     /**
@@ -155,8 +177,11 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group removePetal(Group group, Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+        Set<Petal> petals = group.getPetals();
+        petals.remove(petal);
+        group.setPetals(petals);
+        group=  entityManager.merge(group);
+        return group;
     }
 
     /**
@@ -168,8 +193,8 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Collection<Petal> collectPetals(String groupName) {
-        // TODO Auto-generated method stub
-        return null;
+        Group group = entityManager.find(Group.class, groupName);
+        return group.getPetals();
     }
 
     /**
@@ -179,8 +204,11 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Collection<Group> collectGroups() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        Query groups = entityManager.createNamedQuery("Group.findAll");
+        List<Group> groupList = groups.getResultList();
+        Set<Group> groupSet = new HashSet<Group>();
+        groupSet.addAll(groupList);
+        return groupSet;
+        }
 
 }
