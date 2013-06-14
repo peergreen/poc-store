@@ -57,6 +57,7 @@ public class DefaultCategoryTest {
         //Then
         verify(entityManager).persist(category.capture());
         Assert.assertEquals(categoryName, category.getValue().getCategoryName());
+        Assert.assertTrue(category.getValue().getPetals().isEmpty());
 
     }
 
