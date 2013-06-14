@@ -2,6 +2,8 @@ package com.peergreen.store.aether.provider;
 
 import java.io.File;
 
+import com.peergreen.store.db.client.ejb.entity.Vendor;
+
 /**
  * Interface defining methods for repository provider.
  */
@@ -27,7 +29,7 @@ public interface IRepositoryProvider<T> {
      * @param version petal's version
      * @param binary petal's binary
      */
-    void addPetal(String vendor, String artifactId, String version, File binary);
+    void addPetal(Vendor vendor, String artifactId, String version, File binary);
 
     /**
      * Method to retrieve a petal's binary from the repository.
@@ -37,6 +39,8 @@ public interface IRepositoryProvider<T> {
      * @param version petal's version
      * @return
      */
-    File retrievePetal(String vendor, String artifactId, String version);
+
+    File retrievePetal(Vendor vendor, String artifactId, String version);
+
 
 }

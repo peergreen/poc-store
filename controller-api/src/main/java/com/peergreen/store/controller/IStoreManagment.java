@@ -11,6 +11,7 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 /**
  * Interface defining high level operations to manage server.
@@ -105,7 +106,7 @@ public interface IStoreManagment {
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
      * 
-     * @param vendorName petal's vendor name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -115,7 +116,7 @@ public interface IStoreManagment {
      * @param petalBinary petal's binary file
      * @return corresponding petal on database
      */
-    Petal submitPetal(String vendorName, String artifactId,
+    Petal submitPetal(Vendor vendor, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary);
@@ -123,11 +124,11 @@ public interface IStoreManagment {
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
-     * @param vendorName petal's vendor name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal on database
      */
-    Petal validatePetal(String vendorName, String artifactId, String version);
+    Petal validatePetal(Vendor vendor, String artifactId, String version);
 
 }

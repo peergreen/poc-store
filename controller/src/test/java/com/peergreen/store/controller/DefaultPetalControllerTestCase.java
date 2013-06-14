@@ -82,11 +82,11 @@ public class DefaultPetalControllerTestCase {
         File binary = new File("/home/toto/petal.jar");
 
         // verify getPetal is called when petalPersistence.getPetal is used
-        when(petalPersistence.getPetal(vendorName, artifactId, version)).thenReturn(binary);
+        when(petalPersistence.getPetal(vendor, artifactId, version)).thenReturn(binary);
 
         // verify persistence.getPetal is called
         petalController.getPetal(vendor, artifactId, version);
-        verify(petalPersistence).getPetalFromLocal(vendorName, artifactId, version);
+        verify(petalPersistence).getPetalFromLocal(vendor, artifactId, version);
     }
 
     @Test
@@ -104,13 +104,13 @@ public class DefaultPetalControllerTestCase {
         // nothing to mock, void return
 
         // verify petalPersitence.addToLocal is called
-        petalController.addPetal(vendorName, artifactId,
+        petalController.addPetal(vendor, artifactId,
                 version, "", new Category(),
                 new HashSet<Requirement>(),
                 new HashSet<Capability>(),
                 Origin.LOCAL,
                 petal);
-        verify(petalPersistence).addToLocal(vendorName, artifactId, version, petal);
+        verify(petalPersistence).addToLocal(vendor, artifactId, version, petal);
     }
 
     @Test

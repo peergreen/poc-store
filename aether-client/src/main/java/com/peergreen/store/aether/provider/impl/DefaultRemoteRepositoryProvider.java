@@ -12,6 +12,8 @@ import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
 
+import com.peergreen.store.db.client.ejb.entity.Vendor;
+
 /**
  * Class defining methods for remote repository provider.
  */
@@ -43,8 +45,8 @@ public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<R
      * @return
      */
     @Override
-    public File retrievePetal(String vendor, String artifactId, String version) {
-        Artifact artifact = new DefaultArtifact(vendor+":"+artifactId+":"+version);
+    public File retrievePetal(Vendor vendor, String artifactId, String version) {
+        Artifact artifact = new DefaultArtifact(vendor.getVendorName()+":"+artifactId+":"+version);
         ArtifactRequest artifactRequest = new ArtifactRequest();
         artifactRequest.addRepository(repository);
         artifactRequest.setArtifact(artifact);

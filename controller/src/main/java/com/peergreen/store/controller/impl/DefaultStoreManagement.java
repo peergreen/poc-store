@@ -172,7 +172,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
      * 
-     * @param vendorName petal's vendor
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -183,14 +183,14 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @return corresponding petal on database
      */
     @Override
-    public Petal submitPetal(String vendorName, String artifactId, String version, String description, Category category,
+    public Petal submitPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
-        petalsPersistence.addToStaging(vendorName, artifactId, version, petalBinary);
-        petalSession.addPetal(vendorName, artifactId, version, description,
+        petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
+        petalSession.addPetal(vendor, artifactId, version, description,
                 category, capabilities, requirements, Origin.STAGING);
         
-        Vendor vendor = vendorSession.findVendor(vendorName);
-        
+         //     Vendor vendor = vendorSession.findVendor(vendorName);
+  
         return petalSession.findPetal(vendor, artifactId, version);
     }
 
@@ -198,19 +198,19 @@ public class DefaultStoreManagement implements IStoreManagment {
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
      * 
-     * @param vendorName petal's vendor name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal on database
      */
     @Override
-    public Petal validatePetal(String vendorName, String artifactId, String version) {
+    public Petal validatePetal(Vendor vendor, String artifactId, String version) {
         // retrieve petal from staging repository
-        File binary = petalsPersistence.getPetalFromStaging(vendorName, artifactId, version);
+        File binary = petalsPersistence.getPetalFromStaging(vendor, artifactId, version);
         // add this petal in local repository
-        petalsPersistence.addToLocal(vendorName, artifactId, version, binary);
+        petalsPersistence.addToLocal(vendor, artifactId, version, binary);
         // change origin attribute to LOCAL
-        Vendor vendor = vendorSession.findVendor(vendorName);
+       // Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         petalSession.setOrigin(petal, Origin.LOCAL);
         

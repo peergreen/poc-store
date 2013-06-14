@@ -2,6 +2,8 @@ package com.peergreen.store.aether.client;
 
 import java.io.File;
 
+import com.peergreen.store.db.client.ejb.entity.Vendor;
+
 
 /**
  * Interface defining petal's persistence relative functionalities.
@@ -37,23 +39,23 @@ public interface IPetalsPersistence {
     /**
      * Method to recover petal's binary from its information
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifact id
      * @param version petal's version
      * @return petal's binary
      */
-    File getPetal(String vendorName, String artifactId, String version);
+    File getPetal(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to add a petal to the local repository
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param petal petal's binary
      */
     void addToLocal(
-            String vendorName,
+            Vendor vendor,
             String artifactId,
             String version,
             File petal);
@@ -61,23 +63,23 @@ public interface IPetalsPersistence {
     /**
      * Method to retrieve a petal from the local repository
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal's binary
      */
-    File getPetalFromLocal(String vendorName, String artifactId, String version);
+    File getPetalFromLocal(Vendor vendor, String artifactId, String version);
 
     /**
      * Method to add a petal to the staging repository
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param petal petal's binary
      */
     void addToStaging(
-            String vendorName,
+            Vendor vendor,
             String artifactId,
             String version,
             File petal);
@@ -85,20 +87,20 @@ public interface IPetalsPersistence {
     /**
      * Method to retrieve a petal from the staging repository
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal's binary
      */
-    File getPetalFromStaging(String vendorName, String artifactId, String version);
+    File getPetalFromStaging(Vendor vendor, String artifactId, String version);
     
     /**
      * Method to retrieve a petal from all remote repositories
      * 
-     * @param vendorName petal's vendor's name
+     * @param vendor petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal's binary
      */
-    File getPetalFromRemote(String vendorName, String artifactId, String version);
+    File getPetalFromRemote(Vendor vendor, String artifactId, String version);
 }

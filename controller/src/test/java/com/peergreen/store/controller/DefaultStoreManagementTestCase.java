@@ -149,6 +149,8 @@ public class DefaultStoreManagementTestCase {
     @Test
     public void testSubmitPetal() {
         String vendorName = "Peergreen";
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         File binary = new File("/home/toto/petal.jar");
@@ -156,12 +158,12 @@ public class DefaultStoreManagementTestCase {
         HashSet<Requirement> requirements = new HashSet<>();
         HashSet<Capability> capabilities = new HashSet<>();
 
-        storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
-        verify(petalSession).addPetal(vendorName, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
+        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
+        verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
         /* optional: can used collectPetals instead
         verify(groupSession).addGroup("admin");
          */
-        verify(petalsPersistence).addToStaging(vendorName, artifactId, version, binary);
+        verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
     }
 
     @Test
@@ -178,12 +180,12 @@ public class DefaultStoreManagementTestCase {
         //      => always return the same binary
         //      => always return the same petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
-        when(petalsPersistence.getPetalFromStaging(vendorName, artifactId, version)).thenReturn(binary);
+        when(petalsPersistence.getPetalFromStaging(vendor, artifactId, version)).thenReturn(binary);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         
-        storeManagement.validatePetal(vendorName, artifactId, version);
-        verify(petalsPersistence).getPetalFromStaging(vendorName, artifactId, version);
-        verify(petalsPersistence).addToLocal(vendorName, artifactId, version, binary);
+        storeManagement.validatePetal(vendor, artifactId, version);
+        verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
+        verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
         verify(petalSession).setOrigin(petal, Origin.LOCAL);
 
     }
