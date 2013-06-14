@@ -186,7 +186,7 @@ public class DefaultStoreManagementTestCase {
         storeManagement.validatePetal(vendor, artifactId, version);
         verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
         verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
-        verify(petalSession).setOrigin(petal, Origin.LOCAL);
+        verify(petalSession).updateOrigin(petal, Origin.LOCAL);
 
     }
 

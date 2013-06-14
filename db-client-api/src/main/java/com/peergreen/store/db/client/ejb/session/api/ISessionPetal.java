@@ -70,22 +70,20 @@ public interface ISessionPetal {
     Collection<Requirement> collectRequirements(Petal petal); 
 
     /**
-     * Method to modify a petal 
+     * Method to update the description of petal
      * 
-     * @param oldpetal The petal to modify
-     * @param vendor The new petal's vendor
-     * @param artifactId The new petal's artifactId
-     * @param version The new petal's version
-     * @param description The new petal's description
-     * @param category The new petal's category
-     * @param capabilities The new petal's capabilities 
-     * @param requirements The new petal's requirements
-     * 
-     * @return The oldpetal with new attributes
+     * @param petal The petal that which the description will change
+     * @param newDescription the new description of the petal
      */
-    Petal updatePetal(Petal oldpetal,Vendor vendor, String artifactId, 
-            String version, String description, Category category, 
-            Collection<Capability> capabilities, Collection<Requirement> requirements);
+    public Petal updateDescription(Petal petal, String newDescription);
+    
+    /**
+     * Method to update the origin of petal
+     * 
+     * @param petal The petal that which the origin will change
+     * @param newOrigin the new origin of the petal
+     */
+    public Petal updateOrigin(Petal petal, Origin newOrigin);
 
     /**
      * Method to delete an instance of petal
@@ -200,21 +198,5 @@ public interface ISessionPetal {
      * @return A collection of petals coming from the remote repository
      */
     Collection<Petal> collectPetalsFromRemote();
-    
-    /**
-     * Method to retrieve petal's origin.
-     * 
-     * @param petal to which retrieve origin
-     * @return petal's origin {LOCAL, STAGING, REMOTE}
-     */
-    Origin getOrigin(Petal petal);
-    
-    /**
-     * Method to set petal's origin.
-     * 
-     * @param petal to which set origin
-     * @param origin petal's origin {LOCAL, STAGING, REMOTE}
-     */
-    void setOrigin(Petal petal, Origin origin);
     
 }

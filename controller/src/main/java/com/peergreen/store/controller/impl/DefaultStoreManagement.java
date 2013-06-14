@@ -212,7 +212,7 @@ public class DefaultStoreManagement implements IStoreManagment {
         // change origin attribute to LOCAL
        // Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        petalSession.setOrigin(petal, Origin.LOCAL);
+        petalSession.updateOrigin(petal, Origin.LOCAL);
         
         return petal;
     }
