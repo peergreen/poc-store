@@ -2,12 +2,14 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -134,8 +136,10 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Collection<Category> collectCategories() {
-        // TODO Auto-generated method stub
-        return null;
+        Query query = entityManager.createNamedQuery("Category.findAll");
+        List<Category> catList = query.getResultList();
+        Set<Category> categorySet = new HashSet<Category>(catList);
+        return categorySet;
     }
 
 }

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -23,7 +24,8 @@ import com.peergreen.store.db.client.ejb.impl.DefaultCategory;
 public class DefaultCategoryTest {
 
     private DefaultCategory sessionCategory;
-
+    private String queryString;
+    
     @Mock
     private EntityManager entityManager;
     @Mock 
@@ -32,6 +34,8 @@ public class DefaultCategoryTest {
     private Petal petal ;
     @Mock
     private Set<Petal> petals;
+    @Mock 
+    private Query query;
 
     ArgumentCaptor<Category> category;
     ArgumentCaptor<String> name;
@@ -45,6 +49,7 @@ public class DefaultCategoryTest {
         category = ArgumentCaptor.forClass(Category.class);
         name = ArgumentCaptor.forClass(String.class);
         petalArgument  = ArgumentCaptor.forClass(Petal.class);
+        queryString = "Category.findAll";
     }
 
 
@@ -129,6 +134,17 @@ public class DefaultCategoryTest {
         Assert.assertSame(petal, petalArgument.getValue());
         verify(entityManager).merge(mockcategory);
 
+    }
+    
+    @Test 
+    public void shouldCollectCategories() {
+        //given
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        //when
+        sessionCategory.collectCategories();
+        //then
+        verify(entityManager).createNamedQuery(queryString);
+        verify(query).getResultList();
     }
 
 }

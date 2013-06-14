@@ -3,6 +3,7 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,11 +19,13 @@ import javax.persistence.Table;
 @Table(name="Categories")
 @SequenceGenerator(name="idCategorySeq", initialValue=1, allocationSize=50)
 public class Category{
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
-    private int categoryId;
-
+    
 	@Id
+	@Column(name ="name")
 	private String categoryName;
+	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
+    private int categoryId;
 
 	@OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private Set<Petal> petals;
