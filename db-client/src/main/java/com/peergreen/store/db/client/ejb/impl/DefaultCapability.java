@@ -2,12 +2,14 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -61,7 +63,7 @@ public class DefaultCapability implements ISessionCapability{
         capability.setProperties(properties);
         Set<Petal> petals = new HashSet<Petal>();
         capability.setPetals(petals);
-        entityManager.persist(capability);
+        entityManager.persist(capability); 
 
         return capability;
     }
@@ -155,8 +157,29 @@ public class DefaultCapability implements ISessionCapability{
 
     @Override
     public Collection<Capability> collectcapabilities() {
-        // TODO Auto-generated method stub
-        return null;
+
+        Query capQuery = entityManager.createNamedQuery("Capability.findAll");
+        List<Capability> capList = capQuery.getResultList();
+        Set<Capability> capSet = new HashSet<Capability>();
+        capSet.addAll(capList);
+
+        return capSet;
+    }
+
+    @Override
+    public Capability updateNamespace(Capability capability, String namespace) {
+
+        capability.setNamespace(namespace);
+        return entityManager.merge(capability);
+   
+    }
+
+    @Override
+    public Capability updateProperties(Capability capability, Map<String, String> prooperties) {
+       
+        capability.setProperties(prooperties);
+        return entityManager.merge(capability);
+   
     }
 
 

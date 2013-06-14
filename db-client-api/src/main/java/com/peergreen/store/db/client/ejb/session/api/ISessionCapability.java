@@ -34,6 +34,20 @@ public interface ISessionCapability {
     Capability findCapability (String capabilityName);
 
     /**
+     * Method to change a capability existing namespace
+     * @param namespace the new namespace of the capability
+     * @return The capability with the change updated
+     */
+    Capability updateNamespace (Capability capability, String namespace);
+    
+    /**
+     * 
+     * @param capability
+     * @return
+     */
+    Capability updateProperties (Capability capability, Map<String,String> prooperties);
+    
+    /**
      * Method to collect the petals which give the capability with the name 'capabilityName'
      * 
      * @param name the capability's name
