@@ -178,7 +178,7 @@ public class Petal {
 	 * 
 	 * @return A Set of group which belongs the petal instance
 	 */
-	public Set<Group> getGroupSet() {
+	public Set<Group> getGroups() {
 		return groupSet;
 	}
 
@@ -187,7 +187,7 @@ public class Petal {
 	 * 
 	 * @param groupSet A Set of group to add for the petal 
 	 */
-	public void setGroupSet(Set<Group> groupSet) {
+	public void setGroups(Set<Group> groupSet) {
 		this.groupSet = groupSet;
 	}
 	

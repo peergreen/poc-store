@@ -136,7 +136,7 @@ public class DefaultPetalControllerTestCase {
         Set<Group> groups = new HashSet<Group>();
         groups.add(group1);
         groups.add(group2);
-        petal.setGroupSet(groups);
+        petal.setGroups(groups);
 
         // mock => return needed objects to verify method call
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
