@@ -67,7 +67,6 @@ public class DefaultUser implements ISessionUser {
      */
     @Override
     public User findUserByPseudo(String pseudo) {
-        // TODO Auto-generated method stub
         User user = entityManager.find(User.class, pseudo);
         return user;
     }
@@ -79,7 +78,6 @@ public class DefaultUser implements ISessionUser {
      */
     @Override
     public Collection<User> collectUsers() {
-        // TODO Auto-generated method stub
         Query users = entityManager.createNamedQuery("User.findAll");
         List<User> usersList = users.getResultList();
         Set<User> userSet = new HashSet<User>();
