@@ -76,7 +76,7 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public Link findLink(String linkUrl) {
-        // TODO Auto-generated method stub
+        
         Link link = entityManager.find(Link.class, linkUrl);
 
         return link;
@@ -89,7 +89,7 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public Collection<Link> collectLinks() {
-        // TODO Auto-generated method stub
+        
         Query links = entityManager.createNamedQuery("Link.findAll");
         List<Link> usersList = links.getResultList();
         Set<Link> linkSet = new HashSet<Link>();

@@ -75,7 +75,7 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group findGroup(String groupName) {
-        // TODO remove because we can't change the groupname which is the primary key
+
         Group group = entityManager.find(Group.class, groupName);
         return group;
     }
@@ -89,6 +89,7 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group updateGroup(String oldGroupName, String groupName) {
+       // TODO remove because we can't change the groupname which is the primary key
         return null;
     }
 

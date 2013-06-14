@@ -46,7 +46,7 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Stateless
 public class DefaultPetal implements ISessionPetal {
 
-    
+
     private EntityManager entityManager;
 
 
@@ -78,18 +78,18 @@ public class DefaultPetal implements ISessionPetal {
     public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin) {
         Petal petal = new Petal();
-        
+
         DefaultVendor sessionVendor = new DefaultVendor();
         sessionVendor.addPetal(vendor, petal);
-        
+
         petal.setArtifactId(artifactId);
         petal.setVersion(version);
         petal.setDescription(description);
-        
+
         petal.setCategory(category);
         DefaultCategory sessionCategory = new DefaultCategory();
         sessionCategory.addPetal(category, petal);
-        
+
         Capability capability = new Capability();
         DefaultCapability sessionCapability = new DefaultCapability();
         petal.setCapabilities((Set<Capability>) capabilities);
@@ -98,7 +98,7 @@ public class DefaultPetal implements ISessionPetal {
             capability = it.next();
             sessionCapability.addPetal(capability, petal);
         }
-        
+
         Requirement requirement= new Requirement();
         DefaultRequirement sessionRequirement = new DefaultRequirement();
         petal.setRequirements((Set<Requirement>) requirements);
@@ -107,11 +107,11 @@ public class DefaultPetal implements ISessionPetal {
             requirement = itreq.next();
             sessionRequirement.addPetal(requirement, petal);
         }
-        
+
         petal.setOrigin(origin);
-       
+
         entityManager.persist(petal);
-        
+
         return petal;
     }
 

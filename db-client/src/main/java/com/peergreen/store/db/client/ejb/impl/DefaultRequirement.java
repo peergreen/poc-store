@@ -79,7 +79,7 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement findRequirement(String requirementName) {
-        // TODO Auto-generated method stub
+        
         Requirement requirement = entityManager.find(Requirement.class, requirementName);
         return requirement;
     }
@@ -126,7 +126,7 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement removePetal(Requirement requirement, Petal petal) {
-        // TODO Auto-generated method stub
+        
         Set<Petal> petals = requirement.getPetals();
         petals.remove(petal);
         requirement.setPetals(petals);
@@ -136,7 +136,7 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Collection<Requirement> collectRequirements() {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 
