@@ -2,14 +2,17 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 
 /**
@@ -137,7 +140,26 @@ public class DefaultRequirement implements ISessionRequirement {
     @Override
     public Collection<Requirement> collectRequirements() {
         
-        return null;
+        Query reqs = entityManager.createNamedQuery("Requirement.findAll");
+        List<Requirement> reqList = reqs.getResultList();
+        Set<Requirement> reqSet = new HashSet<Requirement>();
+        reqSet.addAll(reqList);
+        return reqSet;
+    }
+
+    @Override
+    public Requirement updateNamespace(Requirement requirement, String namespace) {
+        
+        requirement.setNamespace(namespace);
+        
+        return entityManager.merge(requirement);
+    }
+
+    @Override
+    public Requirement updateFilter(Requirement requirement, String filter) {
+
+        requirement.setFilter(filter);
+        return entityManager.merge(requirement);
     }
 
 

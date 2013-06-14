@@ -16,7 +16,7 @@ public interface ISessionRequirement {
      * 
      * @return A new instance of requirement
      */
-    Requirement addRequirement(String namespace, String requirementName, String filter);
+    Requirement addRequirement(String requirementName,String namespace,String filter);
 
     /**
      * Method to delete a requirement in the database
@@ -67,5 +67,9 @@ public interface ISessionRequirement {
      * @return A collection of requirements in the database
      */
     Collection<Requirement> collectRequirements();
+    
+    Requirement updateNamespace(Requirement requirement, String nameSpace);
+    
+    Requirement updateFilter(Requirement requirement, String filter);
 
 }

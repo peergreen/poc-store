@@ -6,9 +6,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -30,6 +33,8 @@ public class DefaultRequirementTest {
     private String filter;
     private String namespace;
     private String requirementName;
+    private String queryString;
+    private List<Requirement> requs;
     @Mock
     private EntityManager entityManager;
     @Mock
@@ -38,6 +43,8 @@ public class DefaultRequirementTest {
     private Petal petal;
     @Mock
     private Set<Petal> petals;
+    @Mock
+    private Query query;
 
 
 
@@ -52,6 +59,8 @@ public class DefaultRequirementTest {
         requirementName = "my requirement";
         namespace="service";
         filter="namespace=service";
+        queryString = "Requirement.findAll";
+        requs = new ArrayList<Requirement>();
     }
 
     @Test
@@ -135,4 +144,38 @@ public class DefaultRequirementTest {
 
 
     }
+    
+    @Test
+    public void shouldCollectRequirements() {
+        //Given
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        //when
+        sessionRequirement.collectRequirements();
+        //then
+        verify(entityManager).createNamedQuery(queryString);
+        verify(query).getResultList();
+    }
+    
+    @Test
+    public void shouldUpdateNamespace(){
+        
+      //when
+        sessionRequirement.updateNamespace(mockrequirement, namespace);
+        //then
+        verify(mockrequirement).setNamespace(idArgument.capture());
+        Assert.assertEquals(namespace, idArgument.getValue());
+        verify(entityManager).merge(mockrequirement);
+    }
+    
+    @Test
+    public void shouldUpdateFilter() {
+        
+      //when
+        sessionRequirement.updateFilter(mockrequirement, filter);
+        //then
+        verify(mockrequirement).setFilter(idArgument.capture());
+        Assert.assertEquals(filter, idArgument.getValue());
+        verify(entityManager).merge(mockrequirement);
+    }
+    
 }

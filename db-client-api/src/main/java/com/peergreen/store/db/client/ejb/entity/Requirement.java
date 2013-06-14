@@ -15,16 +15,17 @@ import javax.persistence.Table;
  * Entity Bean representing in the database the requirement of a petal  
  */
 @Entity
-@Table(name="Requirements")
+@Table(name="Requirement")
 @SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
 public class Requirement {
 
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
-    private int requirementId;
-
     @Id
-    @Column(unique=true)
+    @Column(name = "name", unique=true)
     private String requirementName;
+    
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
+    @Column(name="id")
+    private int requirementId;
 
     private String filter;
 
