@@ -184,7 +184,7 @@ public class DefaultPetalController implements IPetalController {
      * @param properties capability's properties (metadata)
      */
     @Override
-    public Capability createCapability(String capabilityName, String namespace, Map<String,Object> properties) {
+    public Capability createCapability(String capabilityName, String namespace, Map<String,String> properties) {
         return capabilitySession.addCapability(capabilityName, namespace, properties);
     }
 

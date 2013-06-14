@@ -53,16 +53,16 @@ public class DefaultCapability implements ISessionCapability{
      * @return The capability creates
      */
     @Override
-    public Capability addCapability(String capabilityName, String namespace, Map<String, Object> properties) {
+    public Capability addCapability(String capabilityName, String namespace, Map<String, String> properties) {
 
-           Capability capability = new Capability();
-            capability.setName(capabilityName);
-            capability.setNamespace(namespace);
-            capability.setProperties(properties);
-            Set<Petal> petals = new HashSet<Petal>();
-            capability.setPetals(petals);
-            entityManager.persist(capability); 
-             
+        Capability capability = new Capability();
+        capability.setName(capabilityName);
+        capability.setNamespace(namespace);
+        capability.setProperties(properties);
+        Set<Petal> petals = new HashSet<Petal>();
+        capability.setPetals(petals);
+        entityManager.persist(capability);
+
         return capability;
     }
 

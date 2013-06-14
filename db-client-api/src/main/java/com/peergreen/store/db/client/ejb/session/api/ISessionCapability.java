@@ -14,10 +14,9 @@ public interface ISessionCapability {
      * @param capabilityName the capability's name
      * @param namespace the capability's namespace
      * @param properties the capability's properties
-     * @param petal the petal which provides this capability
      * @return The capability creates
      */
-    Capability addCapability(String capabilityName, String namespace, Map<String,Object> properties);
+    Capability addCapability(String capabilityName, String namespace, Map<String,String> properties);
 
     /**
      * Method to delete a capability in the database

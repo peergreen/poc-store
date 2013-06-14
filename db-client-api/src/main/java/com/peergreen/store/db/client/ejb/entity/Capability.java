@@ -4,11 +4,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -17,21 +21,32 @@ import javax.persistence.Table;
  * Entity Bean representing in the database the capability of a petal
  */
 @Entity
-@Table(name="Capabilities")
+@Table(name="Capability")
 @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability{
 
+    @Id
+    @Column(name = "name")
+    private String capabilityName;
+    
+    
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
+    @Column(name = "id")
     private int capabilityId;
 
-    @Id
-    private String capabilityName; 
-
+    @Column(name="namespace", nullable=false)
     private String namespace;
 
-    private Map<String, Object> properties; 
+    @ElementCollection
+    @CollectionTable(
+            name="Properties"
+            )
+    @MapKeyColumn (name="propertiesName")
+    @Column(name="properties",nullable=false)
+    private Map<String, String> properties; 
 
     @ManyToMany(mappedBy="capabilities")
+    @Column(name="petals", nullable=false)
     private Set<Petal> petals = new HashSet<>();
 
     /**
@@ -83,7 +98,7 @@ public class Capability{
      * 
      * @return Map containing all the properties of the capability
      */
-    public Map<String, Object> getProperties() {
+    public Map<String, String> getProperties() {
         return properties;
     }
 
@@ -92,7 +107,7 @@ public class Capability{
      * 
      * @param properties the properties to set
      */
-    public void setProperties(Map<String, Object> properties) {
+    public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
 
