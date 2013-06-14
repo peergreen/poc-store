@@ -26,7 +26,7 @@ public interface ISessionPetal {
      * 
      * @return A new instance of petal 
      */
-    Petal addPetal(String vendorName, String artifactId, 
+    Petal addPetal(Vendor vendor, String artifactId, 
             String version, String description, Category category, 
             Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin);
 

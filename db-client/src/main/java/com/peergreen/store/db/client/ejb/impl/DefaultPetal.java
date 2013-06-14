@@ -1,6 +1,8 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -12,6 +14,7 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.enumeration.Origin;
 
@@ -72,10 +75,44 @@ public class DefaultPetal implements ISessionPetal {
      * @return A new instance of petal 
      */
     @Override
-    public Petal addPetal(String VendorName, String artifactId, String version, String description, Category category,
+    public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin) {
-        // TODO Auto-generated method stub
-        return null;
+        Petal petal = new Petal();
+        
+        DefaultVendor sessionVendor = new DefaultVendor();
+        sessionVendor.addPetal(vendor, petal);
+        
+        petal.setArtifactId(artifactId);
+        petal.setVersion(version);
+        petal.setDescription(description);
+        
+        petal.setCategory(category);
+        DefaultCategory sessionCategory = new DefaultCategory();
+        sessionCategory.addPetal(category, petal);
+        
+        Capability capability = new Capability();
+        DefaultCapability sessionCapability = new DefaultCapability();
+        petal.setCapabilities((Set<Capability>) capabilities);
+        Iterator<Capability> it = capabilities.iterator();
+        while(it.hasNext()) {
+            capability = it.next();
+            sessionCapability.addPetal(capability, petal);
+        }
+        
+        Requirement requirement= new Requirement();
+        DefaultRequirement sessionRequirement = new DefaultRequirement();
+        petal.setRequirements((Set<Requirement>) requirements);
+        Iterator<Requirement> itreq = requirements.iterator();
+        while(itreq.hasNext()) {
+            requirement = itreq.next();
+            sessionRequirement.addPetal(requirement, petal);
+        }
+        
+        petal.setOrigin(origin);
+       
+        entityManager.persist(petal);
+        
+        return petal;
     }
 
     /**
@@ -89,8 +126,10 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal findPetal(Vendor vendor, String artifactId, String version) {
-        // TODO Auto-generated method stub
-        return null;
+        String vendorName = vendor.getVendorName();
+        PetalId petalId = new PetalId(vendorName, artifactId, version);
+        Petal petal =entityManager.find(Petal.class, petalId);
+        return petal;
     }
 
     /**
