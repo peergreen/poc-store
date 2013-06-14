@@ -1,18 +1,22 @@
 package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -141,8 +145,8 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Group> collectGroups(Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        return petal.getGroups();
     }
 
     /**
@@ -154,8 +158,8 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Capability> collectCapabilities(Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        return petal.getCapabilities();
     }
 
     /**
@@ -167,30 +171,10 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Requirement> collectRequirements(Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        return petal.getRequirements();
     }
 
-    /**
-     * Method to modify a petal 
-     * 
-     * @param oldpetal The petal to modify
-     * @param vendor The new petal's vendor
-     * @param artifactId The new petal's artifactId
-     * @param version The new petal's version
-     * @param description The new petal's description
-     * @param category The new petal's category
-     * @param capabilities The new petal's capabilities 
-     * @param requirements The new petal's requirements
-     * 
-     * @return The oldpetal with new attributes
-     */
-    @Override
-    public Petal updatePetal(Petal oldpetal, Vendor vendor, String artifactId, String version, String description,
-            Category category, Collection<Capability> capabilities, Collection<Requirement> requirements) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     /**
      * Method to delete an instance of petal
@@ -199,7 +183,35 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public void deletePetal(Petal petal) {
-        // TODO Auto-generated method stub
+
+        entityManager.remove(petal);
+    }
+
+    /**
+     * Method to update the description of petal
+     * 
+     * @param petal The petal that which the description will change
+     * @param newDescription the new description of the petal
+     */
+    @Override
+    public Petal updateDescription(Petal petal, String newDescription) {
+
+        petal.setDescription(newDescription);
+        return entityManager.merge(petal);
+
+    }
+
+    /**
+     * Method to update the origin of petal
+     * 
+     * @param petal The petal that which the origin will change
+     * @param newOrigin the new origin of the petal
+     */
+    @Override
+    public Petal updateOrigin(Petal petal, Origin newOrigin) {
+
+        petal.setOrigin(newOrigin);
+        return entityManager.merge(petal);
 
     }
 
@@ -213,8 +225,13 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal giveAccesToGroup(Petal petal, Group group) {
-        // TODO Auto-generated method stub
-        return null;
+
+        DefaultGroup sessionGroup =  new DefaultGroup();
+        petal.getGroups().add(group);
+        sessionGroup.addPetal(group, petal);
+        entityManager.merge(petal);
+
+        return petal;
     }
 
     /**
@@ -227,8 +244,14 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeAccesToGroup(Petal petal, Group group) {
-        // TODO Auto-generated method stub
-        return null;
+
+        DefaultGroup sessionGroup = new DefaultGroup();
+        Set<Group> groups = petal.getGroups();
+        groups.remove(group);
+        sessionGroup.removePetal(group, petal);
+        entityManager.merge(petal);
+
+        return petal;
     }
 
     /**
@@ -241,8 +264,13 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addCategory(Petal petal, Category category) {
-        // TODO Auto-generated method stub
-        return null;
+
+        DefaultCategory sessionCategory = new DefaultCategory();
+        sessionCategory.addPetal(category, petal);
+        petal.setCategory(category);
+        entityManager.merge(petal);
+
+        return petal;
     }
 
     /**
@@ -254,8 +282,8 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Category getCategory(Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
+
+        return petal.getCategory();
     }
 
     /**
@@ -268,8 +296,14 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addCapability(Petal petal, Capability capability) {
-        // TODO Auto-generated method stub
-        return null;
+
+        DefaultCapability sessionCapability = new DefaultCapability();
+        Set<Capability> capabilities = petal.getCapabilities();
+        capabilities.add(capability);
+        entityManager.merge(petal);
+        sessionCapability.addPetal(capability, petal);
+
+        return petal;
     }
 
     /**
@@ -282,8 +316,14 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeCapability(Petal petal, Capability capability) {
-        // TODO Auto-generated method stub
-        return null;
+
+        DefaultCapability sessionCapability = new DefaultCapability();
+        Set<Capability> capabilities = petal.getCapabilities();
+        capabilities.remove(capability);
+        entityManager.merge(petal);
+        sessionCapability.removePetal(capability, petal);
+
+        return petal;
     }
 
     /**
@@ -296,8 +336,17 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addRequirement(Petal petal, Requirement requirement) {
-        // TODO Auto-generated method stub
-        return null;
+        DefaultRequirement sessionRequirement = new DefaultRequirement();
+
+        Set<Requirement> requirements = petal.getRequirements();
+        requirements.add(requirement);
+        petal.setRequirements(requirements);
+
+        entityManager.merge(petal);
+
+        sessionRequirement.addPetal(requirement, petal);
+
+        return petal;
     }
 
     /**
@@ -310,8 +359,17 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeRequirement(Petal petal, Requirement requirement) {
-        // TODO Auto-generated method stub
-        return null;
+        DefaultRequirement sessionRequirement = new DefaultRequirement();
+
+        Set<Requirement> requirements = petal.getRequirements();
+        requirements.remove(requirement);
+        petal.setRequirements(requirements);
+
+        entityManager.merge(petal);
+
+        sessionRequirement.removePetal(requirement, petal);
+
+        return petal;
     }
 
     /**
@@ -321,8 +379,13 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetals() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Query petals = entityManager.createNamedQuery("Petal.findAll");
+        List<Petal> petalsList = petals.getResultList();
+        Set<Petal> petalSet = new HashSet<Petal>();
+        petalSet.addAll(petalsList);
+        return petalSet;
+        
     }
 
     /**
@@ -332,8 +395,12 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Query petals = entityManager.createNamedQuery("Petal.findAllFromLocal");
+        List<Petal> petalsList = petals.getResultList();
+        Set<Petal> petalSet = new HashSet<Petal>();
+        petalSet.addAll(petalsList);
+        return petalSet;
     }
 
     /**
@@ -343,8 +410,12 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromStaging() {
-        // TODO Auto-generated method stub
-        return null;
+        
+        Query petals = entityManager.createNamedQuery("Petal.findAllFromStaging");
+        List<Petal> petalsList = petals.getResultList();
+        Set<Petal> petalSet = new HashSet<Petal>();
+        petalSet.addAll(petalsList);
+        return petalSet;
     }
 
     /**
@@ -354,32 +425,12 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromRemote() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
-     * Method to retrieve petal's origin.
-     * 
-     * @param petal to which retrieve origin
-     * @return petal's origin {LOCAL, STAGING, REMOTE}
-     */
-    @Override
-    public Origin getOrigin(Petal petal) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /**
-     * Method to set petal's origin.
-     * 
-     * @param petal to which set origin
-     * @param origin of the petal {LOCAL, STAGING, REMOTE}
-     */
-    @Override
-    public void setOrigin(Petal petal, Origin origin) {
-        // TODO Auto-generated method stub
-        
+       
+        Query petals = entityManager.createNamedQuery("Petal.findAllFromRemote");
+        List<Petal> petalsList = petals.getResultList();
+        Set<Petal> petalSet = new HashSet<Petal>();
+        petalSet.addAll(petalsList);
+        return petalSet;
     }
 
 }
