@@ -52,7 +52,7 @@ public class DefaultPetal implements ISessionPetal {
 
 
     private EntityManager entityManager;
-
+    
 
     public EntityManager getEntityManager() {
         return entityManager;
@@ -84,6 +84,9 @@ public class DefaultPetal implements ISessionPetal {
         Petal petal = new Petal();
 
         DefaultVendor sessionVendor = new DefaultVendor();
+        sessionVendor.setEntityManager(entityManager);
+        petal.setVendorName(vendor.getVendorName());
+        petal.setVendor(vendor);
         sessionVendor.addPetal(vendor, petal);
 
         petal.setArtifactId(artifactId);
@@ -92,10 +95,12 @@ public class DefaultPetal implements ISessionPetal {
 
         petal.setCategory(category);
         DefaultCategory sessionCategory = new DefaultCategory();
+        sessionCategory.setEntityManager(entityManager);
         sessionCategory.addPetal(category, petal);
 
         Capability capability = new Capability();
         DefaultCapability sessionCapability = new DefaultCapability();
+        sessionCapability.setEntityManager(entityManager);
         petal.setCapabilities((Set<Capability>) capabilities);
         Iterator<Capability> it = capabilities.iterator();
         while(it.hasNext()) {
@@ -105,6 +110,7 @@ public class DefaultPetal implements ISessionPetal {
 
         Requirement requirement= new Requirement();
         DefaultRequirement sessionRequirement = new DefaultRequirement();
+        sessionRequirement.setEntityManager(entityManager);
         petal.setRequirements((Set<Requirement>) requirements);
         Iterator<Requirement> itreq = requirements.iterator();
         while(itreq.hasNext()) {
@@ -227,8 +233,11 @@ public class DefaultPetal implements ISessionPetal {
     public Petal giveAccesToGroup(Petal petal, Group group) {
 
         DefaultGroup sessionGroup =  new DefaultGroup();
-        petal.getGroups().add(group);
-        sessionGroup.addPetal(group, petal);
+        sessionGroup.setEntityManager(entityManager);
+        Set<Group> groups = petal.getGroups();
+        groups.add(group);
+        petal.setGroups(groups);
+        sessionGroup.addPetal(group,petal);
         entityManager.merge(petal);
 
         return petal;
@@ -246,8 +255,10 @@ public class DefaultPetal implements ISessionPetal {
     public Petal removeAccesToGroup(Petal petal, Group group) {
 
         DefaultGroup sessionGroup = new DefaultGroup();
+        sessionGroup.setEntityManager(entityManager);
         Set<Group> groups = petal.getGroups();
         groups.remove(group);
+        petal.setGroups(groups);
         sessionGroup.removePetal(group, petal);
         entityManager.merge(petal);
 
@@ -266,6 +277,7 @@ public class DefaultPetal implements ISessionPetal {
     public Petal addCategory(Petal petal, Category category) {
 
         DefaultCategory sessionCategory = new DefaultCategory();
+        sessionCategory.setEntityManager(entityManager);
         sessionCategory.addPetal(category, petal);
         petal.setCategory(category);
         entityManager.merge(petal);
@@ -298,8 +310,10 @@ public class DefaultPetal implements ISessionPetal {
     public Petal addCapability(Petal petal, Capability capability) {
 
         DefaultCapability sessionCapability = new DefaultCapability();
+        sessionCapability.setEntityManager(entityManager);
         Set<Capability> capabilities = petal.getCapabilities();
         capabilities.add(capability);
+        petal.setCapabilities(capabilities);
         entityManager.merge(petal);
         sessionCapability.addPetal(capability, petal);
 
@@ -318,8 +332,10 @@ public class DefaultPetal implements ISessionPetal {
     public Petal removeCapability(Petal petal, Capability capability) {
 
         DefaultCapability sessionCapability = new DefaultCapability();
+        sessionCapability.setEntityManager(entityManager);
         Set<Capability> capabilities = petal.getCapabilities();
         capabilities.remove(capability);
+        petal.setCapabilities(capabilities);
         entityManager.merge(petal);
         sessionCapability.removePetal(capability, petal);
 
@@ -337,7 +353,7 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal addRequirement(Petal petal, Requirement requirement) {
         DefaultRequirement sessionRequirement = new DefaultRequirement();
-
+        sessionRequirement.setEntityManager(entityManager);
         Set<Requirement> requirements = petal.getRequirements();
         requirements.add(requirement);
         petal.setRequirements(requirements);
@@ -360,6 +376,7 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal removeRequirement(Petal petal, Requirement requirement) {
         DefaultRequirement sessionRequirement = new DefaultRequirement();
+        sessionRequirement.setEntityManager(entityManager);
 
         Set<Requirement> requirements = petal.getRequirements();
         requirements.remove(requirement);
@@ -379,13 +396,13 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetals() {
-        
+
         Query petals = entityManager.createNamedQuery("Petal.findAll");
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
         return petalSet;
-        
+
     }
 
     /**
@@ -395,7 +412,7 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
-        
+
         Query petals = entityManager.createNamedQuery("Petal.findAllFromLocal");
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
@@ -410,7 +427,7 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromStaging() {
-        
+
         Query petals = entityManager.createNamedQuery("Petal.findAllFromStaging");
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
@@ -425,7 +442,7 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromRemote() {
-       
+
         Query petals = entityManager.createNamedQuery("Petal.findAllFromRemote");
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
