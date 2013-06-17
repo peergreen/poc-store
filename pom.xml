@@ -27,7 +27,6 @@
     <module>db-client</module>
     <module>aether-client-api</module>
     <module>aether-client</module>
-    <module>launcher</module>
   </modules>
 
   <dependencies>
