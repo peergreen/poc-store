@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -80,18 +81,6 @@ public class DefaultGroup implements ISessionGroup {
         return group;
     }
 
-    /**
-     * Method to change the name of the group 
-     * 
-     * @param oldGroupName the older name
-     * @param groupName the new name
-     * @return the group changed 
-     */
-    @Override
-    public Group updateGroup(String oldGroupName, String groupName) {
-       // TODO remove because we can't change the groupname which is the primary key
-        return null;
-    }
 
     /**
      * Method to delete the group with the name groupName
@@ -206,8 +195,17 @@ public class DefaultGroup implements ISessionGroup {
     @Override
     public Collection<Group> collectGroups() {
         Query groups = entityManager.createNamedQuery("Group.findAll");
-        List<Group> groupList = groups.getResultList();
+        List groupList = groups.getResultList();
+        
+        
         Set<Group> groupSet = new HashSet<Group>();
+        Iterator<Group> it = groupSet.iterator();
+        int index =0;
+        while(it.hasNext()){
+            Group gp = it.next();
+            gp = (Group) groupList.get(index);
+            index ++;
+        }
         groupSet.addAll(groupList);
         return groupSet;
         }

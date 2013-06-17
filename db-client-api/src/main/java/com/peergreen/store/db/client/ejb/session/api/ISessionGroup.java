@@ -43,15 +43,6 @@ public interface ISessionGroup {
     Group findGroup(String groupName);
 
     /**
-     * Method to change the name of the group 
-     * 
-     * @param oldGroupName the older name
-     * @param groupName the new name
-     * @return the group changed 
-     */
-    Group updateGroup(String oldGroupName, String groupName);
-
-    /**
      * Method to delete the group with the name groupName
      * 
      * @param groupName the name of the group to delete

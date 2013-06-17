@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * Entity Bean representing in the database group of users
  */
 @Entity
-@Table(name="Groups")
+@Table(name="Group")
 public class Group {
 
     @Id

@@ -27,14 +27,6 @@ public interface IGroupController {
      */
     Group addGroup(String groupName);
     
-    /**
-     * Method to modify an existing Group entity.
-     * 
-     * @param groupName old group's name
-     * @param groupName new group's name
-     * @return updated group
-     */
-    Group modifyGroup(String oldGroupName, String newGroupName);
     
     /**
      * Method to remove a group from the database.

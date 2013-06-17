@@ -185,7 +185,7 @@ public class DefaultGroupTest {
   }
   
   @Test
-  public void shouldCollectAllTheUsers(){
+  public void shouldCollectAllGroups(){
       //Given
       when(entityManager.createNamedQuery(anyString())).thenReturn(query);
       when(query.getResultList()).thenReturn(groupList);

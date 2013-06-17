@@ -44,17 +44,6 @@ public class DefaultGroupController implements IGroupController {
         return groupSession.addGroup(groupName);
     }
 
-    /**
-     * Method to modify an existing Group entity.
-     * 
-     * @param groupName old group's name
-     * @param groupName new group's name
-     * @return updated group
-     */
-    @Override
-    public Group modifyGroup(String oldGroupName, String newGroupName) {
-        return groupSession.updateGroup(oldGroupName, newGroupName);
-    }
 
     /**
      * Method to remove a group from the database.

@@ -42,22 +42,6 @@ public class DefaultGroupControllerTestCase {
         verify(groupSession).addGroup(groupName);
     }
 
-    @Test
-    public void testModifyGroup() {
-        String oldGroupName = "myName";
-        String newGroupName = "myNewName";
-
-        // create entity instance with name = newGroupName
-        Group updatedGroup = new Group();
-        updatedGroup.setGroupname(newGroupName);
-
-        // mock facade => always return a group instance with name = newGroupName
-        when(groupSession.updateGroup(oldGroupName, newGroupName)).thenReturn(updatedGroup);
-
-        // verify groupSession.updateGroup(...) is called
-        groupController.modifyGroup(oldGroupName, newGroupName);
-        verify(groupSession).updateGroup(oldGroupName, newGroupName);
-    }
 
     @Test
     public void testRemoveGroup() {
