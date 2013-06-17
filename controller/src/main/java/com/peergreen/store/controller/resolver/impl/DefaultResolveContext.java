@@ -34,18 +34,18 @@ import org.osgi.resource.Wiring;
 import org.osgi.service.resolver.HostedCapability;
 import org.osgi.service.resolver.ResolveContext;
 
-import com.peergreen.store.controller.resolver.wrapper.MissingCapability;
+import com.peergreen.store.controller.resolver.wrapper.impl.MissingCapability;
 
 @Component
 @Instantiate
 @Provides
-public class DefaultResolverContext extends ResolveContext {
+public class DefaultResolveContext extends ResolveContext {
     private final Collection<Resource> resources;
     private final Map<Resource, Wiring> wirings;
     private final Collection<Resource> mandatoryResources;
     private final Collection<Resource> optionalResources;
 
-    public DefaultResolverContext(Collection<Resource> resources, Map<Resource, Wiring> wirings,
+    public DefaultResolveContext(Collection<Resource> resources, Map<Resource, Wiring> wirings,
             Collection<Resource> mandatoryResources, Collection<Resource> optionalResources) {
         this.resources = resources;
         this.wirings = wirings;
