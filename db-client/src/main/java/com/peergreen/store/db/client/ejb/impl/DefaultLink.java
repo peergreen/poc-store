@@ -96,6 +96,14 @@ public class DefaultLink implements ISessionLink {
         linkSet.addAll(usersList);
         return linkSet;
     }
+
+    @Override
+    public Link updateDescription(Link oldLink, String newDescription) {
+
+        oldLink.setDescription(newDescription);
+        
+        return entityManager.merge(oldLink);
+    }
 }
 
 

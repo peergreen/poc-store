@@ -92,4 +92,16 @@ public class DefaultLinkTest {
         verify(query).getResultList();
 
     }
+    
+    @Test
+    public void shouldModifyLinkDescription() {
+        //Given
+        String newDescription = "new link";
+        //when
+        sessionLink.updateDescription(mocklink, newDescription);
+        //then
+        verify(mocklink).setDescription(value.capture());
+        Assert.assertEquals(newDescription, value.getValue());
+        verify(entityManager).merge(mocklink);
+    }
 }

@@ -48,5 +48,14 @@ public interface ISessionLink {
      * @return links list
      */
     Collection<Link> collectLinks();
+    
+    /**
+     * Method to modify a link's description
+     * 
+     * @param oldLink The link to modify 
+     * @param newDescription The new description of the link 
+     * @return
+     */
+    Link updateDescription(Link oldLink, String newDescription);
 
 }
