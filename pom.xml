@@ -27,6 +27,7 @@
     <module>db-client</module>
     <module>aether-client-api</module>
     <module>aether-client</module>
+    <module>launcher</module>
   </modules>
 
   <dependencies>
@@ -50,7 +51,7 @@
     <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.ipojo.annotations</artifactId>
-      <version>1.8.6</version>
+      <version>1.10.0</version>
     </dependency>
   </dependencies>
 
