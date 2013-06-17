@@ -74,7 +74,7 @@ public interface ISessionGroup {
      * 
      * @param groupName the group's name
      * 
-     * @return A collection of users wich belongs to the group
+     * @return A collection of users which belongs to the group
      */
     Collection<User> collectUsers(String groupName);
 

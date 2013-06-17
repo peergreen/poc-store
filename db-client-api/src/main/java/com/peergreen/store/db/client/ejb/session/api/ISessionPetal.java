@@ -118,7 +118,7 @@ public interface ISessionPetal {
      * @param petal An instance of petal
      * @param category A category to set for the petal
      * 
-     * @return A petal with the Category 'category'
+      * @return A petal with the Category 'category'
      */
     Petal addCategory(Petal petal, Category category);
 
