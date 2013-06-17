@@ -3,6 +3,7 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +13,25 @@ import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.osgi.resource.Resource;
+import org.osgi.resource.Wiring;
+import org.osgi.service.resolver.ResolveContext;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
+import com.peergreen.store.aether.client.impl.DefaultPetalsPersistence;
 import com.peergreen.store.controller.IPetalController;
+import com.peergreen.store.controller.resolver.impl.DefaultResolveContext;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
+import com.peergreen.store.db.client.ejb.impl.DefaultCategory;
+import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
+import com.peergreen.store.db.client.ejb.impl.DefaultRequirement;
+import com.peergreen.store.db.client.ejb.impl.DefaultVendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
@@ -55,7 +66,26 @@ public class DefaultPetalController implements IPetalController {
     private ISessionVendor vendorSession;
     /** reference to the aether client for petal persistence */
     private IPetalsPersistence petalPersistence;
+    /** resolver to get all petal"s transitive dependencies */
+    private ResolveContext resolver;
+    /** associated variables */
+    Collection<Resource> resources;
+    Map<Resource, Wiring> wirings;
+    Collection<Resource> mandatoryResources;
 
+    /**
+     * Default constructor. Initialize attributes.
+     */
+    public DefaultPetalController() {
+        capabilitySession = new DefaultCapability();
+        categorySession = new DefaultCategory();
+        petalSession = new DefaultPetal();
+        requirementSession = new DefaultRequirement();
+        vendorSession = new DefaultVendor();
+        petalPersistence = new DefaultPetalsPersistence();
+        resolver = new DefaultResolveContext(resources, wirings, mandatoryResources, null);
+    }
+    
     /**
      * Method to retrieve metadata related to a petal.
      * 
@@ -91,6 +121,11 @@ public class DefaultPetalController implements IPetalController {
     @Override
     public Collection<PetalId> getTransitiveRequirements(Vendor vendor, String artifactId, String version) {
         // TODO Auto-generated method stub
+        Collection<Resource> resources = new HashSet<>();
+        // required resources
+        Collection<Resource> mandatoryResources = new HashSet<>();
+        Map<Resource, Wiring> wirings = new HashMap<>();
+        DefaultResolveContext resolver = new DefaultResolveContext(resources, wirings, mandatoryResources, null);
         return null;
     }
     
