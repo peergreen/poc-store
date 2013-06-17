@@ -13,6 +13,7 @@ import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.Requires;
 import org.osgi.resource.Resource;
 import org.osgi.resource.Wiring;
 import org.osgi.service.resolver.ResolveContext;
@@ -27,11 +28,6 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
-import com.peergreen.store.db.client.ejb.impl.DefaultCategory;
-import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
-import com.peergreen.store.db.client.ejb.impl.DefaultRequirement;
-import com.peergreen.store.db.client.ejb.impl.DefaultVendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
@@ -59,10 +55,15 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Provides
 public class DefaultPetalController implements IPetalController {
 
+    @Requires
     private ISessionCapability capabilitySession;
+    @Requires
     private ISessionCategory categorySession;
+    @Requires
     private ISessionPetal petalSession;
+    @Requires
     private ISessionRequirement requirementSession;
+    @Requires
     private ISessionVendor vendorSession;
     /** reference to the aether client for petal persistence */
     private IPetalsPersistence petalPersistence;
@@ -77,11 +78,6 @@ public class DefaultPetalController implements IPetalController {
      * Default constructor. Initialize attributes.
      */
     public DefaultPetalController() {
-        capabilitySession = new DefaultCapability();
-        categorySession = new DefaultCategory();
-        petalSession = new DefaultPetal();
-        requirementSession = new DefaultRequirement();
-        vendorSession = new DefaultVendor();
         petalPersistence = new DefaultPetalsPersistence();
         resolver = new DefaultResolveContext(resources, wirings, mandatoryResources, null);
     }
