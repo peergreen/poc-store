@@ -1,5 +1,5 @@
-Export-Package com.peergreen.store.aether.client;version=${project.version},\
-               com.peergreen.store.aether.provider;version=${project.version}
+Export-Package com.peergreen.store.aether.client.*;version=${project.version},\
+               com.peergreen.store.aether.provider.*;version=${project.version}
 
 Private-Package com.peergreen.store.aether.provider.*,\
                 com.peergreen.store.aether.client.*,\
