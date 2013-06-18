@@ -57,7 +57,7 @@ public class App {
         petalSession.addPetal(vendor, "Store", "0.1.0-beta", "Store module for Peergreen Platform",
                 category, capabilities, requirements, Origin.LOCAL);
         
-//        Collection<Petal> petalsList = storeManagement.collectPetalsFromLocal();
-//        System.out.println("There are "+petalsList.size()+" petal(s) in local repository");
+        Collection<Petal> petalsList = storeManagement.collectPetalsFromLocal();
+        System.out.println("There are "+petalsList.size()+" petal(s) in local repository");
     }
 }
