@@ -2,6 +2,8 @@ package com.peergreen.store.db.client.ejb.key.primary;
 
 import java.io.Serializable;
 
+import com.peergreen.store.db.client.ejb.entity.Vendor;
+
 
 public class PetalId implements Serializable {
 
@@ -10,7 +12,7 @@ public class PetalId implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String vendorName;
+	private Vendor vendor;
 	private String artifactId;
 	private String version; 
 
@@ -18,8 +20,8 @@ public class PetalId implements Serializable {
 		
 	}
 	
-	public PetalId(String vendor, String artifactId,String version){
-		this.vendorName = vendor;
+	public PetalId(Vendor vendor, String artifactId,String version){
+		this.vendor = vendor;
 		this.artifactId = artifactId;
 		this.version = version;
 
@@ -30,8 +32,8 @@ public class PetalId implements Serializable {
 	 * 
 	 * @param vendor the vendor to set for the petal
 	 */
-	public void setVendor(String vendor2) {
-		this.vendorName = vendor2;
+	public void setVendor(Vendor vendor2) {
+		this.vendor = vendor2;
 	}
 
 	/**
@@ -57,9 +59,9 @@ public class PetalId implements Serializable {
 	 * 
 	 * @return the vendor of the petal
 	 */
-	public String getVendor()
+	public Vendor getVendor()
 	{
-		return this.vendorName;
+		return this.vendor;
 	}
 	
 	/**

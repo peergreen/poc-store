@@ -23,13 +23,10 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Entity
 @IdClass(PetalId.class)
 public class Petal {
-
-
-    //  @Column(name = "vendorName",insertable=false, updatable=false)
-    private String vendorName;
-    @Id
+    
     @ManyToOne
     //  @JoinColumn(name = "vendorName", referencedColumnName = "name")
+    @Id
     private Vendor vendor;
     @Id
     private String artifactId;
@@ -54,23 +51,6 @@ public class Petal {
 
     private Origin origin;
 
-    /**
-     * Method to retrieve the petal's vendor name
-     * 
-     * @return the vendor's name which provides the petal
-     */
-    public String getVendorName() {
-        return this.vendorName;
-    }
-
-    /**
-     * Method to set the petal's vendor name
-     * 
-     * @param vendor The vendor's name of the petal to set
-     */
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
 
     /**
      * Method to retrieve the petal's artifactId

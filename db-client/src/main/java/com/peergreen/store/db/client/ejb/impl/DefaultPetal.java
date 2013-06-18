@@ -136,8 +136,8 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal findPetal(Vendor vendor, String artifactId, String version) {
-        String vendorName = vendor.getVendorName();
-        PetalId petalId = new PetalId(vendorName, artifactId, version);
+       // String vendorName = vendor.getVendorName();
+        PetalId petalId = new PetalId(vendor, artifactId, version);
         Petal petal =entityManager.find(Petal.class, petalId);
         return petal;
     }
