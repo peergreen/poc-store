@@ -15,20 +15,39 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.enterprise</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>controller-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.peergreen.store</groupId>
-      <artifactId>db-client</artifactId>
+      <artifactId>db-client-api</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.peergreen.store</groupId>
-      <artifactId>aether-client</artifactId>
+      <artifactId>aether-client-api</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.peergreen.store</groupId>
+      <artifactId>db-client</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

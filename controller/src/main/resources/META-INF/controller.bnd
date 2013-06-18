@@ -1,5 +1,7 @@
-Import-Package *
+Import-Package org.osgi.framework;version=1.6.0,*
 
 Export-Package com.peergreen.store.controller,\
                com.peergreen.store.controller.resolver,\
-               com.peergreen.store.controller.resolver.wrapper
+               com.peergreen.store.controller.resolver.wrapper,\
+               org.osgi.resource;version=1.0,\
+               org.osgi.service.resolver;version=1.0
