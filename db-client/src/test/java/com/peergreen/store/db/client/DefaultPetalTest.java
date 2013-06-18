@@ -1,8 +1,5 @@
 package com.peergreen.store.db.client;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anySet;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -23,8 +20,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import bsh.Capabilities;
-
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
@@ -32,12 +27,8 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
-import com.peergreen.store.db.client.ejb.impl.DefaultCategory;
 import com.peergreen.store.db.client.ejb.impl.DefaultGroup;
 import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
-import com.peergreen.store.db.client.ejb.impl.DefaultRequirement;
-import com.peergreen.store.db.client.ejb.impl.DefaultVendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.enumeration.Origin;
 
@@ -46,10 +37,6 @@ public class DefaultPetalTest {
     private DefaultPetal sessionPetal;
     @Mock
     private DefaultGroup sessionGroup;
-    private DefaultVendor sessionVendor;
-    private DefaultCategory sessionCategory;
-    private DefaultCapability sessionCapability;
-    private DefaultRequirement sessionRequirement;
 
     private ArgumentCaptor<String> stringArgumentCaptor;
     private ArgumentCaptor<Petal> petalArgumentCaptor;
@@ -355,37 +342,43 @@ public class DefaultPetalTest {
 
     @Test
     public void shouldcollectPetalsFromLocal() {
-        queryString = "Petal.findAllFromLocal";
-        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        queryString = "select p from Petal p where p.origin = :origin";
+        when(entityManager.createQuery(anyString())).thenReturn(query);
         //when
         sessionPetal.collectPetalsFromLocal();
         //then
-        verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
+        verify(entityManager).createQuery(stringArgumentCaptor.capture());
         Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
+        verify(query).setParameter(anyString(), originArgumentCaptor.capture());
+        Assert.assertEquals(Origin.LOCAL, originArgumentCaptor.getValue());
         verify(query).getResultList();
     }
     
     @Test
     public void shouldcollectPetalsFromRemote() {
-        queryString = "Petal.findAllFromRemote";
-        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        queryString = "select p from Petal p where p.origin = :origin";
+        when(entityManager.createQuery(anyString())).thenReturn(query);
         //when
         sessionPetal.collectPetalsFromRemote();
         //then
-        verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
+        verify(entityManager).createQuery(stringArgumentCaptor.capture());
         Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
+        verify(query).setParameter(anyString(), originArgumentCaptor.capture());
+        Assert.assertEquals(Origin.REMOTE, originArgumentCaptor.getValue());
         verify(query).getResultList();
     }
     
     @Test
     public void shouldcollectPetalsFromStagging() {
-        queryString = "Petal.findAllFromStaging";
-        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        queryString = "select p from Petal p where p.origin = :origin";
+        when(entityManager.createQuery(anyString())).thenReturn(query);
         //when
         sessionPetal.collectPetalsFromStaging();
         //then
-        verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
+        verify(entityManager).createQuery(stringArgumentCaptor.capture());
         Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
+        verify(query).setParameter(anyString(), originArgumentCaptor.capture());
+        Assert.assertEquals(Origin.STAGING, originArgumentCaptor.getValue());
         verify(query).getResultList();
     }
 
