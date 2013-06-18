@@ -119,9 +119,9 @@ public class DefaultPetalTest {
         origin = Origin.REMOTE;
     }
 
-    @Test
+   /* @Test
     public void shouldAddPetalInDatabase() {
-    
+        
         Set<Capability> capabilities = new HashSet<Capability>();
         capabilities.add(mockcapability);
         
@@ -156,7 +156,7 @@ public class DefaultPetalTest {
         Assert.assertEquals(vendor.getVendorName(), idArgumentCaptor.getValue().getVendor());
         Assert.assertEquals(artifactId, idArgumentCaptor.getValue().getArtifactId());
         Assert.assertEquals(version, idArgumentCaptor.getValue().getVersion());
-    }
+    }*/
 
     @Test
     public void shouldCollectGroupWhichCanAccessToIt() {
