@@ -52,7 +52,7 @@ public class DefaultPetal implements ISessionPetal {
 
 
     private EntityManager entityManager;
-    
+
 
     public EntityManager getEntityManager() {
         return entityManager;
@@ -413,10 +413,15 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
 
-        Query petals = entityManager.createNamedQuery("Petal.findAllFromLocal");
+        //  Query petals = entityManager.createNamedQuery("Petal.findAllFromLocal");
+
+        Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
+        petals.setParameter("origin", Origin.LOCAL);
+
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
+
         return petalSet;
     }
 
@@ -428,10 +433,13 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Collection<Petal> collectPetalsFromStaging() {
 
-        Query petals = entityManager.createNamedQuery("Petal.findAllFromStaging");
+        Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
+        petals.setParameter("origin", Origin.STAGING);
+
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
+
         return petalSet;
     }
 
@@ -443,10 +451,13 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Collection<Petal> collectPetalsFromRemote() {
 
-        Query petals = entityManager.createNamedQuery("Petal.findAllFromRemote");
+        Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
+        petals.setParameter("origin", Origin.REMOTE);
+
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
+        
         return petalSet;
     }
 
