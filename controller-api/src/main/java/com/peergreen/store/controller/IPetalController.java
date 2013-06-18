@@ -17,6 +17,7 @@ import com.peergreen.store.db.client.enumeration.Origin;
  * Interface defining all petal related operations:
  * <ul>
  *      <li>Retrieve petal metadata or binary</li>
+ *      <li>Resolve petal's dependencies</li>
  *      <li>Create, remove or modify petals on database</li>
  *      <li>Create, retireve capabilities on database</li>
  *      <li>Add or remove capabilities to petals</li>
@@ -40,14 +41,21 @@ public interface IPetalController {
     Map<String, Object> getPetalMetadata(Vendor vendor, String artifactId, String version);
 
     /**
-     * Method to retrieve all needed petals to install the provided one.
+     * Method to retrieve all petals available for each required capability.
      * 
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @return list of all needed petals for installation of the provided petal
+     * @param map indexing all petals providing each required capability
+     * @param requirements that can't be satisfied
+     * @return list of all petals available for each required capability
      */
-    Collection<PetalId> getTransitiveRequirements(Vendor vendor, String artifactId, String version);
+    Collection<PetalId> getTransitiveRequirements(
+            Vendor vendor,
+            String artifactId,
+            String version,
+            Map<Capability, Set<Petal>> resolvedCapabilities,
+            Set<Requirement> unresolvedRequirements);
     
     /**
      * Method to retrieve a petal from the local store.
