@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,10 +17,13 @@ import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
-import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
+import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
@@ -50,13 +54,17 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Stateless
 public class DefaultPetal implements ISessionPetal {
 
-
+    @EJB
+    private ISessionVendor sessionVendor;
+    @EJB
+    private ISessionCategory sessionCategory;
+    @EJB
+    private ISessionCapability sessionCapability;
+    @EJB
+    private ISessionRequirement sessionRequirement;
+    
     private EntityManager entityManager;
 
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
 
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
@@ -83,44 +91,31 @@ public class DefaultPetal implements ISessionPetal {
             Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin) {
         Petal petal = new Petal();
 
-        DefaultVendor sessionVendor = new DefaultVendor();
-        sessionVendor.setEntityManager(entityManager);
-        petal.setVendorName(vendor.getVendorName());
         petal.setVendor(vendor);
-        sessionVendor.addPetal(vendor, petal);
-
         petal.setArtifactId(artifactId);
         petal.setVersion(version);
         petal.setDescription(description);
-
         petal.setCategory(category);
-        DefaultCategory sessionCategory = new DefaultCategory();
-        sessionCategory.setEntityManager(entityManager);
-        sessionCategory.addPetal(category, petal);
-
-        Capability capability = new Capability();
-        DefaultCapability sessionCapability = new DefaultCapability();
-        sessionCapability.setEntityManager(entityManager);
-        petal.setCapabilities((Set<Capability>) capabilities);
-        Iterator<Capability> it = capabilities.iterator();
-        while(it.hasNext()) {
-            capability = it.next();
-            sessionCapability.addPetal(capability, petal);
-        }
-
-        Requirement requirement= new Requirement();
-        DefaultRequirement sessionRequirement = new DefaultRequirement();
-        sessionRequirement.setEntityManager(entityManager);
         petal.setRequirements((Set<Requirement>) requirements);
-        Iterator<Requirement> itreq = requirements.iterator();
-        while(itreq.hasNext()) {
-            requirement = itreq.next();
-            sessionRequirement.addPetal(requirement, petal);
-        }
-
+        petal.setCapabilities((Set<Capability>) capabilities);
         petal.setOrigin(origin);
 
         entityManager.persist(petal);
+
+        sessionVendor.addPetal(vendor, petal);
+        sessionCategory.addPetal(category, petal);
+        Iterator<Capability> it = capabilities.iterator();
+        while(it.hasNext()) {
+
+            sessionCapability.addPetal(it.next(), petal);
+        }
+
+
+        Iterator<Requirement> itreq = requirements.iterator();
+        while(itreq.hasNext()) {
+            sessionRequirement.addPetal(itreq.next(), petal);
+        }
+
 
         return petal;
     }
@@ -457,7 +452,7 @@ public class DefaultPetal implements ISessionPetal {
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
-        
+
         return petalSet;
     }
 
