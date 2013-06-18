@@ -4,14 +4,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database a link between two stores
  */
+@NamedQueries({
+    @NamedQuery(
+    name = "Link.findAll",
+    query = "select l from Link l")
+})
 @Entity
-@Table(name="Links")
 @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
 public class Link {
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")

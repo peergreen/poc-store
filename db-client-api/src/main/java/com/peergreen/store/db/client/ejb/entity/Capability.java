@@ -13,15 +13,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 
 /**
  * Entity Bean representing in the database the capability of a petal
  */
+@NamedQueries({
+    @NamedQuery(
+    name = "Capability.findAll",
+    query = "select cap from Capability cap")
+})
 @Entity
-@Table(name="Capability")
 @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability{
 

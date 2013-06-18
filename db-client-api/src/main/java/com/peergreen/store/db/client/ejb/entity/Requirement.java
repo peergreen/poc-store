@@ -8,14 +8,19 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database the requirement of a petal  
  */
+@NamedQueries({
+    @NamedQuery(
+    name = "Requirement.findAll",
+    query = "select r from Requirement r")
+})
 @Entity
-@Table(name="Requirement")
 @SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
 public class Requirement {
 

@@ -3,23 +3,24 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 
 /**
  * Entity Bean representing in the database the user
  */
-/*@NamedQueries({
+@NamedQueries({
     @NamedQuery(
     name = "User.findAll",
-    query = "SELECT user FROM Users AS user")
-})*/
+    query = "select u from User u")
+})
 @Entity
-@Table(name="Users")
+
 public class User {
 
 	@Id
@@ -29,6 +30,8 @@ public class User {
 
 	private String email;
 
+	@ElementCollection  
+    @CollectionTable(name = "groupsofuser")
 	@ManyToMany(mappedBy="users")
 	private Set<Group> groupSet;
 

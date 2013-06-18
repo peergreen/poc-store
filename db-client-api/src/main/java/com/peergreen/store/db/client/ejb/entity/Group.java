@@ -2,19 +2,26 @@ package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * Entity Bean representing in the database group of users
  */
-@Entity
-@Table(name="Group")
+@NamedQueries({
+    @NamedQuery(
+            name = "Series.findAll",
+            query = "select s from Series s")
+})
+@Entity(name="Series")
 public class Group {
 
     @Id
+    @Column(name ="name")
     private String groupname;
 
     @ManyToMany

@@ -8,15 +8,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
  * Entity Bean representing the category of a petal  
  */
+@NamedQueries({
+    @NamedQuery(
+    name = "Category.findAll",
+    query = "select cat from Category cat")
+})
 @Entity
-@Table(name="Categories")
 @SequenceGenerator(name="idCategorySeq", initialValue=1, allocationSize=50)
 public class Category{
     
