@@ -60,7 +60,7 @@ public class DefaultGroupTest {
       petalArgument  = ArgumentCaptor.forClass(Petal.class);
       userArgument  = ArgumentCaptor.forClass(User.class);
       groupname="usersgroup";
-      queryString = "Group.findAll";
+      queryString = "Series.findAll";
       groupList = new ArrayList<Group>();
 
 
