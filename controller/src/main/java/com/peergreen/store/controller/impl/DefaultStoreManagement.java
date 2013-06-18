@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Bind;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.controller.IStoreManagment;
@@ -39,6 +42,9 @@ import com.peergreen.store.db.client.enumeration.Origin;
  *      <li>Petal submission and validation</li>
  * </ul>
  */
+@Component
+@Instantiate
+@Provides
 public class DefaultStoreManagement implements IStoreManagment {
 
     private IPetalsPersistence petalsPersistence;

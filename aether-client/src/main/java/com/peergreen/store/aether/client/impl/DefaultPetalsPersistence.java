@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.felix.ipojo.annotations.Bind;
+import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Instantiate;
+import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.apache.felix.ipojo.annotations.Unbind;
 import org.apache.felix.ipojo.annotations.Validate;
@@ -32,6 +35,9 @@ import com.peergreen.store.db.client.ejb.entity.Vendor;
  * 		<li>add a petal to the local repository</li>
  * </ul>
  */
+@Component
+@Instantiate
+@Provides
 public class DefaultPetalsPersistence implements IPetalsPersistence {
 
     @Requires
@@ -41,6 +47,10 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     private IRepositoryProvider<LocalRepository> stagingProvider;
     private CopyOnWriteArraySet<IRepositoryProvider<RemoteRepository>> remoteProviders;
 
+    public DefaultPetalsPersistence() {
+        remoteProviders = new CopyOnWriteArraySet<>();
+    }
+    
     @Validate
     private void validate() {
         try {
