@@ -3,7 +3,9 @@ package com.peergreen.store.aether.provider.impl;
 import java.io.File;
 
 import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Property;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.ServiceProperty;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
@@ -22,7 +24,9 @@ public class DefaultLocalRepositoryProvider extends DefaultRepositoryProvider<Lo
 
     private LocalRepository repository;
     // retrieved from Config Admin
+    @Property
     private String path;
+    @ServiceProperty
     private boolean staging;
 
     /**

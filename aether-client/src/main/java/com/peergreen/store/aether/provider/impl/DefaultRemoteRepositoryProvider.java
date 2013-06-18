@@ -3,7 +3,9 @@ package com.peergreen.store.aether.provider.impl;
 import java.io.File;
 
 import org.apache.felix.ipojo.annotations.Component;
+import org.apache.felix.ipojo.annotations.Property;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.apache.felix.ipojo.annotations.ServiceProperty;
 import org.apache.felix.ipojo.annotations.Validate;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -23,7 +25,9 @@ public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<R
 
     private RemoteRepository repository;
     // retrieved from Config Admin
+    @ServiceProperty
     private String name;
+    @Property
     private String path;
     
     /**
