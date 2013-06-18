@@ -194,7 +194,7 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Collection<Group> collectGroups() {
-        Query groups = entityManager.createNamedQuery("Group.findAll");
+        Query groups = entityManager.createNamedQuery("Series.findAll");
         List groupList = groups.getResultList();
         
         
