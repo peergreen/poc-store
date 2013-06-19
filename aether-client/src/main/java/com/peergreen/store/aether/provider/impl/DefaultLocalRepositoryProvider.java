@@ -6,6 +6,7 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Property;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.ServiceProperty;
+import org.apache.felix.ipojo.annotations.Validate;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
@@ -32,6 +33,7 @@ public class DefaultLocalRepositoryProvider extends DefaultRepositoryProvider<Lo
     /**
      * Method to build up requirements to use Aether with local repository.
      */
+    @Validate
     @Override
     public void init() {
         validate();
