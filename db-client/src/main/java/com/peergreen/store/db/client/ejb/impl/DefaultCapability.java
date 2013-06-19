@@ -33,7 +33,6 @@ public class DefaultCapability implements ISessionCapability{
 
     private EntityManager entityManager;
 
-
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -171,15 +170,15 @@ public class DefaultCapability implements ISessionCapability{
 
         capability.setNamespace(namespace);
         return entityManager.merge(capability);
-   
+
     }
 
     @Override
     public Capability updateProperties(Capability capability, Map<String, String> prooperties) {
-       
+
         capability.setProperties(prooperties);
         return entityManager.merge(capability);
-   
+
     }
 
 

@@ -231,10 +231,10 @@ public class DefaultCapabilityTest {
         verify(entityManager).createNamedQuery(queryString);
         verify(query).getResultList();
     }
-    
+
     @Test
     public void shouldUpdateNamespace() {
-        
+
         //when
         sessionCapability.updateNamespace(mockcapability, "namespace");
         //then
@@ -242,10 +242,10 @@ public class DefaultCapabilityTest {
         Assert.assertEquals("namespace", value.getValue());
         verify(entityManager).merge(mockcapability);
     }
-    
+
     @Test
     public void shouldUpdateProperties() {
-        
+
         //when
         sessionCapability.updateProperties(mockcapability, properties);
         //then

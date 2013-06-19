@@ -48,7 +48,7 @@ public class Capability{
     @Column(name = "id")
     private int capabilityId;
 
-    @Id
+    @Id 
     @Column(name="version")
     private String version;
 
@@ -106,7 +106,7 @@ public class Capability{
     }
 
     /**
-     * Method to retrieve a capability version
+     * Method to retrieve a capability version 
      * @return The version of this instance of capability
      */
     public String getVersion() {
@@ -115,7 +115,7 @@ public class Capability{
 
     /**
      * Method to set the version of a capability
-     *
+     * 
      * @param version A version to set for an instance of capability
      */
     public void setVersion(String version) {
