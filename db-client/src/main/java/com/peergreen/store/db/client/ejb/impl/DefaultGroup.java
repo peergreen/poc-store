@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +38,10 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 public class DefaultGroup implements ISessionGroup {
 
     private EntityManager entityManager;
+    @EJB
+    private DefaultUser sessionUser;
+    @EJB
+    private DefaultPetal sessionPetal;
 
     public EntityManager getEntityManager() {
         return entityManager;
@@ -108,6 +113,7 @@ public class DefaultGroup implements ISessionGroup {
         users.add(myUser);
         group.setUsers(users);
         group=  entityManager.merge(group);
+        sessionUser.addGroup(myUser, group);
         return group;
     }
 
@@ -125,6 +131,7 @@ public class DefaultGroup implements ISessionGroup {
         users.remove(user);
         group.setUsers(users);
         group=  entityManager.merge(group);
+        sessionUser.removeGroup(user, group);
         return group;
     }
 
@@ -155,6 +162,7 @@ public class DefaultGroup implements ISessionGroup {
         petals.add(petal);
         group.setPetals(petals);
         group=  entityManager.merge(group);
+        sessionPetal.giveAccesToGroup(petal, group);
         return group;
     }
 
@@ -171,6 +179,7 @@ public class DefaultGroup implements ISessionGroup {
         petals.remove(petal);
         group.setPetals(petals);
         group=  entityManager.merge(group);
+        sessionPetal.removeAccesToGroup(petal, group);
         return group;
     }
 
