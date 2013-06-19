@@ -98,6 +98,31 @@ public class Capability{
     }
 
     /**
+     * Method to get Id of a capability
+     * @return the capability's id
+     */
+    public int getCapabilityId() {
+        return capabilityId;
+    }
+
+    /**
+     * Method to retrieve a capability version
+     * @return The version of this instance of capability
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * Method to set the version of a capability
+     *
+     * @param version A version to set for an instance of capability
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
      * Method to get the namespace of the capability instance
      * 
      * @return the namespace of the capability
