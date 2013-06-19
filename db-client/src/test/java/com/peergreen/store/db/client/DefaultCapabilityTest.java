@@ -1,7 +1,7 @@
 package com.peergreen.store.db.client;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,12 +30,14 @@ public class DefaultCapabilityTest {
 
     private DefaultCapability sessionCapability;
     private String queryString;
+    private String version; 
     private List<Capability> capabilityList;
     private Map<String,String> properties;
     ArgumentCaptor<Capability> capability1;
     ArgumentCaptor<String> value;
     ArgumentCaptor<Map<String,String>> propArgument;
-    
+    ArgumentCaptor<String> stringArgumentCaptor;
+
     @Mock
     private EntityManager entityManager;  
     @Mock 
@@ -55,9 +57,10 @@ public class DefaultCapabilityTest {
         sessionCapability.setEntityManager(entityManager);       
         capability1 = ArgumentCaptor.forClass(Capability.class);
         value = ArgumentCaptor.forClass(String.class);
+        stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         properties = new HashMap<String,String>();
-        queryString = "Capability.findAll";
         capabilityList = new ArrayList<Capability>() ;
+        version ="1.0";
 
     }
 
@@ -67,13 +70,16 @@ public class DefaultCapabilityTest {
      * Test to check that adding a capability     
      */
     public void shouldAddCapability() {
-
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(null);
+        when(sessionCapability.findCapability(anyString())).thenReturn(null);
         //When 
-        sessionCapability.addCapability("capabilityName", "namespace", properties);
+        sessionCapability.addCapability("capabilityName",version, "namespace", properties);
 
         //Then 
         verify(entityManager).persist(capability1.capture());
-        Assert.assertEquals("capabilityName", capability1.getValue().getcapabilityName());
+        Assert.assertEquals("capabilityName", capability1.getValue().getCapabilityName());
+        Assert.assertEquals(version, capability1.getValue().getVersion());
         Assert.assertEquals("namespace", capability1.getValue().getNamespace());
         Assert.assertEquals(properties, capability1.getValue().getProperties());
         Assert.assertTrue(capability1.getValue().getPetals().isEmpty());
@@ -85,23 +91,20 @@ public class DefaultCapabilityTest {
      */
     public void shouldFindCapability(){
         //Given
-        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
+        queryString = "CapabilityByName";
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(mockcapability);
         //When 
         sessionCapability.findCapability("capabilityName");
         //Then 
-        verify(entityManager).find(eq(Capability.class), name.capture());
-        Assert.assertEquals("capabilityName", name.getValue());
 
-    }
+        verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
+        Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
+        verify(query).setParameter(anyString(), value.capture());
+        Assert.assertEquals("capabilityName", value.getValue());
+        verify(query).getSingleResult();
+        
 
-    @Test
-    public void shouldReturnNullCauseOfMissingCapability(){
-        //Given
-        when(entityManager.find(eq(Capability.class), anyString())).thenReturn(null);
-        //When
-        mockcapability= sessionCapability.findCapability("InexistentCap");
-        //Then
-        Assert.assertEquals(mockcapability, null);
     }
 
     @Test
@@ -110,16 +113,13 @@ public class DefaultCapabilityTest {
      */
     public void shouldRemoveCapabilityExistent(){
         //Given a petal that provided a capability
-        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
-        when(entityManager.find(eq(Capability.class), anyString())).thenReturn(mockcapability);
-        when(mockcapability.getcapabilityName()).thenReturn("capabilityName");
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(mockcapability);
         //When  
         sessionCapability.deleteCapability("capabilityName");
         //Then 
-        verify(entityManager).find(eq(Capability.class), name.capture());
-        Assert.assertEquals("capabilityName", name.getValue());
-        verify(entityManager).remove(capability1.capture());
-        Assert.assertEquals("capabilityName", capability1.getValue().getcapabilityName());
+ 
+        verify(entityManager).remove(mockcapability);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class DefaultCapabilityTest {
         //Given petals that provided a capability existent in the database
         ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
 
-        when(mockcapability.getcapabilityName()).thenReturn("capabilityName");
+        when(mockcapability.getCapabilityName()).thenReturn("capabilityName");
         when(mockcapability.getPetals()).thenReturn(petals);
 
         //When adding a new petal 
@@ -157,7 +157,7 @@ public class DefaultCapabilityTest {
         ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
 
         when(mockcapability.getPetals()).thenReturn(petals);
-        when(mockcapability.getcapabilityName()).thenReturn("Mock");
+        when(mockcapability.getCapabilityName()).thenReturn("Mock");
 
         //When
         sessionCapability.removePetal(mockcapability, petal);
@@ -183,7 +183,7 @@ public class DefaultCapabilityTest {
         ArgumentCaptor<Petal> petalArgument = ArgumentCaptor.forClass(Petal.class);
 
         when(mockcapability.getPetals()).thenReturn(petals);
-        when(mockcapability.getcapabilityName()).thenReturn("Mock");
+        when(mockcapability.getCapabilityName()).thenReturn("Mock");
         when(petals.isEmpty()).thenReturn(true);
 
         //When
@@ -205,22 +205,21 @@ public class DefaultCapabilityTest {
      */
     public void shouldCollectPetals(){
         //Given 
-        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
-        when(entityManager.find(eq(Capability.class), anyString())).thenReturn(mockcapability);
-
-
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(mockcapability);
         //When
         sessionCapability.collectPetals("capabilityName");
 
         //Then
-        verify(entityManager).find(eq(Capability.class), name.capture());
-        Assert.assertEquals("capabilityName", name.getValue());
+        
         verify(mockcapability).getPetals();
 
     }
 
     @Test
     public void shouldCollectAllCapabilities() {
+        queryString = "Capability.findAll";
+
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getResultList()).thenReturn(capabilityList);
