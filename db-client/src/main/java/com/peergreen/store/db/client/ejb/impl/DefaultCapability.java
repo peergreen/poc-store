@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -54,17 +57,43 @@ public class DefaultCapability implements ISessionCapability{
      * @return The capability creates
      */
     @Override
-    public Capability addCapability(String capabilityName, String namespace, Map<String, String> properties) {
+    public Capability addCapability(String capabilityName,String version, String namespace, Map<String, String> properties) throws EntityExistsException {
 
         Capability capability = new Capability();
-        capability.setName(capabilityName);
-        capability.setNamespace(namespace);
-        capability.setProperties(properties);
-        Set<Petal> petals = new HashSet<Petal>();
-        capability.setPetals(petals);
-        entityManager.persist(capability); 
 
-        return capability;
+        Capability temp = findCapability(capabilityName);
+
+        if(temp != null
+                && temp.getVersion().equalsIgnoreCase(version)
+                && temp.getNamespace().equalsIgnoreCase(namespace)){
+
+           // new EntityExistsException();
+            return temp;
+        }
+        else
+        {
+            capability.setName(capabilityName);
+            capability.setVersion(version);
+            capability.setNamespace(namespace);
+            capability.setProperties(properties);
+            Set<Petal> petals = new HashSet<Petal>();
+            capability.setPetals(petals);
+
+            /*
+             * If the entity to add already exists, it will throw an exception
+             */
+            try{
+                entityManager.persist(capability); 
+            }
+            catch (EntityExistsException e)
+            {
+                System.out.println ("This entity already exists in the database");
+            }
+
+
+            return capability;
+        }
+
     }
 
 
@@ -75,10 +104,13 @@ public class DefaultCapability implements ISessionCapability{
      * @param capabilityName the capability's name
      */
     @Override
-    public void deleteCapability(String capabilityName) {
+    public void deleteCapability(String capabilityName)throws IllegalArgumentException {
 
-        Capability temp = entityManager.find(Capability.class, capabilityName);
-        entityManager.remove(temp);
+        Capability temp = findCapability(capabilityName);
+        if(temp != null)
+        {
+            entityManager.remove(temp);
+        }
     }
 
     /**
@@ -88,10 +120,21 @@ public class DefaultCapability implements ISessionCapability{
      * @return the capacity with the name 'capabilityName'
      */
     @Override
-    public Capability findCapability(String capabilityName) {
+    public Capability findCapability(String capabilityName) throws NoResultException{
 
-        Capability capability = entityManager.find(Capability.class, capabilityName);
-        return capability;
+        Query q = entityManager.createNamedQuery("CapabilityByName");
+        q.setParameter("name", capabilityName);
+
+        Capability capabilityResult;
+        try{ 
+            capabilityResult = (Capability)q.getSingleResult();
+
+        }catch (NoResultException e){
+            capabilityResult = null ; 
+        }
+
+        return capabilityResult;
+
     }
 
     /**
@@ -103,9 +146,14 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Collection<Petal> collectPetals(String capabilityName) {
 
-        Capability capability = entityManager.find(Capability.class, capabilityName);
-
-        return capability.getPetals();
+        Capability capability = this.findCapability(capabilityName);
+        if(capability != null){
+            return capability.getPetals();
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /**
