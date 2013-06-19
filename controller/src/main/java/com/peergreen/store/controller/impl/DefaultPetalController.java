@@ -240,12 +240,13 @@ public class DefaultPetalController implements IPetalController {
      * Method to add a new Capability to the database.
      * 
      * @param capabilityName capability's name
+     * @param version capability's version
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
      */
     @Override
-    public Capability createCapability(String capabilityName, String namespace, Map<String,String> properties) {
-        return capabilitySession.addCapability(capabilityName, namespace, properties);
+    public Capability createCapability(String capabilityName,String version, String namespace, Map<String,String> properties) {
+        return capabilitySession.addCapability(capabilityName,version, namespace, properties);
     }
 
     /**

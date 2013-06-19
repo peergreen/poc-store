@@ -159,11 +159,12 @@ public class DefaultPetalControllerTestCase {
     public void testCreateCapability() {
         String capabilityName = "my capability";
         String namespace = "service";
+        String version = "1.0";
         Map<String, String> properties = new HashMap<String,String>();
 
         // verify capabilitySession.addCapability(...) is called
-        petalController.createCapability(capabilityName, namespace, properties);
-        verify(capabilitySession).addCapability(capabilityName, namespace, properties);
+        petalController.createCapability(capabilityName,version, namespace, properties);
+        verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
     }
 
     @Test

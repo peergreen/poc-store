@@ -117,10 +117,11 @@ public interface IPetalController {
      * Method to add a new Capability to the database.
      * 
      * @param capabilityName capability's name
+     * @param version capability's version
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
      */
-    Capability createCapability(String capabilityName, String namespace, Map<String,String> properties);
+    Capability createCapability(String capabilityName, String version, String namespace, Map<String,String> properties);
 
     /**
      * Method to collect all the capabilities provided by a petal.
