@@ -65,20 +65,26 @@ public class Capability{
     @Column(name="petals", nullable=false)
     private Set<Petal> petals = new HashSet<>();
 
-    /**
-     * Method to get Id of a capability
-     * @return the capability's id
-     */
-    public int getCapabilityId() {
-        return capabilityId;
+    public Capability(){
+
     }
+
+    public Capability(String capabilityName,String version, String namespace,
+            Map<String, String> properties) {
+        super();
+        this.capabilityName = capabilityName;
+        this.version = version;
+        this.namespace = namespace;
+        this.properties = properties;
+    }
+
 
     /**
      * Method to get the name of the capability instance
      * 
      * @return the name of the capability
      */
-    public String getcapabilityName() {
+    public String getCapabilityName() {
         return this.capabilityName;
     }
 
