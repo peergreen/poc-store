@@ -8,3 +8,4 @@ Export-Package com.peergreen.store.db.client.ejb.entity,\
                com.peergreen.store.db.client.enumeration
 
 -failok= true
+Import-Package: javax.validation.constraints;resolution:=optional
