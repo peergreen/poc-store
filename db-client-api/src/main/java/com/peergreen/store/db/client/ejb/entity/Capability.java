@@ -11,11 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+
+import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
 
 
 /**
@@ -23,29 +26,37 @@ import javax.persistence.SequenceGenerator;
  */
 @NamedQueries({
     @NamedQuery(
-    name = "Capability.findAll",
-    query = "select cap from Capability cap")
+            name = "Capability.findAll",
+            query = "select cap from Capability cap"
+            ),
+            @NamedQuery(
+                    name = "CapabilityByName",
+                    query="select cap from Capability cap where cap.capabilityName = :name"
+                    )
 })
 @Entity
-@SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
+@IdClass(CapabilityId.class)
 public class Capability{
 
     @Id
     @Column(name = "name")
     private String capabilityName;
-    
-    
+
+    @Id
+    @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
     @Column(name = "id")
     private int capabilityId;
+
+    @Id
+    @Column(name="version")
+    private String version;
 
     @Column(name="namespace", nullable=false)
     private String namespace;
 
     @ElementCollection
-    @CollectionTable(
-            name="Properties"
-            )
+    @CollectionTable( name="Properties")
     @MapKeyColumn (name="propertiesName")
     @Column(name="properties",nullable=false)
     private Map<String, String> properties; 
