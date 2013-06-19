@@ -4,24 +4,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+
+import com.peergreen.store.db.client.ejb.key.primary.LinkId;
 
 /**
  * Entity Bean representing in the database a link between two stores
  */
 @NamedQueries({
     @NamedQuery(
-    name = "Link.findAll",
-    query = "select l from Link l")
+            name = "Link.findAll",
+            query = "select l from Link l")
 })
 @Entity
-@SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
+@IdClass(LinkId.class)
 public class Link {
+    @Id
+    @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
     private int linkId;
-
+    
     @Id
     private String url; 
 
