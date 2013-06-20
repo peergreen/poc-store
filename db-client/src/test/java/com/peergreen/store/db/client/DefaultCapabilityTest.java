@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -83,7 +84,7 @@ public class DefaultCapabilityTest {
         Assert.assertEquals(properties, capability1.getValue().getProperties());
         Assert.assertTrue(capability1.getValue().getPetals().isEmpty());
     }
-    
+
     @Test(expectedExceptions = EntityExistsException.class)
     public void shoudThrowExceptionWhenAddCauseEntityAlreadyExits() {
         //Given
@@ -91,12 +92,11 @@ public class DefaultCapabilityTest {
         when(query.getSingleResult()).thenReturn(mockcapability);
         when(mockcapability.getVersion()).thenReturn(version);
         when(mockcapability.getNamespace()).thenReturn("namespace");
-        
+
         //when
         sessionCapability.addCapability("capabilityName",version, "namespace", properties);
-        
-        
-        
+
+
     }
 
     @Test
@@ -114,10 +114,9 @@ public class DefaultCapabilityTest {
 
         verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
         Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
-        verify(query).setParameter(anyString(), value.capture());
-        Assert.assertEquals("capabilityName", value.getValue());
+        verify(query, times(2)).setParameter(anyString(), anyString());
         verify(query).getSingleResult();
-        
+
 
     }
 
@@ -132,10 +131,10 @@ public class DefaultCapabilityTest {
         //When  
         sessionCapability.deleteCapability("capabilityName",version);
         //Then 
- 
+
         verify(entityManager).remove(mockcapability);
     }
-    
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     /**
      *Test to check if the delete feature works well  
@@ -146,7 +145,7 @@ public class DefaultCapabilityTest {
         when(query.getSingleResult()).thenReturn(null);
         //When  
         sessionCapability.deleteCapability("capabilityName",version);
-      
+
     }
 
     @Test
@@ -238,11 +237,11 @@ public class DefaultCapabilityTest {
         sessionCapability.collectPetals("capabilityName",version);
 
         //Then
-        
+
         verify(mockcapability).getPetals();
 
     }
-    
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenCollectCauseEntityNotExistent() {
         //Given 

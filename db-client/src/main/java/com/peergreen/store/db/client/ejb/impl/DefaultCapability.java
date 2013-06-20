@@ -108,6 +108,7 @@ public class DefaultCapability implements ISessionCapability{
 
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
+        q.setParameter("version", version);
 
         Capability capabilityResult;
         try{ 
