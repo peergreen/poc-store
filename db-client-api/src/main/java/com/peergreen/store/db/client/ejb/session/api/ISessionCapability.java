@@ -22,8 +22,9 @@ public interface ISessionCapability {
      * Method to delete a capability in the database
      * 
      * @param capabilityName the capability's name
+     * @param version the version of the capability to delete
      */
-    void deleteCapability (String capabilityName);
+    void deleteCapability (String capabilityName, String version);
 
     /**
      * Method to find a capability in the database
@@ -31,7 +32,7 @@ public interface ISessionCapability {
      * @param capabilityName the capability's name
      * @return the capability with the name 'capabilityName'
      */
-    Capability findCapability (String capabilityName);
+    Capability findCapability (String capabilityName, String version);
 
     /**
      * Method to change a capability existing namespace
@@ -51,9 +52,10 @@ public interface ISessionCapability {
      * Method to collect the petals which give the capability with the name 'capabilityName'
      * 
      * @param name the capability's name
+     * @param version the version of the capability to delete
      * @return A collection of all the petals which give this capability
      */
-    Collection<Petal> collectPetals(String capabilityName);
+    Collection<Petal> collectPetals(String capabilityName, String version);
 
     /**
      * Method to add a petal to the list of petals which give the capability

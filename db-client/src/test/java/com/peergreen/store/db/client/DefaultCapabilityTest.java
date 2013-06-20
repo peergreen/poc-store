@@ -109,7 +109,7 @@ public class DefaultCapabilityTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(mockcapability);
         //When 
-        sessionCapability.findCapability("capabilityName");
+        sessionCapability.findCapability("capabilityName",version);
         //Then 
 
         verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
@@ -130,7 +130,7 @@ public class DefaultCapabilityTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(mockcapability);
         //When  
-        sessionCapability.deleteCapability("capabilityName");
+        sessionCapability.deleteCapability("capabilityName",version);
         //Then 
  
         verify(entityManager).remove(mockcapability);
@@ -145,7 +145,7 @@ public class DefaultCapabilityTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
         //When  
-        sessionCapability.deleteCapability("capabilityName");
+        sessionCapability.deleteCapability("capabilityName",version);
       
     }
 
@@ -235,7 +235,7 @@ public class DefaultCapabilityTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(mockcapability);
         //When
-        sessionCapability.collectPetals("capabilityName");
+        sessionCapability.collectPetals("capabilityName",version);
 
         //Then
         
@@ -249,7 +249,7 @@ public class DefaultCapabilityTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
         //When
-        sessionCapability.collectPetals("capabilityName");
+        sessionCapability.collectPetals("capabilityName",version);
     }
 
     @Test

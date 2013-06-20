@@ -59,11 +59,9 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Capability addCapability(String capabilityName,String version, String namespace, Map<String, String> properties) throws EntityExistsException {
 
-        Capability temp = findCapability(capabilityName);
+        Capability temp = findCapability(capabilityName, version);
 
-        if(temp != null
-                && temp.getVersion().equalsIgnoreCase(version)
-                && temp.getNamespace().equalsIgnoreCase(namespace)){
+        if(temp != null){
 
             throw new EntityExistsException();
         }
@@ -86,9 +84,9 @@ public class DefaultCapability implements ISessionCapability{
      * @param capabilityName the capability's name
      */
     @Override
-    public void deleteCapability(String capabilityName)throws IllegalArgumentException {
+    public void deleteCapability(String capabilityName, String version)throws IllegalArgumentException {
 
-        Capability temp = findCapability(capabilityName);
+        Capability temp = findCapability(capabilityName,version);
         if(temp != null)
         {
             entityManager.remove(temp);
@@ -106,7 +104,7 @@ public class DefaultCapability implements ISessionCapability{
      * @return the capacity with the name 'capabilityName'
      */
     @Override
-    public Capability findCapability(String capabilityName) throws NoResultException{
+    public Capability findCapability(String capabilityName, String version) throws NoResultException{
 
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
@@ -130,9 +128,9 @@ public class DefaultCapability implements ISessionCapability{
      * @return A collection of all the petals which give this capability
      */
     @Override
-    public Collection<Petal> collectPetals(String capabilityName) throws IllegalArgumentException {
+    public Collection<Petal> collectPetals(String capabilityName, String version) throws IllegalArgumentException {
 
-        Capability capability = this.findCapability(capabilityName);
+        Capability capability = this.findCapability(capabilityName,version);
         if(capability != null){
             return capability.getPetals();
         }
