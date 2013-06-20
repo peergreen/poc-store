@@ -59,37 +59,19 @@ public class DefaultCapability implements ISessionCapability{
     @Override
     public Capability addCapability(String capabilityName,String version, String namespace, Map<String, String> properties) throws EntityExistsException {
 
-        Capability capability = new Capability();
-
         Capability temp = findCapability(capabilityName);
 
         if(temp != null
                 && temp.getVersion().equalsIgnoreCase(version)
                 && temp.getNamespace().equalsIgnoreCase(namespace)){
 
-           // new EntityExistsException();
-            return temp;
+            throw new EntityExistsException();
         }
         else
         {
-            capability.setName(capabilityName);
-            capability.setVersion(version);
-            capability.setNamespace(namespace);
-            capability.setProperties(properties);
-            Set<Petal> petals = new HashSet<Petal>();
-            capability.setPetals(petals);
+            Capability  capability = new Capability(capabilityName, version, namespace, properties);
 
-            /*
-             * If the entity to add already exists, it will throw an exception
-             */
-            try{
-                entityManager.persist(capability); 
-            }
-            catch (EntityExistsException e)
-            {
-                System.out.println ("This entity already exists in the database");
-            }
-
+            entityManager.persist(capability);
 
             return capability;
         }
