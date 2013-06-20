@@ -17,7 +17,10 @@ import com.peergreen.store.db.client.ejb.key.primary.LinkId;
 @NamedQueries({
     @NamedQuery(
             name = "Link.findAll",
-            query = "select l from Link l")
+            query = "select l from Link l"),
+            @NamedQuery(
+                    name = "LinkByUrl",
+                    query = "select l from Link l where l.url = :url")
 })
 @Entity
 @IdClass(LinkId.class)
