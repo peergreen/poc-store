@@ -15,7 +15,10 @@ import javax.persistence.NamedQuery;
 @NamedQueries({
     @NamedQuery(
             name = "Series.findAll",
-            query = "select s from Series s")
+            query = "select s from Series s"),
+            @NamedQuery(
+                    name="GroupByName",
+                    query="select s from Series s where s.groupname = :name")
 })
 @Entity(name="Series")
 public class Group {
