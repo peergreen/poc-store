@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -32,6 +33,19 @@ public class Group {
 
     @ManyToMany
     private Set<Petal> petals ;
+
+    public Group() {
+        
+    }
+    
+    public Group(String groupname) {
+        super();
+        this.groupname = groupname;
+        Set<User> users = new HashSet<User>();
+        Set<Petal> petals = new HashSet<Petal>();
+        this.setPetals(petals);
+        this.setUsers(users);
+    }
 
     /**
      * Method to retrieve the group's name
