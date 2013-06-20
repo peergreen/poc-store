@@ -1,12 +1,12 @@
 package com.peergreen.store.db.client;
 
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -25,7 +25,8 @@ public class DefaultCategoryTest {
 
     private DefaultCategory sessionCategory;
     private String queryString;
-    
+    private String queryString2;
+
     @Mock
     private EntityManager entityManager;
     @Mock 
@@ -50,12 +51,15 @@ public class DefaultCategoryTest {
         name = ArgumentCaptor.forClass(String.class);
         petalArgument  = ArgumentCaptor.forClass(Petal.class);
         queryString = "Category.findAll";
+        queryString2 = "CategoryByName";
     }
 
 
     @Test
-    public void shouldAddCategory() {
+    public void shouldAddCategoryNonExistent() {
         //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionCategory.findCategory(anyString())).thenReturn(null);
         String categoryName = "totoService";
         //When
         sessionCategory.addCategory(categoryName);
@@ -65,39 +69,66 @@ public class DefaultCategoryTest {
         Assert.assertTrue(category.getValue().getPetals().isEmpty());
 
     }
-
-    @Test
-    public void shouldFindCategory(){
+    
+    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowExceptionWhenAddCategoryCauseAlreadyExist() {
         //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionCategory.findCategory(anyString())).thenReturn(mockcategory);
         String categoryName = "totoService";
         //When
-        sessionCategory.findCategory("totoService");
+        sessionCategory.addCategory(categoryName);
+       
+    }
+
+    @Test
+    public void shouldFindCategoryExisting(){
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        String categoryName = "totoService";
+        //When
+        sessionCategory.findCategory(categoryName);
         //Then
-        verify(entityManager).find(eq(Category.class),name.capture());
+        verify(entityManager).createNamedQuery(name.capture());
+        Assert.assertEquals(queryString2, name.getValue());
+        verify(query).setParameter(anyString(), name.capture());
         Assert.assertEquals(categoryName, name.getValue());
+        verify(query).getSingleResult();
+        
     }
 
     @Test
     public void shouldDeleteCategory(){
         //Given
         String categoryName = "totoService";
-        when(entityManager.find(eq(Category.class), anyString())).thenReturn(mockcategory);
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(mockcategory);
         //When
         sessionCategory.deleteCategory(categoryName);
         //Then
-        verify(entityManager).find(eq(Category.class),name.capture());
-        Assert.assertEquals(categoryName, name.getValue());
         verify(entityManager).remove(category.capture());
         Assert.assertSame(mockcategory,category.getValue() );
-       
+
     }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+        //Given
+        String categoryName = "totoService";
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(null);
+        //When
+        sessionCategory.deleteCategory(categoryName);
+        
+    }
+    
     @Test
     public void shouldAddPetal(){
         //Given
         when(mockcategory.getPetals()).thenReturn(petals);
 
         //When
-       
+
         sessionCategory.addPetal(mockcategory, petal);
 
         //Then
@@ -112,19 +143,29 @@ public class DefaultCategoryTest {
     @Test
     public void shouldCollectPetals(){
         //Given
-        when(entityManager.find(eq(Category.class), anyString())).thenReturn(mockcategory);
-      //When
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(mockcategory);
+        //When
         sessionCategory.collectPetals("totoService");
         //Then
-        verify(entityManager).find(eq(Category.class), name.capture());
-        Assert.assertEquals("totoService", name.getValue());
         verify(mockcategory).getPetals();
 
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+        //Given
+        String categoryName = "totoService";
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(null);
+        //When
+        sessionCategory.collectPetals(categoryName);
+        
     }
 
     @Test
     public void shouldRemovePetal(){
-         //Given
+        //Given
         when(mockcategory.getPetals()).thenReturn(petals);
         //when
         sessionCategory.removePetal(mockcategory, petal);
