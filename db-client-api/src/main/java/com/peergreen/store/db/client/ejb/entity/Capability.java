@@ -78,6 +78,8 @@ public class Capability{
         this.version = version;
         this.namespace = namespace;
         this.properties = properties;
+        Set<Petal> petals = new HashSet<Petal>();
+        setPetals(petals);
     }
 
 
