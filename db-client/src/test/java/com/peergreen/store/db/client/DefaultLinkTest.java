@@ -1,10 +1,10 @@
 package com.peergreen.store.db.client;
 
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -24,6 +24,7 @@ public class DefaultLinkTest {
     private String url;
     private String description;
     private String queryString;
+    private String queryString2;
     private ArgumentCaptor<Link> linkArgument;
     private ArgumentCaptor<String> value;
 
@@ -45,11 +46,15 @@ public class DefaultLinkTest {
         url = "urlname";
         description = "link ";
         queryString="Link.findAll";
+        queryString2 = "LinkByUrl";
+
     }
 
     @Test
     public void shouldAddLink() {
-
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionLink.findLink(anyString())).thenReturn(null);
         //when
         sessionLink.addLink(url, description);
         //Then
@@ -59,26 +64,50 @@ public class DefaultLinkTest {
 
     }
 
+    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowExceptionWhenAddLinkCauseAlreadyExist() {
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionLink.findLink(anyString())).thenReturn(mocklink);
+
+        //When
+        sessionLink.addLink(url, description);
+
+    }
+
     @Test
     public void shouldDeleteLink() {
         //Given
-        when(entityManager.find(eq(Link.class), anyString())).thenReturn(mocklink);
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionLink.findLink(anyString())).thenReturn(mocklink);
         //when
         sessionLink.deleteLink(url);
         //Then
-        verify(entityManager).find(eq(Link.class),value.capture());
-        Assert.assertEquals(url, value.getValue());
         verify(entityManager).remove(mocklink);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(null);
+        //When
+        sessionLink.deleteLink(url);
 
     }
 
     @Test
     public void shouldFindLink() {
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         //when
         sessionLink.findLink(url);
         //Then
-        verify(entityManager).find(eq(Link.class),value.capture());
+        verify(entityManager).createNamedQuery(value.capture());
+        Assert.assertEquals(queryString2, value.getValue());
+        verify(query).setParameter(anyString(), value.capture());
         Assert.assertEquals(url, value.getValue());
+        verify(query).getSingleResult();
     }
 
     @Test
@@ -92,7 +121,7 @@ public class DefaultLinkTest {
         verify(query).getResultList();
 
     }
-    
+
     @Test
     public void shouldModifyLinkDescription() {
         //Given

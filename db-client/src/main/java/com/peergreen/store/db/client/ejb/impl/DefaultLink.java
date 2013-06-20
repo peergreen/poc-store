@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -40,7 +42,9 @@ public class DefaultLink implements ISessionLink {
 
     /**
      * Method to add a new instance of Link in the database
-     * 
+     * It throws an exception "EntityExistsException" 
+     * when the entity already exist in the database
+     *  
      * @param url the link's url
      * @param description the link's description
      * 
@@ -48,38 +52,56 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public Link addLink(String url, String description) {
-        Link link = new Link();
-        link.setUrl(url);
-        link.setDescription(description);
-        entityManager.persist(link);
-        return link;
+        Link link = findLink(url);
+        if(link != null){
+            throw new EntityExistsException();
+        }else{
+            link = new Link(url, description);
+            entityManager.persist(link);
+            return link;
+        }
+
+
     }
 
     /**
-     * Method to delete an instance ok link with the url 'linkUrl'
+     * Method to delete an instance of link with the url 'linkUrl'
+     * It throws an IllegalArgumentException if the entity to remove
+     * doesn't exist in the database.
      * 
      * @param linkUrl the url of the link to delete
      */
     @Override
     public void deleteLink(String linkUrl) {
 
-        Link temp = entityManager.find(Link.class, linkUrl);
+        Link temp = findLink(linkUrl);
+        if(temp != null){
         entityManager.remove(temp);
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
      * Method to find the link with the url 'linkUrl'
-     * 
+     * It returns null if the link doesn't exist.
+     *  
      * @param linkUrl the url of the link to find
      * 
      * @return The link with the url linkUrl
      */
     @Override
-    public Link findLink(String linkUrl) {
-        
-        Link link = entityManager.find(Link.class, linkUrl);
-
-        return link;
+    public Link findLink(String linkUrl)throws NoResultException {
+        Query q = entityManager.createNamedQuery("LinkByUrl");
+        q.setParameter("url", linkUrl);
+        Link result;
+        try{
+            result = (Link)q.getSingleResult();
+        }catch(NoResultException e) {
+            result = null;
+        }
+        return result;
     }
 
     /**
@@ -89,7 +111,7 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public Collection<Link> collectLinks() {
-        
+
         Query links = entityManager.createNamedQuery("Link.findAll");
         List<Link> usersList = links.getResultList();
         Set<Link> linkSet = new HashSet<Link>();
@@ -101,7 +123,7 @@ public class DefaultLink implements ISessionLink {
     public Link updateDescription(Link oldLink, String newDescription) {
 
         oldLink.setDescription(newDescription);
-        
+
         return entityManager.merge(oldLink);
     }
 }
