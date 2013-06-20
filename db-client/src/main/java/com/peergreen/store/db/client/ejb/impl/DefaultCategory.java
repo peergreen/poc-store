@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -42,58 +43,91 @@ public class DefaultCategory implements ISessionCategory{
     }
 
     /**
-     * Method to add a new category in the database
+     * Method to add a new category in the database. It throws
+     * an exception "EntityExistsException " when the entity already exist in the database
      * The attributes petals are null when creating the category
      * 
      * @param categoryName the category's name
      * @return A new instance of Category
      */
     @Override
-    public Category addCategory(String categoryName) throws EntityExistsException {
-        Category category = new Category();
-        category.setCategoryName(categoryName);
-        Set<Petal> petals = new HashSet<Petal>(); 
-        category.setPetals(petals);
-        entityManager.persist(category);    
-        return category;
+    public Category addCategory(String categoryName) throws EntityExistsException{
+        Category temp = findCategory(categoryName);
+
+        if(temp != null ) {      
+            throw new EntityExistsException();
+        }
+
+        else {
+            Category category = new Category(categoryName);  
+            entityManager.persist(category);  
+            return category ;
+        }
     }
 
     /**
-     * Method to delete the category with the name categoryName
+     * Method to delete the category with the name categoryName.
+     * It throws an IllegalArgumentException if the entity to remove
+     * doesn't exist in the database.
      * 
      * @param categoryName the name of the category to delete
      */
     @Override
-    public void deleteCategory(String categoryName) {
-        Category temp = entityManager.find(Category.class, categoryName);
-        entityManager.remove(temp);
+    public void deleteCategory(String categoryName) throws IllegalArgumentException{
+        Category temp = findCategory(categoryName);
+
+        if (temp != null){
+
+            entityManager.remove(temp);
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
-     * Method to find the category with the name categoryName
+     * Method to find the category with the name categoryName.
+     * It returns null if the category doesn't exist. 
      * 
      * @param categoryName the name of the category to find
      * 
      * @return the category with the name categoryName
      */
     @Override
-    public Category findCategory(String categoryName) {
-        return entityManager.find(Category.class, categoryName);
+    public Category findCategory(String categoryName)throws NoResultException {
+        Query q = entityManager.createNamedQuery("CategoryByName");
+        q.setParameter("name", categoryName);
+        Category result;
+        try{
+            result = (Category)q.getSingleResult();
+        }catch(NoResultException e){
+            result = null;
+        }
+        return result;
     }
 
     /**
      * Method to collect all the petals which belongs to the category
-     * with the name categoryName
+     * with the name categoryName. It throws an IllegalArgumentException
+     * when the category doesn't exists
      * 
      * @param categoryName the name of the category whose petals are collected
      *  
      * @return A collection of petals which belongs to this category
      */
     @Override
-    public Collection<Petal> collectPetals(String categoryName) {
-        Category category = entityManager.find(Category.class, categoryName);
+    public Collection<Petal> collectPetals(String categoryName) throws IllegalArgumentException{
+        Category category = findCategory(categoryName);
 
-        return category.getPetals();
+        if(category != null){
+
+            return category.getPetals();
+
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
+
     }
 
     /**
