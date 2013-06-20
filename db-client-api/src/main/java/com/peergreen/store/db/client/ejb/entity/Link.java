@@ -35,6 +35,16 @@ public class Link {
 
     private String description;
 
+    public Link() {
+        
+    }
+    
+    public Link(String url, String description) {
+        super();
+        this.url = url;
+        this.description = description;
+    }
+
     /**
      * Method to retrieve the link's id
      * 
