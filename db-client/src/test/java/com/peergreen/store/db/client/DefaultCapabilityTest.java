@@ -1,6 +1,5 @@
 package com.peergreen.store.db.client;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -70,12 +70,11 @@ public class DefaultCapabilityTest {
      * Test to check that adding a capability     
      */
     public void shouldAddCapability() {
+        //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
-        when(sessionCapability.findCapability(anyString())).thenReturn(null);
         //When 
         sessionCapability.addCapability("capabilityName",version, "namespace", properties);
-
         //Then 
         verify(entityManager).persist(capability1.capture());
         Assert.assertEquals("capabilityName", capability1.getValue().getCapabilityName());
@@ -83,6 +82,21 @@ public class DefaultCapabilityTest {
         Assert.assertEquals("namespace", capability1.getValue().getNamespace());
         Assert.assertEquals(properties, capability1.getValue().getProperties());
         Assert.assertTrue(capability1.getValue().getPetals().isEmpty());
+    }
+    
+    @Test(expectedExceptions = EntityExistsException.class)
+    public void shoudThrowExceptionWhenAddCauseEntityAlreadyExits() {
+        //Given
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(mockcapability);
+        when(mockcapability.getVersion()).thenReturn(version);
+        when(mockcapability.getNamespace()).thenReturn("namespace");
+        
+        //when
+        sessionCapability.addCapability("capabilityName",version, "namespace", properties);
+        
+        
+        
     }
 
     @Test
@@ -111,7 +125,7 @@ public class DefaultCapabilityTest {
     /**
      *Test to check if the delete feature works well  
      */
-    public void shouldRemoveCapabilityExistent(){
+    public void shouldRemoveCapability(){
         //Given a petal that provided a capability
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(mockcapability);
@@ -120,6 +134,19 @@ public class DefaultCapabilityTest {
         //Then 
  
         verify(entityManager).remove(mockcapability);
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    /**
+     *Test to check if the delete feature works well  
+     */
+    public void shouldThrowExceptionWhenDeleteCauseEntityNotExistent(){
+        //Given a petal that provided a capability
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(null);
+        //When  
+        sessionCapability.deleteCapability("capabilityName");
+      
     }
 
     @Test
@@ -214,6 +241,15 @@ public class DefaultCapabilityTest {
         
         verify(mockcapability).getPetals();
 
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenCollectCauseEntityNotExistent() {
+        //Given 
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(query.getSingleResult()).thenReturn(null);
+        //When
+        sessionCapability.collectPetals("capabilityName");
     }
 
     @Test
