@@ -63,7 +63,7 @@ public class Capability{
     @Column(name="properties",nullable=false)
     private Map<String, String> properties; 
 
-    @ManyToMany(mappedBy="capabilities")
+    @ManyToMany(mappedBy="capabilities", fetch=FetchType.LAZY)
     @Column(name="petals", nullable=false)
     private Set<Petal> petals = new HashSet<>();
 
