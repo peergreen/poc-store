@@ -8,7 +8,9 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -38,9 +40,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 public class DefaultGroup implements ISessionGroup {
 
     private EntityManager entityManager;
-    @EJB
+    
     private DefaultUser sessionUser;
-    @EJB
+    
     private DefaultPetal sessionPetal;
 
     public EntityManager getEntityManager() {
@@ -55,47 +57,62 @@ public class DefaultGroup implements ISessionGroup {
     /**
      * Method to add a new group in the database.
      * The attributes users and petals are null when creating the group
+     * It throws an exception "EntityExistsException" 
+     * when the entity already exist in the database
      * 
      * @param groupName the name of the group to create
      * @return The new group
      */
     @Override
-    public Group addGroup(String groupName) {
-        Group group = new Group();
-        group.setGroupname(groupName);
-        Set<User> users = new HashSet<User>();
-        Set<Petal> petals = new HashSet<Petal>();
-        group.setPetals(petals);
-        group.setUsers(users);
-        entityManager.persist(group);
+    public Group addGroup(String groupName) throws EntityExistsException{
+        Group group = findGroup(groupName) ;
 
-
-        return group;
+        if(group != null) {
+            throw new EntityExistsException();
+        }
+        else{
+            group = new Group(groupName);
+            entityManager.persist(group);
+            return group;
+        }
     }
 
     /**
      * Method to find a group in the database
-     * 
+     * It returns null if the group doesn't exist. 
+     *  
      * @param groupName the group's name
      * @return the group with the name 'groupName'
      */
     @Override
-    public Group findGroup(String groupName) {
-
-        Group group = entityManager.find(Group.class, groupName);
-        return group;
+    public Group findGroup(String groupName)throws NoResultException {
+        Query q = entityManager.createNamedQuery("GroupByName");
+        q.setParameter("name", groupName);
+        Group result;
+        try{
+            result = (Group)q.getSingleResult();
+        }catch(NoResultException e){
+            result = null;
+        }
+        return result;
     }
 
 
     /**
      * Method to delete the group with the name groupName
-     * 
+     * It throws an IllegalArgumentException if the entity to remove
+     * doesn't exist in the database.
      * @param groupName the name of the group to delete
      */
     @Override
-    public void deleteGroup(String groupName) {
-        Group group = entityManager.find(Group.class, groupName);
-        entityManager.remove(group);
+    public void deleteGroup(String groupName)throws IllegalArgumentException {
+        Group group = findGroup(groupName);
+        if(group != null){
+            entityManager.remove(group);
+        }
+        else{
+            throw new IllegalArgumentException();
+        }   
     }
 
     /**
@@ -136,16 +153,24 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     /**
-     * Method to collect the users which belongs to the group with the name 'groupName'
-     * 
+     * Method to collect the users which belongs to the group 
+     * with the name 'groupName'
+     * It throws an IllegalArgumentException
+     * when the group doesn't exist
      * @param groupName the group's name
      * 
      * @return A collection of users wich belongs to the group
      */
     @Override
-    public Collection<User> collectUsers(String groupName) {
-        Group group = entityManager.find(Group.class, groupName);
-        return group.getUsers();
+    public Collection<User> collectUsers(String groupName)throws IllegalArgumentException{
+        Group group = findGroup(groupName);
+
+        if(group != null){
+            return group.getUsers();
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -185,15 +210,22 @@ public class DefaultGroup implements ISessionGroup {
 
     /**
      * Method to collect the petals which are accessible from the Group 'group'
+     * It throws an IllegalArgumentException when the group doesn't exist
      * 
      * @param groupName the group's name
      * 
      * @return A collection of petals which are accessible from the group
      */
     @Override
-    public Collection<Petal> collectPetals(String groupName) {
-        Group group = entityManager.find(Group.class, groupName);
-        return group.getPetals();
+    public Collection<Petal> collectPetals(String groupName)throws IllegalArgumentException {
+        Group group = findGroup(groupName);
+
+        if(group != null){
+            return group.getPetals();
+        }
+        else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -217,6 +249,22 @@ public class DefaultGroup implements ISessionGroup {
         }
         groupSet.addAll(groupList);
         return groupSet;
+    }
+
+    /**
+     * @param sessionPetal the sessionPetal to set
+     */
+    @EJB
+    public void setSessionPetal(DefaultPetal sessionPetal) {
+        this.sessionPetal = sessionPetal;
+    }
+
+    /**
+     * @param sessionUser the sessionUser to set
+     */
+    @EJB
+    public void setSessionUser(DefaultUser sessionUser) {
+        this.sessionUser = sessionUser;
     }
 
 }

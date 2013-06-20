@@ -1,7 +1,6 @@
 package com.peergreen.store.db.client;
 
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -23,6 +23,8 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.impl.DefaultGroup;
+import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
+import com.peergreen.store.db.client.ejb.impl.DefaultUser;
 
 public class DefaultGroupTest {
   
@@ -33,6 +35,7 @@ public class DefaultGroupTest {
     ArgumentCaptor<Petal> petalArgument;
     ArgumentCaptor<User> userArgument;
     private String queryString;
+    private String queryString2;
     private List<Group> groupList;
     
     @Mock
@@ -49,26 +52,35 @@ public class DefaultGroupTest {
     private Set<User> users;
     @Mock
     private Query query;
+    @Mock
+    private DefaultPetal sessionPetal;
+    @Mock
+    private DefaultUser sessionUser;
     
   @BeforeMethod
   public void beforeMethod() {
       MockitoAnnotations.initMocks(this);
       sessionGroup = new DefaultGroup();
-      sessionGroup.setEntityManager(entityManager);  
+      sessionGroup.setEntityManager(entityManager); 
+      sessionGroup.setSessionPetal(sessionPetal);
+      sessionGroup.setSessionUser(sessionUser);
       groupArgument = ArgumentCaptor.forClass(Group.class);
       name = ArgumentCaptor.forClass(String.class);
       petalArgument  = ArgumentCaptor.forClass(Petal.class);
       userArgument  = ArgumentCaptor.forClass(User.class);
       groupname="usersgroup";
       queryString = "Series.findAll";
+      queryString2 = "GroupByName";
       groupList = new ArrayList<Group>();
 
 
   }
   
-  /*@Test
-  public void shouldAddGroup(){
-      
+  @Test
+  public void shouldAddGroupNonExistent(){
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(sessionGroup.findGroup(anyString())).thenReturn(null);
       //When
       sessionGroup.addGroup(groupname);
       //Then
@@ -80,28 +92,51 @@ public class DefaultGroupTest {
       
   }
 
+  @Test(expectedExceptions = EntityExistsException.class)
+  public void shouldThrowExceptionWhenAddGroupCauseAlreadyExist() {
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
+      
+      //When
+      sessionGroup.addGroup(groupname);
+     
+  }
   @Test
   public void shouldFindGroup(){
-      
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
       //when
       sessionGroup.findGroup(groupname);
       //Then
-      verify(entityManager).find(eq(Group.class),name.capture());
+      verify(entityManager).createNamedQuery(name.capture());
+      Assert.assertEquals(queryString2, name.getValue());
+      verify(query).setParameter(anyString(), name.capture());
       Assert.assertEquals(groupname, name.getValue());
+      verify(query).getSingleResult();
   }
   
  
   @Test
   public void shouldDeleteGroup(){
       //Given
-      when(entityManager.find(eq(Group.class), anyString())).thenReturn(mockgroup);
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
       //when
       sessionGroup.deleteGroup(groupname);
       //then
-      verify(entityManager).find(eq(Group.class),name.capture());
-      Assert.assertEquals(groupname, name.getValue());
       verify(entityManager).remove(mockgroup);
 
+  }
+  
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(query.getSingleResult()).thenReturn(null);
+      //When
+      sessionGroup.deleteGroup(groupname);
+      
   }
   
   @Test
@@ -135,15 +170,24 @@ public class DefaultGroupTest {
   public void shouldCollectUserOfGroup() {
       
       //Given
-      when(entityManager.find(eq(Group.class), anyString())).thenReturn(mockgroup);
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
       //when
       sessionGroup.collectUsers(groupname);
       //Then
-      verify(entityManager).find(eq(Group.class),name.capture());
-      Assert.assertEquals(groupname, name.getValue());
       verify(mockgroup).getUsers();
    
   }
+  
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void shouldThrowExceptionWhenCollectCauseEntityNotExisting(){
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(query.getSingleResult()).thenReturn(null);
+      //When
+      sessionGroup.collectUsers(groupname);      
+  }
+  
   
   @Test
   public void shouldAddPetal() {
@@ -174,14 +218,23 @@ public class DefaultGroupTest {
   @Test
   public void shouldCollectPetals(){
     //Given
-      when(entityManager.find(eq(Group.class), anyString())).thenReturn(mockgroup);
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
       //when
       sessionGroup.collectPetals(groupname);
       //Then
-      verify(entityManager).find(eq(Group.class),name.capture());
-      Assert.assertEquals(groupname, name.getValue());
       verify(mockgroup).getPetals();
    
+  }
+  
+  @Test(expectedExceptions = IllegalArgumentException.class)
+  public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(query.getSingleResult()).thenReturn(null);
+      //When
+      sessionGroup.collectPetals(groupname);
+      
   }
   
   @Test
@@ -195,6 +248,6 @@ public class DefaultGroupTest {
       //Then
       verify(entityManager).createNamedQuery(queryString);
       verify(query).getResultList();
-  }*/
+  }
 }
 
