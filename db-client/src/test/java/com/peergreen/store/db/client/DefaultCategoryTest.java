@@ -135,7 +135,7 @@ public class DefaultCategoryTest {
         verify(entityManager).merge(mockcategory);
 
     }
-    
+
     @Test 
     public void shouldCollectCategories() {
         //given
