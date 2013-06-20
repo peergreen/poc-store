@@ -71,7 +71,7 @@ public class DefaultCapability implements ISessionCapability{
         {
             Capability  capability = new Capability(capabilityName, version, namespace, properties);
 
-            entityManager.persist(capability);
+            entityManager.persist(capability); 
 
             return capability;
         }
@@ -92,6 +92,10 @@ public class DefaultCapability implements ISessionCapability{
         if(temp != null)
         {
             entityManager.remove(temp);
+        }
+        else
+        {
+            throw new IllegalArgumentException();
         }
     }
 
@@ -126,7 +130,7 @@ public class DefaultCapability implements ISessionCapability{
      * @return A collection of all the petals which give this capability
      */
     @Override
-    public Collection<Petal> collectPetals(String capabilityName) {
+    public Collection<Petal> collectPetals(String capabilityName) throws IllegalArgumentException {
 
         Capability capability = this.findCapability(capabilityName);
         if(capability != null){
@@ -134,7 +138,7 @@ public class DefaultCapability implements ISessionCapability{
         }
         else
         {
-            return null;
+            throw new IllegalArgumentException();
         }
     }
 
