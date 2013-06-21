@@ -7,7 +7,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -23,7 +25,12 @@ import com.peergreen.store.db.client.ejb.impl.DefaultVendor;
 public class DefaultVendorTest {
 
     private DefaultVendor vendorSession;
-
+    ArgumentCaptor<Vendor> vendorArgument;
+    ArgumentCaptor<Petal> petalArgument;
+    ArgumentCaptor<String> id ;
+    private String queryString;
+    
+    String vendorName ;
     @Mock
     private EntityManager entityManager;
     @Mock
@@ -32,11 +39,8 @@ public class DefaultVendorTest {
     private Vendor mockvendor;
     @Mock
     private Set<Petal> petals;
-
-    ArgumentCaptor<Vendor> vendorArgument;
-    ArgumentCaptor<Petal> petalArgument;
-    ArgumentCaptor<String> id ;
-    String vendorName ;
+    @Mock
+    private Query query;
 
 
     @BeforeMethod
@@ -48,7 +52,7 @@ public class DefaultVendorTest {
         petalArgument = ArgumentCaptor.forClass(Petal.class);
         id = ArgumentCaptor.forClass(String.class);
         vendorName = "toto";
-
+        queryString = "Vendor.findAll";
     }
 
     @Test
@@ -56,6 +60,7 @@ public class DefaultVendorTest {
         //Given
         String vendorName = "toto";
         String vendorDescription = "SSII";
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
         //When
         vendorSession.addVendor(vendorName, vendorDescription);
         //Then
@@ -64,6 +69,18 @@ public class DefaultVendorTest {
         Assert.assertEquals(vendorDescription, vendorArgument.getValue().getVendorDescription());
         Assert.assertNotNull(vendorArgument.getValue().getPetals());
 
+
+    }
+
+    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowExceptionWhenAddCauseAlreadyExist() {
+
+        //Given
+        String vendorName = "toto";
+        String vendorDescription = "SSII";
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(mockvendor);
+        //When
+        vendorSession.addVendor(vendorName, vendorDescription);
 
     }
 
@@ -79,6 +96,14 @@ public class DefaultVendorTest {
         verify(entityManager).remove(vendorArgument.capture());
         Assert.assertSame(mockvendor, vendorArgument.getValue());
 
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+        //Given
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
+        //When
+        vendorSession.deleteVendor(vendorName);
     }
 
     @Test
@@ -108,6 +133,14 @@ public class DefaultVendorTest {
 
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+        //Given
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
+        //When
+        vendorSession.collectPetals(vendorName);
+    }
+
     @Test
     public void shouldAddPetal() {
         //Given
@@ -120,11 +153,6 @@ public class DefaultVendorTest {
         Assert.assertSame(petal,petalArgument.getValue());
         verify(mockvendor).setPetals(petals);
         verify(entityManager).merge(mockvendor);
-        
-           }
-
-    @Test
-    public void testAddPetalAlreadyExists() {
 
     }
 
@@ -140,9 +168,19 @@ public class DefaultVendorTest {
         Assert.assertEquals(petal, petalArgument.getValue());
         verify(entityManager).merge(vendorArgument.capture());
         Assert.assertEquals(mockvendor, vendorArgument.getValue());
-        
-        
 
     }
+
+    @Test 
+    public void shouldCollectVendors() {
+        //given
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        //when
+        vendorSession.collectVendors();
+        //then
+        verify(entityManager).createNamedQuery(queryString);
+        verify(query).getResultList();
+    }
+
 
 }

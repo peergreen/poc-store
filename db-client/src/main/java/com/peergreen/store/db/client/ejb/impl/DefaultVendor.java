@@ -2,12 +2,14 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
@@ -30,10 +32,12 @@ public class DefaultVendor implements ISessionVendor {
 
 
     private EntityManager entityManager;
-    
+
 
     /**
-     * Method to add a new instance of vendor in the database.<br />
+     * Method to add a new instance of vendor in the database.
+     * It throws an exception "EntityExistsException " when the entity already
+     * exist in the database
      * The attribute petals are null when creating the group.
      * 
      * @param vendorName the vendor's name
@@ -44,21 +48,34 @@ public class DefaultVendor implements ISessionVendor {
     @Override
     public Vendor addVendor(String vendorName, String vendorDescription) throws EntityExistsException{
 
-        Vendor vendor = new Vendor(vendorName, vendorDescription);
-        entityManager.persist(vendor);
-
-        return vendor;
+        Vendor vendor = entityManager.find(Vendor.class, vendorName);
+        if(vendor != null){
+            throw new EntityExistsException();
+        }
+        else{
+            vendor = new Vendor(vendorName, vendorDescription);
+            entityManager.persist(vendor);
+            return vendor;
+        }
     }
+
 
     /**
      * Method to delete a vendor with the name 'vendorName'
+     * It throws an IllegalArgumentException if the entity to remove
+     * doesn't exist in the database.
      * 
      * @param vendorName the name of the vendor to delete
      */
     @Override
-    public void deleteVendor(String vendorName) {
+    public void deleteVendor(String vendorName)throws IllegalArgumentException {
         Vendor temp = entityManager.find(Vendor.class, vendorName);
-        entityManager.remove(temp);
+        if(temp != null){
+            entityManager.remove(temp);}
+        else
+        {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -76,18 +93,24 @@ public class DefaultVendor implements ISessionVendor {
 
     /**
      * Method to collect all the petals provided by
-     * the vendor with the name 'vendorName'
-     * 
+     * the vendor with the name 'vendorName'.It throws an IllegalArgumentException
+     * if the entity to remove doesn't exist in the database.
+     *  
      * @param vendorName the vendor's name to which we collect petals which he provides
      * 
      * @return A collection of petals which are provided by the vendor with the name 'vendorName'
      */
     @Override
-    public Collection<Petal> collectPetals(String vendorName) {
+    public Collection<Petal> collectPetals(String vendorName) throws IllegalArgumentException{
 
-        Vendor vendor = entityManager.find(Vendor.class, vendorName);
-
-        return vendor.getPetals();
+        Vendor temp = entityManager.find(Vendor.class, vendorName);
+        if(temp != null){
+            return temp.getPetals();
+            }
+        else
+        {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -137,14 +160,13 @@ public class DefaultVendor implements ISessionVendor {
         this.entityManager = entityManager;
     }
 
-    public EntityManager getEntityManager() {
-        return this.entityManager;
-    }
 
     @Override
     public Collection<Vendor> collectVendors() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        Query query = entityManager.createNamedQuery("Vendor.findAll");
+        List<Vendor> vendorList = query.getResultList();
+        Set<Vendor> vendorSet = new HashSet<Vendor>(vendorList);
+        return vendorSet;   
+        }
 
 }
