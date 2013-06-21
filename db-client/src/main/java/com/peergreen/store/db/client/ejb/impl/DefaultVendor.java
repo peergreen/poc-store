@@ -44,12 +44,7 @@ public class DefaultVendor implements ISessionVendor {
     @Override
     public Vendor addVendor(String vendorName, String vendorDescription) throws EntityExistsException{
 
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
-        vendor.setVendorDescription(vendorDescription);
-        Set<Petal> petals = new HashSet<Petal>();
-        vendor.setPetals(petals);
-
+        Vendor vendor = new Vendor(vendorName, vendorDescription);
         entityManager.persist(vendor);
 
         return vendor;

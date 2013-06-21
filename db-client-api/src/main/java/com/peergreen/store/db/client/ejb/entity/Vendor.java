@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -27,6 +28,17 @@ public class Vendor {
     @OneToMany(mappedBy="vendor", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Petal> petals;
 
+    public Vendor() {
+        
+    }
+    
+    public Vendor(String vendorName, String vendorDescription) {
+        super();
+        this.vendorName = vendorName;
+        this.vendorDescription = vendorDescription;
+        Set<Petal> petals = new HashSet<Petal>();
+        this.setPetals(petals);
+    }
 
     /**
      * Method to get the name of the  vendor
