@@ -31,16 +31,19 @@
       <groupId>com.peergreen.store</groupId>
       <artifactId>controller-api</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>db-client-api</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>aether-client-api</artifactId>
       <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
