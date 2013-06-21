@@ -18,6 +18,8 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 
 /**
  * Class defining an entity session to manage the entity Group
@@ -41,10 +43,8 @@ public class DefaultGroup implements ISessionGroup {
 
     private EntityManager entityManager;
     
-    private DefaultUser sessionUser;
+    private ISessionUser sessionUser;
     
-    private DefaultPetal sessionPetal;
-
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -249,19 +249,12 @@ public class DefaultGroup implements ISessionGroup {
         return groupSet;
     }
 
-    /**
-     * @param sessionPetal the sessionPetal to set
-     */
-    @EJB
-    public void setSessionPetal(DefaultPetal sessionPetal) {
-        this.sessionPetal = sessionPetal;
-    }
-
+   
     /**
      * @param sessionUser the sessionUser to set
      */
     @EJB
-    public void setSessionUser(DefaultUser sessionUser) {
+    public void setSessionUser(ISessionUser sessionUser) {
         this.sessionUser = sessionUser;
     }
 

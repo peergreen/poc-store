@@ -62,7 +62,6 @@ public class DefaultGroupTest {
       MockitoAnnotations.initMocks(this);
       sessionGroup = new DefaultGroup();
       sessionGroup.setEntityManager(entityManager); 
-      sessionGroup.setSessionPetal(sessionPetal);
       sessionGroup.setSessionUser(sessionUser);
       groupArgument = ArgumentCaptor.forClass(Group.class);
       name = ArgumentCaptor.forClass(String.class);
