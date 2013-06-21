@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
@@ -18,8 +19,9 @@ import com.peergreen.store.db.client.enumeration.Origin;
  * <ul>
  *      <li>Retrieve petal metadata or binary</li>
  *      <li>Resolve petal's dependencies</li>
+ *      <li>Create, retrieve or remove vendors on database</li>
  *      <li>Create, remove or modify petals on database</li>
- *      <li>Create, retireve capabilities on database</li>
+ *      <li>Create, retrieve capabilities on database</li>
  *      <li>Add or remove capabilities to petals</li>
  *      <li>Create, retrieve requirements</li>
  *      <li>Add or remove requirements to petals</li>
@@ -56,7 +58,30 @@ public interface IPetalController {
             String version,
             Map<Capability, Set<Petal>> resolvedCapabilities,
             Set<Requirement> unresolvedRequirements);
-    
+
+    /**
+     * Method to add a vendor to the database.
+     * 
+     * @param vendorName vendor's name
+     * @param description vendor's description
+     * @return created vendor instance
+     */
+    Vendor addVendor(String vendorName, String description);
+
+    /**
+     * Method to remove a vendor from the database.
+     * 
+     * @param vendorName vendor's name
+     */
+    void removeVendor(String vendorName);
+
+    /**
+     * Method to collect all existing vendors in database.
+     * 
+     * @return list of all existing vendors in database
+     */
+    Collection<Vendor> collectVendors();
+
     /**
      * Method to retrieve a petal from the local store.
      * 

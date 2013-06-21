@@ -152,7 +152,34 @@ public class DefaultPetalController implements IPetalController {
         return null;
     }
     
-    
+    /**
+     * Method to add a vendor to the database.
+     * 
+     * @param vendorName vendor's name
+     * @param description vendor's description
+     * @return created vendor instance
+     */
+    public Vendor addVendor(String vendorName, String description) {
+        return vendorSession.addVendor(vendorName, description);
+    }
+
+    /**
+     * Method to remove a vendor from the database.
+     * 
+     * @param vendorName vendor's name
+     */
+    public void removeVendor(String vendorName) {
+        vendorSession.deleteVendor(vendorName);
+    }
+
+    /**
+     * Method to collect all existing vendors in database.
+     * 
+     * @return list of all existing vendors in database
+     */
+    public Collection<Vendor> collectVendors() {
+        return vendorSession.collectVendors();
+    }
     
     /**
      * Method to retrieve a petal from the local store.
