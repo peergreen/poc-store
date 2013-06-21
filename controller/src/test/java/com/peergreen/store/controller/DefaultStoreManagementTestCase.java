@@ -55,7 +55,6 @@ public class DefaultStoreManagementTestCase {
         storeManagement.bindLinkSession(linkSession);
         storeManagement.bindPetalSession(petalSession);
         storeManagement.bindUserSession(userSession);
-        storeManagement.bindVendorSession(vendorSession);
     }
 
     @Test

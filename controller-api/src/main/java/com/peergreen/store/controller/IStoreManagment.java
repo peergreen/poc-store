@@ -30,11 +30,11 @@ import com.peergreen.store.db.client.ejb.entity.Vendor;
 public interface IStoreManagment {
 
     /**
-     * Method to a link between a remote store and the current one.
+     * Method to add a link between a remote store and the current one.
      * 
      * @param url path to the remote store
      * @param description link's description
-     * @param created link instance
+     * @retun created link instance
      */
     Link addLink(String url, String description);
 

@@ -54,7 +54,6 @@ public class DefaultStoreManagement implements IStoreManagment {
     private ISessionLink linkSession;
     private ISessionPetal petalSession;
     private ISessionUser userSession;
-    private ISessionVendor vendorSession;
 
     /**
      * Method to a link between a remote store and the current one.
@@ -281,11 +280,6 @@ public class DefaultStoreManagement implements IStoreManagment {
     @Bind
     public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
-    }
-    
-    @Bind
-    public void bindVendorSession(ISessionVendor vendorSession) {
-        this.vendorSession = vendorSession;
     }
 
 }
