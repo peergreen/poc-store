@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -7,37 +8,58 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
+
+import com.peergreen.store.db.client.ejb.key.primary.RequirementId;
 
 /**
  * Entity Bean representing in the database the requirement of a petal  
  */
 @NamedQueries({
     @NamedQuery(
-    name = "Requirement.findAll",
-    query = "select r from Requirement r")
+            name = "Requirement.findAll",
+            query = "select r from Requirement r"),
+            @NamedQuery(
+                    name = "RequirementByName",
+                    query = "select r from Requirement r where r.requirementName = :name")
 })
 @Entity
-@SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
+@IdClass(RequirementId.class)
 public class Requirement {
 
     @Id
     @Column(name = "name", unique=true)
     private String requirementName;
-    
+
+    @Id
+    @SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
     @Column(name="id")
     private int requirementId;
+    
+    private String namespace;
 
     private String filter;
 
-    private String namespace;
-
     @ManyToMany(mappedBy="requirements")
     private Set<Petal> petals;
+    
+    public Requirement() {
+        
+    }
+
+    public Requirement(String requirementName,String namespace, String filter) {
+        super();
+        this.setRequirementName(requirementName);
+        this.setNamespace(namespace);
+        this.setFilter(filter);
+        Set<Petal> petals = new HashSet<Petal>();
+        this.setPetals(petals);
+    }
 
     /**
      * Method to retrieve the requirement's Id
