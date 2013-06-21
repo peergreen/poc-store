@@ -54,7 +54,7 @@ public abstract class DefaultRepositoryProvider<T> implements IRepositoryProvide
      */
     @Override
     public void addPetal(Vendor vendor, String artifactId, String version, File binary) {
-        Artifact jarArtifact = new DefaultArtifact(vendor.getVendorName(), artifactId, "", "", version);
+        Artifact jarArtifact = new DefaultArtifact(vendor.getVendorName(), artifactId, null, "jar", version);
         jarArtifact = jarArtifact.setFile(binary);
 //        Artifact pomArtifact = new SubArtifact( jarArtifact, "", "pom" );
 //        pomArtifact = pomArtifact.setFile( new File( "pom.xml" ) );
