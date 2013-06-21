@@ -1,0 +1,18 @@
+<configadmin xmlns="http://jonas.ow2.org/ns/configadmin/1.0">
+
+	<factory-configuration pid="com.peergreen.store.aether.provider.impl.DefaultLocalRepositoryProvider">
+		<property name="path">file:///C:/Users/user2/Desktop/test</property>
+		<property name="staging">false</property>
+	</factory-configuration>
+	
+	<factory-configuration pid="com.peergreen.store.aether.provider.impl.DefaultLocalRepositoryProvider">
+		<property name="path">file:///C:/Users/user2/Desktop/test2</property>
+		<property name="staging">true</property>
+	</factory-configuration>
+
+	<factory-configuration pid="com.peergreen.store.aether.provider.impl.DefaultRemoteRepositoryProvider">
+		<property name="name">Peergreen Central Store</property>
+		<property name="path">file:///C:/Users/user2/Desktop/test3</property>
+	</factory-configuration>
+
+</configadmin>

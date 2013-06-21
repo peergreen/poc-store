@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-plan xmlns="http://jonas.ow2.org/ns/deployment-plan/1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:m2="http://jonas.ow2.org/ns/deployment-plan/maven2/1.0">
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>db-client</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.ow2.spec.ee</m2:groupId>
+    <m2:artifactId>ow2-atinject-1.0-spec</m2:artifactId>
+    <m2:version>1.0.13</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.eclipse.aether</m2:groupId>
+    <m2:artifactId>aether-api</m2:artifactId>
+    <m2:version>0.9.0.M2</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.eclipse.aether</m2:groupId>
+    <m2:artifactId>aether-spi</m2:artifactId>
+    <m2:version>0.9.0.M2</m2:version>
+  </deployment> 
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.eclipse.aether</m2:groupId>
+    <m2:artifactId>aether-util</m2:artifactId>
+    <m2:version>0.9.0.M2</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.eclipse.aether</m2:groupId>
+    <m2:artifactId>aether-impl</m2:artifactId>
+    <m2:version>0.9.0.M2</m2:version>
+  </deployment>  
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>aether-dependencies</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.eclipse.aether</m2:groupId>
+    <m2:artifactId>aether-connector-file</m2:artifactId>
+    <m2:version>0.9.0.M2</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	<m2:groupId>org.eclipse.aether</m2:groupId>
+    <m2:artifactId>aether-connector-wagon</m2:artifactId>
+    <m2:version>0.9.0.M2</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>aether-client</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+	  <m2:groupId>org.osgi</m2:groupId>
+    <m2:artifactId>org.osgi.enterprise</m2:artifactId>
+    <m2:version>5.0.0</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>controller</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>demo</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+
+</deployment-plan>
