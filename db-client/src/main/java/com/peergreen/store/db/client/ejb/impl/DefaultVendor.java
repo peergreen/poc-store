@@ -106,7 +106,7 @@ public class DefaultVendor implements ISessionVendor {
         Vendor temp = entityManager.find(Vendor.class, vendorName);
         if(temp != null){
             return temp.getPetals();
-            }
+        }
         else
         {
             throw new IllegalArgumentException();
@@ -167,6 +167,6 @@ public class DefaultVendor implements ISessionVendor {
         List<Vendor> vendorList = query.getResultList();
         Set<Vendor> vendorSet = new HashSet<Vendor>(vendorList);
         return vendorSet;   
-        }
+    }
 
 }
