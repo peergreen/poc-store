@@ -19,6 +19,7 @@ import com.peergreen.store.db.client.ejb.entity.Vendor;
  * Provided functionalities:
  * <ul>
  *      <li>Add, remove and retrieve links to remote stores</li>
+ *      <li>Add, remove and retrieve categories</li>
  *      <li>Retrieve available petals for a specific user,
  *          from local store or from staging store</li>
  *      <li>Retrieve all users</li>
@@ -50,6 +51,28 @@ public interface IStoreManagment {
      * @return list of all existing links in database
      */
     Collection<Link> collectLinks();
+    
+    /**
+     * Method to add a new category to the database.
+     * 
+     * @param name of the category
+     * @return created Category instance
+     */
+    Category addCategory(String name);
+
+    /**
+     * Method to remove a category from the database.
+     * 
+     * @param ame of the category to remove
+     */
+    void removeCategory(String name);
+
+    /**
+     * Method to collect all existing categories in database.
+     * 
+     * @return list of all existing categories in database
+     */
+    Collection<Category> collectCategories();
 
     /**
      * Method to collect available petals.<br />

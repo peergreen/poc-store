@@ -21,6 +21,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -48,6 +49,7 @@ import com.peergreen.store.db.client.enumeration.Origin;
 public class DefaultStoreManagement implements IStoreManagment {
 
     private IPetalsPersistence petalsPersistence;
+    private ISessionCategory categorySession;
     private ISessionGroup groupSession;
     private ISessionLink linkSession;
     private ISessionPetal petalSession;
@@ -84,6 +86,34 @@ public class DefaultStoreManagement implements IStoreManagment {
     @Override
     public Collection<Link> collectLinks() {
         return linkSession.collectLinks();
+    }
+    
+    /**
+     * Method to add a new category to the database.
+     * 
+     * @param name of the category
+     * @return created Category instance
+     */
+    public Category addCategory(String name) {
+        return categorySession.addCategory(name);
+    }
+
+    /**
+     * Method to remove a category from the database.
+     * 
+     * @param ame of the category to remove
+     */
+    public void removeCategory(String name) {
+        categorySession.deleteCategory(name);
+    }
+
+    /**
+     * Method to collect all existing categories in database.
+     * 
+     * @return list of all existing categories in database
+     */
+    public Collection<Category> collectCategories() {
+        return categorySession.collectCategories();
     }
 
     /**
@@ -226,6 +256,11 @@ public class DefaultStoreManagement implements IStoreManagment {
     @Bind
     public void bindPetalsPersistence(IPetalsPersistence petalsPersistence) {
         this.petalsPersistence = petalsPersistence;
+    }
+    
+    @Bind
+    public void bindCategorySession(ISessionCategory categorySession) {
+        this.categorySession = categorySession;
     }
     
     @Bind
