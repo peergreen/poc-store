@@ -11,6 +11,7 @@ import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.Requires;
 import org.apache.felix.ipojo.annotations.Validate;
 
+import com.peergreen.store.controller.IGroupController;
 import com.peergreen.store.controller.IPetalController;
 import com.peergreen.store.controller.IStoreManagment;
 import com.peergreen.store.db.client.ejb.entity.Capability;
@@ -29,18 +30,17 @@ public class App {
     private IStoreManagment storeManagement;
     @Requires
     private IPetalController petalController;
+    @Requires
+    private IGroupController groupController;
 
     @Validate
     public void main() {
         System.out.println("Running");
 
+        groupController.addGroup("Administrateur");
+        
         storeManagement.addLink("https://store.peergreen.com/community", "Store Community");
 
-//        Vendor vendor = vendorSession.addVendor("Peergreen",
-//                "Peergreen is a software company started by the core team" +
-//                "who created JOnAS, the Open Application Server used for" +
-//                "critical production processes");
-//
         Category category = storeManagement.addCategory("Bundle");
 
         Set<Capability> capabilities = new HashSet<>();
@@ -51,7 +51,8 @@ public class App {
                 "who created JOnAS, the Open Application Server used for" +
                 "critical production processes");
         
-        File petalBinary = new File("C:\\Users\\user2\\.m2\\repository\\com\\peergreen\\store\\controller");
+        File petalBinary = new File("C:\\Users\\user2\\.m2\\repository\\com\\peergreen\\" +
+        		"store\\controller\\1.0-SNAPSHOT\\controller-1.0-SNAPSHOT.jar");
         
         petalController.addPetal(vendor, "Store", "0.1.0-beta", "Apps Store for Peergreen Platform",
                 category, requirements, capabilities, Origin.LOCAL, petalBinary);
