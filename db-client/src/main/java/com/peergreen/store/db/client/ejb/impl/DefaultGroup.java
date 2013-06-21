@@ -187,7 +187,6 @@ public class DefaultGroup implements ISessionGroup {
         petals.add(petal);
         group.setPetals(petals);
         group=  entityManager.merge(group);
-        sessionPetal.giveAccesToGroup(petal, group);
         return group;
     }
 
@@ -204,7 +203,6 @@ public class DefaultGroup implements ISessionGroup {
         petals.remove(petal);
         group.setPetals(petals);
         group=  entityManager.merge(group);
-        sessionPetal.removeAccesToGroup(petal, group);
         return group;
     }
 
