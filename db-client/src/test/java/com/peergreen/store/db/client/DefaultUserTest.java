@@ -43,7 +43,7 @@ public class DefaultUserTest {
     private Set<Group> groups;
 
     private Group groupArray[];
-    
+
     private List<User> userList;
     @Mock
     private Set<User> userSet;
@@ -99,10 +99,10 @@ public class DefaultUserTest {
         Assert.assertEquals(password1, value.getValue());
 
         when(mockuser.getPassword()).thenReturn(password1);
-        
+
         verify(mockuser).setEmail(value.capture());
         Assert.assertEquals(email1, value.getValue());
-        
+
         when(mockuser.getEmail()).thenReturn(email1);
 
         verify(entityManager).merge(userArgument.capture());
@@ -150,13 +150,13 @@ public class DefaultUserTest {
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getResultList()).thenReturn(userList);
-        
+
         //when
         sessionUser.collectUsers();
         //Then
         verify(entityManager).createNamedQuery(queryString);
         verify(query).getResultList();
-        
+
     }
 
     @Test
