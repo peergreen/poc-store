@@ -51,6 +51,24 @@ public class Petal {
 
     private Origin origin;
 
+    
+    public Petal() {
+        
+    }
+    
+    public Petal(Vendor vendor, String artifactId, String version, Category category, String description,
+             Set<Requirement> requirements, Set<Capability> capabilities, Origin origin) {
+        super();
+        this.vendor = vendor;
+        this.artifactId = artifactId;
+        this.version = version;
+        this.category = category;
+        this.description = description;
+        this.requirements = requirements;
+        this.capabilities = capabilities;
+        this.origin = origin;
+    }
+
 
     /**
      * Method to retrieve the petal's artifactId
