@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -47,15 +48,17 @@ public class DefaultUser implements ISessionUser {
      * @return created user instance
      */
     @Override
-    public User addUser(String pseudo, String password, String email) {
-        User user = new User();
-        user.setPseudo(pseudo);
-        user.setPassword(password);
-        user.setEmail(email);
-        Set<Group> groups = new HashSet<Group>();
-        user.setGroupSet(groups);
-        entityManager.persist(user);
-        return user;
+    public User addUser(String pseudo, String password, String email)throws EntityExistsException  {
+        User user = entityManager.find(User.class, pseudo);
+
+        if (user != null){
+            throw new EntityExistsException("This user already exists");
+        }
+        else{
+            user = new User(pseudo, password, email);
+            entityManager.persist(user);
+            return user;
+        }
     }
 
     /**
@@ -66,7 +69,7 @@ public class DefaultUser implements ISessionUser {
      * @return the user with the pseudo 'pseudo'
      */
     @Override
-    public User findUserByPseudo(String pseudo) {
+    public User findUserByPseudo(String pseudo){
         User user = entityManager.find(User.class, pseudo);
         return user;
     }
@@ -86,15 +89,20 @@ public class DefaultUser implements ISessionUser {
     }
 
     /**
-     * Method to remove a user using his pseudo
+     * Method to remove a user using his pseudo.
+     * It throws new IllegalArgumentException if the user is null
      * 
      * @param pseudo The pseudo of the user to remove from the database
      */
     @Override
-    public void removeUserbyPseudo(String pseudo) {
+    public void removeUserbyPseudo(String pseudo)throws IllegalArgumentException {
 
         User user = entityManager.find(User.class, pseudo);
-        entityManager.remove(user);
+        if(user!=null){
+            entityManager.remove(user);}
+        else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -103,7 +111,7 @@ public class DefaultUser implements ISessionUser {
      * @param myUser The user to remove from the database
      */
     @Override
-    public void removeUser(User myUser) {
+    public void removeUser(User myUser){
 
         entityManager.remove(myUser);
     }
@@ -168,50 +176,54 @@ public class DefaultUser implements ISessionUser {
 
     /**
      * Method to collect all the groups to which a user belongs
+     * It throws new IllegalArgumentException if the user is null
      * 
      * @param pseudo the user's pseudo
      * 
      * @return A collection with the groups to which the user with the pseudo 'pseudo' belongs
      */
     @Override
-    public Collection<Group> collectGroups(String pseudo) {
+    public Collection<Group> collectGroups(String pseudo)throws IllegalArgumentException  {
 
         User user = entityManager.find(User.class, pseudo);
-
+        if(user!=null){
         return user.getGroupSet();
+        }
+        else{
+            throw new IllegalArgumentException("This user doesnt exist in the database");
+        }
+        
     }
 
     /**
      * Method to collect all the petals to which a user has access 
+     * It throws new IllegalArgumentException if the user is null
      * 
      * @param pseudo the user's pseudo
      * 
      * @return A collection with the petals to which the user with the pseudo 'pseudo' has access
      */
     @Override
-    public Collection<Petal> collectPetals(String pseudo) {
+    public Collection<Petal> collectPetals(String pseudo)throws IllegalArgumentException {
+
+
         Set<Group> groups = new HashSet<Group>();
         Set<Petal> petals = new HashSet<Petal>();
 
         User user = entityManager.find(User.class, pseudo);
-        groups = user.getGroupSet();
+        if(user!=null){
+            groups = user.getGroupSet();
 
-        Object [] groupsTab = groups.toArray();
-        for(int i =0; i<groupsTab.length; i++)
-        {
-            petals.addAll(((Group) groupsTab[i]).getPetals());
+            Object [] groupsTab = groups.toArray();
+            for(int i =0; i<groupsTab.length; i++)
+            {
+                petals.addAll(((Group) groupsTab[i]).getPetals());
+            }
+
+            return petals;}
+        else{
+            throw new IllegalArgumentException("This user doesnt exist in the database");
         }
-
-        return petals;
-    }
-
-    /**
-     * Method to retrieve entity manager.
-     * 
-     * @return entity manager
-     */
-    public EntityManager getEntityManager() {
-        return this.entityManager;
     }
 
     /**
