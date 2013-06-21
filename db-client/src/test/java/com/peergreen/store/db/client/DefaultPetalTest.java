@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 
 import junit.framework.Assert;
@@ -27,16 +28,18 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.impl.DefaultGroup;
 import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
+import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
+import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
 
 public class DefaultPetalTest {
 
     private DefaultPetal sessionPetal;
-    @Mock
-    private DefaultGroup sessionGroup;
 
     private ArgumentCaptor<String> stringArgumentCaptor;
     private ArgumentCaptor<Petal> petalArgumentCaptor;
@@ -81,6 +84,16 @@ public class DefaultPetalTest {
     private Requirement mockrequirement;
     @Mock
     private Iterator<Capability> it;
+    @Mock
+    private ISessionVendor sessionVendor;
+    @Mock
+    private ISessionCategory sessionCategory;
+    @Mock
+    private ISessionCapability sessionCapability;
+    @Mock
+    private ISessionRequirement sessionRequirement;
+    @Mock
+    private ISessionGroup sessionGroup;
 
 
 
@@ -89,19 +102,12 @@ public class DefaultPetalTest {
         MockitoAnnotations.initMocks(this);
 
         sessionPetal = new DefaultPetal();
-        /*     sessionGroup = new DefaultGroup();
-      sessionVendor = new DefaultVendor();
-      sessionCategory = new DefaultCategory();
-      sessionCapability = new DefaultCapability();
-      sessionRequirement = new DefaultRequirement();*/
-
         sessionPetal.setEntityManager(entityManager);
-
-        /*    sessionPetal.setSessionCapability(sessionCapability);
-      sessionPetal.setSessionCategory(sessionCategory);
-      sessionPetal.setSessionGroup(sessionGroup);;
-      sessionPetal.setSessionRequirement(sessionRequirement);
-      sessionPetal.setSessionVendor(sessionVendor);*/
+        sessionPetal.setSessionCapability(sessionCapability);
+        sessionPetal.setSessionCategory(sessionCategory);
+        sessionPetal.setSessionGroup(sessionGroup);;
+        sessionPetal.setSessionRequirement(sessionRequirement);
+        sessionPetal.setSessionVendor(sessionVendor);
 
         petalArgumentCaptor  = ArgumentCaptor.forClass(Petal.class);
         stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
@@ -119,15 +125,17 @@ public class DefaultPetalTest {
         origin = Origin.REMOTE;
     }
 
-   /* @Test
-    public void shouldAddPetalInDatabase() {
-        
+    @Test
+    public void shouldAddPetal() {
+
+        //Given
+        when(sessionGroup.findGroup("Administrateur")).thenReturn(mockgroup);
         Set<Capability> capabilities = new HashSet<Capability>();
         capabilities.add(mockcapability);
-        
+
         Set<Requirement> requirements = new HashSet<Requirement>();
         requirements.add(mockrequirement);
-       
+
         //when
         sessionPetal.addPetal(vendor, artifactId, version, description, category, capabilities, requirements, origin);
         //then
@@ -140,8 +148,18 @@ public class DefaultPetalTest {
         Assert.assertEquals(capabilities, petalArgumentCaptor.getValue().getCapabilities());
         Assert.assertEquals(requirements, petalArgumentCaptor.getValue().getRequirements());
         Assert.assertEquals(origin, petalArgumentCaptor.getValue().getOrigin());
+        Assert.assertTrue(petalArgumentCaptor.getValue().getGroups().contains(mockgroup));
 
 
+    }
+
+    @Test(expectedExceptions = EntityNotFoundException.class)
+    public void shouldThrowExceptionWhenAddCauseGroupAdministratorDoesNotExist() {
+        //Given
+        when(sessionGroup.findGroup("Administrateur")).thenReturn(null);    
+
+        //when
+        sessionPetal.addPetal(vendor, artifactId, version, description, category, capabilities, requirements, origin);
 
     }
 
@@ -153,10 +171,10 @@ public class DefaultPetalTest {
         sessionPetal.findPetal(vendor, artifactId, version);
         //then
         verify(entityManager).find(eq(Petal.class), idArgumentCaptor.capture());
-        Assert.assertEquals(vendor.getVendorName(), idArgumentCaptor.getValue().getVendor());
+        Assert.assertEquals(vendor, idArgumentCaptor.getValue().getVendor());
         Assert.assertEquals(artifactId, idArgumentCaptor.getValue().getArtifactId());
         Assert.assertEquals(version, idArgumentCaptor.getValue().getVersion());
-    }*/
+    }
 
     @Test
     public void shouldCollectGroupWhichCanAccessToIt() {
@@ -220,7 +238,7 @@ public class DefaultPetalTest {
     }
 
 
-  /*  @Test
+    @Test
     public void shouldGiveAccessToPetalForGroup() {
         when(mockpetal.getGroups()).thenReturn(groups);
         //when
@@ -244,7 +262,7 @@ public class DefaultPetalTest {
         Assert.assertSame(mockgroup, groupArgumentCaptor.getValue());
         verify(mockpetal).setGroups(groups);
         verify(entityManager).merge(mockpetal);
-    }*/
+    }
 
     @Test
     public void shouldAddCategory() {
@@ -284,7 +302,7 @@ public class DefaultPetalTest {
 
     @Test
     public void shouldRemoveCapability() {
-      //Given
+        //Given
         when(mockpetal.getCapabilities()).thenReturn(capabilities);
         //when
         sessionPetal.removeCapability(mockpetal, mockcapability);
@@ -299,7 +317,7 @@ public class DefaultPetalTest {
 
     @Test
     public void shouldAddRequirement() {
-     
+
         //Given
         when(mockpetal.getRequirements()).thenReturn(requirements);
         //when
@@ -314,7 +332,7 @@ public class DefaultPetalTest {
 
     @Test
     public void shouldRemoveRequirement() {
-     
+
         //Given
         when(mockpetal.getRequirements()).thenReturn(requirements);
         //when
@@ -353,7 +371,7 @@ public class DefaultPetalTest {
         Assert.assertEquals(Origin.LOCAL, originArgumentCaptor.getValue());
         verify(query).getResultList();
     }
-    
+
     @Test
     public void shouldcollectPetalsFromRemote() {
         queryString = "select p from Petal p where p.origin = :origin";
@@ -367,7 +385,7 @@ public class DefaultPetalTest {
         Assert.assertEquals(Origin.REMOTE, originArgumentCaptor.getValue());
         verify(query).getResultList();
     }
-    
+
     @Test
     public void shouldcollectPetalsFromStagging() {
         queryString = "select p from Petal p where p.origin = :origin";

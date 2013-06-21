@@ -8,7 +8,9 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -21,6 +23,7 @@ import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
@@ -54,17 +57,53 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Stateless
 public class DefaultPetal implements ISessionPetal {
 
-    @EJB
     private ISessionVendor sessionVendor;
-    @EJB
     private ISessionCategory sessionCategory;
-    @EJB
     private ISessionCapability sessionCapability;
-    @EJB
     private ISessionRequirement sessionRequirement;
-    
+    private ISessionGroup sessionGroup;
+
     private EntityManager entityManager;
 
+    /**
+     * @param sessionVendor the sessionVendor to set
+     */
+    @EJB
+    public void setSessionVendor(ISessionVendor sessionVendor) {
+        this.sessionVendor = sessionVendor;
+    }
+
+    /**
+     * @param sessionCategory the sessionCategory to set
+     */
+    @EJB
+    public void setSessionCategory(ISessionCategory sessionCategory) {
+        this.sessionCategory = sessionCategory;
+    }
+
+    /**
+     * @param sessionCapability the sessionCapability to set
+     */
+    @EJB
+    public void setSessionCapability(ISessionCapability sessionCapability) {
+        this.sessionCapability = sessionCapability;
+    }
+
+    /**
+     * @param sessionRequirement the sessionRequirement to set
+     */
+    @EJB
+    public void setSessionRequirement(ISessionRequirement sessionRequirement) {
+        this.sessionRequirement = sessionRequirement;
+    }
+
+    /**
+     * @param sessionGroup the sessionGroup to set
+     */
+    @EJB
+    public void setSessionGroup(ISessionGroup sessionGroup) {
+        this.sessionGroup = sessionGroup;
+    }
 
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
@@ -73,7 +112,8 @@ public class DefaultPetal implements ISessionPetal {
 
 
     /**
-     * Method to create an instance of a petal and add it in the database
+     * Method to create an instance of a petal and add it in the database.
+     * It will thrw an EnityNotFoundException if the group administrateur doesn't exist.
      * 
      * @param vendorName The petal's vendor name
      * @param artifactId The petal's artifactId
@@ -88,36 +128,47 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin) {
-        Petal petal = new Petal();
+            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin)throws EntityNotFoundException {
 
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
-        petal.setDescription(description);
-        petal.setCategory(category);
-        petal.setRequirements((Set<Requirement>) requirements);
-        petal.setCapabilities((Set<Capability>) capabilities);
-        petal.setOrigin(origin);
-
-        entityManager.persist(petal);
-
-        sessionVendor.addPetal(vendor, petal);
-        sessionCategory.addPetal(category, petal);
-        Iterator<Capability> it = capabilities.iterator();
-        while(it.hasNext()) {
-
-            sessionCapability.addPetal(it.next(), petal);
+        Group group = sessionGroup.findGroup("Administrateur");
+        /*
+         * All the petals should be accessible via the group "Administrateur" at least.
+         * So if it doesn't exist, this method will throw an exception 
+         * 
+         */
+        if(group == null){
+            throw new EntityNotFoundException("The group Administrateur must be created first at all");
         }
+        else{
+            Petal petal = new Petal(vendor, artifactId, version, category,
+                    description, (Set<Requirement>)requirements,(Set<Capability>) capabilities, origin);
 
+            Set<Group> groups = new HashSet<Group>();
+            groups.add(group);
+            petal.setGroups(groups);
 
-        Iterator<Requirement> itreq = requirements.iterator();
-        while(itreq.hasNext()) {
-            sessionRequirement.addPetal(itreq.next(), petal);
+            try{
+                entityManager.persist(petal);
+            }catch(EntityExistsException e){
+
+            }
+
+            sessionVendor.addPetal(vendor, petal);
+            sessionCategory.addPetal(category, petal);
+            sessionGroup.addPetal(group, petal);
+
+            Iterator<Capability> it = capabilities.iterator();
+            while(it.hasNext()) {
+                sessionCapability.addPetal(it.next(), petal);
+            }
+
+            Iterator<Requirement> itreq = requirements.iterator();
+            while(itreq.hasNext()) {
+                sessionRequirement.addPetal(itreq.next(), petal);
+            }
+            return petal;
+
         }
-
-
-        return petal;
     }
 
     /**
@@ -131,7 +182,7 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal findPetal(Vendor vendor, String artifactId, String version) {
-       // String vendorName = vendor.getVendorName();
+
         PetalId petalId = new PetalId(vendor, artifactId, version);
         Petal petal =entityManager.find(Petal.class, petalId);
         return petal;
@@ -227,13 +278,12 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal giveAccesToGroup(Petal petal, Group group) {
 
-        DefaultGroup sessionGroup =  new DefaultGroup();
-        sessionGroup.setEntityManager(entityManager);
         Set<Group> groups = petal.getGroups();
         groups.add(group);
         petal.setGroups(groups);
-        sessionGroup.addPetal(group,petal);
         entityManager.merge(petal);
+        
+        sessionGroup.addPetal(group,petal);
 
         return petal;
     }
@@ -249,13 +299,12 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal removeAccesToGroup(Petal petal, Group group) {
 
-        DefaultGroup sessionGroup = new DefaultGroup();
-        sessionGroup.setEntityManager(entityManager);
         Set<Group> groups = petal.getGroups();
         groups.remove(group);
         petal.setGroups(groups);
-        sessionGroup.removePetal(group, petal);
         entityManager.merge(petal);
+        
+        sessionGroup.removePetal(group, petal);
 
         return petal;
     }
@@ -271,11 +320,10 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal addCategory(Petal petal, Category category) {
 
-        DefaultCategory sessionCategory = new DefaultCategory();
-        sessionCategory.setEntityManager(entityManager);
-        sessionCategory.addPetal(category, petal);
         petal.setCategory(category);
         entityManager.merge(petal);
+
+        sessionCategory.addPetal(category, petal);
 
         return petal;
     }
@@ -304,12 +352,12 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal addCapability(Petal petal, Capability capability) {
 
-        DefaultCapability sessionCapability = new DefaultCapability();
-        sessionCapability.setEntityManager(entityManager);
         Set<Capability> capabilities = petal.getCapabilities();
         capabilities.add(capability);
         petal.setCapabilities(capabilities);
+        
         entityManager.merge(petal);
+        
         sessionCapability.addPetal(capability, petal);
 
         return petal;
@@ -326,12 +374,12 @@ public class DefaultPetal implements ISessionPetal {
     @Override
     public Petal removeCapability(Petal petal, Capability capability) {
 
-        DefaultCapability sessionCapability = new DefaultCapability();
-        sessionCapability.setEntityManager(entityManager);
         Set<Capability> capabilities = petal.getCapabilities();
         capabilities.remove(capability);
         petal.setCapabilities(capabilities);
+        
         entityManager.merge(petal);
+        
         sessionCapability.removePetal(capability, petal);
 
         return petal;
@@ -347,12 +395,11 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addRequirement(Petal petal, Requirement requirement) {
-        DefaultRequirement sessionRequirement = new DefaultRequirement();
-        sessionRequirement.setEntityManager(entityManager);
+    
         Set<Requirement> requirements = petal.getRequirements();
         requirements.add(requirement);
         petal.setRequirements(requirements);
-
+        
         entityManager.merge(petal);
 
         sessionRequirement.addPetal(requirement, petal);
@@ -370,8 +417,6 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeRequirement(Petal petal, Requirement requirement) {
-        DefaultRequirement sessionRequirement = new DefaultRequirement();
-        sessionRequirement.setEntityManager(entityManager);
 
         Set<Requirement> requirements = petal.getRequirements();
         requirements.remove(requirement);
@@ -407,8 +452,6 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
-
-        //  Query petals = entityManager.createNamedQuery("Petal.findAllFromLocal");
 
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.LOCAL);
