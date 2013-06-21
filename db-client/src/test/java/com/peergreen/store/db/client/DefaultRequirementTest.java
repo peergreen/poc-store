@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -34,6 +35,7 @@ public class DefaultRequirementTest {
     private String namespace;
     private String requirementName;
     private String queryString;
+    private String queryString2;
     private List<Requirement> requs;
     @Mock
     private EntityManager entityManager;
@@ -60,12 +62,16 @@ public class DefaultRequirementTest {
         namespace="service";
         filter="namespace=service";
         queryString = "Requirement.findAll";
+        queryString2 = "RequirementByName";
         requs = new ArrayList<Requirement>();
     }
 
     @Test
-    public void shouldAddMissingRequirement() {
-      
+    public void shouldAddRequirement() {
+
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(null);
         //When
         sessionRequirement.addRequirement(requirementName, namespace, filter);
         //Then
@@ -76,44 +82,74 @@ public class DefaultRequirementTest {
         Assert.assertTrue(requirementArgument.getValue().getPetals().isEmpty());
     }
 
+    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowExceptionWhenAddCauseAlreadyExist() {
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);
+        //When
+        sessionRequirement.addRequirement(requirementName, namespace, filter);
+
+    }
 
     @Test
     public void shouldDeleteRequirement(){
         //Given
-        when(entityManager.find(eq(Requirement.class), anyInt())).thenReturn(mockrequirement);
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);   
         //When
         sessionRequirement.deleteRequirement(requirementName);
-        //Then
-        verify(entityManager).find(eq(Requirement.class),idArgument.capture());
-        Assert.assertEquals(requirementName, idArgument.getValue());
+        //Then 
         verify(entityManager).remove(requirementArgument.capture());
         Assert.assertSame(mockrequirement,requirementArgument.getValue() );
 
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(null);   
+        //Whenvv
+        sessionRequirement.deleteRequirement(requirementName);
+
+    }
+
     @Test
     public void shouldFindRequirement() {
-
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         //When
         sessionRequirement.findRequirement(requirementName);
         //Then
-        verify(entityManager).find(eq(Requirement.class),idArgument.capture());
+        verify(entityManager).createNamedQuery(idArgument.capture());
+        Assert.assertEquals(queryString2, idArgument.getValue());
+        verify(query).setParameter(anyString(), idArgument.capture());
         Assert.assertEquals(requirementName, idArgument.getValue());
+        verify(query).getSingleResult();
 
     }
 
     @Test
     public void shouldCollectPetals(){
         //Given
-        when(entityManager.find(eq(Requirement.class), anyString())).thenReturn(mockrequirement);
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);  
         //When
         sessionRequirement.collectPetals(requirementName);
         //Then
-        verify(entityManager).find(eq(Requirement.class),idArgument.capture());
-        Assert.assertEquals(requirementName, idArgument.getValue());
         verify(mockrequirement).getPetals();
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(null);  
+        //When
+        sessionRequirement.collectPetals(requirementName);
+        
+    }
+    
     @Test
     public void shouldAddPetalTorequirement(){
         //Given
@@ -144,7 +180,7 @@ public class DefaultRequirementTest {
 
 
     }
-    
+
     @Test
     public void shouldCollectRequirements() {
         //Given
@@ -155,27 +191,27 @@ public class DefaultRequirementTest {
         verify(entityManager).createNamedQuery(queryString);
         verify(query).getResultList();
     }
-    
+
     @Test
     public void shouldUpdateNamespace(){
-        
-      //when
+
+        //when
         sessionRequirement.updateNamespace(mockrequirement, namespace);
         //then
         verify(mockrequirement).setNamespace(idArgument.capture());
         Assert.assertEquals(namespace, idArgument.getValue());
         verify(entityManager).merge(mockrequirement);
     }
-    
+
     @Test
     public void shouldUpdateFilter() {
-        
-      //when
+
+        //when
         sessionRequirement.updateFilter(mockrequirement, filter);
         //then
         verify(mockrequirement).setFilter(idArgument.capture());
         Assert.assertEquals(filter, idArgument.getValue());
         verify(entityManager).merge(mockrequirement);
     }
-    
+
 }

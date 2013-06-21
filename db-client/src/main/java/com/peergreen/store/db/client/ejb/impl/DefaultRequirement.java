@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -44,6 +46,8 @@ public class DefaultRequirement implements ISessionRequirement {
 
     /**
      *  Method to add a new requirement in the database.
+     *  It throws an exception "EntityExistsException " when 
+     *  the entity already exist in the database
      *  
      * @param requirementName
      * @param filter
@@ -51,54 +55,76 @@ public class DefaultRequirement implements ISessionRequirement {
      * @return A new instance of requirement
      */
     @Override
-    public Requirement addRequirement(String requirementName,String namespace,String filter) {
-        Requirement requirement = new Requirement();
-        requirement.setRequirementName(requirementName);
-        requirement.setNamespace(namespace);
-        requirement.setFilter(filter);
-        Set<Petal> petals = new HashSet<Petal>();
-        requirement.setPetals(petals);
+    public Requirement addRequirement(String requirementName,String namespace,String filter)throws EntityExistsException {
+        Requirement requirement = findRequirement(requirementName);
 
-        entityManager.persist(requirement);
-        return requirement;
+        if(requirement != null){
+            throw new EntityExistsException();
+        }
+        else {
+            requirement = new Requirement(requirementName,namespace,filter);
+            entityManager.persist(requirement);
+            return requirement;
+        }
+
     }
 
     /**
      * Method to delete a requirement in the database
+     * It throws an IllegalArgumentException if the entity to remove
+     * doesn't exist in the database.
      * 
      * @param requirementName the requirement's name
      */
     @Override
-    public void deleteRequirement(String requirementName) {
-        Requirement temp = entityManager.find(Requirement.class, requirementName);
-        entityManager.remove(temp);
+    public void deleteRequirement(String requirementName)throws IllegalArgumentException {
+        Requirement temp = findRequirement(requirementName);
+        if(temp != null){
+            entityManager.remove(temp);
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
-     * Method to find a requirement in the database
+     * Method to find a requirement in the database.
+     * It returns null if the category doesn't exist. 
      * 
      * @param requirementName the requirement's name
      * @return the capacity with the name 'requirementName'
      */
     @Override
-    public Requirement findRequirement(String requirementName) {
-        
-        Requirement requirement = entityManager.find(Requirement.class, requirementName);
-        return requirement;
+    public Requirement findRequirement(String requirementName) throws NoResultException{
+        Query q = entityManager.createNamedQuery("RequirementByName");
+        q.setParameter("name", requirementName);
+        Requirement result;
+        try{
+            result = (Requirement)q.getSingleResult();}
+        catch(NoResultException e){
+            result = null;
+        }
+        return result;
     }
 
     /**
      * Method to collect the petals which have the requirement with the name 'requirementName'
+     * It throws an IllegalArgumentException if the entity to remove
+     * doesn't exist in the database.
      * 
      * @param name the requirement's name
      * @return A collection of all the petals which give this requirement
      */
     @Override
-    public Collection<Petal> collectPetals(String requirementName) {
+    public Collection<Petal> collectPetals(String requirementName) throws IllegalArgumentException{
 
-        Requirement requirement = entityManager.find(Requirement.class,requirementName);
-        Set<Petal> petals = requirement.getPetals();
-        return petals;
+        Requirement requirement = findRequirement(requirementName);
+        if(requirement != null){
+         return requirement.getPetals();
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -129,7 +155,7 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement removePetal(Requirement requirement, Petal petal) {
-        
+
         Set<Petal> petals = requirement.getPetals();
         petals.remove(petal);
         requirement.setPetals(petals);
@@ -139,7 +165,7 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Collection<Requirement> collectRequirements() {
-        
+
         Query reqs = entityManager.createNamedQuery("Requirement.findAll");
         List<Requirement> reqList = reqs.getResultList();
         Set<Requirement> reqSet = new HashSet<Requirement>();
@@ -149,9 +175,9 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Requirement updateNamespace(Requirement requirement, String namespace) {
-        
+
         requirement.setNamespace(namespace);
-        
+
         return entityManager.merge(requirement);
     }
 
