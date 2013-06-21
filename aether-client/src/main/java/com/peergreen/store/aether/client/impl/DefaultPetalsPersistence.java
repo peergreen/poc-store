@@ -214,12 +214,12 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
 
     @Bind(filter="(staging=true)")
     public void bindStagingProvider(IRepositoryProvider<LocalRepository> provider) {
-        localProvider = provider;
+        stagingProvider = provider;
     }
 
     @Unbind
     public void unbindStagingProvider(IRepositoryProvider<LocalRepository> provider) {
-        localProvider = null;
+        stagingProvider = null;
     }
 
     @Bind(optional=true, aggregate=true)
