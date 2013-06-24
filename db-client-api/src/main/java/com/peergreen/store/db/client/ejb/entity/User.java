@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -34,7 +35,7 @@ public class User {
 
     @ElementCollection  
     @CollectionTable(name = "groupsofuser")
-    @ManyToMany(mappedBy="users")
+    @ManyToMany(mappedBy="users", fetch = FetchType.EAGER)
     private Set<Group> groupSet;
 
     public User() {
