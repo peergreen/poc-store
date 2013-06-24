@@ -130,7 +130,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     }
 
     /**
-     * Method to add a petal to the staging repository
+     * Method to add a petal to the local repository
      * 
      * @param vendor petal's vendor
      * @param artifactId petal's artifactId
