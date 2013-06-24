@@ -46,7 +46,7 @@ public class App {
         Set<Capability> capabilities = new HashSet<>();
         Set<Requirement> requirements = new HashSet<>();
         
-        Vendor vendor = petalController.addVendor("Peergreen",
+        Vendor vendor = petalController.createVendor("Peergreen",
                 "Peergreen is a software company started by the core team" +
                 "who created JOnAS, the Open Application Server used for" +
                 "critical production processes");
