@@ -1,3 +1,2 @@
 Export-Package com.peergreen.store.controller,\
-               com.peergreen.store.controller.resolver,\
                com.peergreen.store.controller.resolver.wrapper
