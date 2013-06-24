@@ -74,14 +74,6 @@ public class DefaultPetalController implements IPetalController {
     Collection<Resource> mandatoryResources;
 
     /**
-     * Default constructor. Initialize attributes.
-     */
-    public DefaultPetalController() {
-//        petalPersistence = new DefaultPetalsPersistence();
-//        resolver = new DefaultResolveContext(resources, wirings, mandatoryResources, null);
-    }
-
-    /**
      * Method to retrieve metadata related to a petal.
      * 
      * @param vendor petal's vendor
@@ -153,14 +145,26 @@ public class DefaultPetalController implements IPetalController {
     }
     
     /**
-     * Method to add a vendor to the database.
+     * Method to create a new vendor on database.
      * 
      * @param vendorName vendor's name
-     * @param description vendor's description
+     * @param vendorDescription vendor's description
      * @return created vendor instance
      */
-    public Vendor addVendor(String vendorName, String description) {
-        return vendorSession.addVendor(vendorName, description);
+    public Vendor createVendor(String vendorName, String vendorDescription) {
+        return vendorSession.addVendor(vendorName, vendorDescription);
+    }
+    
+    /**
+     * Method to add a vendor to a petal.
+     * 
+     * @param vendor vendor to add
+     * @param petal petal to which add the vendor
+     * @return updated petal
+     */
+    public Petal addVendor(Vendor vendor, Petal petal) {
+        // TODO
+        return null;
     }
 
     /**
@@ -168,8 +172,9 @@ public class DefaultPetalController implements IPetalController {
      * 
      * @param vendorName vendor's name
      */
-    public void removeVendor(String vendorName) {
-        vendorSession.deleteVendor(vendorName);
+    public Petal removeVendor(Vendor vendor, Petal petal) {
+        // TODO
+        return null;
     }
 
     /**
@@ -259,7 +264,8 @@ public class DefaultPetalController implements IPetalController {
     @Override
     public Petal updatePetal(Vendor vendor, String artifactId, String version, String description,
             Category category, Set<Requirement> requirements, Set<Capability> capabilities,
-            File petalBinary) {
+            Origin origin, File petalBinary) {
+        // TODO
         return null;
     }
 
@@ -411,17 +417,6 @@ public class DefaultPetalController implements IPetalController {
     public Petal setCategory(Vendor vendor, String artifactId, String version, Category category) {
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         return petalSession.addCategory(petal, category);
-    }
-
-    /**
-     * Method to create a new vendor on database.
-     * 
-     * @param vendorName vendor's name
-     * @param vendorDescription vendor's description
-     */
-    @Override
-    public Vendor createVendor(String vendorName, String vendorDescription) {
-        return vendorSession.addVendor(vendorName, vendorDescription);
     }
 
     @Bind

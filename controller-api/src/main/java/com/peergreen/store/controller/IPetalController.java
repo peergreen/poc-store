@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
-import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
@@ -60,20 +59,31 @@ public interface IPetalController {
             Set<Requirement> unresolvedRequirements);
 
     /**
-     * Method to add a vendor to the database.
+     * Method to create a new vendor on database.
      * 
      * @param vendorName vendor's name
-     * @param description vendor's description
+     * @param vendorDescription vendor's description
      * @return created vendor instance
      */
-    Vendor addVendor(String vendorName, String description);
+    Vendor createVendor(String vendorName, String vendorDescription);
+    
+    /**
+     * Method to add a vendor to a petal.
+     * 
+     * @param vendor vendor to add
+     * @param petal petal to which add the vendor
+     * @return updated petal
+     */
+    Petal addVendor(Vendor vendor, Petal petal);
 
     /**
-     * Method to remove a vendor from the database.
+     * Method to remove a vendor from a petal.
      * 
-     * @param vendorName vendor's name
+     * @param vendor vendor to remove
+     * @param petal petal from which remove the vendor
+     * @return updated petal
      */
-    void removeVendor(String vendorName);
+    Petal removeVendor(Vendor vendor, Petal petal);
 
     /**
      * Method to collect all existing vendors in database.
@@ -103,8 +113,9 @@ public interface IPetalController {
      * @param category petal's category
      * @param requirements petal's requirements
      * @param capabilities petal's capabilities
+     * @param origin the petal's origin
      * @param petalBinary petal's binary
-     * @param origin the petal's origin 
+     * @return corresponding Petal instance
      */
     Petal addPetal(Vendor vendor, String artifactId,
             String version, String description, Category category,
@@ -130,13 +141,14 @@ public interface IPetalController {
      * @param category petal's category
      * @param requirements petal's requirements
      * @param capabilities petal's capabilities
+     * @param origin the petal's origin
      * @param petalBinary petal's petalBinary
-     * @return updated petal
+     * @return updated Petal instance
      */
     Petal updatePetal(Vendor vendor, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
-            File petalBinary);
+            Origin origin, File petalBinary);
 
     /**
      * Method to add a new Capability to the database.
@@ -247,14 +259,5 @@ public interface IPetalController {
      * @return updated category
      */
     Petal setCategory(Vendor vendor, String artifactId, String version, Category category);
-
-    /**
-     * Method to create a new vendor on database.
-     * 
-     * @param vendorName vendor's name
-     * @param vendorDescription vendor's description
-     * @return created vendor instance
-     */
-    Vendor createVendor(String vendorName, String vendorDescription);
-
+    
 }
