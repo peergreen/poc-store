@@ -14,6 +14,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
 
+import com.peergreen.store.db.client.ejb.constraint.validation.CheckEmail;
+
 /**
  * Entity Bean representing in the database the user
  */
@@ -30,7 +32,7 @@ public class User {
     private String pseudo;
     @NotNull
     private String password;
-
+    @CheckEmail(message= "THIS IS NOT AN EMAIL ")
     private String email;
 
     @ElementCollection  

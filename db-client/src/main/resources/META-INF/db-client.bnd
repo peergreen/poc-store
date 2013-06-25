@@ -5,7 +5,8 @@ DynamicImport-Package: *
 Export-Package com.peergreen.store.db.client.ejb.entity,\
                com.peergreen.store.db.client.ejb.session.api,\
                com.peergreen.store.db.client.ejb.key.primary,\
-               com.peergreen.store.db.client.enumeration
+               com.peergreen.store.db.client.enumeration,\
+               com.peergreen.store.db.client.ejb.constraint.validation
 
 -failok= true
 Import-Package: javax.validation.constraints;resolution:=optional
