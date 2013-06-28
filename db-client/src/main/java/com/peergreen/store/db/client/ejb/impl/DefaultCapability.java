@@ -188,7 +188,7 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     @Override
-    public Collection<Capability> collectcapabilities() {
+    public Collection<Capability> collectCapabilities() {
 
         Query capQuery = entityManager.createNamedQuery("Capability.findAll");
         List<Capability> capList = capQuery.getResultList();

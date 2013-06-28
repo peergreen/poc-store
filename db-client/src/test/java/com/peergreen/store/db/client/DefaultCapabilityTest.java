@@ -260,7 +260,7 @@ public class DefaultCapabilityTest {
         when(query.getResultList()).thenReturn(capabilityList);
 
         //when
-        sessionCapability.collectcapabilities();
+        sessionCapability.collectCapabilities();
         //Then
         verify(entityManager).createNamedQuery(queryString);
         verify(query).getResultList();

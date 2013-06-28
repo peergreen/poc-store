@@ -36,7 +36,7 @@ public interface ISessionCapability {
 
     /**
      * Method to change a capability existing namespace
-     * @param capability the capability to modify
+     * @param capability the capability to modify 
      * @param namespace the new namespace of the capability
      * @return The capability with the change updated
      */
@@ -44,7 +44,7 @@ public interface ISessionCapability {
 
     /**
      * Method to change a capability existing properties
-     * @param capability the capability to modify
+     * @param capability the capability to modify 
      * @param properties the new properties of the capability
      * @return The capability with the change updated
      */
@@ -78,12 +78,12 @@ public interface ISessionCapability {
      * @return A new capability with a new list of petals 
      */
     Capability removePetal (Capability capability, Petal petal);
-    
+
     /**
      * Method to collect all the capability in the database
      * 
      * @return A collection of capabilities in the database
      */
-    Collection<Capability> collectcapabilities();
+    Collection<Capability> collectCapabilities();
 
 }
