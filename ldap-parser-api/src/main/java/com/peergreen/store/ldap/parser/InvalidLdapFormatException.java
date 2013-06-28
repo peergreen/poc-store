@@ -1,4 +1,4 @@
-package com.peergreen.store.ldap.parser.exception;
+package com.peergreen.store.ldap.parser;
 
 public class InvalidLdapFormatException extends Exception {
 

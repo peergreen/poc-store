@@ -1,4 +1,4 @@
-package com.peergreen.store.ldap.parser.content;
+package com.peergreen.store.ldap.parser;
 
 public class NodeContent {
 

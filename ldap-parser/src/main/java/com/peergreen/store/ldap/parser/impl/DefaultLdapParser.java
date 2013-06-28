@@ -7,8 +7,9 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 
-import com.peergreen.store.ldap.parser.content.NodeContent;
-import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
+import com.peergreen.store.ldap.parser.ILdapParser;
+import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
+import com.peergreen.store.ldap.parser.NodeContent;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
@@ -20,7 +21,7 @@ import com.peergreen.tree.node.SimpleNode;
 @Component
 @Instantiate
 @Provides
-public class DefaultLdapParser {
+public class DefaultLdapParser implements ILdapParser {
 
     /**
      * Method to parse a LDAP filter to a tree.<br />
@@ -30,6 +31,7 @@ public class DefaultLdapParser {
      * @return tree constructed from LDAP filter parsing.
      * @throws InvalidLdapFormatException
      */
+    @Override
     public Node<NodeContent> parse(String filter) throws InvalidLdapFormatException {
         // only check if expression start and finish with parenthesis
         String regex = "^[(].*[)]$";
@@ -182,7 +184,7 @@ public class DefaultLdapParser {
      * 
      * @param filter filter
      * @param position beginning read position in filter
-     * @return a string containing the operator or <em>empty string</em> if no operator to read
+     * @return a string containing the operator or {@literal empty string} if no operator to read
      */
     protected String readOperator(String filter, int position) {
         String op = "";
@@ -210,7 +212,7 @@ public class DefaultLdapParser {
      * 
      * @param filter filter (LDAP like) from which extract inner parenthesis text
      * @param position opening parenthesis position
-     * @return inner parenthesis text, <em>empty string</em> if incorrect position or no inner text
+     * @return inner parenthesis text, {@literal empty string} if incorrect position or no inner text
      */
     protected String getInnerText(String filter, int position) throws InvalidLdapFormatException {
         String innerText = "";
@@ -246,7 +248,7 @@ public class DefaultLdapParser {
      * Method to check if a character is an operator.
      * 
      * @param c character to check
-     * @return <em>true</em> if the character is an operator (or part of a composed operator), <em>false</em> otherwise
+     * @return {@literal true} if the character is an operator (or part of a composed operator), {@literal false} otherwise
      */
     protected boolean isOperator(char c) {
         return ((c == '&') || (c == '|') || (c == '<') || (c == '=') || (c == '>'));
@@ -257,7 +259,7 @@ public class DefaultLdapParser {
      * Verify every operator node has at least two operands.
      * 
      * @param node root node of tree to check
-     * @return <em>true</em> if tree is valid, <em>false</em> otherwise
+     * @return {@literal true} if tree is valid, {@literal false} otherwise
      * @throws InvalidLdapFormatException
      */
     protected boolean checkTree(Node<NodeContent> node) throws InvalidLdapFormatException {
