@@ -89,12 +89,11 @@ public class DefaultUserTest {
 
 
     @Test
-    public void shouldUpdateUser(){
+    public void shouldUpdateUserPassword(){
         //Given
         String password1 = "pwdbis";
-        String email1 = "titi@peergreen.com";
         //When
-        sessionUser.updateUser(mockuser, pseudo, password1, email1);
+        sessionUser.updatePassword(mockuser, password1);
         //Then
 
         verify(mockuser).setPassword(value.capture());
@@ -102,14 +101,25 @@ public class DefaultUserTest {
 
         when(mockuser.getPassword()).thenReturn(password1);
 
-        verify(mockuser).setEmail(value.capture());
-        Assert.assertEquals(email1, value.getValue());
-
-        when(mockuser.getEmail()).thenReturn(email1);
-
         verify(entityManager).merge(userArgument.capture());
         Assert.assertEquals(password1, userArgument.getValue().getPassword());
-        Assert.assertEquals(email1, userArgument.getValue().getEmail());
+    }
+    
+    @Test
+    public void shouldUpdateUserMail(){
+        //Given
+        String email1 = "titi@peergreen.com";
+        //When
+        sessionUser.updatePassword(mockuser, email1);
+        //Then
+
+        verify(mockuser).setPassword(value.capture());
+        Assert.assertEquals(email1, value.getValue());
+
+        when(mockuser.getPassword()).thenReturn(email1);
+
+        verify(entityManager).merge(userArgument.capture());
+        Assert.assertEquals(email1, userArgument.getValue().getPassword());
     }
 
     @Test

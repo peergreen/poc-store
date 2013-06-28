@@ -45,25 +45,34 @@ public interface IUserController {
      * @return created user
      */
     User addUser(String pseudo, String password, String email);
-    
+
     /**
      * Method to remove a user from the database.
      * 
      * @param pseudo user's pseudo
      */
     void removeUser(String pseudo);
+
+    /**
+     * Method to modify a user account.
+     * 
+     * @param oldUser the user to modify
+     * @param password user's password
+     * @return modified user
+     */
+    
+    public User modifyUserPassword(User oldUser, String password);
     
     /**
      * Method to modify a user account.
      * 
      * @param oldUser the user to modify
-     * @param pseudo user's pseudo
-     * @param password user's password
-     * @param email user's email
+     * @param email user's mail
      * @return modified user
      */
-    User modifyUser(User oldUser, String pseudo, String password, String email);
     
+    public User modifyUserEmail(User oldUser, String email);
+
     /**
      * Method to collect all user's groups.
      * 
@@ -71,5 +80,5 @@ public interface IUserController {
      * @return list of all user's groups
      */
     Collection<Group> collectGroups(String pseudo);
-    
+
 }

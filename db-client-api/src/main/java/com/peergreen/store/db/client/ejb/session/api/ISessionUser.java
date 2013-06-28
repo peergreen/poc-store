@@ -50,16 +50,24 @@ public interface ISessionUser {
     void removeUser(User myUser);
 
     /**
-     * Method to modify a user 
+     * Method to modify a user's password  
      * 
      * @param oldUser the user to modify
-     * @param pseudo the new user's pseudo
      * @param password the new user's password
+     * 
+     * @return The oldUser modify with the new information
+     */
+    User updatePassword( User oldUser, String password);
+
+    /**
+     * Method to modify a user's mail 
+     * 
+     * @param oldUser the user to modify
      * @param email the new user's email
      * 
-     * @return The oldUser modify with the new informations
+     * @return The oldUser modify with the new information
      */
-    User updateUser( User oldUser, String pseudo, String password, String email);
+    User updateMail( User oldUser, String email);
 
     /**
      * Method to add a group to the list of groups to which a user belongs 

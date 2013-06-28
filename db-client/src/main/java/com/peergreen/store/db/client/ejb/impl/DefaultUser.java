@@ -117,27 +117,6 @@ public class DefaultUser implements ISessionUser {
     }
 
     /**
-     * Method to modify a user 
-     * 
-     * @param oldUser the user to modify
-     * @param pseudo the new user's pseudo
-     * @param password the new user's password
-     * @param email the new user's email
-     * 
-     * @return The oldUser modify with the new informations
-     */
-    @Override
-    public User updateUser(User oldUser, String pseudo, String password, String email) {
-
-        oldUser.setPassword(password);
-        oldUser.setEmail(email);
-
-        entityManager.merge(oldUser);
-
-        return oldUser;
-    }
-
-    /**
      * Method to add a group to the list of groups to which a user belongs 
      * 
      * @param user The user that must change the list of groups belonging
@@ -236,10 +215,36 @@ public class DefaultUser implements ISessionUser {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Method to modify a user's password  
+     * 
+     * @param oldUser the user to modify
+     * @param password the new user's password
+     * 
+     * @return The oldUser modify with the new information
+     */
     @Override
-    public Collection<Group> collectGroups() {
-        // TODO Auto-generated method stub
-        return null;
+    public User updatePassword(User oldUser, String password) {
+
+        oldUser.setPassword(password);
+
+        return entityManager.merge(oldUser);
+    }
+
+    /**
+     * Method to modify a user's mail 
+     * 
+     * @param oldUser the user to modify
+     * @param email the new user's email
+     * 
+     * @return The oldUser modify with the new information
+     */
+    @Override
+    public User updateMail(User oldUser, String email) {
+
+        oldUser.setPassword(email);
+
+        return entityManager.merge(oldUser);
     }
 
 }
