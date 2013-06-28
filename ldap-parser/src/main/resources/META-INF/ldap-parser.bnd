@@ -1,0 +1,3 @@
+Export-Package com.peergreen.store.ldap.parser,\
+               com.peergreen.store.ldap.parser.content,\
+               com.peergreen.store.ldap.parser.exception

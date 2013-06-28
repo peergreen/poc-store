@@ -4,6 +4,12 @@
 
   <deployment xsi:type="m2:maven2-deploymentType">
     <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>ldap-parser</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>com.peergreen.store</m2:groupId>
     <m2:artifactId>db-client</m2:artifactId>
     <m2:version>1.0-SNAPSHOT</m2:version>
   </deployment>
