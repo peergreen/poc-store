@@ -81,13 +81,14 @@ public class DefaultGroupTest {
       //Given
       when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
       when(sessionGroup.findGroup(anyString())).thenReturn(null);
+      when(sessionUser.findUserByPseudo(anyString())).thenReturn(mockuser);
       //When
       sessionGroup.addGroup(groupname);
       //Then
       verify(entityManager).persist(groupArgument.capture());
       Assert.assertEquals(groupname, groupArgument.getValue().getGroupname());
       Assert.assertTrue(groupArgument.getValue().getPetals().isEmpty());
-      Assert.assertTrue(groupArgument.getValue().getUsers().isEmpty());
+      Assert.assertTrue(groupArgument.getValue().getUsers().contains(mockuser));
 
       
   }
@@ -97,6 +98,18 @@ public class DefaultGroupTest {
       //Given
       when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
       when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
+      
+      //When
+      sessionGroup.addGroup(groupname);
+     
+  }
+  
+  @Test(expectedExceptions = NoResultException.class)
+  public void shouldThrowExceptionWhenAddGroupCauseNoAdmin() {
+      //Given
+      when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+      when(sessionGroup.findGroup(anyString())).thenReturn(null);
+      when(sessionUser.findUserByPseudo(anyString())).thenReturn(null);
       
       //When
       sessionGroup.addGroup(groupname);

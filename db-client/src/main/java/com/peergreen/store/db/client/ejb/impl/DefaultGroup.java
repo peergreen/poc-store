@@ -56,7 +56,7 @@ public class DefaultGroup implements ISessionGroup {
 
     /**
      * Method to add a new group in the database.
-     * The attributes petals are null when creating the group
+     * The attributes petals are null when creating the group 
      * but we have one user : the administrator
      * It throws an exception "EntityExistsException" 
      * when the entity already exist in the database
@@ -65,7 +65,7 @@ public class DefaultGroup implements ISessionGroup {
      * @return The new group
      */
     @Override
-    public Group addGroup(String groupName) throws EntityExistsException{
+    public Group addGroup(String groupName) throws EntityExistsException, NoResultException{
         Group group = findGroup(groupName) ;
 
         if(group != null) {
@@ -73,6 +73,12 @@ public class DefaultGroup implements ISessionGroup {
         }
         else{
             group = new Group(groupName);
+            User admin = sessionUser.findUserByPseudo("Administrator");
+            if(admin == null){
+                String e = "You have to create the administrator first at all";
+                throw new NoResultException(e);
+            }
+            group.getUsers().add(admin);
             entityManager.persist(group);
             return group;
         }
