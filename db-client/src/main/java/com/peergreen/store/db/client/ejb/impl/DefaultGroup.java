@@ -42,9 +42,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 public class DefaultGroup implements ISessionGroup {
 
     private EntityManager entityManager;
-    
+
     private ISessionUser sessionUser;
-    
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -56,7 +56,8 @@ public class DefaultGroup implements ISessionGroup {
 
     /**
      * Method to add a new group in the database.
-     * The attributes users and petals are null when creating the group
+     * The attributes petals are null when creating the group
+     * but we have one user : the administrator
      * It throws an exception "EntityExistsException" 
      * when the entity already exist in the database
      * 
@@ -249,7 +250,7 @@ public class DefaultGroup implements ISessionGroup {
         return groupSet;
     }
 
-   
+
     /**
      * @param sessionUser the sessionUser to set
      */

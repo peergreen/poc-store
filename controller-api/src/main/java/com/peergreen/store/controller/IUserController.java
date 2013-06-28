@@ -19,7 +19,7 @@ import com.peergreen.store.db.client.ejb.entity.User;
  *
  */
 public interface IUserController {
-    
+
     /**
      * Method to retrieve user's information.
      * 
@@ -27,7 +27,7 @@ public interface IUserController {
      * <em>null</em> if user doesn't exist.
      */
     Map<String, String> getUserMetadata(String pseudo);
-    
+
     /**
      * Method to retrieve a user instance from its pseudo.
      * 
@@ -35,7 +35,7 @@ public interface IUserController {
      * @return corresponding User instance
      */
     User getUser(String pseudo);
-    
+
     /**
      * Method to add a new user to the database.
      * 

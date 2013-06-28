@@ -27,7 +27,8 @@ public interface ISessionGroup {
 
     /**
      * Method to add a new group in the database.
-     * The attributes users and petals are null when creating the group
+     * The attributes petals are null when creating the group 
+     * but we have one user : the administrator
      * 
      * @param groupName the name of the group to create
      * @return The new group

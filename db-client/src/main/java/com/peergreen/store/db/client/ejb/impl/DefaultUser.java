@@ -187,12 +187,12 @@ public class DefaultUser implements ISessionUser {
 
         User user = entityManager.find(User.class, pseudo);
         if(user!=null){
-        return user.getGroupSet();
+            return user.getGroupSet();
         }
         else{
             throw new IllegalArgumentException("This user doesnt exist in the database");
         }
-        
+
     }
 
     /**

@@ -76,7 +76,7 @@ public class DefaultLink implements ISessionLink {
 
         Link temp = findLink(linkUrl);
         if(temp != null){
-        entityManager.remove(temp);
+            entityManager.remove(temp);
         }
         else{
             throw new IllegalArgumentException();

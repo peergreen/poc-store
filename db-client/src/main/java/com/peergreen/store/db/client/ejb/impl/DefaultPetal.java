@@ -282,7 +282,7 @@ public class DefaultPetal implements ISessionPetal {
         groups.add(group);
         petal.setGroups(groups);
         entityManager.merge(petal);
-        
+
         sessionGroup.addPetal(group,petal);
 
         return petal;
@@ -303,7 +303,7 @@ public class DefaultPetal implements ISessionPetal {
         groups.remove(group);
         petal.setGroups(groups);
         entityManager.merge(petal);
-        
+
         sessionGroup.removePetal(group, petal);
 
         return petal;
@@ -355,9 +355,9 @@ public class DefaultPetal implements ISessionPetal {
         Set<Capability> capabilities = petal.getCapabilities();
         capabilities.add(capability);
         petal.setCapabilities(capabilities);
-        
+
         entityManager.merge(petal);
-        
+
         sessionCapability.addPetal(capability, petal);
 
         return petal;
@@ -377,9 +377,9 @@ public class DefaultPetal implements ISessionPetal {
         Set<Capability> capabilities = petal.getCapabilities();
         capabilities.remove(capability);
         petal.setCapabilities(capabilities);
-        
+
         entityManager.merge(petal);
-        
+
         sessionCapability.removePetal(capability, petal);
 
         return petal;
@@ -395,11 +395,11 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addRequirement(Petal petal, Requirement requirement) {
-    
+
         Set<Requirement> requirements = petal.getRequirements();
         requirements.add(requirement);
         petal.setRequirements(requirements);
-        
+
         entityManager.merge(petal);
 
         sessionRequirement.addPetal(requirement, petal);

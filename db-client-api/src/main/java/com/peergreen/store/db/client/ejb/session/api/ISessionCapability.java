@@ -36,18 +36,20 @@ public interface ISessionCapability {
 
     /**
      * Method to change a capability existing namespace
+     * @param capability the capability to modify
      * @param namespace the new namespace of the capability
      * @return The capability with the change updated
      */
     Capability updateNamespace (Capability capability, String namespace);
-    
+
     /**
-     * 
-     * @param capability
-     * @return
+     * Method to change a capability existing properties
+     * @param capability the capability to modify
+     * @param properties the new properties of the capability
+     * @return The capability with the change updated
      */
     Capability updateProperties (Capability capability, Map<String,String> prooperties);
-    
+
     /**
      * Method to collect the petals which give the capability with the name 'capabilityName'
      * 

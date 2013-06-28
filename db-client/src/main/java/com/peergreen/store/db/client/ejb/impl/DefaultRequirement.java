@@ -120,7 +120,7 @@ public class DefaultRequirement implements ISessionRequirement {
 
         Requirement requirement = findRequirement(requirementName);
         if(requirement != null){
-         return requirement.getPetals();
+            return requirement.getPetals();
         }
         else {
             throw new IllegalArgumentException();

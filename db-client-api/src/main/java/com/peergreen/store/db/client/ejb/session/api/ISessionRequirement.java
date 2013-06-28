@@ -60,16 +60,28 @@ public interface ISessionRequirement {
      * @return A new requirement with a new list of petals 
      */
     Requirement removePetal(Requirement requirement, Petal petal);
-    
+
     /**
      * Method to collect all the requirement in the database
      * 
      * @return A collection of requirements in the database
      */
     Collection<Requirement> collectRequirements();
-    
-    Requirement updateNamespace(Requirement requirement, String nameSpace);
-    
+
+    /**
+     * Method to modify a requirement's namespace 
+     * @param requirement the requirement to modify 
+     * @param namespace the new namespace 
+     * @return
+     */
+    Requirement updateNamespace(Requirement requirement, String namespace);
+
+    /**
+     * Method to modify a requirement's filter 
+     * @param requirement the requirement to modify 
+     * @param filter the new filter
+     * @return
+     */
     Requirement updateFilter(Requirement requirement, String filter);
 
 }

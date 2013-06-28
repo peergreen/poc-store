@@ -76,7 +76,7 @@ public interface ISessionPetal {
      * @param newDescription the new description of the petal
      */
     public Petal updateDescription(Petal petal, String newDescription);
-    
+
     /**
      * Method to update the origin of petal
      * 
@@ -118,7 +118,7 @@ public interface ISessionPetal {
      * @param petal An instance of petal
      * @param category A category to set for the petal
      * 
-      * @return A petal with the Category 'category'
+     * @return A petal with the Category 'category'
      */
     Petal addCategory(Petal petal, Category category);
 
@@ -177,26 +177,26 @@ public interface ISessionPetal {
      * @return petals list
      */
     Collection<Petal> collectPetals();
-    
+
     /**
      * Method to collect all the petals in the local repository 
      * 
      * @return A collection of petals coming from the local repository
      */
     Collection<Petal> collectPetalsFromLocal();
-    
+
     /**
      * Method to collect all the petals in the staging repository 
      * 
      * @return A collection of petals coming from the staging repository
      */
     Collection<Petal> collectPetalsFromStaging();
-    
+
     /**
      * Method to collect all the petals in the remote repository 
      * 
      * @return A collection of petals coming from the remote repository
      */
     Collection<Petal> collectPetalsFromRemote();
-    
+
 }

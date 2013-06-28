@@ -41,14 +41,14 @@ public interface ISessionLink {
      * @return The link with the url linkUrl
      */
     Link findLink(String linkUrl);
-    
+
     /**
      * Method to collect all existing links on database.
      * 
      * @return links list
      */
     Collection<Link> collectLinks();
-    
+
     /**
      * Method to modify a link's description
      * 
