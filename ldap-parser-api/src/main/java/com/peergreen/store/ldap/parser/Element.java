@@ -1,12 +1,12 @@
 package com.peergreen.store.ldap.parser;
 
-public class NodeContent {
+public class Element {
 
     private boolean operator;
     private String content;
     private int operandsNb;
     
-    public NodeContent(boolean operator, String content, int operandsNb) {
+    public Element(boolean operator, String content, int operandsNb) {
         this.operator = operator;
         this.content = content;
         this.operandsNb = operandsNb;

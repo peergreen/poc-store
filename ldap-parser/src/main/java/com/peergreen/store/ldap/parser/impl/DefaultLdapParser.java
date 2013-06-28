@@ -9,7 +9,7 @@ import org.apache.felix.ipojo.annotations.Provides;
 
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
-import com.peergreen.store.ldap.parser.NodeContent;
+import com.peergreen.store.ldap.parser.Element;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
@@ -32,11 +32,11 @@ public class DefaultLdapParser implements ILdapParser {
      * @throws InvalidLdapFormatException
      */
     @Override
-    public Node<NodeContent> parse(String filter) throws InvalidLdapFormatException {
+    public Node<Element> parse(String filter) throws InvalidLdapFormatException {
         // only check if expression start and finish with parenthesis
         String regex = "^[(].*[)]$";
 
-        Node<NodeContent> root = null;
+        Node<Element> root = null;
         
         if (filter.matches(regex)) {
             root = parseNode(filter, 1, null);
@@ -56,10 +56,10 @@ public class DefaultLdapParser implements ILdapParser {
      * @return tree constructed from LDAP filter parsing.
      * @throws InvalidLdapFormatException
      */
-    protected Node<NodeContent> parseNode(String filter, int position, Node<NodeContent> parentNode) throws InvalidLdapFormatException {
+    protected Node<Element> parseNode(String filter, int position, Node<Element> parentNode) throws InvalidLdapFormatException {
         char character;
-        NodeContent currentContent;
-        SimpleNode<NodeContent> currentNode = null;
+        Element currentContent;
+        SimpleNode<Element> currentNode = null;
 
         // get the current character, if not at the end of entry
         if (position < filter.length()) {
@@ -70,8 +70,8 @@ public class DefaultLdapParser implements ILdapParser {
 
                 if (!op.isEmpty()) {
                     // create root node
-                    currentContent = new NodeContent(true, op, 0);
-                    currentNode = new SimpleNode<NodeContent>(currentContent);
+                    currentContent = new Element(true, op, 0);
+                    currentNode = new SimpleNode<Element>(currentContent);
 
                     parseNode(filter, position + op.length(), currentNode);
 
@@ -87,8 +87,8 @@ public class DefaultLdapParser implements ILdapParser {
 
                 if (!op.isEmpty()) {
                     // add a new operator child
-                    NodeContent content = new NodeContent(true, op, 0);
-                    currentNode = new SimpleNode<NodeContent>(content);
+                    Element content = new Element(true, op, 0);
+                    currentNode = new SimpleNode<Element>(content);
                     parentNode.getChildren().add(currentNode);
                     currentNode.setParent(parentNode);
 
@@ -106,8 +106,8 @@ public class DefaultLdapParser implements ILdapParser {
 
                     // if following char is an operator
                     if (!op2.isEmpty()) {
-                        NodeContent content = new NodeContent(true, op2, 0);
-                        currentNode = new SimpleNode<NodeContent>(content);
+                        Element content = new Element(true, op2, 0);
+                        currentNode = new SimpleNode<Element>(content);
                         parentNode.getChildren().add(currentNode);
                         currentNode.setParent(parentNode);
 
@@ -135,8 +135,8 @@ public class DefaultLdapParser implements ILdapParser {
                         }
                         
                         // create an operator node (=)
-                        NodeContent opContent = new NodeContent(true, "=", 2);
-                        SimpleNode<NodeContent> opNode = new SimpleNode<NodeContent>(opContent);
+                        Element opContent = new Element(true, "=", 2);
+                        SimpleNode<Element> opNode = new SimpleNode<Element>(opContent);
                         // add node to its parent node
                         parentNode.getChildren().add(opNode);
                         opNode.setParent(parentNode);
@@ -145,8 +145,8 @@ public class DefaultLdapParser implements ILdapParser {
                         
                         // add the two operands (key and value) to the parent operator node (=)
                         for (String s : operands) {
-                            NodeContent content = new NodeContent(false, s, 0);
-                            SimpleNode<NodeContent> node = new SimpleNode<NodeContent>(content);
+                            Element content = new Element(false, s, 0);
+                            SimpleNode<Element> node = new SimpleNode<Element>(content);
                             opNode.addChild(node);
                             node.setParent(opNode);
                         }
@@ -262,15 +262,15 @@ public class DefaultLdapParser implements ILdapParser {
      * @return {@literal true} if tree is valid, {@literal false} otherwise
      * @throws InvalidLdapFormatException
      */
-    protected boolean checkTree(Node<NodeContent> node) throws InvalidLdapFormatException {
+    protected boolean checkTree(Node<Element> node) throws InvalidLdapFormatException {
         if (node.getData().isOperator()) {
             if (node.getData().getOperandsNb() < 2) {
                 throw new InvalidLdapFormatException("Operator must be applied on at least two operands");
             }
         }
 
-        List<Node<NodeContent>> children = node.getChildren();
-        Iterator<Node<NodeContent>> it = children.iterator();
+        List<Node<Element>> children = node.getChildren();
+        Iterator<Node<Element>> it = children.iterator();
         while(it.hasNext()) {
             checkTree(it.next());
         }

@@ -17,6 +17,6 @@ public interface ILdapParser {
      * @return tree constructed from LDAP filter parsing.
      * @throws InvalidLdapFormatException
      */
-    Node<NodeContent> parse(String filter) throws InvalidLdapFormatException;
+    Node<Element> parse(String filter) throws InvalidLdapFormatException;
 
 }
