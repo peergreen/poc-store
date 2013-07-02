@@ -7,9 +7,10 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 
+import com.peergreen.store.ldap.parser.Element;
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
-import com.peergreen.store.ldap.parser.Element;
+import com.peergreen.store.ldap.parser.enumeration.Operators;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
@@ -190,18 +191,20 @@ public class DefaultLdapParser implements ILdapParser {
         String op = "";
 
         if (position < filter.length()) {
-            char c = filter.charAt(position);
-            if (isOperator(c)) {
-                op += c;
+            String s = Character.toString(filter.charAt(position));
+            
+            if (Operators.isOperator(s)) {
+                op = s;
                 if (++position < filter.length()) {
-                    char c2 = filter.charAt(position);
-                    if (isOperator(c2)) {
-                        op += c2;
+                    String s2 = filter.substring(position - 1, position);
+                    if (Operators.isOperator(s2)) {
+                        op = s2;
                     }
                 }
             }
         }
 
+        System.err.println(op);
         return op;
     }
 
