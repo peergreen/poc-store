@@ -7,9 +7,9 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
 
+import com.peergreen.store.ldap.parser.Element;
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
-import com.peergreen.store.ldap.parser.Element;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
@@ -37,7 +37,7 @@ public class DefaultLdapParser implements ILdapParser {
         String regex = "^[(].*[)]$";
 
         Node<Element> root = null;
-        
+
         if (filter.matches(regex)) {
             root = parseNode(filter, 1, null);
         } else {
@@ -112,7 +112,7 @@ public class DefaultLdapParser implements ILdapParser {
                         currentNode.setParent(parentNode);
 
                         // skip operator and continue to parse filter
-                        position += op2.length();
+                        position += op2.length() + 1;
 
                         // operator must be followed by open parenthesis
                         if (filter.charAt(position) != '(') {
@@ -129,11 +129,12 @@ public class DefaultLdapParser implements ILdapParser {
                         }
 
                         String innerText = getInnerText(filter, position);
+                        /*
                         String[] operands = innerText.split("=");
                         if (operands.length != 2) {
                             throw new InvalidLdapFormatException("Leaf content must match pattern \"key=value\".");
                         }
-                        
+
                         // create an operator node (=)
                         Element opContent = new Element(true, "=", 2);
                         SimpleNode<Element> opNode = new SimpleNode<Element>(opContent);
@@ -142,7 +143,7 @@ public class DefaultLdapParser implements ILdapParser {
                         opNode.setParent(parentNode);
                         // increment parent operands number
                         parentNode.getData().setOperandsNb(parentNode.getData().getOperandsNb()+1);
-                        
+
                         // add the two operands (key and value) to the parent operator node (=)
                         for (String s : operands) {
                             Element content = new Element(false, s, 0);
@@ -150,7 +151,13 @@ public class DefaultLdapParser implements ILdapParser {
                             opNode.addChild(node);
                             node.setParent(opNode);
                         }
-
+                        */
+                        
+                        Element content = new Element(false, innerText, 0);
+                        SimpleNode<Element> node = new SimpleNode<Element>(content);
+                        parentNode.getChildren().add(node);
+                        node.setParent(parentNode);
+                        
                         parseNode(filter, position + innerText.length() + 2, parentNode);
 
                         return currentNode;
@@ -162,7 +169,7 @@ public class DefaultLdapParser implements ILdapParser {
 
                     // go back one level in the tree
                     parseNode(filter, position + 1, parentNode.getParent());
-                    
+
                     return parentNode;
                 } else {
                     return null;
@@ -172,7 +179,7 @@ public class DefaultLdapParser implements ILdapParser {
             if (parentNode != null) {
                 throw new InvalidLdapFormatException("Missing closing parenthesis");
             }
-            
+
             return parentNode;
         }
     }
@@ -189,15 +196,26 @@ public class DefaultLdapParser implements ILdapParser {
     protected String readOperator(String filter, int position) {
         String op = "";
 
+        // if filter is not too short to read an operator
         if (position < filter.length()) {
-            char c = filter.charAt(position);
-            if (isOperator(c)) {
-                op += c;
-                if (++position < filter.length()) {
-                    char c2 = filter.charAt(position);
-                    if (isOperator(c2)) {
-                        op += c2;
+            // if long enought to read a composed operator
+            if ((position + 2) < filter.length()) {
+                op = filter.substring(position, position + 2);
+                if (isComposedOperator(op)) {
+                    return op;
+                } else {
+                    if (isSimpleOperator(op.charAt(0))) {
+                        return Character.toString(op.charAt(0));
+                    } else {
+                        op = "";
                     }
+                }
+            } else {
+                op = filter.substring(position, position + 1);
+                if (isSimpleOperator(op.charAt(0))) {
+                    return Character.toString(op.charAt(0));
+                } else {
+                    op = "";
                 }
             }
         }
@@ -245,13 +263,57 @@ public class DefaultLdapParser implements ILdapParser {
     }
 
     /**
-     * Method to check if a character is an operator.
+     * Method to check if a character is a single character operator.
      * 
      * @param c character to check
-     * @return {@literal true} if the character is an operator (or part of a composed operator), {@literal false} otherwise
+     * @return {@literal true} if the character is a single character operator (or part of a composed operator), {@literal false} otherwise
      */
-    protected boolean isOperator(char c) {
-        return ((c == '&') || (c == '|') || (c == '<') || (c == '=') || (c == '>'));
+    protected boolean isSimpleOperator(char c) {
+        return ((c == '&') || (c == '|') || (c == '=') || (c == '!'));
+    }
+
+    /**
+     * Method to check if a String is a composed operator.
+     * 
+     * @param s String to check
+     * @return {@literal true} if the String is a composed operator (or part of a composed operator), {@literal false} otherwise
+     */
+    protected boolean isComposedOperator(String s) {
+        return (s.equals("~=") || s.equals(">=") || s.equals("<="));
+    }
+    
+    /**
+     * Method to check if a String is a compare operator.
+     * 
+     * @param s String to check
+     * @return {@literal true} if the String is a composed operator (or part of a composed operator), {@literal false} otherwise
+     */
+    protected boolean isCompareOperator(String s) {
+        return (s.equals("~=") || s.equals(">=") || s.equals("<=") || s.equals("="));
+    }
+
+    /**
+     * Method to negate the given operator.
+     * 
+     * @param filter operator to negate
+     * @return negated operator or {@literal empty string} if invalid operator given
+     */
+    protected String negate(String filter) {
+        if (!filter.isEmpty()) {
+            String op = readOperator(filter, 0);
+
+            if (!op.isEmpty()) {
+                if (op.equals("<=")) {
+                    return ">";
+                } else if (op.equals(">=")) {
+                    return "<";
+                } else if (op.equals("=")) {
+                    return "<>";
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -265,7 +327,7 @@ public class DefaultLdapParser implements ILdapParser {
     protected boolean checkTree(Node<Element> node) throws InvalidLdapFormatException {
         if (node.getData().isOperator()) {
             if (node.getData().getOperandsNb() < 2) {
-                throw new InvalidLdapFormatException("Operator must be applied on at least two operands");
+//                throw new InvalidLdapFormatException("Operator must be applied on at least two operands");
             }
         }
 
