@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-plan xmlns="http://jonas.ow2.org/ns/deployment-plan/1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:m2="http://jonas.ow2.org/ns/deployment-plan/maven2/1.0">
+
+  <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:artifactId>db-client</m2:artifactId>
+    <m2:version>1.0.0-SNAPSHOT</m2:version>
+  </deployment>
+
+</deployment-plan>
