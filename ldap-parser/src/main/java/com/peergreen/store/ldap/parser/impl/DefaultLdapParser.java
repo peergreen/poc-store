@@ -1,5 +1,6 @@
 package com.peergreen.store.ldap.parser.impl;
 
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.enumeration.Operators;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
+import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 
 /**
  * Tool class to parse a LDAP filter to produce a tree.
@@ -24,6 +26,32 @@ import com.peergreen.tree.node.SimpleNode;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
+    private static TreePrettyPrintNodeVisitor<Element> visitor = new TreePrettyPrintNodeVisitor<Element>(System.out) {
+        @Override
+        protected void doPrintInfo(PrintStream stream, Node<Element> node) {
+            if (node.getData().isOperator()) {
+                stream.printf("OP %s%n", node.getData().getContent());
+            } else {
+                stream.printf("%s%n", node.getData().getContent());
+            }
+        }
+    };
+
+    public static void main(String[] args) {
+        DefaultLdapParser app = new DefaultLdapParser();
+
+        //        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
+        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0))";
+
+        try {
+            Node<Element> res = app.parse(f);
+            res.walk(visitor);
+            app.checkTree(res);
+        } catch (InvalidLdapFormatException e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * Method to parse a LDAP filter to a tree.<br />
      * Automatically check if output tree is valid.
@@ -195,16 +223,17 @@ public class DefaultLdapParser implements ILdapParser {
             
             if (Operators.isOperator(s)) {
                 op = s;
-                if (++position < filter.length()) {
-                    String s2 = filter.substring(position - 1, position);
-                    if (Operators.isOperator(s2)) {
-                        op = s2;
-                    }
+            }
+            
+            position += 1;
+            if (position < filter.length()) {
+                String s2 = filter.substring(position - 1, position + 1);
+                if (Operators.isOperator(s2)) {
+                    op = s2;
                 }
             }
         }
 
-        System.err.println(op);
         return op;
     }
 
