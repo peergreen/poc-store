@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
@@ -186,6 +187,12 @@ public class DefaultRequirement implements ISessionRequirement {
 
         requirement.setFilter(filter);
         return entityManager.merge(requirement);
+    }
+
+    @Override
+    public Collection<Capability> findCapabilities(Requirement requirement) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 
