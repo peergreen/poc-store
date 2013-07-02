@@ -11,9 +11,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
+
+import org.junit.Assert;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
@@ -39,11 +43,15 @@ public class DefaultPetalControllerTestCase {
     @Mock
     private ISessionCapability capabilitySession;
     @Mock
+    Capability mockcapability;
+    @Mock
     private ISessionCategory categorySession;
     @Mock
     private ISessionPetal petalSession;
     @Mock
     private ISessionRequirement requirementSession;
+    @Mock
+    Requirement mockrequirement;
     @Mock
     private ISessionVendor vendorSession;
     @Mock
@@ -86,6 +94,7 @@ public class DefaultPetalControllerTestCase {
 
         // verify persistence.getPetal is called
         petalController.getPetal(vendor, artifactId, version);
+
         verify(petalPersistence).getPetalFromLocal(vendor, artifactId, version);
     }
 
@@ -167,6 +176,19 @@ public class DefaultPetalControllerTestCase {
         verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
     }
 
+//    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistExceptionForCapability() {
+        String capabilityName = "my capability";
+        String namespace = "service";
+        String version = "1.0";
+        Map<String, String> properties = new HashMap<String,String>();
+
+        // verify capabilitySession.addCapability(...) is called
+        petalController.createCapability(capabilityName,version, namespace, properties);
+        petalController.createCapability(capabilityName,version, namespace, properties);
+
+    }
+
     @Test
     public void testCollectCapabilities() {
         // create a petal
@@ -185,6 +207,21 @@ public class DefaultPetalControllerTestCase {
         // verify petalSession.collectCapabilites(...) is called
         petalController.collectCapabilities(vendor, artifactId, version);
         verify(petalSession).collectCapabilities(petal);
+    }
+
+//    @Test
+    public void shouldReturnNullWhenCollectCapabilitiesCausePetalNonExistent() {
+        //Given
+        Vendor vendor = new Vendor();
+        String artifactId = "";
+        String version = "";
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        //when
+        List<Capability> capabilities = petalController.collectCapabilities(vendor, artifactId, version);
+
+        Assert.assertNull(capabilities);
+
     }
 
     @Test
@@ -206,6 +243,19 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).addCapability(petal, capability);
     }
 
+//    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenAddCapabilityCausePetalNonExistent() {
+        //Given
+        Vendor vendor = new Vendor();
+        String artifactId = "";
+        String version = "";
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        //when
+        petalController.addCapability(vendor, artifactId, version, mockcapability);
+
+    }
+
     @Test
     public void testRemoveCapability() {
         Petal petal = new Petal();
@@ -222,16 +272,40 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).removeCapability(petal, capability);
     }
 
+//    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenRemoveCapabilityCausePetalNonExistent() {
+        //Given
+        Vendor vendor = new Vendor();
+        String artifactId = "";
+        String version = "";
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        //when
+        petalController.removeCapability(vendor, artifactId, version, mockcapability);
+
+    }
+
     @Test
     public void testCreateRequirement() {
         String requirementName = "my requirement";
         String namespace = "";
         String filter = "namespace=service";
-        
+
 
         // verify requirementSession.addRequirement(...) is called
         petalController.createRequirement(requirementName,namespace, filter);
         verify(requirementSession).addRequirement(requirementName,namespace, filter);
+    }
+
+//    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistExceptionForRequirement() {
+        String requirementName = "my requirement";
+        String namespace = "";
+        String filter = "namespace=service";
+
+        petalController.createRequirement(requirementName,namespace, filter);
+        petalController.createRequirement(requirementName,namespace, filter);
+
     }
 
     @Test
@@ -254,6 +328,21 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).collectRequirements(petal);
     }
 
+  //  @Test
+    public void shouldReturnNullWhenCollectRequirementCausePetalNonExistent() {
+        //Given
+        Vendor vendor = new Vendor();
+        String artifactId = "";
+        String version = "";
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        //when
+        List<Requirement> requirements = petalController.collectRequirements(vendor, artifactId, version);
+
+        Assert.assertNull(requirements);
+
+    }
+
     @Test
     public void testAddRequirement() {
         Vendor vendor = new Vendor();
@@ -268,6 +357,19 @@ public class DefaultPetalControllerTestCase {
         // verify petalSession.addRequirement(...) is called
         petalController.addRequirement(vendor, artifactId, version, requirement);
         verify(petalSession).addRequirement(petal, requirement);
+    }
+
+   // @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenAddRequirementCausePetalNonExistent() {
+        //Given
+        Vendor vendor = new Vendor();
+        String artifactId = "";
+        String version = "";
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        //when
+        petalController.addRequirement(vendor, artifactId, version, mockrequirement);
+
     }
 
     @Test
@@ -286,6 +388,19 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).removeRequirement(petal, requirement);
     }
 
+//    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenRemoveRequirementCausePetalNonExistent() {
+        //Given
+        Vendor vendor = new Vendor();
+        String artifactId = "";
+        String version = "";
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        //when
+        petalController.removeRequirement(vendor, artifactId, version, mockrequirement);
+
+    }
+
     @Test
     public void testCreateCategory() {
         String categoryName = "Administration";
@@ -293,6 +408,16 @@ public class DefaultPetalControllerTestCase {
         // verify categorySession.addCategory(...) is called
         petalController.createCategory(categoryName);
         verify(categorySession).addCategory(categoryName);
+    }
+
+    //@Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistExceptionForCategory() {
+        String categoryName = "Administration";
+
+        // verify categorySession.addCategory(...) is called
+        petalController.createCategory(categoryName);
+        petalController.createCategory(categoryName);
+
     }
 
     @Test
@@ -308,6 +433,20 @@ public class DefaultPetalControllerTestCase {
         // verify petalSession.getCategory(...) is called
         petalController.getCategory(vendor, artifactId, version);
         verify(petalSession).getCategory(petal);
+    }
+
+   // @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenGetCategoryCausePetalNonExistent() {
+        Vendor vendor = new Vendor();
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+
+        // mock => always return targeted petal
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        // verify petalSession.getCategory(...) is called
+        petalController.getCategory(vendor, artifactId, version);
+
     }
 
     @Test
@@ -326,14 +465,43 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).addCategory(petal, category);
     }
 
+   // @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionWhenSetCategoryCausePetalNonExistent() {
+        Vendor vendor = new Vendor();
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+        Category category = new Category();
+
+        // mock => always return targeted petal
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
+
+        // verify petalSession.getCategory(...) is called
+        petalController.setCategory(vendor, artifactId, version, category);
+
+    }
+
     @Test
     public void testCreateVendor() {
         String vendorName = "Peergreen";
         String vendorDescription = "Software company started by the core team who created JOnAS";
-        
+
         // verify vendorSession.addVendor(...) is called
         petalController.createVendor(vendorName, vendorDescription);
         verify(vendorSession).addVendor(vendorName, vendorDescription);
     }
+
+ // @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldthrowEntityAlreadyExistException() {
+
+        String vendorName = "Peergreen";
+        String vendorDescription = "Software company started by the core team who created JOnAS";
+
+        // verify vendorSession.addVendor(...) is called
+        petalController.createVendor(vendorName, vendorDescription);
+        petalController.createVendor(vendorName, vendorDescription);
+
+    }
+
+
 
 }

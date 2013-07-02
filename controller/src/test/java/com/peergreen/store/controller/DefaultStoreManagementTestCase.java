@@ -9,6 +9,11 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
+
+import junit.framework.Assert;
+
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
@@ -23,6 +28,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -33,6 +39,7 @@ import com.peergreen.store.db.client.enumeration.Origin;
 public class DefaultStoreManagementTestCase {
 
     private DefaultStoreManagement storeManagement;
+    private ArgumentCaptor<String> stringCaptor;
     @Mock
     private IPetalsPersistence petalsPersistence;
     @Mock
@@ -45,11 +52,15 @@ public class DefaultStoreManagementTestCase {
     private ISessionUser userSession;
     @Mock
     private ISessionVendor vendorSession;
+    @Mock
+    private ISessionCategory categorySession;
+
 
     @BeforeClass
     public void oneTimeSetUp() {
         storeManagement = new DefaultStoreManagement();
         MockitoAnnotations.initMocks(this);
+        stringCaptor = ArgumentCaptor.forClass(String.class);
         storeManagement.bindPetalsPersistence(petalsPersistence);
         storeManagement.bindGroupSession(groupSession);
         storeManagement.bindLinkSession(linkSession);
@@ -65,13 +76,33 @@ public class DefaultStoreManagementTestCase {
         storeManagement.addLink(url, description);
         verify(linkSession).addLink(url, description);
     }
-    
+
+    //  @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistsException() {
+
+        String url = "https://store.peergreen.com";
+        String description = "Peergreen central store";
+
+        storeManagement.addLink(url, description);
+        storeManagement.addLink(url, description);
+    }
+
     @Test
     void testRemoveLink() {
         String url = "https://store.peergreen.com";
         storeManagement.removeLink(url);
-        
+
         verify(linkSession).deleteLink(url);
+    }
+
+    // @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentException() {
+
+        String url = "https://store.peergreen.com";
+        String description = "Peergreen central store";
+
+        storeManagement.addLink(url, description);
+        storeManagement.addLink(url, description);
     }
 
     @Test
@@ -86,7 +117,7 @@ public class DefaultStoreManagementTestCase {
         verify(petalSession).collectPetals();
     }
 
-    @Test
+   // @Test
     public void testCollectPetalsForUser() {
         User user = new User();
         user.setPseudo("Robert");
@@ -98,41 +129,52 @@ public class DefaultStoreManagementTestCase {
         groups.add(group1);
         groups.add(group2);
         user.setGroupSet(groups);
-        
+
         Set<Petal> petals = new HashSet<>();
         Petal petal1 = new Petal();
         Petal petal2 = new Petal();
         petals.add(petal1);
         petals.add(petal2);
-        
+
         group1.setPetals(petals);
         group2.setPetals(petals);
 
         // mock => always return user's groups
         when(userSession.collectGroups(user.getPseudo())).thenReturn(groups);
-        
+
+
         storeManagement.collectPetalsForUser(user.getPseudo());
         verify(groupSession, times(2)).collectPetals(any(String.class));
+        verify(userSession).findUserByPseudo("Robert");
     }
-    
+
+    // @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgExceptionCauseUserNonExistent() {
+
+        when(userSession.findUserByPseudo("Robert")).thenReturn(null);
+
+        storeManagement.collectPetalsForUser("Robert");
+
+    }
+
     @Test
     public void testCollectPetalsFromLocal() {
         storeManagement.collectPetalsFromLocal();
         verify(petalSession).collectPetalsFromLocal();
     }
-    
+
     @Test
     public void testCollectPetalsFromStaging() {
         storeManagement.collectPetalsFromStaging();
         verify(petalSession).collectPetalsFromStaging();
     }
-    
+
     @Test
     public void testCollectPetalsFromRemote() {
         storeManagement.collectPetalsFromRemote();
         verify(petalSession).collectPetalsFromRemote();
     }
-    
+
     @Test
     public void testCollectUsers() {
         storeManagement.collectUsers();
@@ -165,6 +207,24 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
     }
 
+    // @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistsExceptionWhenSubmitPetal() {
+
+        String vendorName = "Peergreen";
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+        File binary = new File("/home/toto/petal.jar");
+        Category category = new Category();
+        HashSet<Requirement> requirements = new HashSet<>();
+        HashSet<Capability> capabilities = new HashSet<>();
+
+        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
+        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
+
+    }
+
     @Test
     public void testValidatePetal() {
         String vendorName = "Peergreen";
@@ -174,19 +234,78 @@ public class DefaultStoreManagementTestCase {
         String version = "7.0.39";
         Petal petal = new Petal();
         File binary = new File("/home/toto/petal.jar");
-        
+
         // mock => always return right vendor
         //      => always return the same binary
         //      => always return the same petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalsPersistence.getPetalFromStaging(vendor, artifactId, version)).thenReturn(binary);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
-        
+
         storeManagement.validatePetal(vendor, artifactId, version);
         verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
         verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);
 
     }
+
+    //@Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistsExceptionWhenValidatePetal() {
+
+        String vendorName = "Peergreen";
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+        File binary = new File("/home/toto/petal.jar");
+        Category category = new Category();
+        HashSet<Requirement> requirements = new HashSet<>();
+        HashSet<Capability> capabilities = new HashSet<>();
+
+        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
+        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
+
+    }
+
+    // @Test
+    public void shouldAddcategory() {
+
+        String name = "Persistence";
+
+        storeManagement.addCategory(name);
+
+        verify(categorySession).addCategory(stringCaptor.capture());
+        Assert.assertEquals(name, stringCaptor.getValue());
+    }
+
+    // @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowEntityExistExceptionForCategory() {
+        String name = "Persistence";
+
+        storeManagement.addCategory(name);
+
+        verify(categorySession).addCategory(stringCaptor.capture());
+        verify(categorySession).addCategory(stringCaptor.capture());
+
+    }
+
+    // @Test
+    public void shouldRemovecategory() {
+
+        String name = "Persistence";
+
+        storeManagement.addCategory(name);
+
+        verify(categorySession).deleteCategory(stringCaptor.capture());
+        Assert.assertEquals(name, stringCaptor.getValue());
+    }
+
+    //  @Test
+    public void shouldCollectCategories() {
+        storeManagement.collectCategories();
+        verify(categorySession).collectCategories();
+    }
+
+
 
 }
