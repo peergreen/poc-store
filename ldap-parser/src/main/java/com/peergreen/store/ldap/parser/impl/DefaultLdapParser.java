@@ -40,13 +40,12 @@ public class DefaultLdapParser implements ILdapParser {
     public static void main(String[] args) {
         DefaultLdapParser app = new DefaultLdapParser();
 
-        //        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
-        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0))";
+        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
+//        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0))";
 
         try {
             Node<Element> res = app.parse(f);
             res.walk(visitor);
-            app.checkTree(res);
         } catch (InvalidLdapFormatException e) {
             e.printStackTrace();
         }
@@ -68,7 +67,7 @@ public class DefaultLdapParser implements ILdapParser {
         Node<Element> root = null;
         
         if (filter.matches(regex)) {
-            root = parseNode(filter, 1, null);
+            root = parseNode(filter, 0, null);
         } else {
             throw new InvalidLdapFormatException("LDAP expression must begin and finish with parenthesis");
         }
@@ -86,118 +85,82 @@ public class DefaultLdapParser implements ILdapParser {
      * @throws InvalidLdapFormatException
      */
     protected Node<Element> parseNode(String filter, int position, Node<Element> parentNode) throws InvalidLdapFormatException {
-        char character;
-        Element currentContent;
+        Element currentElement;
         SimpleNode<Element> currentNode = null;
-
-        // get the current character, if not at the end of entry
+        
         if (position < filter.length()) {
-
+            String innerText = getInnerText(filter, position);
+            
             if (parentNode == null) {
                 // root node must be an operator
-                String op = readOperator(filter, position);
+                String op = readOperator(innerText, position);
 
                 if (!op.isEmpty()) {
                     // create root node
-                    currentContent = new Element(true, op, 0);
-                    currentNode = new SimpleNode<Element>(currentContent);
+                    currentElement = new Element(true, op, 0);
+                    currentNode = new SimpleNode<Element>(currentElement);
 
-                    parseNode(filter, position + op.length(), currentNode);
+                    parseNode(filter, position + op.length() + 1, currentNode);
 
                     return currentNode;
                 } else {
                     throw new InvalidLdapFormatException("First character after initial opening parenthesis must be an operator.");
                 }
             } else {
-                // read the character at given position
-                character = filter.charAt(position);
-                // try to read an operator
-                String op = readOperator(filter, position);
-
-                if (!op.isEmpty()) {
-                    // add a new operator child
-                    Element content = new Element(true, op, 0);
-                    currentNode = new SimpleNode<Element>(content);
-                    parentNode.getChildren().add(currentNode);
-                    currentNode.setParent(parentNode);
-
-                    // operator must be followed by open parenthesis
-                    if (filter.charAt(position + op.length()) != '(') {
-                        throw new InvalidLdapFormatException("Operator must be followed by an opening parenthesis");
+                if (!innerText.isEmpty()) {
+                    char c = innerText.charAt(0);
+                
+                    if (c == '(') {
+                        throw new InvalidLdapFormatException("Can not have two following parenthesis.");
+                    } else if(c == ')') {
+                        if (parentNode.getParent() == null && (filter.length() - position) > 1) {
+                            throw new InvalidLdapFormatException("Superfluous parenthesis at the tail");
+                        }
+        
+                        // go back one level in the tree
+                        parseNode(filter, position + 1, parentNode.getParent());
+                        
+                        return parentNode;
                     } else {
-                        parseNode(filter, position + op.length(), currentNode);
-                    }
-
-                    return currentNode;
-                } else if ((character == '(')) {
-                    // try to read an operator
-                    String op2 = readOperator(filter, position + 1);
-
-                    // if following char is an operator
-                    if (!op2.isEmpty()) {
-                        Element content = new Element(true, op2, 0);
-                        currentNode = new SimpleNode<Element>(content);
-                        parentNode.getChildren().add(currentNode);
-                        currentNode.setParent(parentNode);
-
-                        // skip operator and continue to parse filter
-                        position += op2.length();
-
-                        // operator must be followed by open parenthesis
-                        if (filter.charAt(position) != '(') {
-                            throw new InvalidLdapFormatException("Operator must be followed by an opening parenthesis");
+                        String op = readOperator(innerText, 0);
+                        
+                        // operator case
+                        if (!op.isEmpty()) {
+                            // create operator node
+                            Element opElem = new Element(true, op, 0);
+                            SimpleNode<Element> opNode = new SimpleNode<Element>(opElem);
+                            parentNode.getChildren().add(opNode);
+                            opNode.setParent(parentNode);
+                            
+                            // recursive call to parse children
+                            parseNode(filter, position + op.length() + 1, opNode);
+                            
+                            return opNode;
                         } else {
-                            parseNode(filter, position, currentNode);
-                        }
-
-                        return currentNode;
-                    } else {
-                        // couldn't have 2 following parenthesis
-                        if (filter.charAt(position + 1) == '(') {
-                            throw new InvalidLdapFormatException("Couldn't have two following parenthesis");
-                        }
-
-                        String innerText = getInnerText(filter, position);
-                        String[] operands = innerText.split("=");
-                        if (operands.length != 2) {
-                            throw new InvalidLdapFormatException("Leaf content must match pattern \"key=value\".");
-                        }
-                        
-                        // create an operator node (=)
-                        Element opContent = new Element(true, "=", 2);
-                        SimpleNode<Element> opNode = new SimpleNode<Element>(opContent);
-                        // add node to its parent node
-                        parentNode.getChildren().add(opNode);
-                        opNode.setParent(parentNode);
-                        // increment parent operands number
-                        parentNode.getData().setOperandsNb(parentNode.getData().getOperandsNb()+1);
-                        
-                        // add the two operands (key and value) to the parent operator node (=)
-                        for (String s : operands) {
-                            Element content = new Element(false, s, 0);
+                            // create an "operand" node containing innerText
+                            Element content = new Element(false, innerText, 0);
                             SimpleNode<Element> node = new SimpleNode<Element>(content);
-                            opNode.addChild(node);
-                            node.setParent(opNode);
+                            parentNode.getChildren().add(node);
+                            node.setParent(parentNode);
+                            
+                            // parse rest of filter
+                            parseNode(filter, position + innerText.length() + 2, parentNode);
+                            
+                            return node;
                         }
-
-                        parseNode(filter, position + innerText.length() + 2, parentNode);
-
-                        return currentNode;
                     }
-                } else if (character == ')') {
-                    if (parentNode.getParent() == null && (filter.length() - position) > 1) {
-                        throw new InvalidLdapFormatException("Superfluous parenthesis at the tail");
+                } else /* if (innerText.isEmpty()) */ {
+                    if (filter.charAt(position) == ')') {
+                        // go back one level in the tree
+                        parseNode(filter, position + 1, parentNode.getParent());
+                        
+                        return parentNode;
+                    } else {
+                        throw new InvalidLdapFormatException("Missing closing parenthesis");
                     }
-
-                    // go back one level in the tree
-                    parseNode(filter, position + 1, parentNode.getParent());
-                    
-                    return parentNode;
-                } else {
-                    return null;
                 }
-            }
-        } else { // enf if (position < filter.length())
+            } // end if (parentNode == null)
+        } else {
             if (parentNode != null) {
                 throw new InvalidLdapFormatException("Missing closing parenthesis");
             }
@@ -208,7 +171,7 @@ public class DefaultLdapParser implements ILdapParser {
 
     /**
      * Method to read an operator from the specified position in filter.<br />
-     * Operator can be simple (&, |, <, =, >) or composed (<=, >=).<br />
+     * Operator can be simple (&, |, !) or composed (<=, >=, ~=).<br />
      * Be careful, you have to increase position by the length of returned operator.
      * 
      * @param filter filter
@@ -253,20 +216,20 @@ public class DefaultLdapParser implements ILdapParser {
 
         if (position < filter.length()) {
             do {
-                char c2 = filter.charAt(position+loop);
-                if (c2 == ')') {
+                char c = filter.charAt(position+loop);
+                if (c == ')') {
                     openedBr -= 1;
-                } else if (c2 == '(') {
+                } else if (c == '(') {
                     openedBr += 1;
                 }
 
                 // if first parenthesis not already closed, compose innerText
                 if (openedBr > 0 && loop != 0) {
-                    innerText += c2;
+                    innerText += c;
                 }
 
                 loop++;
-            } while(position < filter.length() && openedBr != 0);
+            } while(position + loop < filter.length() && openedBr != 0);
         }
 
         if (((position + loop) == filter.length() - 1) && openedBr != 0) {
@@ -274,16 +237,6 @@ public class DefaultLdapParser implements ILdapParser {
         }
 
         return innerText;
-    }
-
-    /**
-     * Method to check if a character is an operator.
-     * 
-     * @param c character to check
-     * @return {@literal true} if the character is an operator (or part of a composed operator), {@literal false} otherwise
-     */
-    protected boolean isOperator(char c) {
-        return ((c == '&') || (c == '|') || (c == '<') || (c == '=') || (c == '>'));
     }
 
     /**
@@ -297,7 +250,7 @@ public class DefaultLdapParser implements ILdapParser {
     protected boolean checkTree(Node<Element> node) throws InvalidLdapFormatException {
         if (node.getData().isOperator()) {
             if (node.getData().getOperandsNb() < 2) {
-                throw new InvalidLdapFormatException("Operator must be applied on at least two operands");
+//                throw new InvalidLdapFormatException("Operator must be applied on at least two operands");
             }
         }
 
