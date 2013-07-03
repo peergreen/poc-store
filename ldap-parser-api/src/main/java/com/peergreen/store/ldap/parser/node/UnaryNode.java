@@ -3,7 +3,7 @@ package com.peergreen.store.ldap.parser.node;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
-public class UnaryNode<T> extends SimpleNode<T> {
+public class UnaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
 
     private Node<T> child;
     
@@ -11,7 +11,7 @@ public class UnaryNode<T> extends SimpleNode<T> {
         super(data);
     }
 
-    public boolean validateNode() {
+    public boolean validate() {
         return getChildren().size() == 1;
     }
     
