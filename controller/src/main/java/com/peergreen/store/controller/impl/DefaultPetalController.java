@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -67,7 +70,7 @@ public class DefaultPetalController implements IPetalController {
     @Requires
     private IPetalsPersistence petalPersistence;
     /** resolver to get all petal"s transitive dependencies */
-//    private ResolveContext resolver;
+    //    private ResolveContext resolver;
     /** associated variables */
     Collection<Resource> resources;
     Map<Resource, Wiring> wirings;
@@ -114,7 +117,7 @@ public class DefaultPetalController implements IPetalController {
             String version,
             Map<Capability, Set<Petal>> resolvedCapabilities,
             Set<Requirement> unresolvedRequirements) {
-        
+
         // find petal and its requirements
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         Collection<Requirement> requirements = petal.getRequirements();
@@ -122,15 +125,15 @@ public class DefaultPetalController implements IPetalController {
         // for each requirement, retrieve matching capabilities
         for (Requirement requirement : requirements) {
             // need: retrieve capabilities which meet the requirements in a same namespace
-//            Collection<Capability> capabilities = capabilitySession.findCapabilities("namespace", "filtre LDAP");
-            
+            //            Collection<Capability> capabilities = capabilitySession.findCapabilities("namespace", "filtre LDAP");
+
             Collection<Capability> capabilities = new HashSet<>();
-            
+
             // retrieve petals providing the capability
             for (Capability capability : capabilities) {
                 Collection<Petal> petals = capability.getPetals();
                 HashSet<Petal> setPetals = new HashSet<>(petals);
-                
+
                 if (petals.isEmpty()) {
                     // declare missing capability
                     unresolvedRequirements.add(requirement);
@@ -143,7 +146,7 @@ public class DefaultPetalController implements IPetalController {
 
         return null;
     }
-    
+
     /**
      * Method to create a new vendor on database.
      * 
@@ -152,9 +155,15 @@ public class DefaultPetalController implements IPetalController {
      * @return created vendor instance
      */
     public Vendor createVendor(String vendorName, String vendorDescription) {
-        return vendorSession.addVendor(vendorName, vendorDescription);
+        Vendor vendor = null;
+        try{
+            vendor = vendorSession.addVendor(vendorName, vendorDescription);
+        }catch(EntityExistsException e){
+
+        }
+        return vendor;
     }
-    
+
     /**
      * Method to add a vendor to a petal.
      * 
@@ -185,7 +194,7 @@ public class DefaultPetalController implements IPetalController {
     public Collection<Vendor> collectVendors() {
         return vendorSession.collectVendors();
     }
-    
+
     /**
      * Method to retrieve a petal from the local store.
      * 
@@ -216,8 +225,19 @@ public class DefaultPetalController implements IPetalController {
     @Override
     public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) {
+
         petalPersistence.addToLocal(vendor, artifactId, version, petalBinary);
-        return petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin);
+
+        Petal petal = null;
+
+        try{
+            petal = petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin);
+        }catch(EntityNotFoundException e){
+
+        }catch(EntityExistsException e1){
+
+        }
+        return petal; 
     }
 
     /**
@@ -279,7 +299,14 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public Capability createCapability(String capabilityName,String version, String namespace, Map<String,String> properties) {
-        return capabilitySession.addCapability(capabilityName,version, namespace, properties);
+        Capability capability = null; 
+        try{
+            capability= capabilitySession.addCapability(capabilityName,version, namespace, properties);
+        }
+        catch(EntityExistsException e){
+
+        }
+        return capability;
     }
 
     /**
@@ -334,7 +361,14 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public Requirement createRequirement(String requirementName, String namespace, String filter) {
-        return requirementSession.addRequirement(requirementName,namespace,filter);
+        Requirement requirement = null;
+        try
+        {
+            requirement = requirementSession.addRequirement(requirementName,namespace,filter);
+        }catch(EntityExistsException e){
+
+        }
+        return requirement;
     }
 
     /**
@@ -387,7 +421,14 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public Category createCategory(String categoryName) {
-        return categorySession.addCategory(categoryName);
+        Category category = null;
+        try{
+            category = categorySession.addCategory(categoryName);
+        }
+        catch(EntityExistsException e){
+
+        }
+        return category;
     }
 
     /**

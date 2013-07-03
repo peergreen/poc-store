@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityExistsException;
+
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -33,11 +35,11 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 public class DefaultUserController implements IUserController {
 
     private ISessionUser userSession;
-    
+
     public DefaultUserController(@Requires ISessionUser userSession) {
         this.userSession = userSession;
     }
-    
+
     /**
      * Method to retrieve user's information.
      * 
@@ -51,7 +53,7 @@ public class DefaultUserController implements IUserController {
         metadata.put("pseudo", user.getPseudo());
         metadata.put("password", user.getPassword());
         metadata.put("email", user.getEmail());
-        
+
         return metadata;
     }
 
@@ -76,7 +78,14 @@ public class DefaultUserController implements IUserController {
      */
     @Override
     public User addUser(String pseudo, String password, String email) {
-        return userSession.addUser(pseudo, password, email);
+        User user = null;
+
+        try{
+            user = userSession.addUser(pseudo, password, email);
+        }catch(EntityExistsException e){
+
+        }
+        return user;
     }
 
     /**
@@ -86,7 +95,11 @@ public class DefaultUserController implements IUserController {
      */
     @Override
     public void removeUser(String pseudo) {
-        userSession.removeUserbyPseudo(pseudo);
+        try{
+            userSession.removeUserbyPseudo(pseudo);
+        }catch(IllegalArgumentException e){
+
+        }
     }
 
     /**
@@ -100,7 +113,7 @@ public class DefaultUserController implements IUserController {
     public User modifyUserPassword(User oldUser, String password) {
         return userSession.updatePassword(oldUser, password);
     }
-    
+
     /**
      * Method to modify a user account.
      * 
@@ -121,7 +134,14 @@ public class DefaultUserController implements IUserController {
      */
     @Override
     public Collection<Group> collectGroups(String pseudo) {
-        return userSession.collectGroups(pseudo);
+        Collection<Group> groups = null;
+        try{
+            groups = userSession.collectGroups(pseudo);
+        }
+        catch(IllegalArgumentException e){
+
+        }
+        return groups; 
     }
 
     @Bind

@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -64,7 +67,14 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Link addLink(String url, String description) {
-        return linkSession.addLink(url, description);
+        Link link = null;
+        try{
+            link = linkSession.addLink(url, description);
+        }
+        catch(EntityExistsException e){
+
+        }
+        return link;
     }
 
     /**
@@ -74,7 +84,12 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public void removeLink(String linkUrl) {
-        linkSession.deleteLink(linkUrl);
+        try{
+            linkSession.deleteLink(linkUrl);
+        }
+        catch(IllegalArgumentException e){
+
+        }
     }
 
     /**
@@ -86,7 +101,7 @@ public class DefaultStoreManagement implements IStoreManagment {
     public Collection<Link> collectLinks() {
         return linkSession.collectLinks();
     }
-    
+
     /**
      * Method to add a new category to the database.
      * 
@@ -94,7 +109,14 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @return created Category instance
      */
     public Category addCategory(String name) {
-        return categorySession.addCategory(name);
+        Category category = null;
+        try{
+            category = categorySession.addCategory(name);
+        }
+        catch(EntityExistsException e){
+
+        }
+        return category;
     }
 
     /**
@@ -103,7 +125,11 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param ame of the category to remove
      */
     public void removeCategory(String name) {
-        categorySession.deleteCategory(name);
+        try{
+            categorySession.deleteCategory(name);
+        }catch(IllegalArgumentException e){
+
+        }
     }
 
     /**
@@ -134,22 +160,27 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public Collection<Petal> collectPetalsForUser(String pseudo) {
-        Collection<Group> groups = userSession.collectGroups(pseudo);
-        Iterator<Group> it = groups.iterator();
-        
+        Collection<Group> groups = null;
         Collection<Petal> petals = null;
-        
-        // retrieve all petals for each group
-        while (it.hasNext()) {
-            Group g = it.next();
-            Collection<Petal> p = groupSession.collectPetals(g.getGroupname());
-            if (petals != null) {
-                petals.addAll(p);
-            } else {
-                petals = p;
+
+        try{
+            groups = userSession.collectGroups(pseudo);
+            Iterator<Group> it = groups.iterator();
+            // retrieve all petals for each group
+            while (it.hasNext()) {
+                Group g = it.next();
+                Collection<Petal> p = groupSession.collectPetals(g.getGroupname());
+                if (petals != null) {
+                    petals.addAll(p);
+                } else {
+                    petals = p;
+                }
             }
         }
-        
+        catch(IllegalArgumentException e){
+
+        }
+
         return petals;
     }
 
@@ -162,7 +193,7 @@ public class DefaultStoreManagement implements IStoreManagment {
     public Collection<Petal> collectPetalsFromLocal() {
         return petalSession.collectPetalsFromLocal();
     }
-    
+
     /**
      * Method to collect petals in the staging repository.
      * 
@@ -172,7 +203,7 @@ public class DefaultStoreManagement implements IStoreManagment {
     public Collection<Petal> collectPetalsFromStaging() {
         return petalSession.collectPetalsFromStaging();
     }
-    
+
     /**
      * Method to collect petals in all associated remote repositories.
      * 
@@ -221,11 +252,18 @@ public class DefaultStoreManagement implements IStoreManagment {
     public Petal submitPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
         petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
-        petalSession.addPetal(vendor, artifactId, version, description,
-                category, capabilities, requirements, Origin.STAGING);
-        
-         //     Vendor vendor = vendorSession.findVendor(vendorName);
-  
+        try{
+            petalSession.addPetal(vendor, artifactId, version, description,
+                    category, capabilities, requirements, Origin.STAGING);
+        }catch(EntityNotFoundException e){
+
+        }catch(EntityExistsException e1){
+
+        }
+
+
+        //     Vendor vendor = vendorSession.findVendor(vendorName);
+
         return petalSession.findPetal(vendor, artifactId, version);
     }
 
@@ -245,10 +283,10 @@ public class DefaultStoreManagement implements IStoreManagment {
         // add this petal in local repository
         petalsPersistence.addToLocal(vendor, artifactId, version, binary);
         // change origin attribute to LOCAL
-       // Vendor vendor = vendorSession.findVendor(vendorName);
+        // Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         petalSession.updateOrigin(petal, Origin.LOCAL);
-        
+
         return petal;
     }
 
@@ -256,12 +294,12 @@ public class DefaultStoreManagement implements IStoreManagment {
     public void bindPetalsPersistence(IPetalsPersistence petalsPersistence) {
         this.petalsPersistence = petalsPersistence;
     }
-    
+
     @Bind
     public void bindCategorySession(ISessionCategory categorySession) {
         this.categorySession = categorySession;
     }
-    
+
     @Bind
     public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;
