@@ -92,7 +92,7 @@ public class DefaultGroup implements ISessionGroup {
      * @return the group with the name 'groupName'
      */
     @Override
-    public Group findGroup(String groupName)throws NoResultException {
+    public Group findGroup(String groupName){
         Query q = entityManager.createNamedQuery("GroupByName");
         q.setParameter("name", groupName);
         Group result;

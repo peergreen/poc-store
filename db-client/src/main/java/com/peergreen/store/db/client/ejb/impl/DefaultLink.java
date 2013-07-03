@@ -22,18 +22,14 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
  *      <li>Remove a link from the database</li>
  *      <li>Find a link from the database</li>
  *      <li>Collect all existing links on database</li>
+ *      <li>Modify existing link changing his description</li>
  * </ul>
  * 
  */
 @Stateless
 public class DefaultLink implements ISessionLink {
 
-
     private EntityManager entityManager;
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
 
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
@@ -51,7 +47,7 @@ public class DefaultLink implements ISessionLink {
      * @return A new instance of link
      */
     @Override
-    public Link addLink(String url, String description) {
+    public Link addLink(String url, String description) throws EntityExistsException{
         Link link = findLink(url);
         if(link != null){
             throw new EntityExistsException();
@@ -60,7 +56,6 @@ public class DefaultLink implements ISessionLink {
             entityManager.persist(link);
             return link;
         }
-
 
     }
 
@@ -72,7 +67,7 @@ public class DefaultLink implements ISessionLink {
      * @param linkUrl the url of the link to delete
      */
     @Override
-    public void deleteLink(String linkUrl) {
+    public void deleteLink(String linkUrl) throws IllegalArgumentException {
 
         Link temp = findLink(linkUrl);
         if(temp != null){
@@ -92,7 +87,7 @@ public class DefaultLink implements ISessionLink {
      * @return The link with the url linkUrl
      */
     @Override
-    public Link findLink(String linkUrl)throws NoResultException {
+    public Link findLink(String linkUrl) {
         Query q = entityManager.createNamedQuery("LinkByUrl");
         q.setParameter("url", linkUrl);
         Link result;
@@ -118,7 +113,15 @@ public class DefaultLink implements ISessionLink {
         linkSet.addAll(usersList);
         return linkSet;
     }
-
+    
+    /**
+     * Method to modify the description of an Link
+     * 
+     * @param oldLink the link to modify
+     * @param newDescription the new description of the Link
+     * 
+     * @return the modify link
+     */
     @Override
     public Link updateDescription(Link oldLink, String newDescription) {
 

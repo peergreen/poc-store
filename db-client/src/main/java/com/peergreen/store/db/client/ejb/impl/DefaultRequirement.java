@@ -96,7 +96,7 @@ public class DefaultRequirement implements ISessionRequirement {
      * @return the capacity with the name 'requirementName'
      */
     @Override
-    public Requirement findRequirement(String requirementName) throws NoResultException{
+    public Requirement findRequirement(String requirementName){
         Query q = entityManager.createNamedQuery("RequirementByName");
         q.setParameter("name", requirementName);
         Requirement result;
