@@ -40,8 +40,8 @@ public class DefaultLdapParser implements ILdapParser {
     public static void main(String[] args) {
         DefaultLdapParser app = new DefaultLdapParser();
 
-        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
-//        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0))";
+//        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
+        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0)))";
 
         try {
             Node<Element> res = app.parse(f);
@@ -93,7 +93,7 @@ public class DefaultLdapParser implements ILdapParser {
             
             if (parentNode == null) {
                 // root node must be an operator
-                String op = readOperator(innerText, position);
+                String op = readOperator(innerText, 0);
 
                 if (!op.isEmpty()) {
                     // create root node
@@ -105,13 +105,14 @@ public class DefaultLdapParser implements ILdapParser {
                     return currentNode;
                 } else {
                     throw new InvalidLdapFormatException("First character after initial opening parenthesis must be an operator.");
+                    // TODO Can be a leaf too. ex: filter (artifactId=Store)
                 }
             } else {
                 if (!innerText.isEmpty()) {
                     char c = innerText.charAt(0);
                 
                     if (c == '(') {
-                        throw new InvalidLdapFormatException("Can not have two following parenthesis.");
+                        throw new InvalidLdapFormatException("Cannot have two following parenthesis.");
                     } else if(c == ')') {
                         if (parentNode.getParent() == null && (filter.length() - position) > 1) {
                             throw new InvalidLdapFormatException("Superfluous parenthesis at the tail");
