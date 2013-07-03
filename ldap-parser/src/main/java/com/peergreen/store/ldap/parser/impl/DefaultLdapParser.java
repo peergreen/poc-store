@@ -41,7 +41,7 @@ public class DefaultLdapParser implements ILdapParser {
         DefaultLdapParser app = new DefaultLdapParser();
 
 //        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
-        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0)))";
+        String f = "(~=(groupId=com.peergreen.store)(artifactId=controller)(version=1.6.0))";
 
         try {
             Node<Element> res = app.parse(f);
