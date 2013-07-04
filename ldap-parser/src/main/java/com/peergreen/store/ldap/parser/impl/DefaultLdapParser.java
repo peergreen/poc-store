@@ -19,7 +19,6 @@ import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.OperandNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
 import com.peergreen.tree.Node;
-import com.peergreen.tree.node.SimpleNode;
 import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 
 /**
@@ -88,8 +87,6 @@ public class DefaultLdapParser implements ILdapParser {
      * @throws InvalidLdapFormatException
      */
     protected Node<String> parseNode(String filter, int position, Node<String> parentNode) throws InvalidLdapFormatException {
-        SimpleNode<String> currentNode = null;
-        
         if (position < filter.length()) {
             String innerText = getInnerText(filter, position);
             
