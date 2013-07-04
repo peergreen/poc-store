@@ -28,4 +28,9 @@ public class BinaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
             return null;
         }
     }
+    
+    @Override
+    public void setParent(Node<T> parentNode) {
+        super.setParent(parentNode);
+    }
 }

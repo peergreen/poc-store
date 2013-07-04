@@ -22,4 +22,9 @@ public class UnaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
     public void setChild(Node<T> child) {
         this.child = child;
     }
+    
+    @Override
+    public void setParent(Node<T> parentNode) {
+        super.setParent(parentNode);
+    }
 }
