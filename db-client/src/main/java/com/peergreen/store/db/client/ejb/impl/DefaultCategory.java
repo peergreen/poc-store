@@ -25,18 +25,15 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
  *      <li>Collect all the petals that belongs to a category</li>>
  *      <li>Add a petal to those which belongs to a category</li>
  *      <li>Remove a petal from those which belongs to a category</li>
+ *      <li>Collect all categories on database</li>
  * </ul>
  * 
  */
 @Stateless
 public class DefaultCategory implements ISessionCategory{
 
+    private EntityManager entityManager;
 
-    private EntityManager entityManager = null;
-
-    EntityManager getEntityManager() {
-        return entityManager;
-    }
     @PersistenceContext 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -81,7 +78,8 @@ public class DefaultCategory implements ISessionCategory{
             entityManager.remove(temp);
         }
         else{
-            throw new IllegalArgumentException();
+            String message = "the category to delete doesn't exist";
+            throw new IllegalArgumentException(message);
         }
     }
 
@@ -94,7 +92,7 @@ public class DefaultCategory implements ISessionCategory{
      * @return the category with the name categoryName
      */
     @Override
-    public Category findCategory(String categoryName)throws NoResultException {
+    public Category findCategory(String categoryName){
         Query q = entityManager.createNamedQuery("CategoryByName");
         q.setParameter("name", categoryName);
         Category result;
@@ -109,7 +107,7 @@ public class DefaultCategory implements ISessionCategory{
     /**
      * Method to collect all the petals which belongs to the category
      * with the name categoryName. It throws an IllegalArgumentException
-     * when the category doesn't exists
+     * when the category doesn't exist.
      * 
      * @param categoryName the name of the category whose petals are collected
      *  
@@ -131,7 +129,7 @@ public class DefaultCategory implements ISessionCategory{
     }
 
     /**
-     * Method to add a new petal to a category
+     * Method to add a new petal to a category.
      * 
      * @param category the category to which add a new petal
      * @param petal the petal to add to the category
@@ -166,7 +164,7 @@ public class DefaultCategory implements ISessionCategory{
     /**
      * Method to collect all the category in the database
      * 
-     * @return A collection of cetegories in the database
+     * @return A collection of categories in the database
      */
     @Override
     public Collection<Category> collectCategories() {

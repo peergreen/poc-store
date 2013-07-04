@@ -62,7 +62,8 @@ public class DefaultUser implements ISessionUser {
     }
 
     /**
-     * Method to find a user
+     * Method to find a user.
+     * It returns null if the user doesn't exist.
      * 
      * @param pseudo the pseudo of the user to find 
      * 
@@ -201,7 +202,7 @@ public class DefaultUser implements ISessionUser {
 
             return petals;}
         else{
-            throw new IllegalArgumentException("This user doesnt exist in the database");
+            throw new IllegalArgumentException("This user doesn't exist in the database");
         }
     }
 

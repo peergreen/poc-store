@@ -31,6 +31,12 @@
       <artifactId>db-client-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.peergreen.tree</groupId>
+      <artifactId>peergreen-tree</artifactId>
+      <version>1.0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <properties>

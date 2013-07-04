@@ -10,7 +10,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -27,40 +26,36 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
  *      <li>Collect all the petals that have the capability</li>>
  *      <li>Add a petal to the list of petals of a capability</li>
  *      <li>Remove a petal from the list of petals of a capability</li>
+ *      <li>Collect all existing capabilities on database</li>
+ *      <li>Modify existing capability changing his namespace</li>
+ *      <li>Modify existing capability changing his properties</li>
  * </ul>
  * 
  */
 @Stateless
 public class DefaultCapability implements ISessionCapability{
 
-
     private EntityManager entityManager;
-
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
 
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
-
-
     /**
      * Method to add a new capability in the database.
+     * The attributes petals is empty when the capability is created
      * 
      * @param capabilityName the capability's name
      * @param namespace the capability's namespace
      * @param properties the capability's properties
-     * @param petal the petal which provides this capability
-     * @return The capability creates
+
+     * @return The capability that was created
      */
     @Override
     public Capability addCapability(String capabilityName,String version, String namespace, Map<String, String> properties) throws EntityExistsException {
 
         Capability temp = findCapability(capabilityName, version);
-
         if(temp != null){
 
             throw new EntityExistsException();
@@ -76,12 +71,12 @@ public class DefaultCapability implements ISessionCapability{
 
     }
 
-
-
     /**
-     * Method to delete a capability in the database
+     * Method to delete a capability in the database.
+     * We throw an exception if the capability to delete doesn't exist
      * 
      * @param capabilityName the capability's name
+     * @param version the capability's version 
      */
     @Override
     public void deleteCapability(String capabilityName, String version)throws IllegalArgumentException {
@@ -98,13 +93,14 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     /**
-     * Method to find a capability in the database
+     * Method to find a capability in the database.
+     * If the capability to find doesn't exist, we return null
      * 
      * @param capabilityName the capability's name
      * @return the capacity with the name 'capabilityName'
      */
     @Override
-    public Capability findCapability(String capabilityName, String version) throws NoResultException{
+    public Capability findCapability(String capabilityName, String version){
 
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
@@ -123,21 +119,25 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     /**
-     * Method to collect the petals which give the capability with the name 'capabilityName'
+     * Method to collect the petals which give a capability.
+     * We throw a new exception when the capability doesn't exist 
      * 
      * @param name the capability's name
+     * @param version the capability's version 
+     * 
      * @return A collection of all the petals which give this capability
      */
     @Override
     public Collection<Petal> collectPetals(String capabilityName, String version) throws IllegalArgumentException {
 
-        Capability capability = this.findCapability(capabilityName,version);
+        Capability capability = findCapability(capabilityName,version);
         if(capability != null){
             return capability.getPetals();
         }
         else
         {
-            throw new IllegalArgumentException();
+            String message = " The capability doesn't exist";
+            throw new IllegalArgumentException(message);
         }
     }
 
@@ -187,6 +187,11 @@ public class DefaultCapability implements ISessionCapability{
         return capability;
     }
 
+    /**
+     * Method to collect all the capabilities in the database 
+     * 
+     * @return A collection of all the capabilities which are stored in the database 
+     */
     @Override
     public Collection<Capability> collectCapabilities() {
 
@@ -198,6 +203,14 @@ public class DefaultCapability implements ISessionCapability{
         return capSet;
     }
 
+    /**
+     * Method to change a capability's namespace
+     * 
+     * @param capability the capability to modify 
+     * @param namespace the new namespace 
+     * 
+     * @return The capability with new attribute 
+     */
     @Override
     public Capability updateNamespace(Capability capability, String namespace) {
 
@@ -205,11 +218,19 @@ public class DefaultCapability implements ISessionCapability{
         return entityManager.merge(capability);
 
     }
-
+    
+    /**
+     * Method to change a capability's properties
+     * 
+     * @param capability the capability to modify 
+     * @param properties new properties for the capability 
+     * 
+     * @return The capability with new attribute 
+     */
     @Override
-    public Capability updateProperties(Capability capability, Map<String, String> prooperties) {
+    public Capability updateProperties(Capability capability, Map<String, String> properties) {
 
-        capability.setProperties(prooperties);
+        capability.setProperties(properties);
         return entityManager.merge(capability);
 
     }

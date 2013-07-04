@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeClass;
@@ -42,6 +44,16 @@ public class DefaultGroupControllerTestCase {
         verify(groupSession).addGroup(groupName);
     }
 
+    //    @Test(expectedExceptions = EntityExistsException.class)
+    public void shouldThrowExceptionGroupAlreadyExist() {
+        //Given
+        String groupName = "Administrator";
+        groupController.addGroup(groupName);
+        //When 
+        groupController.addGroup(groupName);
+        //then, this should throw an exception 
+
+    }
 
     @Test
     public void testRemoveGroup() {
@@ -55,27 +67,43 @@ public class DefaultGroupControllerTestCase {
         groupController.removeGroup(groupName);
         verify(groupSession).deleteGroup(groupName);
     }
-    
+
+    //    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionCauseGroupNonExistent() {
+
+        //when
+        groupController.removeGroup("Inexist");
+        //then throw an Illegal Argument Exception 
+    }
+
     @Test
     public void testCollectUser() {
         String groupName = "myGroup";
-        
+
         // mock facade => always return empty collection
         Collection<User> list = new ArrayList<>();
         when(groupSession.collectUsers(groupName)).thenReturn(list);
-        
+
         // verify groupSession.collectUsers(...) is called
         groupController.collectUsers(groupName);
         verify(groupSession).collectUsers(groupName);
     }
-    
+
+    //    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void shouldThrowExceptionCauseGroupNonExistentBis() {
+
+        //when
+        groupController.collectUsers("Inexist");
+        //then throw an Illegal Argument Exception 
+    }
+
     @Test
     public void testAddUser() {
         // user to add
         String pseudo = "toto";
         User user = new User();
         user.setPseudo(pseudo);
-        
+
         String groupName = "myGroup";
         // entity instance before user add
         Group groupBefore = new Group();
@@ -83,7 +111,7 @@ public class DefaultGroupControllerTestCase {
         // entity instance after user add
         Group groupAfter = new Group();
         groupAfter.setGroupname(groupName);
-        
+
         // add the user to groupAfter
         Set<User> list = new HashSet<User>();
         list.add(user);
@@ -91,26 +119,26 @@ public class DefaultGroupControllerTestCase {
 
         // mock facade => always find group called groupName
         when(groupSession.findGroup(groupName)).thenReturn(groupBefore);
-        
+
         // mock facade => always find user called pseudo
         when(userSession.findUserByPseudo(pseudo)).thenReturn(user);
-        
+
         // mock facade => return a group
         // with a user list containing the user
         when(groupSession.addUser(groupBefore, user)).thenReturn(groupAfter);
-        
+
         // verify groupSession.collectUsers(...) is called
         groupController.addUser(groupName, pseudo);
         verify(groupSession).addUser(groupBefore, user);
     }
-    
+
     @Test
     public void testRemoveUser() {
         // user to add
         String pseudo = "toto";
         User user = new User();
         user.setPseudo(pseudo);
-        
+
         String groupName = "myGroup";
         // entity instance before user add
         Group groupBefore = new Group();
@@ -122,17 +150,17 @@ public class DefaultGroupControllerTestCase {
         // entity instance after user add
         Group groupAfter = new Group();
         groupAfter.setGroupname(groupName);
-        
+
         // mock facade => always find group called groupName
         when(groupSession.findGroup(groupName)).thenReturn(groupBefore);
-        
+
         // mock facade => always find user called pseudo
         when(userSession.findUserByPseudo(pseudo)).thenReturn(user);
-        
+
         // mock facades => always return group with empty collection
         when(userSession.findUserByPseudo(pseudo)).thenReturn(user);
         when(groupSession.removeUser(groupBefore, user)).thenReturn(groupAfter);
-        
+
         // verify groupSession.collectUsers(...) is called
         groupController.removeUser(groupName, pseudo);
         verify(groupSession).removeUser(groupBefore, user);

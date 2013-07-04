@@ -2,6 +2,8 @@ package com.peergreen.store.controller.impl;
 
 import java.util.Collection;
 
+import javax.persistence.EntityExistsException;
+
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -32,7 +34,7 @@ public class DefaultGroupController implements IGroupController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;
-    
+
     /**
      * Method to add a new group in database.
      * 
@@ -41,7 +43,12 @@ public class DefaultGroupController implements IGroupController {
      */
     @Override
     public Group addGroup(String groupName) {
-        return groupSession.addGroup(groupName);
+        try{
+            return groupSession.addGroup(groupName);
+        } catch(EntityExistsException e){
+
+        }
+        return null;
     }
 
 
@@ -52,7 +59,11 @@ public class DefaultGroupController implements IGroupController {
      */
     @Override
     public void removeGroup(String groupName) {
-        groupSession.deleteGroup(groupName);
+        try{
+            groupSession.deleteGroup(groupName);
+        }catch(IllegalArgumentException e){
+
+        }
     }
 
     /**
@@ -63,7 +74,12 @@ public class DefaultGroupController implements IGroupController {
      */
     @Override
     public Collection<User> collectUsers(String groupName) {
-        return groupSession.collectUsers(groupName);
+        try{
+            return groupSession.collectUsers(groupName);
+        }catch(IllegalArgumentException e) {
+            
+        }
+        return null;
     }
 
     /**
@@ -98,10 +114,10 @@ public class DefaultGroupController implements IGroupController {
     public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;
     }
-    
+
     @Bind
     public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
     }
-    
+
 }

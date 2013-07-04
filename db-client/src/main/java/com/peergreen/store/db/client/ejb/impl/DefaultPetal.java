@@ -51,6 +51,9 @@ import com.peergreen.store.db.client.enumeration.Origin;
  *      <li>Collect all existing petals on database</li>
  *      <li>Retrieve petal's origin {LOCAL, STAGING, REMOTE}</li>
  *      <li>Set petal's origin {LOCAL, STAGING, REMOTE}</li>
+ *      <li>Collect all existing petals in the Local repository on database</li>
+ *      <li>Collect all existing petals in the Staging repository on database</li>
+ *      <li>Collect all existing petals in the Remote repository on database</li>
  * </ul>
  * 
  */
@@ -113,7 +116,11 @@ public class DefaultPetal implements ISessionPetal {
 
     /**
      * Method to create an instance of a petal and add it in the database.
-     * It will thrw an EnityNotFoundException if the group administrateur doesn't exist.
+     * The group administrator has access to all the petals, so it have to be created before
+     * adding petals.
+     * It will throw an EntiyNotFoundException if the group administrator doesn't exist, and
+     * EntityExistsException if the petal already exist
+     * 
      * 
      * @param vendorName The petal's vendor name
      * @param artifactId The petal's artifactId
@@ -128,7 +135,7 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin)throws EntityNotFoundException {
+            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin)throws EntityNotFoundException, EntityExistsException {
 
         Group group = sessionGroup.findGroup("Administrateur");
         /*
@@ -140,39 +147,42 @@ public class DefaultPetal implements ISessionPetal {
             throw new EntityNotFoundException("The group Administrateur must be created first at all");
         }
         else{
-            Petal petal = new Petal(vendor, artifactId, version, category,
-                    description, (Set<Requirement>)requirements,(Set<Capability>) capabilities, origin);
-
-            Set<Group> groups = new HashSet<Group>();
-            groups.add(group);
-            petal.setGroups(groups);
-
-            try{
+            Petal petal = findPetal(vendor, artifactId, version);
+            if(petal != null){
+                throw new EntityExistsException();
+            }
+            else {
+                petal = new Petal(vendor, artifactId, version, category,
+                        description, (Set<Requirement>)requirements,(Set<Capability>) capabilities, origin);
+                Set<Group> groups = new HashSet<Group>();
+                groups.add(group);
+                petal.setGroups(groups);
                 entityManager.persist(petal);
-            }catch(EntityExistsException e){
 
+                sessionVendor.addPetal(vendor, petal);
+                sessionCategory.addPetal(category, petal);
+                sessionGroup.addPetal(group, petal);
+
+                Iterator<Capability> it = capabilities.iterator();
+                while(it.hasNext()) {
+                    sessionCapability.addPetal(it.next(), petal);
+                }
+
+                Iterator<Requirement> itreq = requirements.iterator();
+                while(itreq.hasNext()) {
+                    sessionRequirement.addPetal(itreq.next(), petal);
+                }
             }
 
-            sessionVendor.addPetal(vendor, petal);
-            sessionCategory.addPetal(category, petal);
-            sessionGroup.addPetal(group, petal);
 
-            Iterator<Capability> it = capabilities.iterator();
-            while(it.hasNext()) {
-                sessionCapability.addPetal(it.next(), petal);
-            }
-
-            Iterator<Requirement> itreq = requirements.iterator();
-            while(itreq.hasNext()) {
-                sessionRequirement.addPetal(itreq.next(), petal);
-            }
             return petal;
 
         }
     }
 
     /**
-     * Method to find a petal 
+     * Method to find a petal.
+     * It returns null if the petals doesn't exist.
      * 
      * @param vendor the petal's vendor
      * @param artifactId the petal's artifactId!
