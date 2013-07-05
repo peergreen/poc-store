@@ -1,6 +1,5 @@
 package com.peergreen.store.ldap.parser.handler;
 
-import com.peergreen.store.ldap.parser.Element;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
@@ -20,7 +19,7 @@ public interface ILdapHandler<T> {
      * @param node input tree to transcript on JPQL
      * @return corresponding piece of JPQL query
      */
-    String toQueryElement(Node<Element> node);
+    String toQueryElement(Node<String> node);
     
     /**
      * Method called when an unary node is created.
