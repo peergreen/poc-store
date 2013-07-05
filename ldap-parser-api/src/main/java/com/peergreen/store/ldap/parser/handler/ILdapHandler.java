@@ -13,4 +13,19 @@ public interface ILdapHandler {
      * @return corresponding piece of JPQL query
      */
     String toQueryElement(Node<Element> node);
+    
+    /**
+     * Method called when an unary node is created.
+     */
+    void onUnaryNodeCreation();
+    
+    /**
+     * Method called when a binary node is created.
+     */
+    void onBinaryNodeCreation();
+    
+    /**
+     * Method called when an n-ary node is created.
+     */
+    void onNaryNodeCreation();
 }
