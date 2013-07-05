@@ -239,17 +239,8 @@ public class DefaultGroup implements ISessionGroup {
     @Override
     public Collection<Group> collectGroups() {
         Query groups = entityManager.createNamedQuery("Series.findAll");
-        List groupList = groups.getResultList();
-
-
+        List<Group> groupList = groups.getResultList();
         Set<Group> groupSet = new HashSet<Group>();
-        Iterator<Group> it = groupSet.iterator();
-        int index =0;
-        while(it.hasNext()){
-            Group gp = it.next();
-            gp = (Group) groupList.get(index);
-            index ++;
-        }
         groupSet.addAll(groupList);
         return groupSet;
     }
