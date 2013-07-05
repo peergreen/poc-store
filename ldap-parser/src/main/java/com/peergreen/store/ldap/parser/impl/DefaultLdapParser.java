@@ -177,7 +177,7 @@ public class DefaultLdapParser implements ILdapParser {
             } // end if (parentNode == null)
         } else {
             if (parentNode != null) {
-                throw new InvalidLdapFormatException("Missing closing parenthesis");
+                throw new InvalidLdapFormatException("Unvalid LDAP expression. Remaining characters at tail.");
             }
 
             return parentNode;
@@ -249,6 +249,14 @@ public class DefaultLdapParser implements ILdapParser {
         }
     }
 
+    /**
+     * Method to parse a subtree (binary operator + two leaves) from a filter.
+     * 
+     * @param filter filter to parse
+     * @param parentNode parent node
+     * @return created subtree
+     * @throws InvalidLdapFormatException
+     */
     protected IValidatorNode<String> parseLeaf(String filter, Node<String> parentNode) throws InvalidLdapFormatException {
         int position = 0;
 
@@ -330,6 +338,13 @@ public class DefaultLdapParser implements ILdapParser {
         return innerText;
     }
 
+    /**
+     * Method to parse an operator node from a String containing the operator.<br />
+     * Basically, create a node corresponding to operator cardinality.
+     * 
+     * @param op operator
+     * @return created node
+     */
     protected IValidatorNode<String> createOperatorNode (String op) {
         IValidatorNode<String> opNode = null;
         if (UnaryOperators.isUnaryOperator(op)) {
