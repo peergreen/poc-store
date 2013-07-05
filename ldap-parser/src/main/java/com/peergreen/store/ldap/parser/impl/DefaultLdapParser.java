@@ -41,8 +41,8 @@ public class DefaultLdapParser implements ILdapParser {
     public static void main(String[] args) {
         DefaultLdapParser app = new DefaultLdapParser();
 
-        //        String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
-        String f = "(&(groupId<=com.peergreen.store)(artifactId>=controller)(version=1.6.0))";
+                String f = "(|(&(a=p)(|(b=p)(c=p)))(&(d=p)(e=p))(|(f=v)(g=x)))";
+//        String f = "(&(groupId<=com.peergreen.store)(artifactId>=controller)(version=1.6.0))";
         //        String f = "(&(!(a<=2)))";
 
         try {
@@ -106,8 +106,12 @@ public class DefaultLdapParser implements ILdapParser {
                         throw new InvalidLdapFormatException();
                     }
                 } else {
-                    throw new InvalidLdapFormatException("First character after initial opening parenthesis must be an operator.");
-                    // TODO Can be a leaf too. ex: filter (artifactId=Store)
+                    IValidatorNode<String> n = parseLeaf(filter.substring(position), parentNode);
+                    if (n != null) {
+                        return n;
+                    } else {
+                        throw new InvalidLdapFormatException("First character after initial opening parenthesis must be an operator.");
+                    }
                 }
             } else {
                 if (!innerText.isEmpty()) {
@@ -165,12 +169,36 @@ public class DefaultLdapParser implements ILdapParser {
                         }
                     }
                 } else /* if (innerText.isEmpty()) */ {
+                    // 4 cases:
+                        // operator node
+                        // binary node
+                        // closing parenthesis
+                        // error
+                    
+                    System.err.println("char at "+position+": "+filter.charAt(position));
+                    
                     if (filter.charAt(position) == ')') {
                         // go back one level in the tree
                         parseNode(filter, position + 1, parentNode.getParent());
 
                         return parentNode;
-                    } else {
+                    } else /* cases operator node, leaf node or error*/ {
+                        IValidatorNode<String> n = null;
+                        try {
+                            n = parseOperatorNode(filter.substring(position), parentNode);
+                        } catch (InvalidLdapFormatException e) {
+                            // Nothing to do, just cannot parse operator node
+                            // Try to parse a leaf now
+                        }
+                        
+                        if (n != null) {
+                            return n;
+                        } else {
+                            n = parseLeaf(filter.substring(position), parentNode);
+                            if (n != null) {
+                                return n;
+                            }
+                        }
                         throw new InvalidLdapFormatException("Missing closing parenthesis");
                     }
                 }
@@ -224,8 +252,9 @@ public class DefaultLdapParser implements ILdapParser {
      * @throws InvalidLdapFormatException
      */
     protected IValidatorNode<String> parseOperatorNode(String filter, Node<String> parentNode) throws InvalidLdapFormatException {
-        if (filter.length() > 5) /* minimum length ex: &(x=y) */ {
+        if (filter.length() >= 3) /* minimum length ex: x=y */ {
             String op = readOperator(filter, 0);
+            System.err.println("op: " + op); // TODO
 
             // operator case
             if (!op.isEmpty()) {
@@ -260,10 +289,10 @@ public class DefaultLdapParser implements ILdapParser {
     protected IValidatorNode<String> parseLeaf(String filter, Node<String> parentNode) throws InvalidLdapFormatException {
         int position = 0;
 
-        IValidatorNode<String> n = parseOperatorNode(filter, parentNode);
-        if (n != null) {
-            return n;
-        } else {
+//        IValidatorNode<String> n = parseOperatorNode(filter, parentNode);
+//        if (n != null) {
+//            return n;
+//        } else {
             // create an comparison operator node and operand nodes
             String operator = "";
             String[] operands = null;
@@ -274,6 +303,8 @@ public class DefaultLdapParser implements ILdapParser {
                     break;
                 }
             }
+            
+            System.err.println("comparison op:"+operator);
 
             BinaryNode<String> operatorNode = new BinaryNode<String>(operator);
 
@@ -296,7 +327,7 @@ public class DefaultLdapParser implements ILdapParser {
             parseNode(filter, position + filter.length() + 2, parentNode);
 
             return operatorNode;
-        }
+//        }
     }
 
     /**
@@ -335,6 +366,7 @@ public class DefaultLdapParser implements ILdapParser {
             throw new InvalidLdapFormatException("Missing closing parenthesis.");
         }
 
+        System.err.println("inner text: " + innerText); // TODO
         return innerText;
     }
 
