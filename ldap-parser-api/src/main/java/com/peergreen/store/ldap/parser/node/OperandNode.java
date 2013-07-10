@@ -1,32 +1,28 @@
 package com.peergreen.store.ldap.parser.node;
 
-import com.peergreen.store.ldap.parser.handler.ILdapHandler;
-import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
 public class OperandNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
 
+	private IValidatorNode<T> parent;
+	
     public OperandNode(T data) {
         super(data);
     }
 
     @Override
     public boolean validate() {
-        return true;
+        return getData() != null;
     }
-
+    
     @Override
-    public ILdapHandler<T> getHandler() {
-        return null;
-    }
-
-    @Override
-    public void setHandler(ILdapHandler<T> handler) {
-        // no handler, nothing to do
-    }
-
-    @Override
-    public void setParent(Node<T> parentNode) {
+    public void setParent(IValidatorNode<T> parentNode) {
         super.setParent(parentNode);
+        this.parent = parentNode;
+    }
+    
+    @Override
+    public IValidatorNode<T> getParentValidatorNode() {
+    	return this.parent;
     }
 }

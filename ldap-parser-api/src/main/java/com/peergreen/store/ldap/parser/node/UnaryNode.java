@@ -1,32 +1,24 @@
 package com.peergreen.store.ldap.parser.node;
 
-import com.peergreen.store.ldap.parser.handler.ILdapHandler;
+import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
 public class UnaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
 
-    private ILdapHandler<T> handler;
-    
+	private IValidatorNode<T> parent;
     private Node<T> child;
     
     public UnaryNode(T data) {
         super(data);
     }
 
-    @Override
-    public boolean validate() {
-        return getChildren().size() == 1;
-    }
-    
-    @Override
-    public ILdapHandler<T> getHandler() {
-        return handler;
-    }
-    
-    @Override
-    public void setHandler(ILdapHandler<T> handler) {
-        this.handler = handler;
+    public boolean validate() throws InvalidLdapFormatException {
+        if (getChildren().size() == 1) {
+        	return true;
+        } else {
+        	throw new InvalidLdapFormatException("Invalid unary node. One and only one child expected.");
+        }
     }
     
     public Node<T> getChild() {
@@ -38,7 +30,13 @@ public class UnaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
     }
     
     @Override
-    public void setParent(Node<T> parentNode) {
+    public void setParent(IValidatorNode<T> parentNode) {
         super.setParent(parentNode);
+        this.parent = parentNode;
+    }
+    
+    @Override
+    public IValidatorNode<T> getParentValidatorNode() {
+    	return this.parent;
     }
 }

@@ -1,50 +1,57 @@
 package com.peergreen.store.ldap.parser.node;
 
-import com.peergreen.store.ldap.parser.handler.ILdapHandler;
+import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.tree.Node;
 import com.peergreen.tree.node.SimpleNode;
 
 public class BinaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
     
-    private ILdapHandler<T> handler;
-    
+	private IValidatorNode<T> parent;
+	
     public BinaryNode(T data) {
         super(data);
     }
     
-    @Override
-    public boolean validate() {
-        return getChildren().size() == 2;
-    }
-
-    @Override
-    public ILdapHandler<T> getHandler() {
-        return handler;
-    }
-
-    @Override
-    public void setHandler(ILdapHandler<T> handler) {
-        this.handler = handler;
+    public boolean validate() throws InvalidLdapFormatException {
+    	if (getChildren().size() == 2) {
+    		return getChildren().size() == 2;
+    	} else {
+    		throw new InvalidLdapFormatException("Invalid binary node. Doesn't have two operands.");
+    	}
     }
 
     public Node<T> getLeftOperand() {
-        if (validate()) {
-            return getChildren().get(0);
-        } else {
-            return null;
-        }
+        try {
+			if (validate()) {
+			    return getChildren().get(0);
+			} else {
+			    return null;
+			}
+		} catch (InvalidLdapFormatException e) {
+			return null;
+		}
     }
 
     public Node<T> getRightOperand() {
-        if (validate()) {
-            return getChildren().get(1);
-        } else {
-            return null;
-        }
+        try {
+			if (validate()) {
+			    return getChildren().get(1);
+			} else {
+			    return null;
+			}
+		} catch (InvalidLdapFormatException e) {
+			return null;
+		}
     }
     
     @Override
-    public void setParent(Node<T> parentNode) {
+    public void setParent(IValidatorNode<T> parentNode) {
         super.setParent(parentNode);
+        this.parent = parentNode;
+    }
+    
+    @Override
+    public IValidatorNode<T> getParentValidatorNode() {
+    	return this.parent;
     }
 }
