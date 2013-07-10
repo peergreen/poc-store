@@ -1,6 +1,5 @@
 package com.peergreen.store.ldap.parser.impl;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -20,7 +19,6 @@ import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.OperandNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
 import com.peergreen.tree.Node;
-import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 
 
 /**
@@ -33,33 +31,6 @@ import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
-    private static TreePrettyPrintNodeVisitor<String> visitor = new TreePrettyPrintNodeVisitor<String>(System.out) {
-        @Override
-        protected void doPrintInfo(PrintStream stream, Node<String> node) {
-            if (Operators.isOperator(node.getData())) {
-                stream.printf("OP %s%n", node.getData());
-            } else {
-                stream.printf("%s%n", node.getData());
-            }
-        }
-    };
-    
-    public static void main (String[] args) {
-        String f = "(&(!(a<=2)(b<=7))(a<=b))";
-        
-        DefaultLdapParser app = new DefaultLdapParser();
-        Node<String> res = null;
-        try {
-            res = app.parse(f);
-        } catch (InvalidLdapFormatException e) {
-            e.printStackTrace();
-        }
-        
-        if (res != null) {
-            res.walk(visitor);
-        }
-    }
-    
 	/**
 	 * Method to parse a LDAP filter to a tree.<br />
 	 * Automatically check if output tree is valid.
