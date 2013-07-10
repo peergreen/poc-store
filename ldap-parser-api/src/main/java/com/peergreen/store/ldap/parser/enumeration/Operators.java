@@ -6,7 +6,8 @@ public enum Operators {
     NOT("!"),
     APPROX("~="),
     LESSER_THAN_EQUAL("<="),
-    GREATER_THAN_EQUAL(">=");
+    GREATER_THAN_EQUAL(">="),
+    EQUAL("=");
 
     String s;
 
@@ -24,6 +25,7 @@ public enum Operators {
                 s.equals(NOT.getOperator()) ||
                 s.equals(APPROX.getOperator()) ||
                 s.equals(LESSER_THAN_EQUAL.getOperator()) ||
-                s.equals(GREATER_THAN_EQUAL.getOperator()));
+                s.equals(GREATER_THAN_EQUAL.getOperator()) ||
+                s.equals(EQUAL.getOperator()));
     }
 }
