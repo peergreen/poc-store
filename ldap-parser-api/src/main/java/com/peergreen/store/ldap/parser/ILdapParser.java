@@ -1,5 +1,6 @@
 package com.peergreen.store.ldap.parser;
 
+import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.tree.Node;
 
 /**
