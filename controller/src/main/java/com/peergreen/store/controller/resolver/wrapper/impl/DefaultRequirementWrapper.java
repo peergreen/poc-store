@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.framework.Constants;
-import org.osgi.resource.Requirement;
 import org.osgi.resource.Resource;
 
 import com.peergreen.store.controller.resolver.wrapper.IRequirementWrapper;
