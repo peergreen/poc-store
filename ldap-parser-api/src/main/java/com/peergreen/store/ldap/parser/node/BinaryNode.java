@@ -2,11 +2,10 @@ package com.peergreen.store.ldap.parser.node;
 
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.tree.Node;
-import com.peergreen.tree.node.SimpleNode;
 
-public class BinaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
+
+public class BinaryNode<T> extends ValidatorNodeHelper<T> {
     
-	private IValidatorNode<T> parent;
 	private IValidatorNode<T> leftOperand;
 	private IValidatorNode<T> rightOperand;
 	
@@ -47,16 +46,5 @@ public class BinaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
             getChildren().remove(rightOperand);
         }
         this.rightOperand = rightOperand;
-    }
-    
-    @Override
-    public void setParent(IValidatorNode<T> parentNode) {
-        super.setParent(parentNode);
-        this.parent = parentNode;
-    }
-    
-    @Override
-    public IValidatorNode<T> getParentValidatorNode() {
-    	return this.parent;
     }
 }
