@@ -12,10 +12,25 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.felix.ipojo.annotations.Requires;
+
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
+import com.peergreen.store.ldap.parser.ILdapParser;
+import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
+import com.peergreen.store.ldap.parser.node.IValidatorNode;
+import com.peergreen.tree.Node;
+//import org.apache.felix.ipojo.annotations.Requires;
+//import org.apache.felix.ipojo.annotations.Validate;
+//
+//import com.peergreen.store.db.client.ejb.entity.Capability;
+//import com.peergreen.store.ldap.parser.ILdapParser;
+//import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
+//import com.peergreen.store.ldap.parser.node.IValidatorNode;
+//import com.peergreen.tree.Node;
+
 
 /**
  * Class defining an entity session to manage the entity Requirement
@@ -35,6 +50,8 @@ public class DefaultRequirement implements ISessionRequirement {
 
     private EntityManager entityManager;
 
+    @Requires
+    private ILdapParser ldapParser; 
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -43,6 +60,7 @@ public class DefaultRequirement implements ISessionRequirement {
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
+
 
     /**
      *  Method to add a new requirement in the database.
@@ -190,8 +208,22 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Collection<Capability> findCapabilities(Requirement requirement) {
-        // TODO Auto-generated method stub
-        return null;
+        String queryString = "Select c From Capability where ";
+        String filter = requirement.getFilter();
+        try {
+            Node<String> root = ldapParser.parse(filter);
+           queryString = queryString.concat(((IValidatorNode<String>) root).getHandler().toQueryElement(root));
+        } catch (InvalidLdapFormatException e) {
+            e.printStackTrace();
+        }catch(NullPointerException e) {
+            e.printStackTrace();
+        }
+        Query q = entityManager.createNamedQuery(queryString);
+
+        List<Capability> res = q.getResultList();
+        Set<Capability> capabilities = new HashSet<Capability>();
+        capabilities.addAll(res);
+        return capabilities;
     }
 
 
