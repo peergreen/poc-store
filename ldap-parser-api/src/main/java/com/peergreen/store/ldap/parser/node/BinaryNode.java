@@ -7,11 +7,16 @@ import com.peergreen.tree.node.SimpleNode;
 public class BinaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
     
 	private IValidatorNode<T> parent;
+	private IValidatorNode<T> leftOperand;
+	private IValidatorNode<T> rightOperand;
 	
     public BinaryNode(T data) {
         super(data);
+        leftOperand = null;
+        rightOperand = null;
     }
     
+    @Override
     public boolean validate() throws InvalidLdapFormatException {
     	if (getChildren().size() == 2) {
     		return getChildren().size() == 2;
@@ -21,27 +26,27 @@ public class BinaryNode<T> extends SimpleNode<T> implements IValidatorNode<T> {
     }
 
     public Node<T> getLeftOperand() {
-        try {
-			if (validate()) {
-			    return getChildren().get(0);
-			} else {
-			    return null;
-			}
-		} catch (InvalidLdapFormatException e) {
-			return null;
-		}
+        return leftOperand;
+    }
+    
+    public void setLeftOperand(IValidatorNode<T> leftOperand) {
+        // remove previous left operand
+        if (leftOperand != null) {
+            getChildren().remove(leftOperand);
+        }
+        this.leftOperand = leftOperand;
     }
 
     public Node<T> getRightOperand() {
-        try {
-			if (validate()) {
-			    return getChildren().get(1);
-			} else {
-			    return null;
-			}
-		} catch (InvalidLdapFormatException e) {
-			return null;
-		}
+        return rightOperand;
+    }
+    
+    public void setRightOperand(IValidatorNode<T> rightOperand) {
+        // remove previous right operand
+        if (rightOperand != null) {
+            getChildren().remove(rightOperand);
+        }
+        this.rightOperand = rightOperand;
     }
     
     @Override
