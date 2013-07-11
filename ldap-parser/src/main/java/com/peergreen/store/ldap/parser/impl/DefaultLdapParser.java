@@ -68,7 +68,6 @@ public class DefaultLdapParser implements ILdapParser {
                     parsedNode = createOperatorNode(op);
                 } else {
                     // parse an operand
-//                    parsedNode = new OperandNode<String>(tokens.get(i));
                     parsedNode = createBinaryNode(tokens.get(i));
                 }
 
