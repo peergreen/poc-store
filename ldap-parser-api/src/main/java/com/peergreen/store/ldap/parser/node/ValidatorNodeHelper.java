@@ -1,8 +1,5 @@
 package com.peergreen.store.ldap.parser.node;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.tree.node.SimpleNode;
 
@@ -10,12 +7,12 @@ import com.peergreen.tree.node.SimpleNode;
 public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IValidatorNode<T> {
 
     private IValidatorNode<T> parent;
-    private Set<ILdapHandler<T>> handlers;
+    private ILdapHandler<T> handler;
     
     public ValidatorNodeHelper(T data) {
         super(data);
         parent = null;
-        handlers = new HashSet<>();
+        handler = null;
     }
 
     @Override
@@ -30,25 +27,12 @@ public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IV
     }
 
     @Override
-    public Set<ILdapHandler<T>> getHandlers() {
-        return this.handlers;
+    public ILdapHandler<T> getHandler() {
+        return this.handler;
     }
 
     @Override
-    public void setHandlers(Set<ILdapHandler<T>> handlers) {
-        this.handlers = handlers;
+    public void setHandler(ILdapHandler<T> handler) {
+        this.handler = handler;
     }
-
-    @Override
-    public Set<ILdapHandler<T>> addHandler(ILdapHandler<T> handler) {
-        handlers.add(handler);
-        return handlers;
-    }
-
-    @Override
-    public Set<ILdapHandler<T>> removeHandler(ILdapHandler<T> handler) {
-        handlers.remove(handler);
-        return handlers;
-    }
-
 }
