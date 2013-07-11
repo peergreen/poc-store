@@ -19,7 +19,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.ldap.parser.ILdapParser;
-import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
+import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.tree.Node;
 //import org.apache.felix.ipojo.annotations.Requires;
