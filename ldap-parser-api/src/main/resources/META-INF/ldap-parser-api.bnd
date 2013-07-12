@@ -1,1 +1,5 @@
-Export-Package com.peergreen.store.ldap.parser
+Export-Package com.peergreen.store.ldap.parser,\
+               com.peergreen.store.ldap.parser.enumeration,\
+               com.peergreen.store.ldap.parser.exception,\
+               com.peergreen.store.ldap.parser.handler,\
+               com.peergreen.store.ldap.parser.node
