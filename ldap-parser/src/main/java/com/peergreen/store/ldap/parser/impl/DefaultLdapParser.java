@@ -1,6 +1,7 @@
 package com.peergreen.store.ldap.parser.impl;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -13,6 +14,7 @@ import com.peergreen.store.ldap.parser.enumeration.NaryOperators;
 import com.peergreen.store.ldap.parser.enumeration.Operators;
 import com.peergreen.store.ldap.parser.enumeration.UnaryOperators;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
+import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
@@ -31,6 +33,17 @@ import com.peergreen.tree.Node;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
+    private Set<ILdapHandler<String>> handlers;
+    
+    /**
+     * Method to add a new handler to the parser.
+     * 
+     * @param handler handler to add
+     */
+    private void register(ILdapHandler<String> handler) {
+        handlers.add(handler);
+    }
+    
     /**
      * Method to parse a LDAP filter to a tree.<br />
      * Automatically check if output tree is valid.
@@ -187,16 +200,28 @@ public class DefaultLdapParser implements ILdapParser {
     protected IValidatorNode<String> createOperatorNode (String op) {
         IValidatorNode<String> opNode = null;
         if (UnaryOperators.isUnaryOperator(op)) {
-            opNode = new UnaryNode<String>(op);
-            // TODO add handler
+            UnaryNode<String> node = new UnaryNode<String>(op);
+            // notify registered handlers
+            for (ILdapHandler<String> handler : handlers) {
+                handler.onUnaryNodeCreation(node);
+            }
+            opNode = node;
         } else if (BinaryOperators.isBinaryOperator(op)) {
-            opNode = new BinaryNode<String>(op);
-            // TODO add handler
+            BinaryNode<String> node = new BinaryNode<String>(op);
+            // notify registered handlers
+            for (ILdapHandler<String> handler : handlers) {
+                handler.onBinaryNodeCreation(node);
+            }
+            opNode = node;
         } else if (NaryOperators.isNaryOperator(op)) {
-            opNode = new NaryNode<String>(op);
-            // TODO add handler
+            NaryNode<String> node = new NaryNode<String>(op);
+            // notify registered handlers
+            for (ILdapHandler<String> handler : handlers) {
+                handler.onNaryNodeCreation(node);
+            }
+            opNode = node;
         }
-
+        
         return opNode;
     }
 
