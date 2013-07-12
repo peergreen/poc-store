@@ -66,24 +66,6 @@ public interface IPetalController {
      * @return created vendor instance
      */
     Vendor createVendor(String vendorName, String vendorDescription);
-    
-    /**
-     * Method to add a vendor to a petal.
-     * 
-     * @param vendor vendor to add
-     * @param petal petal to which add the vendor
-     * @return updated petal
-     */
-    Petal addVendor(Vendor vendor, Petal petal);
-
-    /**
-     * Method to remove a vendor from a petal.
-     * 
-     * @param vendor vendor to remove
-     * @param petal petal from which remove the vendor
-     * @return updated petal
-     */
-    Petal removeVendor(Vendor vendor, Petal petal);
 
     /**
      * Method to collect all existing vendors in database.

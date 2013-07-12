@@ -165,28 +165,6 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
-     * Method to add a vendor to a petal.
-     * 
-     * @param vendor vendor to add
-     * @param petal petal to which add the vendor
-     * @return updated petal
-     */
-    public Petal addVendor(Vendor vendor, Petal petal) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * Method to remove a vendor from the database.
-     * 
-     * @param vendorName vendor's name
-     */
-    public Petal removeVendor(Vendor vendor, Petal petal) {
-        // TODO
-        return null;
-    }
-
-    /**
      * Method to collect all existing vendors in database.
      * 
      * @return list of all existing vendors in database
