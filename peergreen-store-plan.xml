@@ -80,7 +80,7 @@
     <m2:version>1.0-SNAPSHOT</m2:version>
   </deployment>
 
-  <deployment xsi:type="m2:maven2-deploymentType">
+  <deployment xsi:type="m2:maven2-deploymentType" start="false">
     <m2:groupId>com.peergreen.store</m2:groupId>
     <m2:artifactId>demo</m2:artifactId>
     <m2:version>1.0-SNAPSHOT</m2:version>
