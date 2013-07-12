@@ -14,6 +14,7 @@ import org.apache.felix.ipojo.annotations.Validate;
 import com.peergreen.store.controller.IGroupController;
 import com.peergreen.store.controller.IPetalController;
 import com.peergreen.store.controller.IStoreManagment;
+import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -32,11 +33,15 @@ public class App {
     private IPetalController petalController;
     @Requires
     private IGroupController groupController;
+    @Requires
+    private IUserController userController;
 
     @Validate
     public void main() {
         System.out.println("Running");
 
+        userController.addUser("Administrator", "pwd", "tut@hotmail.com");
+        
         groupController.addGroup("Administrateur");
         
         storeManagement.addLink("https://store.peergreen.com/community", "Store Community");
