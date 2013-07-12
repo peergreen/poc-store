@@ -1,6 +1,7 @@
 package com.peergreen.store.ldap.parser.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -34,6 +35,13 @@ import com.peergreen.tree.Node;
 public class DefaultLdapParser implements ILdapParser {
 
     private Set<ILdapHandler<String>> handlers;
+    
+    /**
+     * Default constructor.
+     */
+    public DefaultLdapParser() {
+        handlers = new HashSet<>();
+    }
     
     /**
      * Method to add a new handler to the parser.
