@@ -2,6 +2,7 @@ package com.peergreen.store.ldap.parser.node;
 
 import java.util.List;
 
+import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.tree.node.SimpleNode;
 
 
@@ -9,12 +10,12 @@ public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IV
 
     private IValidatorNode<T> parent;
     private List<IValidatorNode<T>> children;
-    private String jpql;
+    private ILdapHandler<T> handler;
     
     public ValidatorNodeHelper(T data) {
         super(data);
         parent = null;
-        jpql = null;
+        handler = null;
     }
     
     @Override
@@ -40,12 +41,12 @@ public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IV
     }
 
     @Override
-    public String getJPQL() {
-        return jpql;
+    public ILdapHandler<T> getHandler() {
+        return handler;
     }
 
     @Override
-    public void setJPQL(String jpql) {
-        this.jpql = jpql;
+    public void setHandler(ILdapHandler<T> handler) {
+        this.handler = handler;
     }
 }
