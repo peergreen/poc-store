@@ -25,21 +25,21 @@ public interface ILdapHandler<T> {
     /**
      * Method called when an unary node is created.
      * 
-     * @param created node
+     * @param created unary node
      */
     void onUnaryNodeCreation(UnaryNode<T> node);
     
     /**
      * Method called when a binary node is created.
      * 
-     * @param created node
+     * @param created binary node
      */
     void onBinaryNodeCreation(BinaryNode<T> node);
     
     /**
      * Method called when an n-ary node is created.
      * 
-     * @param created node
+     * @param created n-ary node
      */
     void onNaryNodeCreation(NaryNode<T> node);
 }
