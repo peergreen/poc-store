@@ -20,6 +20,7 @@ import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.enumeration.Origin;
 
 @Component
@@ -36,6 +37,9 @@ public class App {
     @Requires
     private IUserController userController;
 
+    @Requires
+    ISessionRequirement requirementSession;
+    
     @Validate
     public void main() {
         System.out.println("Running");
@@ -48,7 +52,13 @@ public class App {
 
         Category category = storeManagement.addCategory("Bundle");
 
+        // create a capability
+        // add it to the capabilities list
+        Capability cap = new Capability("tut", "1", "test", null);
         Set<Capability> capabilities = new HashSet<>();
+        capabilities.add(cap);
+        // create a requirement
+        // add it to the requirements list
         Set<Requirement> requirements = new HashSet<>();
         
         Vendor vendor = petalController.createVendor("Peergreen",
@@ -61,6 +71,15 @@ public class App {
         
         petalController.addPetal(vendor, "Store", "0.1.0-beta", "Apps Store for Peergreen Platform",
                 category, requirements, capabilities, Origin.LOCAL, petalBinary);
+        
+        // requirementSession.findCapability(filter)
+        Requirement req = new Requirement();
+        req.setFilter("(&(artifactId=Store)(version=0.1.0-beta))");
+        req.setNamespace("test");
+        Collection<Capability> listResolvedCapabilities = requirementSession.findCapabilities("test", req);
+        for (Capability c : listResolvedCapabilities) {
+            System.out.println(c.getCapabilityName());
+        }
         
         Collection<Petal> petalsList = storeManagement.collectPetalsFromLocal();
         System.out.println("There are "+petalsList.size()+" petal(s) in local repository");
