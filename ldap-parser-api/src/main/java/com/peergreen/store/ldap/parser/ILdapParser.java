@@ -1,7 +1,7 @@
 package com.peergreen.store.ldap.parser;
 
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
-import com.peergreen.tree.Node;
+import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
 /**
  * Interface providing a method to parse a LDAP filter to a tree.
@@ -18,6 +18,6 @@ public interface ILdapParser {
      * @return tree constructed from LDAP filter parsing.
      * @throws InvalidLdapFormatException
      */
-    Node<String> parse(String filter) throws InvalidLdapFormatException;
+    IValidatorNode<String> parse(String filter) throws InvalidLdapFormatException;
 
 }
