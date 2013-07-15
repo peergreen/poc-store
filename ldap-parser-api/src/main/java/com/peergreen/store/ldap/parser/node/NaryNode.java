@@ -10,10 +10,10 @@ public class NaryNode<T> extends ValidatorNodeHelper<T> {
     }
     
     public boolean validate() throws InvalidLdapFormatException {
-    	if (getChildren().size() > 0) {
+    	if (getChildren().size() > 1) {
     		return true;
     	} else {
-    		throw new InvalidLdapFormatException("Invalid n-ary node. At least one child expected.");
+    		throw new InvalidLdapFormatException("Invalid n-ary node. At least two children expected.");
     	}
     }
 }
