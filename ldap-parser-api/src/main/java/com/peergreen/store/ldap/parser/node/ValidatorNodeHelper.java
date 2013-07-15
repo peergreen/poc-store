@@ -1,18 +1,25 @@
 package com.peergreen.store.ldap.parser.node;
 
-import com.peergreen.store.ldap.parser.handler.ILdapHandler;
+import java.util.List;
+
 import com.peergreen.tree.node.SimpleNode;
 
 
 public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IValidatorNode<T> {
 
     private IValidatorNode<T> parent;
-    private ILdapHandler<T> handler;
+    private List<IValidatorNode<T>> children;
+    private String jpql;
     
     public ValidatorNodeHelper(T data) {
         super(data);
         parent = null;
-        handler = null;
+        jpql = null;
+    }
+    
+    @Override
+    public IValidatorNode<T> getParentValidatorNode() {
+        return this.parent;
     }
 
     @Override
@@ -22,17 +29,23 @@ public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IV
     }
     
     @Override
-    public IValidatorNode<T> getParentValidatorNode() {
-        return this.parent;
+    public List<IValidatorNode<T>> getChildrenValidatorNode() {
+        return children;
+    }
+    
+    @Override
+    public void addChild(IValidatorNode<T> child) {
+        super.addChild(child);
+        children.add(child);
     }
 
     @Override
-    public ILdapHandler<T> getHandler() {
-        return this.handler;
+    public String getJPQL() {
+        return jpql;
     }
 
     @Override
-    public void setHandler(ILdapHandler<T> handler) {
-        this.handler = handler;
+    public void setJPQL(String jpql) {
+        this.jpql = jpql;
     }
 }

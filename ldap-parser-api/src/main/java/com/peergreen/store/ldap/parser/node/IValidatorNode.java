@@ -1,7 +1,8 @@
 package com.peergreen.store.ldap.parser.node;
 
+import java.util.List;
+
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
-import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.tree.Node;
 
 
@@ -9,6 +10,8 @@ public interface IValidatorNode<T> extends Node<T> {
     boolean validate() throws InvalidLdapFormatException;
     void setParent(IValidatorNode<T> parentNode);
     IValidatorNode<T> getParentValidatorNode();
-    ILdapHandler<T> getHandler();
-    void setHandler(ILdapHandler<T> handler);
+    List<IValidatorNode<T>> getChildrenValidatorNode();
+    void addChild(IValidatorNode<T> child);
+    String getJPQL();
+    void setJPQL(String jpql);
 }
