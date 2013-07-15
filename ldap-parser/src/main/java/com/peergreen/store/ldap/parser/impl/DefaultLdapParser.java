@@ -21,7 +21,6 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.OperandNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
-import com.peergreen.tree.Node;
 
 
 /**
@@ -61,7 +60,7 @@ public class DefaultLdapParser implements ILdapParser {
      * @throws InvalidLdapFormatException
      */
     @Override
-    public Node<String> parse(String filter) throws InvalidLdapFormatException {
+    public IValidatorNode<String> parse(String filter) throws InvalidLdapFormatException {
         ArrayList<String> tokens = getTokens(filter);
         int i = 0;
         IValidatorNode<String> root = null;
@@ -113,6 +112,7 @@ public class DefaultLdapParser implements ILdapParser {
             } else if (s.equals(")")) {
                 // go back a level
                 if (tokens.get(i-1).equals(")")) {
+                    parentNode.validate();
                     parentNode = parentNode.getParentValidatorNode();
                 }
 
@@ -264,6 +264,10 @@ public class DefaultLdapParser implements ILdapParser {
         }
 
         if (node.validate()) {
+            // notify registered handlers
+            for (ILdapHandler<String> handler : handlers) {
+                handler.onBinaryNodeCreation(node);
+            }
             return node;
         } else {
             throw new InvalidLdapFormatException("Comparison operator must be applied on two operands.");
