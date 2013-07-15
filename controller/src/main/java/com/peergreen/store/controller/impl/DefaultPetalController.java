@@ -3,7 +3,6 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +21,14 @@ import org.osgi.resource.Wiring;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.controller.IPetalController;
+import com.peergreen.store.controller.util.DependencyRequest;
+import com.peergreen.store.controller.util.DependencyResult;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -103,14 +103,39 @@ public class DefaultPetalController implements IPetalController {
     /**
      * Method to retrieve all petals available for each required capability.
      * 
-     * @param vendor petal's vendor
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @param map indexing all petals providing each required capability
-     * @param requirements that can't be satisfied
+     * @param request DependencyRequest containing all constraints.
      * @return list of all petals available for each required capability
+     * @see DependencyRequest
      */
     @Override
+    public DependencyResult getTransitiveDependencies(DependencyRequest request) {
+        // create a DependencyResult
+        DependencyResult result = new DependencyResult();
+        
+        Petal petal = petalSession.findPetal(request.getVendor(), request.getArtifactId(), request.getVersion());
+        Collection<Requirement> requirements = petal.getRequirements();
+        
+        for (Requirement req : requirements) {
+            // retrieve capabilities which meet the requirements in a same namespace
+            Collection<Capability> capabilities = requirementSession.findCapabilities(request.getNamspace(), req);
+            
+            // retrieve petals providing the capability
+            for (Capability capability : capabilities) {
+                Set<Petal> petals = capability.getPetals();
+            
+                if (petals.isEmpty()) {
+                    // declare missing capability
+                    result.addUnresolvedRequirement(req);
+                } else {
+                    // index petals providing the capability
+                    result.addResolvedDependency(req, petals);
+                }
+            }
+        }
+        
+        return result;
+    }
+    /*
     public Collection<PetalId> getTransitiveRequirements(
             Vendor vendor,
             String artifactId,
@@ -146,6 +171,7 @@ public class DefaultPetalController implements IPetalController {
 
         return null;
     }
+    */
 
     /**
      * Method to create a new vendor on database.
@@ -263,7 +289,7 @@ public class DefaultPetalController implements IPetalController {
     public Petal updatePetal(Vendor vendor, String artifactId, String version, String description,
             Category category, Set<Requirement> requirements, Set<Capability> capabilities,
             Origin origin, File petalBinary) {
-        // TODO
+        // TODO Is it really usefull? Versions are not removed (still in use) but a new one is created
         return null;
     }
 
