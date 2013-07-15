@@ -5,12 +5,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import com.peergreen.store.controller.util.DependencyRequest;
+import com.peergreen.store.controller.util.DependencyResult;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.enumeration.Origin;
 
 /**
@@ -51,12 +52,7 @@ public interface IPetalController {
      * @param requirements that can't be satisfied
      * @return list of all petals available for each required capability
      */
-    Collection<PetalId> getTransitiveRequirements(
-            Vendor vendor,
-            String artifactId,
-            String version,
-            Map<Capability, Set<Petal>> resolvedCapabilities,
-            Set<Requirement> unresolvedRequirements);
+    DependencyResult getTransitiveDependencies(DependencyRequest request);
 
     /**
      * Method to create a new vendor on database.
