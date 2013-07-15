@@ -21,7 +21,6 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
-import com.peergreen.tree.Node;
 //import org.apache.felix.ipojo.annotations.Requires;
 //import org.apache.felix.ipojo.annotations.Validate;
 //
@@ -46,12 +45,11 @@ import com.peergreen.tree.Node;
  */
 @Stateless
 public class DefaultRequirement implements ISessionRequirement {
-
-
     private EntityManager entityManager;
 
     @Requires
     private ILdapParser ldapParser; 
+    
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -60,7 +58,6 @@ public class DefaultRequirement implements ISessionRequirement {
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
 
     /**
      *  Method to add a new requirement in the database.
@@ -183,7 +180,6 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Collection<Requirement> collectRequirements() {
-
         Query reqs = entityManager.createNamedQuery("Requirement.findAll");
         List<Requirement> reqList = reqs.getResultList();
         Set<Requirement> reqSet = new HashSet<Requirement>();
@@ -193,29 +189,27 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Requirement updateNamespace(Requirement requirement, String namespace) {
-
         requirement.setNamespace(namespace);
-
         return entityManager.merge(requirement);
     }
 
     @Override
     public Requirement updateFilter(Requirement requirement, String filter) {
-
         requirement.setFilter(filter);
         return entityManager.merge(requirement);
     }
 
     @Override
-    public Collection<Capability> findCapabilities(Requirement requirement) {
-        String queryString = "Select c From Capability where ";
+    public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
+        String queryString = "Select c From Capability where c.namespace="+namespace+" AND ";
         String filter = requirement.getFilter();
         try {
-            Node<String> root = ldapParser.parse(filter);
-           queryString = queryString.concat(((IValidatorNode<String>) root).getHandler().toQueryElement(root));
+            IValidatorNode<String> root = ldapParser.parse(filter);
+//            queryString = queryString.concat(((IValidatorNode<String>) root).getHandler().toQueryElement(root));
+            queryString = root.getJPQL();
         } catch (InvalidLdapFormatException e) {
             e.printStackTrace();
-        }catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         Query q = entityManager.createNamedQuery(queryString);
@@ -225,9 +219,4 @@ public class DefaultRequirement implements ISessionRequirement {
         capabilities.addAll(res);
         return capabilities;
     }
-
-
-
-
-
 }

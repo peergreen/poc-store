@@ -85,6 +85,6 @@ public interface ISessionRequirement {
      */
     Requirement updateFilter(Requirement requirement, String filter);
     
-    Collection<Capability> findCapabilities(Requirement requirement);
+    Collection<Capability> findCapabilities(String namespace, Requirement requirement);
 
 }
