@@ -21,14 +21,6 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
-//import org.apache.felix.ipojo.annotations.Requires;
-//import org.apache.felix.ipojo.annotations.Validate;
-//
-//import com.peergreen.store.db.client.ejb.entity.Capability;
-//import com.peergreen.store.ldap.parser.ILdapParser;
-//import com.peergreen.store.ldap.parser.InvalidLdapFormatException;
-//import com.peergreen.store.ldap.parser.node.IValidatorNode;
-//import com.peergreen.tree.Node;
 
 
 /**
@@ -48,7 +40,7 @@ public class DefaultRequirement implements ISessionRequirement {
     private EntityManager entityManager;
 
     @Requires
-    private ILdapParser ldapParser; 
+    private ILdapParser ldapParser;
     
     public EntityManager getEntityManager() {
         return entityManager;
@@ -205,8 +197,8 @@ public class DefaultRequirement implements ISessionRequirement {
         String filter = requirement.getFilter();
         try {
             IValidatorNode<String> root = ldapParser.parse(filter);
-//            queryString = queryString.concat(((IValidatorNode<String>) root).getHandler().toQueryElement(root));
-            queryString = root.getJPQL();
+            // asking for lazy generation of JPQL
+            
         } catch (InvalidLdapFormatException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
