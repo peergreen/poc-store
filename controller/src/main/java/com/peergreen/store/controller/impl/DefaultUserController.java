@@ -80,11 +80,12 @@ public class DefaultUserController implements IUserController {
     public User addUser(String pseudo, String password, String email) {
         User user = null;
 
-        try{
+        try {
             user = userSession.addUser(pseudo, password, email);
-        }catch(EntityExistsException e){
-
+        } catch(EntityExistsException e){
+            System.err.println("User already exists.");
         }
+        
         return user;
     }
 
