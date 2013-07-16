@@ -20,7 +20,7 @@ public interface ILdapHandler<T> {
      * @param node input tree to transcript on JPQL
      * @return corresponding piece of JPQL query
      */
-    String toQueryElement(Node<String> node);
+    String toQueryElement();
     
     /**
      * Method called when an unary node is created.
