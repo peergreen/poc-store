@@ -1,6 +1,7 @@
-Export-Package com.peergreen.store.db.client.ejb.entity,\
-               com.peergreen.store.db.client.ejb.session.api,\
+Export-Package com.peergreen.store.db.client.ejb.constraint.validation,\
+               com.peergreen.store.db.client.ejb.entity,\
                com.peergreen.store.db.client.ejb.key.primary,\
+               com.peergreen.store.db.client.ejb.session.api,\
                com.peergreen.store.db.client.enumeration,\
-               com.peergreen.store.db.client.ejb.constraint.validation
+               com.peergreen.store.db.client.exception
                
