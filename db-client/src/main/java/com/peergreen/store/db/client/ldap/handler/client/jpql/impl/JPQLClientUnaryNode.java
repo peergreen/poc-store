@@ -2,34 +2,36 @@ package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
-import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
-import com.peergreen.tree.Node;
+
 
 /**
- * JPQL Client for handle UnaryNode and generate a piece of JPQL query 
- *
+ * JPQL Client to handle UnaryNode and generate a piece of JPQL query.
  */
 public class JPQLClientUnaryNode implements ILdapHandler<String> {
+    private UnaryNode<String> node;
+    
     /**
-     * This handler is used when a UnaryNode is created so
-     * we generate the piece of JPQL corresponding using the only child
-     * of the node
+     * Constructor with initialization.
      * 
-     * @param node input tree to transcript on JPQL
-     * @return corresponding piece of JPQL query
+     * @param node node associated to the JPQL handler.
+     */
+    public JPQLClientUnaryNode(UnaryNode<String> node) {
+        this.node = node;
+    }
+    
+    /**
+     * Method to generate the piece of JPQL for the node.
+     * 
+     * @return corresponding piece of JPQL query or {@literal empty String} if operator not supported.
      */
     @Override
-    public String toQueryElement(Node<String> node) throws NullPointerException {
-
-        Node<String> child = ((UnaryNode<String>) node).getChild();
-        ILdapHandler<String> handler = ((IValidatorNode<String>) child).getHandler();
-        if(handler == null){
-            throw new NullPointerException("No handler for the child of the Unarynode");
-        }
-        else{
-            return "NOT " + handler.toQueryElement(child);
+    public String toQueryElement() {
+        if (node.getData().equals("!")) {
+            return "NOT " + node.getChild().getHandler().toQueryElement();
+        } else {
+            return "";
         }
     }
     

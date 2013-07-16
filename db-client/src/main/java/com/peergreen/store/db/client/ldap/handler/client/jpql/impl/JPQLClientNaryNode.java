@@ -1,13 +1,11 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
-import java.util.List;
-
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
-import com.peergreen.tree.Node;
+
 
 /**
  * 
@@ -15,39 +13,42 @@ import com.peergreen.tree.Node;
  *
  */
 public class JPQLClientNaryNode implements ILdapHandler<String> {
+    private NaryNode<String> node;
+    
     /**
-     * This handler is used when a NaryNode is created so
-     * we concatenate all the child with the Narynode's operation 
-     * the piece of JPQL corresponding
+     * Constructor with initialization.
      * 
-     * @param node input tree to transcript on JPQL
-     * @return corresponding piece of JPQL query
+     * @param node node associated to the JPQL handler.
+     */
+    public JPQLClientNaryNode(NaryNode<String> node) {
+        this.node = node;
+    }
+    
+    /**
+     * Method to generate the piece of JPQL for the node.
+     * 
+     * @return corresponding piece of JPQL query or {@literal empty String} if operator not supported.
      */
     @Override
-    public String toQueryElement(Node<String> node)throws NullPointerException {
-        String queryString = null;
+    public String toQueryElement() {
+        String query = "";
 
-        List<Node<String>> children = node.getChildren();
-        int size = children.size();
-
-        ILdapHandler<String> handler;
-        IValidatorNode<String> child;
-
-        for(int i =0; i<size-1; i++)
-        {
-            child = (IValidatorNode<String>) children.get(i);
-            handler = child.getHandler();
-            if(handler == null){
-                throw new NullPointerException("No handler for child of the unaryNode");
-            }else{
-                queryString = queryString + handler.toQueryElement(child) + " " + node.getData()+ " ";
+        int i = 0;
+        for (IValidatorNode<String> n : node.getChildrenValidatorNode()) {
+            String req = n.getHandler().toQueryElement();
+            
+            if (i == 0) {
+                query += req;
+            } else if ((i % 2) == 0) {
+                query += " " + req;
+            } else if ((i % 2) == 1) {
+                query += " " + node.getData() + " " + req;
             }
+            
+            i++;
         }
-        child= (IValidatorNode<String>) children.get(size-1);
-        handler = child.getHandler();
-        queryString = queryString + " " + handler.toQueryElement(child);
 
-        return queryString;
+        return query;
     }
 
     @Override

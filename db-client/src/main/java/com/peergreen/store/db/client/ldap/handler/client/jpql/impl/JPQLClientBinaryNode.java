@@ -4,31 +4,35 @@ import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
-import com.peergreen.tree.Node;
+
 
 /**
  *JPQL Client for handle BinaryNode and generate a piece of JPQL query 
  */
 public class JPQLClientBinaryNode implements ILdapHandler<String> {
-
+    private BinaryNode<String> node;
+    
     /**
-     * This handler is used when a binaryNode is created so 
-     * we can get from it, his two child to generate the piece of JPQL corresponding
+     * Constructor with initialization.
      * 
-     * @param node input tree to transcript on JPQL
-     * @return corresponding piece of JPQL query
+     * @param node node associated to the JPQL handler.
+     */
+    public JPQLClientBinaryNode(BinaryNode<String> node) {
+        this.node = node;
+    }
+    
+    /**
+     * Method to generate the piece of JPQL for the node.
+     * 
+     * @return corresponding piece of JPQL query or {@literal empty String} if operator not supported.
      */
     @Override
-    public String toQueryElement(Node<String> node) {
+    public String toQueryElement() {
+        String query = "";
+
+        query += node.getLeftOperand() + " " + node.getData() + " " + node.getRightOperand();
         
-         // The operation of this node 
-        String op = node.getData();
-        Node<String> childLeft = ((BinaryNode<String>) node).getLeftOperand();
-        Node<String> childRight = ((BinaryNode<String>) node).getRightOperand();
-        
-        String attribute = "c.".concat(childLeft.getData());
-        String value = '\'' + childRight.getData() + '\'' ;
-        return attribute + op  + value ;
+        return query;
     }
 
     @Override
