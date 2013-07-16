@@ -5,6 +5,8 @@ import java.util.Collection;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public interface ISessionUser {
 
@@ -16,8 +18,9 @@ public interface ISessionUser {
      * @param password the user's password
      * @param email the user's mail 
      * @return created user instance
+     * @throws EntityAlreadyExistsException 
      */
-    User addUser(String pseudo, String password, String email);
+    User addUser(String pseudo, String password, String email) throws EntityAlreadyExistsException;
 
     /**
      * Method to find a user
@@ -36,9 +39,9 @@ public interface ISessionUser {
     Collection <User> collectUsers();
 
     /**
-     * Method to remove a user using his pseudo
+     * Method to remove a user using its pseudo.
      * 
-     * @param pseudo The pseudo of the user to remove from the database
+     * @param pseudo pseudo of the user to remove from the database
      */
     void removeUserbyPseudo(String pseudo);
 
@@ -84,27 +87,26 @@ public interface ISessionUser {
      * 
      * @param user The user to remove from the group
      * @param group The group to which is removed the user
-     * 
      * @return A user with new list of groups
      */
     User removeGroup(User user, Group group);
 
     /**
-     * Method to collect all the groups to which a user belongs
+     * Method to collect all the groups to which a user belongs.
      * 
      * @param pseudo the user's pseudo
-     * 
      * @return A collection with the groups to which the user with the pseudo 'pseudo' belongs
+     * @throws NoEntityFoundException 
      */
-    Collection<Group> collectGroups(String pseudo);
+    Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException;
 
     /**
-     * Method to collect all the petals to which a user has access 
+     * Method to collect all the petals to which a user has access.
      * 
      * @param pseudo the user's pseudo
-     * 
      * @return A collection with the petals to which the user with the pseudo 'pseudo' has access
+     * @throws NoEntityFoundException 
      */
-    Collection<Petal> collectPetals(String pseudo);
+    Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException;
 
 }

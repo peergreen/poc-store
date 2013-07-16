@@ -16,6 +16,8 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 
 /**
@@ -49,11 +51,11 @@ public class DefaultUser implements ISessionUser {
      * @exception EntityExistsException
      */
     @Override
-    public User addUser(String pseudo, String password, String email) throws EntityExistsException  {
+    public User addUser(String pseudo, String password, String email) throws EntityAlreadyExistsException {
         User user = entityManager.find(User.class, pseudo);
 
         if (user != null) {
-            throw new EntityExistsException("This user already exists");
+            throw new EntityAlreadyExistsException("This user already exists.");
         } else {
             user = new User(pseudo, password, email);
             entityManager.persist(user);
@@ -81,6 +83,7 @@ public class DefaultUser implements ISessionUser {
     @Override
     public Collection<User> collectUsers() {
         Query users = entityManager.createNamedQuery("User.findAll");
+        @SuppressWarnings("unchecked")
         List<User> usersList = users.getResultList();
         Set<User> userSet = new HashSet<User>();
         userSet.addAll(usersList);
@@ -88,19 +91,15 @@ public class DefaultUser implements ISessionUser {
     }
 
     /**
-     * Method to remove a user using its pseudo.<br />
-     * Throws IllegalArgumentException if user is null.
+     * Method to remove a user using its pseudo.
      * 
-     * @param pseudo The pseudo of the user to remove from the database
-     * @exception IllegalArgumentException
+     * @param pseudo pseudo of the user to remove from the database
      */
     @Override
-    public void removeUserbyPseudo(String pseudo) throws IllegalArgumentException {
+    public void removeUserbyPseudo(String pseudo) {
         User user = entityManager.find(User.class, pseudo);
-        if (user!=null) {
+        if (user != null) {
             entityManager.remove(user);
-        } else {
-            throw new IllegalArgumentException("Cannot find the sepcified user on database.");
         }
     }
 
@@ -149,32 +148,32 @@ public class DefaultUser implements ISessionUser {
 
     /**
      * Method to collect all the groups to which a user belongs.<br />
-     * Throws IllegalArgumentException if user is null.
+     * Throws NoEntityFoundException cannot be found in database.
      * 
      * @param pseudo the user's pseudo
      * @return A collection with the groups to which the user with the pseudo 'pseudo' belongs
-     * @exception IllegalArgumentException
+     * @exception NoEntityFoundException
      */
     @Override
-    public Collection<Group> collectGroups(String pseudo) throws IllegalArgumentException {
+    public Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException {
         User user = entityManager.find(User.class, pseudo);
-        if(user!=null) {
+        if (user != null) {
             return user.getGroupSet();
         } else {
-            throw new IllegalArgumentException("This user doesn't exist in the database.");
+            throw new NoEntityFoundException("This user doesn't exist in the database.");
         }
     }
 
     /**
      * Method to collect all the petals to which a user has access.<br />
-     * Throws IllegalArgumentException if user is null.
+     * Throws NoEntityFoundException if user cannot be found in database.
      * 
      * @param pseudo the user's pseudo
      * @return A collection with the petals to which the user with the pseudo 'pseudo' has access
-     * @exception IllegalArgumentException
+     * @exception NoEntityFoundException
      */
     @Override
-    public Collection<Petal> collectPetals(String pseudo) throws IllegalArgumentException {
+    public Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException {
         User user = entityManager.find(User.class, pseudo);
         
         if (user != null) {
@@ -188,7 +187,7 @@ public class DefaultUser implements ISessionUser {
 
             return petals;
         } else{
-            throw new IllegalArgumentException("This user doesn't exist in the database.");
+            throw new NoEntityFoundException("This user doesn't exist in the database.");
         }
     }
 

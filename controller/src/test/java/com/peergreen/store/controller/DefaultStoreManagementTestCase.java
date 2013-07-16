@@ -33,6 +33,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultStoreManagementTestCase {
 
@@ -116,7 +117,8 @@ public class DefaultStoreManagementTestCase {
     }
 
    // @Test
-    public void testCollectPetalsForUser() {
+    // TODO handle exception
+    public void testCollectPetalsForUser() throws NoEntityFoundException {
         User user = new User();
         user.setPseudo("Robert");
         Group group1 = new Group();

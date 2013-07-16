@@ -18,6 +18,8 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultGroupControllerTestCase {
 
@@ -39,10 +41,14 @@ public class DefaultGroupControllerTestCase {
     public void testAddGroup() {
         String groupName = "myGroup";
         groupController.addGroup(groupName);
-        verify(groupSession).addGroup(groupName);
+        try {
+            verify(groupSession).addGroup(groupName);
+        } catch (EntityAlreadyExistsException | NoEntityFoundException e) {
+            // TODO
+        }
     }
 
-    //    @Test(expectedExceptions = EntityExistsException.class)
+//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowExceptionGroupAlreadyExist() {
         //Given
         String groupName = "Administrator";
@@ -50,7 +56,6 @@ public class DefaultGroupControllerTestCase {
         //When 
         groupController.addGroup(groupName);
         //then, this should throw an exception 
-
     }
 
     @Test
@@ -68,14 +73,14 @@ public class DefaultGroupControllerTestCase {
 
     //    @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionCauseGroupNonExistent() {
-
         //when
         groupController.removeGroup("Inexist");
-        //then throw an Illegal Argument Exception 
+        //then throw an Illegal Argument Exception
+            // no need to throw an exception
     }
 
     @Test
-    public void testCollectUser() {
+    public void testCollectUser() throws NoEntityFoundException {
         String groupName = "myGroup";
 
         // mock facade => always return empty collection

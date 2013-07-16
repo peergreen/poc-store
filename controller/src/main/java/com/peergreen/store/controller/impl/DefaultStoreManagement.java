@@ -30,6 +30,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Class defining high level operations to manage server.
@@ -175,9 +176,8 @@ public class DefaultStoreManagement implements IStoreManagment {
                     petals = p;
                 }
             }
-        }
-        catch(IllegalArgumentException e){
-
+        } catch (NoEntityFoundException e) {
+            // TODO
         }
 
         return petals;

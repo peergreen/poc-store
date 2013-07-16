@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -27,6 +26,8 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultUser;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultUserTest {
 
@@ -57,7 +58,6 @@ public class DefaultUserTest {
     ArgumentCaptor<String> value;
     ArgumentCaptor<Group> groupArgument;
 
-
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -75,21 +75,17 @@ public class DefaultUserTest {
         userList = new ArrayList<User>();
     }
 
-
-
     @Test
-    public void shouldAddUserNonExistent() {
-
+    public void shouldAddUserNonExistent() throws EntityAlreadyExistsException {
         //When 
         sessionUser.addUser(pseudo, password, email);
+        
         //Then
         verify(entityManager).persist(userArgument.capture());
         Assert.assertEquals(pseudo, userArgument.getValue().getPseudo());
         Assert.assertEquals(password, userArgument.getValue().getPassword());
         Assert.assertEquals(email, userArgument.getValue().getEmail());
-
     }
-
 
     @Test
     public void shouldUpdateUserPassword(){
@@ -126,8 +122,7 @@ public class DefaultUserTest {
     }
 
     @Test
-    public void shouldRemoveUserByPseudo(){
-
+    public void shouldRemoveUserByPseudo() {
         //Given
         when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
         //WHen
@@ -140,29 +135,26 @@ public class DefaultUserTest {
 
     }
 
-    @Test(expectedExceptions= EntityExistsException.class)
-    public void shouldThrowsExceptionWhenAddCauseUserExistent() {
+    @Test(expectedExceptions= EntityAlreadyExistsException.class)
+    public void shouldThrowsExceptionWhenAddCauseUserExistent() throws EntityAlreadyExistsException {
         when(entityManager.find(eq(User.class),anyString())).thenReturn(mockuser);
         sessionUser.addUser(pseudo,password,email);
     }
     
-    @Test(expectedExceptions= IllegalArgumentException.class)
-    public void shouldThrowsExceptionWhenDeleteCauseUserExistent() {
+    @Test
+    public void shouldThrowsExceptionWhenDeleteCauseUserExistent() throws NoEntityFoundException {
         when(entityManager.find(eq(User.class),anyString())).thenReturn(null);
         sessionUser.removeUserbyPseudo(pseudo);
     }
 
     @Test
     public void shouldFindUser() {
-
         //When
         sessionUser.findUserByPseudo(pseudo);
         //Then
         verify(entityManager).find(eq(User.class),value.capture());
         Assert.assertEquals(pseudo, value.getValue());
-
     }
-
 
     @Test
     public void shouldCollectUsers(){
@@ -175,7 +167,6 @@ public class DefaultUserTest {
         //Then
         verify(entityManager).createNamedQuery(queryString);
         verify(query).getResultList();
-
     }
 
     @Test
@@ -194,7 +185,7 @@ public class DefaultUserTest {
     }
 
     @Test
-    public void shouldCollectGroup(){
+    public void shouldCollectGroup() throws NoEntityFoundException{
         //Given
         when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
         //When
@@ -205,8 +196,8 @@ public class DefaultUserTest {
         verify(mockuser).getGroupSet();
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenCollectGroupCauseEntityNotExisting(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenCollectGroupCauseEntityNotExisting() throws NoEntityFoundException{
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
         //When
@@ -228,7 +219,7 @@ public class DefaultUserTest {
     }
 
     @Test
-    public void shouldCollectPetal() {
+    public void shouldCollectPetal() throws NoEntityFoundException {
         //Given
         when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
         Set<Group> userGroups = new HashSet<>();
@@ -251,8 +242,8 @@ public class DefaultUserTest {
         verify(group).getPetals();
     }
     
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenCollectPetalCauseEntityNotExisting(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenCollectPetalCauseEntityNotExisting() throws NoEntityFoundException{
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
         //When

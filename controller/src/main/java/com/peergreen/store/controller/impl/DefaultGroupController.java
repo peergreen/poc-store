@@ -2,8 +2,6 @@ package com.peergreen.store.controller.impl;
 
 import java.util.Collection;
 
-import javax.persistence.EntityExistsException;
-
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -14,6 +12,8 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Class defining all group related operations:
@@ -45,8 +45,10 @@ public class DefaultGroupController implements IGroupController {
     public Group addGroup(String groupName) {
         try{
             return groupSession.addGroup(groupName);
-        } catch(EntityExistsException e){
-
+        } catch (EntityAlreadyExistsException e) {
+            // TODO
+        } catch (NoEntityFoundException e) {
+            // TODO
         }
         return null;
     }
@@ -76,8 +78,8 @@ public class DefaultGroupController implements IGroupController {
     public Collection<User> collectUsers(String groupName) {
         try{
             return groupSession.collectUsers(groupName);
-        }catch(IllegalArgumentException e) {
-            
+        } catch (NoEntityFoundException e) {
+            // TODO
         }
         return null;
     }

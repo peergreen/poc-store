@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityExistsException;
-
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -16,6 +14,8 @@ import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Class defining all user related operations:
@@ -82,7 +82,8 @@ public class DefaultUserController implements IUserController {
 
         try {
             user = userSession.addUser(pseudo, password, email);
-        } catch(EntityExistsException e){
+        } catch(EntityAlreadyExistsException e) {
+            System.out.println("User--------------------");
             System.err.println("User already exists.");
         }
         
@@ -96,11 +97,7 @@ public class DefaultUserController implements IUserController {
      */
     @Override
     public void removeUser(String pseudo) {
-        try{
-            userSession.removeUserbyPseudo(pseudo);
-        }catch(IllegalArgumentException e){
-
-        }
+        userSession.removeUserbyPseudo(pseudo);
     }
 
     /**
@@ -136,11 +133,10 @@ public class DefaultUserController implements IUserController {
     @Override
     public Collection<Group> collectGroups(String pseudo) {
         Collection<Group> groups = null;
-        try{
+        try {
             groups = userSession.collectGroups(pseudo);
-        }
-        catch(IllegalArgumentException e){
-
+        } catch (NoEntityFoundException e) {
+            // TODO
         }
         return groups; 
     }

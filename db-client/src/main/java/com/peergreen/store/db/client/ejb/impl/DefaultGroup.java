@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -18,9 +17,12 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
+
 
 /**
- * Class defining an entity session to manage the entity Group
+ * Class defining an entity session to manage the entity Group.
  * <ul>
  *      <li>Create a group in a database</li>
  *      <li>Find a group from the database</li>
@@ -53,28 +55,33 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     /**
-     * Method to add a new group in the database.
-     * The attributes petals are null when creating the group 
-     * but we have one user : the administrator
-     * It throws an exception "EntityExistsException" 
-     * when the entity already exist in the database
+     * <p>
+     * Method to add a new group in the database.<br />
+     * List of allowed petals is empty when creating the group
+     *  but one user is automatically added to users list: Administrator.
+     * </p>
+     * <p>
+     * Throws EntityAlreadyExistsException
+     *  when an entity with same id already exists in the database.<br />
+     * Throws NoEntityFoundException if user Administrator doesn't already exist.
+     * </p>
      * 
-     * @param groupName the name of the group to create
-     * @return The new group
+     * @param groupName group name to create
+     * @return group created
+     * @throws EntityAlreadyExistsException
+     * @throws NoEntityFoundException
      */
     @Override
-    public Group addGroup(String groupName) throws EntityExistsException, NoResultException{
+    public Group addGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException {
         Group group = findGroup(groupName) ;
 
         if(group != null) {
-            throw new EntityExistsException();
-        }
-        else{
+            throw new EntityAlreadyExistsException("This group already exists on database.");
+        } else {
             group = new Group(groupName);
             User admin = sessionUser.findUserByPseudo("Administrator");
-            if(admin == null){
-                String e = "You have to create the administrator first at all";
-                throw new NoResultException(e);
+            if (admin == null) {
+                throw new NoEntityFoundException("You have to create the administrator first at all.");
             }
             group.getUsers().add(admin);
             entityManager.persist(group);
@@ -83,54 +90,59 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     /**
-     * Method to find a group in the database
-     * It returns null if the group doesn't exist. 
+     * Method to find a group in the database.
      *  
-     * @param groupName the group's name
-     * @return the group with the name 'groupName'
+     * @param groupName group's name
+     * @return found group with the name 'groupName', {@literal null} other wise
      */
     @Override
-    public Group findGroup(String groupName){
+    public Group findGroup(String groupName) {
         Query q = entityManager.createNamedQuery("GroupByName");
         q.setParameter("name", groupName);
         Group result;
-        try{
+        try {
             result = (Group)q.getSingleResult();
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             result = null;
         }
         return result;
     }
 
-
+    // TODO
     /**
-     * Method to delete the group with the name groupName
-     * It throws an IllegalArgumentException if the entity to remove
+     * Method to delete the group thanks to its name.<br />
+     * Throws an IllegalArgumentException if the entity to remove
      * doesn't exist in the database.
+     * 
      * @param groupName the name of the group to delete
      */
     @Override
-    public void deleteGroup(String groupName)throws IllegalArgumentException {
+    public void deleteGroup(String groupName) /* throws NoEntityFoundException */ {
         Group group = findGroup(groupName);
-        if(group != null){
-            entityManager.remove(group);
+
+        // remove works
+        //      => no more this entity
+        // remove doesn't work because there was not this entity
+        //      => no more this entity
+        // Conclusion: no need to throw an exception
+        /*
+        if  (group == null) {
+            throw new NoEntityFoundException("This group doesn't exist in databse.");
         }
-        else{
-            throw new IllegalArgumentException();
-        }   
+        */
+
+        entityManager.remove(group);
     }
 
     /**
-     * Method to add a user to the instance of Group 'group'
+     * Method to add a user to a group.
      * 
-     * @param group the group to which add the user
-     * @param myUser the user to add to the group 
-     * 
-     * @return A group with the new user
+     * @param group group to which add the user
+     * @param myUser user to add to the group 
+     * @return modified Group instance
      */
     @Override
     public Group addUser(Group group, User myUser) {
-
         Set<User> users = group.getUsers();
         users.add(myUser);
         group.setUsers(users);
@@ -140,12 +152,11 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     /**
-     * Method to remove a user to the instance of Group 'group'
+     * Method to remove a user from a group.
      * 
-     * @param group the group to which remove the user
-     * @param user the user to remove to the group
-     * 
-     * @return A group without the user deleted
+     * @param group group from which remove the user
+     * @param user user to remove from the group
+     * @return modified group
      */
     @Override
     public Group removeUser(Group group, User user) {
@@ -158,23 +169,21 @@ public class DefaultGroup implements ISessionGroup {
     }
 
     /**
-     * Method to collect the users which belongs to the group 
-     * with the name 'groupName'
-     * It throws an IllegalArgumentException
-     * when the group doesn't exist
-     * @param groupName the group's name
+     * Method to collect the users which belong to a specified group.<br />
+     * Throws an NoEntityFoundException when the group doesn't exist.
      * 
-     * @return A collection of users wich belongs to the group
+     * @param groupName group's name
+     * @return collection of users which belong to the group
+     * @exception NoEntityFoundException
      */
     @Override
-    public Collection<User> collectUsers(String groupName)throws IllegalArgumentException{
+    public Collection<User> collectUsers(String groupName)throws NoEntityFoundException {
         Group group = findGroup(groupName);
 
-        if(group != null){
+        if (group != null) {
             return group.getUsers();
-        }
-        else{
-            throw new IllegalArgumentException();
+        } else{
+            throw new NoEntityFoundException("Group with name:" + groupName + "doesn't exist in database.");
         }
     }
 
@@ -239,6 +248,7 @@ public class DefaultGroup implements ISessionGroup {
     @Override
     public Collection<Group> collectGroups() {
         Query groups = entityManager.createNamedQuery("Series.findAll");
+        @SuppressWarnings("unchecked")
         List<Group> groupList = groups.getResultList();
         Set<Group> groupSet = new HashSet<Group>();
         groupSet.addAll(groupList);
