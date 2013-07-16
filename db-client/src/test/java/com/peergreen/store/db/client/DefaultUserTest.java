@@ -2,10 +2,12 @@ package com.peergreen.store.db.client;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultUser;
@@ -225,22 +228,27 @@ public class DefaultUserTest {
     }
 
     @Test
-    public void shouldCollectPetal(){
+    public void shouldCollectPetal() {
         //Given
         when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
-        when(mockuser.getGroupSet()).thenReturn(groups);
-        when(groups.toArray()).thenReturn(groupArray);
+        Set<Group> userGroups = new HashSet<>();
+        
+        Group group = mock(Group.class);
+        Set<Petal> userPetals = new HashSet<>();
+        when(group.getPetals()).thenReturn(userPetals);
+        
+        userGroups.add(group);
+        
+        when(mockuser.getGroupSet()).thenReturn(userGroups);
 
         //when
         sessionUser.collectPetals(pseudo);
         //Then
-        verify(entityManager).find(eq(User.class),value.capture());
+        verify(entityManager).find(eq(User.class), value.capture());
         Assert.assertEquals(pseudo, value.getValue());
 
         verify(mockuser).getGroupSet();
-        verify(mockgroup).getPetals();
-
-
+        verify(group).getPetals();
     }
     
     @Test(expectedExceptions = IllegalArgumentException.class)
