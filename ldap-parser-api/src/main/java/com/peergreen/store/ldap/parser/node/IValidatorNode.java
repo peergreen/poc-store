@@ -15,4 +15,5 @@ public interface IValidatorNode<T> extends Node<T> {
     void addChild(IValidatorNode<T> child);
     ILdapHandler<T> getHandler();
     void setHandler(ILdapHandler<T> handler);
+    void visit();
 }

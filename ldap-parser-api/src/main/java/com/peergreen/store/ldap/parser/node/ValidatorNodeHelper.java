@@ -49,4 +49,14 @@ public abstract class ValidatorNodeHelper<T> extends SimpleNode<T> implements IV
     public void setHandler(ILdapHandler<T> handler) {
         this.handler = handler;
     }
+    
+    @Override
+    public void visit() {
+        for (IValidatorNode<T> n : getChildrenValidatorNode()) {
+            // recursive call
+            n.visit();
+            // ask for lazy generation
+            n.getHandler().toQueryElement();
+        }
+    }
 }
