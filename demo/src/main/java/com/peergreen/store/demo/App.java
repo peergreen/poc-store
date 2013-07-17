@@ -54,9 +54,10 @@ public class App {
 
         // create a capability
         // add it to the capabilities list
-        Capability cap = new Capability("tut", "1", "test", null);
+        Capability cap = petalController.createCapability("tut", "1", "test", null);
         Set<Capability> capabilities = new HashSet<>();
         capabilities.add(cap);
+        
         // create a requirement
         // add it to the requirements list
         Set<Requirement> requirements = new HashSet<>();
@@ -72,10 +73,8 @@ public class App {
         petalController.addPetal(vendor, "Store", "0.1.0-beta", "Apps Store for Peergreen Platform",
                 category, requirements, capabilities, Origin.LOCAL, petalBinary);
         
-        // requirementSession.findCapability(filter)
-        Requirement req = new Requirement();
-        req.setFilter("(&(artifactId=Store)(version=0.1.0-beta))");
-        req.setNamespace("test");
+        Requirement req = petalController.createRequirement("test", "test", "(&(artifactId=Store)(version=0.1.0-beta))");
+        
         Collection<Capability> listResolvedCapabilities = requirementSession.findCapabilities("test", req);
         for (Capability c : listResolvedCapabilities) {
             System.out.println(c.getCapabilityName());
