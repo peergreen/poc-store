@@ -35,7 +35,6 @@ public class DefaultRequirementTest {
     private String requirementName;
     private String queryString;
     private String queryString2;
-    private List<Requirement> requs;
     @Mock
     private EntityManager entityManager;
     @Mock
@@ -62,7 +61,6 @@ public class DefaultRequirementTest {
         filter="namespace=service";
         queryString = "Requirement.findAll";
         queryString2 = "RequirementByName";
-        requs = new ArrayList<Requirement>();
     }
 
     @Test
