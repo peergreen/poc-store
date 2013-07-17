@@ -22,6 +22,7 @@ import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 @Component
 @Instantiate
@@ -73,7 +74,12 @@ public class App {
         petalController.addPetal(vendor, "Store", "0.1.0-beta", "Apps Store for Peergreen Platform",
                 category, requirements, capabilities, Origin.LOCAL, petalBinary);
         
-        Requirement req = petalController.createRequirement("test", "test", "(&(artifactId=Store)(version=0.1.0-beta))");
+        Requirement req = null;
+        try {
+            req = petalController.createRequirement("test", "test", "(&(artifactId=Store)(version=0.1.0-beta))");
+        } catch (EntityAlreadyExistsException e) {
+            e.printStackTrace();
+        }
         
         Collection<Capability> listResolvedCapabilities = requirementSession.findCapabilities("test", req);
         for (Capability c : listResolvedCapabilities) {

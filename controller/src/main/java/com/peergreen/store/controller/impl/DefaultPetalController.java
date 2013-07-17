@@ -363,17 +363,11 @@ public class DefaultPetalController implements IPetalController {
      * 
      * @param requirementName requirement's name
      * @param filter requirement's filter
+     * @throws EntityAlreadyExistsException 
      */
     @Override
-    public Requirement createRequirement(String requirementName, String namespace, String filter) {
-        Requirement requirement = null;
-        try {
-            requirement = requirementSession.addRequirement(requirementName,namespace,filter);
-        } catch (EntityAlreadyExistsException e) {
-            // TODO
-            e.printStackTrace();
-        }
-        return requirement;
+    public Requirement createRequirement(String requirementName, String namespace, String filter) throws EntityAlreadyExistsException {
+        return requirementSession.addRequirement(requirementName, namespace, filter);
     }
 
     /**

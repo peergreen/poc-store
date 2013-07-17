@@ -13,6 +13,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 /**
  * Interface defining all petal related operations:
@@ -174,10 +175,10 @@ public interface IPetalController {
      * Method to add a new Requirement to the database.
      * 
      * @param requirementName requirement's name
-     * @param namespace requirement's namespace
      * @param filter requirement's filter
+     * @throws EntityAlreadyExistsException 
      */
-    Requirement createRequirement(String requirementName, String namespace, String filter);
+    Requirement createRequirement(String requirementName, String namespace, String filter) throws EntityAlreadyExistsException;
 
     /**
      * Method to collect all the petal's requirements.

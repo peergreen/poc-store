@@ -63,7 +63,7 @@ public class DefaultRequirement implements ISessionRequirement {
      * @throws EntityAlreadyExistsException
      */
     @Override
-    public Requirement addRequirement(String requirementName,String namespace,String filter) throws EntityAlreadyExistsException {
+    public Requirement addRequirement(String requirementName, String namespace, String filter) throws EntityAlreadyExistsException {
         Requirement requirement = findRequirement(requirementName);
 
         if (requirement != null) {

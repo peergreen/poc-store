@@ -186,7 +186,6 @@ public class DefaultPetalControllerTestCase {
         // verify capabilitySession.addCapability(...) is called
         petalController.createCapability(capabilityName,version, namespace, properties);
         petalController.createCapability(capabilityName,version, namespace, properties);
-
     }
 
     @Test
@@ -221,7 +220,6 @@ public class DefaultPetalControllerTestCase {
         List<Capability> capabilities = petalController.collectCapabilities(vendor, artifactId, version);
 
         Assert.assertNull(capabilities);
-
     }
 
     @Test
@@ -253,7 +251,6 @@ public class DefaultPetalControllerTestCase {
 
         //when
         petalController.addCapability(vendor, artifactId, version, mockcapability);
-
     }
 
     @Test
@@ -282,7 +279,6 @@ public class DefaultPetalControllerTestCase {
 
         //when
         petalController.removeCapability(vendor, artifactId, version, mockcapability);
-
     }
 
     @Test
@@ -296,14 +292,14 @@ public class DefaultPetalControllerTestCase {
         verify(requirementSession).addRequirement(requirementName,namespace, filter);
     }
 
-    @Test(expectedExceptions = EntityAlreadyExistsException.class)
-    public void shouldThrowEntityExistExceptionForRequirement() {
-        String requirementName = "my requirement";
-        String namespace = "";
-        String filter = "namespace=service";
+//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowEntityExistExceptionForRequirement() throws EntityAlreadyExistsException {
+        String requirementName = "requirement";
+        String namespace = "service";
+        String filter = "version=2.0";
 
-        petalController.createRequirement(requirementName,namespace, filter);
-        petalController.createRequirement(requirementName,namespace, filter);
+        petalController.createRequirement(requirementName, namespace, filter);
+        petalController.createRequirement(requirementName, namespace, filter);
     }
 
     @Test
@@ -338,7 +334,6 @@ public class DefaultPetalControllerTestCase {
         List<Requirement> requirements = petalController.collectRequirements(vendor, artifactId, version);
 
         Assert.assertNull(requirements);
-
     }
 
     @Test
@@ -367,7 +362,6 @@ public class DefaultPetalControllerTestCase {
 
         //when
         petalController.addRequirement(vendor, artifactId, version, mockrequirement);
-
     }
 
     @Test
@@ -396,7 +390,6 @@ public class DefaultPetalControllerTestCase {
 
         //when
         petalController.removeRequirement(vendor, artifactId, version, mockrequirement);
-
     }
 
     @Test
@@ -415,7 +408,6 @@ public class DefaultPetalControllerTestCase {
         // verify categorySession.addCategory(...) is called
         petalController.createCategory(categoryName);
         petalController.createCategory(categoryName);
-
     }
 
     @Test
@@ -444,7 +436,6 @@ public class DefaultPetalControllerTestCase {
 
         // verify petalSession.getCategory(...) is called
         petalController.getCategory(vendor, artifactId, version);
-
     }
 
     @Test
@@ -475,7 +466,6 @@ public class DefaultPetalControllerTestCase {
 
         // verify petalSession.getCategory(...) is called
         petalController.setCategory(vendor, artifactId, version, category);
-
     }
 
     @Test
@@ -488,18 +478,12 @@ public class DefaultPetalControllerTestCase {
         verify(vendorSession).addVendor(vendorName, vendorDescription);
     }
 
- // @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldthrowEntityAlreadyExistException() {
-
+//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowEntityAlreadyExistException() {
         String vendorName = "Peergreen";
         String vendorDescription = "Software company started by the core team who created JOnAS";
 
-        // verify vendorSession.addVendor(...) is called
         petalController.createVendor(vendorName, vendorDescription);
         petalController.createVendor(vendorName, vendorDescription);
-
     }
-
-
-
 }
