@@ -12,7 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.felix.ipojo.annotations.Requires;
+import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -39,7 +39,7 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 public class DefaultRequirement implements ISessionRequirement {
     private EntityManager entityManager;
 
-    @Requires
+    @OSGiResource
     private ILdapParser ldapParser;
     
     public EntityManager getEntityManager() {
@@ -173,6 +173,7 @@ public class DefaultRequirement implements ISessionRequirement {
     @Override
     public Collection<Requirement> collectRequirements() {
         Query reqs = entityManager.createNamedQuery("Requirement.findAll");
+        @SuppressWarnings("unchecked")
         List<Requirement> reqList = reqs.getResultList();
         Set<Requirement> reqSet = new HashSet<Requirement>();
         reqSet.addAll(reqList);
@@ -193,19 +194,25 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @Override
     public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
-        String queryString = "Select c From Capability where c.namespace="+namespace+" AND ";
+        String queryString = "Select c From Capability where c.namespace=\'"+namespace+"\' AND ";
         String filter = requirement.getFilter();
         try {
             IValidatorNode<String> root = ldapParser.parse(filter);
+            // TODO
             // asking for lazy generation of JPQL
-            
+            root.visit();
+            queryString += root.getHandler().toQueryElement();
         } catch (InvalidLdapFormatException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+        
+        System.err.println("JPQL request: " + queryString);
+        
         Query q = entityManager.createNamedQuery(queryString);
 
+        @SuppressWarnings("unchecked")
         List<Capability> res = q.getResultList();
         Set<Capability> capabilities = new HashSet<Capability>();
         capabilities.addAll(res);
