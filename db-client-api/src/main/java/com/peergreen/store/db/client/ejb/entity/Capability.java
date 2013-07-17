@@ -26,14 +26,18 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
  * Entity Bean representing in the database the capability of a petal
  */
 @NamedQueries({
-    @NamedQuery(
+    @NamedQuery (
             name = "Capability.findAll",
             query = "select cap from Capability cap"
-            ),
-            @NamedQuery(
-                    name = "CapabilityByName",
-                    query="select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
-                    )
+    ),
+    @NamedQuery (
+            name = "CapabilityByName",
+            query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
+    ),
+    @NamedQuery (
+            name = "Requirement.findCapabilities",
+            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace AND :req"
+    )
 })
 @Entity
 @IdClass(CapabilityId.class)
