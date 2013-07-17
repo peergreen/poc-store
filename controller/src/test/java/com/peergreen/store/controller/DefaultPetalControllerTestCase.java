@@ -2,6 +2,7 @@ package com.peergreen.store.controller;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -347,7 +348,7 @@ public class DefaultPetalControllerTestCase {
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
-        Requirement requirement = new Requirement();
+        Requirement requirement = mock(Requirement.class);
 
         // mock => always return targeted petal
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
@@ -376,7 +377,7 @@ public class DefaultPetalControllerTestCase {
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
-        Requirement requirement = new Requirement();
+        Requirement requirement = mock(Requirement.class);
 
         // mock => always return targeted petal
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
