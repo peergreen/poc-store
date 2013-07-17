@@ -4,25 +4,40 @@ import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-
+/**
+ * Interface defining all vendor related operations:
+ * <ul>
+ *      <li>Add a new vendor to the database</li>
+ *      <li>Remove a vendor from the database</li>
+ *      <li>Find a vendor in the database thanks to its name</li>
+ *      <li>Retrieve all petals provided by a specific vendor</li>
+ *      <li>Add a petal to a vendor provided petals list</li>
+ *      <li>Remove a petal from a vendor provided petals list</li>
+ *      <li>Retrieve all vendors present in database</li>
+ * </ul>
+ * 
+ */
 public interface ISessionVendor {
 
     /**
-     * Method to add a new instance of vendor in the database 
-     * The attribute petals are null when creating the group
+     * Method to add a new instance of vendor in the database.<br />
+     * Throws EntityAlreadyExistsException if a vendor with
+     *  same name already exists in database.<br />
      * 
-     * @param vendorName the vendor's name
-     * @param vendorDescription the vendor's description
-     * 
-     * @return A new instance of Vendor
+     * @param vendorName vendor's name
+     * @param vendorDescription vendor's description
+     * @return created vendor instance
+     * @throws EntityAlreadyExistsException 
      */
-    Vendor addVendor(String vendorName, String vendorDescription);
+    Vendor addVendor(String vendorName, String vendorDescription) throws EntityAlreadyExistsException;
 
     /**
-     * Method to delete a vendor with the name 'vendorName'
+     * Method to delete a vendor from the database.
      * 
-     * @param vendorName the name of the vendor to delete
+     * @param vendorName name of the vendor to delete
      */
     void deleteVendor(String vendorName);
 
@@ -36,40 +51,37 @@ public interface ISessionVendor {
     Vendor findVendor(String vendorName);
 
     /**
-     * Method to collect all the petals provided by
-     * the vendor with the name 'vendorName'
-     * 
+     * Method to collect all petals provided by a vendor with a specified name.<br />
+     * Throws an NoEntityFoundException if no vendor correspond to the given vendor name.
+     *  
      * @param vendorName the vendor's name to which we collect petals which he provides
-     * 
-     * @return A collection of petals which are provided by the vendor with the name 'vendorName'
+     * @return collection of petals which are provided by the specified vendor
+     * @throws NoEntityFoundException
      */
-    Collection<Petal> collectPetals(String vendorName);
+    Collection<Petal> collectPetals(String vendorName) throws NoEntityFoundException;
 
     /**
-     * Method to add a new petal to those provided by a vendor
+     * Method to add a new petal to those provided by a vendor.
      * 
-     * @param vendor the vendor to which add a new petal to provide
-     * @param petal the petal to provide by the vendor
-     * 
-     * @return A new vendor with the petal added in his list of petals provided
+     * @param vendor vendor to which add a new petal to provided petals list
+     * @param petal petal to add to provided petals list
+     * @return modified vendor entity with update provided petals list
      */
     Vendor addPetal(Vendor vendor, Petal petal);
 
     /**
-     * Method to delete a petal from those provided by a vendor
+     * Method to delete a petal from those provided by a vendor.
      * 
-     * @param vendor the vendor to which remove a petal
-     * @param petal the petal to remove from the list of petals provided by the vendor
-     * 
-     * @return A new vendor with the petal removed from his list of petals provided
+     * @param vendor vendor from which remove a petal
+     * @param petal petal to remove from the vendor list of provided petals
+     * @return modified vendor entity with update provided petals list
      */
     Vendor removePetal(Vendor vendor, Petal petal);
 
     /**
-     * Method to collect all the vendor in the database
+     * Method to collect all existing vendor in database.
      * 
-     * @return A collection of vendors in the database
+     * @return collection of all existing vendors in database
      */
     Collection<Vendor> collectVendors();
-
 }
