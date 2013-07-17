@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -18,13 +17,15 @@ import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
 
 /**
- * Class defining an entity session to manage the entity Requirement
+ * Class defining a session to manage the entity Requirement
  * <ul>
  *      <li>Create a requirement on database</li>
  *      <li>Remove a requirement from the database</li>
@@ -52,124 +53,113 @@ public class DefaultRequirement implements ISessionRequirement {
     }
 
     /**
-     *  Method to add a new requirement in the database.
-     *  It throws an exception "EntityExistsException " when 
-     *  the entity already exist in the database
+     * Method to add a new requirement in the database.<br />
+     * Throws EntityAlreadyExistException when requirement
+     *  is already present in the database.
      *  
-     * @param requirementName
-     * @param filter
-     * 
-     * @return A new instance of requirement
+     * @param requirementName requirement name
+     * @param filter requirement filter
+     * @return created Requirement instance
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Requirement addRequirement(String requirementName,String namespace,String filter)throws EntityExistsException {
+    public Requirement addRequirement(String requirementName,String namespace,String filter) throws EntityAlreadyExistsException {
         Requirement requirement = findRequirement(requirementName);
 
-        if(requirement != null){
-            throw new EntityExistsException();
-        }
-        else {
+        if (requirement != null) {
+            throw new EntityAlreadyExistsException("The requirement " + requirementName + " already exists in database.");
+        } else {
             requirement = new Requirement(requirementName,namespace,filter);
             entityManager.persist(requirement);
             return requirement;
         }
-
     }
 
     /**
-     * Method to delete a requirement in the database
-     * It throws an IllegalArgumentException if the entity to remove
-     * doesn't exist in the database.
+     * Method to delete a requirement from the database
      * 
      * @param requirementName the requirement's name
      */
     @Override
-    public void deleteRequirement(String requirementName)throws IllegalArgumentException {
-        Requirement temp = findRequirement(requirementName);
-        if(temp != null){
-            entityManager.remove(temp);
-        }
-        else {
-            throw new IllegalArgumentException();
+    public void deleteRequirement(String requirementName) {
+        Requirement req = findRequirement(requirementName);
+        if (req != null) {
+            entityManager.remove(req);
         }
     }
 
     /**
-     * Method to find a requirement in the database.
+     * Method to find a requirement in the database.<br />
      * It returns null if the category doesn't exist. 
      * 
-     * @param requirementName the requirement's name
-     * @return the capacity with the name 'requirementName'
+     * @param requirementName requirement's name
+     * @return requirement with the name 'requirementName'
      */
     @Override
-    public Requirement findRequirement(String requirementName){
+    public Requirement findRequirement(String requirementName) {
         Query q = entityManager.createNamedQuery("RequirementByName");
         q.setParameter("name", requirementName);
         Requirement result;
-        try{
-            result = (Requirement)q.getSingleResult();}
-        catch(NoResultException e){
+        try {
+            result = (Requirement)q.getSingleResult();
+        } catch(NoResultException e) {
             result = null;
         }
         return result;
     }
 
     /**
-     * Method to collect the petals which have the requirement with the name 'requirementName'
-     * It throws an IllegalArgumentException if the entity to remove
-     * doesn't exist in the database.
+     * Method to collect the petals which have this requirement.
      * 
-     * @param name the requirement's name
-     * @return A collection of all the petals which give this requirement
+     * @param name requirement's name
+     * @return collection of all the petals with this requirement
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Collection<Petal> collectPetals(String requirementName) throws IllegalArgumentException{
-
+    public Collection<Petal> collectPetals(String requirementName) throws NoEntityFoundException {
         Requirement requirement = findRequirement(requirementName);
-        if(requirement != null){
+        if (requirement != null) {
             return requirement.getPetals();
-        }
-        else {
-            throw new IllegalArgumentException();
+        } else {
+            throw new NoEntityFoundException("Cannot find this requirement on database.");
         }
     }
 
     /**
-     * Method to add a petal to the list of petals which have the requirement
+     * Method to add a petal to the list of petals which have this specific requirement.
      * 
-     * @param requirement the requirement that is needed for the petal
-     * @param petal the petal to add 
-     * 
-     * @return A new requirement with a new list of petals 
+     * @param requirement requirement that is needed by the petal
+     * @param petal petal to add 
+     * @return modified requirement (updated list of petals which share this requirement) 
      */
     @Override
     public Requirement addPetal(Requirement requirement, Petal petal) {
-
         Set<Petal> petals = requirement.getPetals();
         petals.add(petal);
         requirement.setPetals(petals);
-        requirement =  entityManager.merge(requirement);
-        return requirement;
+        return entityManager.merge(requirement);
     }
 
     /**
-     * Method to remove a petal to the list of petals which give the requirement
+     * Method to remove a petal from the list of petals which share this specific requirement.
      * 
-     * @param requirement the requirement that is needed for the petal
-     * @param petal the petal to remove
-     * 
-     * @return A new requirement with a new list of petals 
+     * @param requirement requirement needed by the petal
+     * @param petal petal to remove
+     * @return modified requirement (updated list of petals which share this requirement) 
      */
     @Override
     public Requirement removePetal(Requirement requirement, Petal petal) {
-
         Set<Petal> petals = requirement.getPetals();
         petals.remove(petal);
         requirement.setPetals(petals);
-        requirement = entityManager.merge(requirement);
-        return requirement;
+        return entityManager.merge(requirement);
     }
 
+    /**
+     * Method to collect all existing requirements in database.
+     * 
+     * @return collection containing all requirements existing in database
+     */
     @Override
     public Collection<Requirement> collectRequirements() {
         Query reqs = entityManager.createNamedQuery("Requirement.findAll");
@@ -180,42 +170,65 @@ public class DefaultRequirement implements ISessionRequirement {
         return reqSet;
     }
 
+    /**
+     * Method to modify a requirement's namespace.
+     * 
+     * @param requirement requirement to modify 
+     * @param namespace new namespace 
+     * @return updated Requirement
+     */
     @Override
     public Requirement updateNamespace(Requirement requirement, String namespace) {
         requirement.setNamespace(namespace);
         return entityManager.merge(requirement);
     }
 
+    /**
+     * Method to modify a requirement's filter.
+     * 
+     * @param requirement requirement to modify
+     * @param filter new filter
+     * @return updated Requirement
+     */
     @Override
     public Requirement updateFilter(Requirement requirement, String filter) {
         requirement.setFilter(filter);
         return entityManager.merge(requirement);
     }
 
+    /**
+     * Method to find matching between LDAP expression (Requirement filter) and Capabilities.
+     * 
+     * @param namespace request namespace
+     * @param requirement requirement containing all constaints to resolve
+     * @return collection of Capability that meets the given requirement
+     * @see DefaultLdapParser
+     */
     @Override
     public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
-        String queryString = "Select c From Capability where c.namespace=\'"+namespace+"\' AND ";
         String filter = requirement.getFilter();
+        
+        IValidatorNode<String> root = null;
         try {
-            IValidatorNode<String> root = ldapParser.parse(filter);
-            // TODO
+            root = ldapParser.parse(filter);
             // asking for lazy generation of JPQL
             root.visit();
-            queryString += root.getHandler().toQueryElement();
         } catch (InvalidLdapFormatException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         
-        System.err.println("JPQL request: " + queryString);
-        
-        Query q = entityManager.createNamedQuery(queryString);
-
+        Query query = entityManager.createNamedQuery("Requirement.findCapabilities");
+        query.setParameter("namespace", namespace);
+        if (root != null) {
+            query.setParameter("req", root.getHandler().toQueryElement());
+        } else {
+            // TODO: exception if parsed tree is null?
+        }
         @SuppressWarnings("unchecked")
-        List<Capability> res = q.getResultList();
+        List<Capability> results = query.getResultList();
+        
         Set<Capability> capabilities = new HashSet<Capability>();
-        capabilities.addAll(res);
+        capabilities.addAll(results);
         return capabilities;
     }
 }
