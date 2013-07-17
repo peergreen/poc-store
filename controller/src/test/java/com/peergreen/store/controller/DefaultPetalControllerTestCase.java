@@ -36,6 +36,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 public class DefaultPetalControllerTestCase {
 
@@ -285,18 +286,17 @@ public class DefaultPetalControllerTestCase {
     }
 
     @Test
-    public void testCreateRequirement() {
+    public void testCreateRequirement() throws EntityAlreadyExistsException {
         String requirementName = "my requirement";
         String namespace = "";
         String filter = "namespace=service";
-
 
         // verify requirementSession.addRequirement(...) is called
         petalController.createRequirement(requirementName,namespace, filter);
         verify(requirementSession).addRequirement(requirementName,namespace, filter);
     }
 
-//    @Test(expectedExceptions = EntityExistsException.class)
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowEntityExistExceptionForRequirement() {
         String requirementName = "my requirement";
         String namespace = "";
@@ -304,7 +304,6 @@ public class DefaultPetalControllerTestCase {
 
         petalController.createRequirement(requirementName,namespace, filter);
         petalController.createRequirement(requirementName,namespace, filter);
-
     }
 
     @Test

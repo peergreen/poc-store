@@ -5,19 +5,23 @@ import java.util.Collection;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
+
 
 public interface ISessionRequirement {
 
     /**
-     *  Method to add a new requirement in the database.
+     * Method to add a new requirement in the database.<br />
+     * Throws EntityAlreadyExistException when  requirement
+     *  already present in the database.
      *  
-     * @param requirementName
-     * @param filter
-     * @param namespace
-     * 
-     * @return A new instance of requirement
+     * @param requirementName requirement name
+     * @param filter requirement filter
+     * @return created Requirement instance
+     * @throws EntityAlreadyExistsException
      */
-    Requirement addRequirement(String requirementName,String namespace,String filter);
+    Requirement addRequirement(String requirementName, String namespace, String filter) throws EntityAlreadyExistsException;
 
     /**
      * Method to delete a requirement in the database
@@ -35,56 +39,64 @@ public interface ISessionRequirement {
     Requirement findRequirement (String requirementName);
 
     /**
-     * Method to collect the petals which have the requirement with the name 'requirementName'
+     * Method to collect the petals which have this requirement.
      * 
-     * @param requirementName the requirement's name
-     * @return A collection of all the petals which have this requirement
+     * @param name requirement's name
+     * @return collection of all the petals with this requirement
+     * @throws NoEntityFoundException 
      */
-    Collection<Petal> collectPetals(String requirementName);
+    Collection<Petal> collectPetals(String requirementName) throws NoEntityFoundException;
 
     /**
-     * Method to add a petal to the list of petals which have the requirement
+     * Method to add a petal to the list of petals which have this specific requirement.
      * 
-     * @param requirement the requirement that is needed for the petal
-     * @param petal the petal to add 
-     * 
-     * @return A new requirement with a new list of petals 
+     * @param requirement requirement that is needed by the petal
+     * @param petal petal to add 
+     * @return modified requirement (updated list of petals which share this requirement) 
      */
     Requirement addPetal(Requirement requirement,Petal petal);
 
     /**
-     * Method to remove a petal to the list of petals which have the requirement
+     * Method to remove a petal from the list of petals which share this specific requirement.
      * 
-     * @param requirement the requirement that is needed for the petal
-     * @param petal the petal to remove
-     * 
-     * @return A new requirement with a new list of petals 
+     * @param requirement requirement needed by the petal
+     * @param petal petal to remove
+     * @return modified requirement (updated list of petals which share this requirement) 
      */
     Requirement removePetal(Requirement requirement, Petal petal);
 
     /**
-     * Method to collect all the requirement in the database
+     * Method to collect all existing requirements in database.
      * 
-     * @return A collection of requirements in the database
+     * @return collection containing all requirements existing in database
      */
     Collection<Requirement> collectRequirements();
 
     /**
-     * Method to modify a requirement's namespace 
-     * @param requirement the requirement to modify 
-     * @param namespace the new namespace 
-     * @return
+     * Method to modify a requirement's namespace.
+     * 
+     * @param requirement requirement to modify
+     * @param namespace new namespace
+     * @return updated Requirement
      */
     Requirement updateNamespace(Requirement requirement, String namespace);
 
     /**
-     * Method to modify a requirement's filter 
-     * @param requirement the requirement to modify 
-     * @param filter the new filter
-     * @return
+     * Method to modify a requirement's filter.
+     * 
+     * @param requirement requirement to modify
+     * @param filter new filter
+     * @return updated Requirement
      */
     Requirement updateFilter(Requirement requirement, String filter);
     
+    /**
+     * Method to find matching between LDAP expression (Requirement filter) and Capabilities.
+     * 
+     * @param namespace request namespace
+     * @param requirement requirement containing all constaints to resolve
+     * @return collection of Capability that meets the given requirement
+     * @see DefaultLdapParser
+     */
     Collection<Capability> findCapabilities(String namespace, Requirement requirement);
-
 }

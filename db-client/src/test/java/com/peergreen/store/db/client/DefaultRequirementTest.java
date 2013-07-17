@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -22,6 +21,8 @@ import org.testng.annotations.Test;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.impl.DefaultRequirement;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultRequirementTest {
 
@@ -65,8 +66,7 @@ public class DefaultRequirementTest {
     }
 
     @Test
-    public void shouldAddRequirement() {
-
+    public void shouldAddRequirement() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(null);
@@ -80,18 +80,18 @@ public class DefaultRequirementTest {
         Assert.assertTrue(requirementArgument.getValue().getPetals().isEmpty());
     }
 
-    @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowExceptionWhenAddCauseAlreadyExist() {
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowExceptionWhenAddCauseAlreadyExist() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);
         //When
         sessionRequirement.addRequirement(requirementName, namespace, filter);
-
+        sessionRequirement.addRequirement(requirementName, namespace, filter);
     }
 
     @Test
-    public void shouldDeleteRequirement(){
+    public void shouldDeleteRequirement() {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);   
@@ -99,18 +99,16 @@ public class DefaultRequirementTest {
         sessionRequirement.deleteRequirement(requirementName);
         //Then 
         verify(entityManager).remove(requirementArgument.capture());
-        Assert.assertSame(mockrequirement,requirementArgument.getValue() );
-
+        Assert.assertSame(mockrequirement,requirementArgument.getValue());
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(null);   
-        //Whenvv
+        //When
         sessionRequirement.deleteRequirement(requirementName);
-
     }
 
     @Test
@@ -125,11 +123,10 @@ public class DefaultRequirementTest {
         verify(query).setParameter(anyString(), idArgument.capture());
         Assert.assertEquals(requirementName, idArgument.getValue());
         verify(query).getSingleResult();
-
     }
 
     @Test
-    public void shouldCollectPetals(){
+    public void shouldCollectPetals() throws NoEntityFoundException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);  
@@ -139,13 +136,12 @@ public class DefaultRequirementTest {
         verify(mockrequirement).getPetals();
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting() throws NoEntityFoundException {
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(null);  
         //When
         sessionRequirement.collectPetals(requirementName);
-        
     }
     
     @Test

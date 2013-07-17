@@ -35,6 +35,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 /**
  * Interface defining all petal related operations:
@@ -366,11 +367,11 @@ public class DefaultPetalController implements IPetalController {
     @Override
     public Requirement createRequirement(String requirementName, String namespace, String filter) {
         Requirement requirement = null;
-        try
-        {
+        try {
             requirement = requirementSession.addRequirement(requirementName,namespace,filter);
-        }catch(EntityExistsException e){
-
+        } catch (EntityAlreadyExistsException e) {
+            // TODO
+            e.printStackTrace();
         }
         return requirement;
     }
