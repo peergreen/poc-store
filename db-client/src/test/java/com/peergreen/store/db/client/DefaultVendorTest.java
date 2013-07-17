@@ -21,6 +21,8 @@ import org.testng.annotations.Test;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultVendor;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultVendorTest {
 
@@ -56,7 +58,7 @@ public class DefaultVendorTest {
     }
 
     @Test
-    public void shouldAddVendor() {
+    public void shouldAddVendor() throws EntityAlreadyExistsException {
         //Given
         String vendorName = "toto";
         String vendorDescription = "SSII";
@@ -68,12 +70,10 @@ public class DefaultVendorTest {
         Assert.assertEquals(vendorName, vendorArgument.getValue().getVendorName());
         Assert.assertEquals(vendorDescription, vendorArgument.getValue().getVendorDescription());
         Assert.assertNotNull(vendorArgument.getValue().getPetals());
-
-
     }
 
-    @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowExceptionWhenAddCauseAlreadyExist() {
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowExceptionWhenAddCauseAlreadyExist() throws EntityAlreadyExistsException {
 
         //Given
         String vendorName = "toto";
@@ -81,7 +81,6 @@ public class DefaultVendorTest {
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(mockvendor);
         //When
         vendorSession.addVendor(vendorName, vendorDescription);
-
     }
 
     @Test
@@ -95,11 +94,10 @@ public class DefaultVendorTest {
         Assert.assertEquals(vendorName, id.getValue());
         verify(entityManager).remove(vendorArgument.capture());
         Assert.assertSame(mockvendor, vendorArgument.getValue());
-
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+    @Test
+    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting() {
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
         //When
@@ -115,12 +113,10 @@ public class DefaultVendorTest {
         //Then
         verify(entityManager).find(eq(Vendor.class), id.capture());
         Assert.assertEquals(vendorName, id.getValue());
-
     }
 
     @Test
-    public void testCollectPetals() {
-
+    public void testCollectPetals() throws NoEntityFoundException {
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(mockvendor);
 
@@ -130,11 +126,10 @@ public class DefaultVendorTest {
         verify(entityManager).find(eq(Vendor.class), id.capture());
         Assert.assertEquals(vendorName, id.getValue());
         verify(mockvendor).getPetals();
-
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting() throws NoEntityFoundException {
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
         //When
@@ -153,7 +148,6 @@ public class DefaultVendorTest {
         Assert.assertSame(petal,petalArgument.getValue());
         verify(mockvendor).setPetals(petals);
         verify(entityManager).merge(mockvendor);
-
     }
 
     @Test
@@ -168,7 +162,6 @@ public class DefaultVendorTest {
         Assert.assertEquals(petal, petalArgument.getValue());
         verify(entityManager).merge(vendorArgument.capture());
         Assert.assertEquals(mockvendor, vendorArgument.getValue());
-
     }
 
     @Test 
@@ -181,6 +174,4 @@ public class DefaultVendorTest {
         verify(entityManager).createNamedQuery(queryString);
         verify(query).getResultList();
     }
-
-
 }

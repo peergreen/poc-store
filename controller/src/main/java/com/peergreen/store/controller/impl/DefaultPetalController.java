@@ -180,15 +180,10 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName vendor's name
      * @param vendorDescription vendor's description
      * @return created vendor instance
+     * @throws EntityAlreadyExistsException 
      */
-    public Vendor createVendor(String vendorName, String vendorDescription) {
-        Vendor vendor = null;
-        try{
-            vendor = vendorSession.addVendor(vendorName, vendorDescription);
-        }catch(EntityExistsException e){
-
-        }
-        return vendor;
+    public Vendor createVendor(String vendorName, String vendorDescription) throws EntityAlreadyExistsException {
+        return vendorSession.addVendor(vendorName, vendorDescription);
     }
 
     /**

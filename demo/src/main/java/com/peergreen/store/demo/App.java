@@ -42,7 +42,7 @@ public class App {
     ISessionRequirement requirementSession;
     
     @Validate
-    public void main() {
+    public void main() throws EntityAlreadyExistsException {
         System.out.println("Running");
 
         userController.addUser("Administrator", "pwd", "tut@hotmail.com");

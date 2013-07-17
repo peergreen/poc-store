@@ -61,8 +61,9 @@ public interface IPetalController {
      * @param vendorName vendor's name
      * @param vendorDescription vendor's description
      * @return created vendor instance
+     * @throws EntityAlreadyExistsException 
      */
-    Vendor createVendor(String vendorName, String vendorDescription);
+    Vendor createVendor(String vendorName, String vendorDescription) throws EntityAlreadyExistsException;
 
     /**
      * Method to collect all existing vendors in database.
