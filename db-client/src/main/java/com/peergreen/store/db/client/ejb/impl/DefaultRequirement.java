@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,6 +20,9 @@ import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientBinaryNode;
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientNaryNode;
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientUnaryNode;
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
@@ -42,7 +46,7 @@ public class DefaultRequirement implements ISessionRequirement {
 
     @OSGiResource
     private ILdapParser ldapParser;
-    
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -50,6 +54,13 @@ public class DefaultRequirement implements ISessionRequirement {
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @PostConstruct
+    public void initHandlers() {
+        ldapParser.register(new JPQLClientUnaryNode());
+        ldapParser.register(new JPQLClientBinaryNode());
+        ldapParser.register(new JPQLClientNaryNode());
     }
 
     /**
@@ -207,28 +218,35 @@ public class DefaultRequirement implements ISessionRequirement {
     @Override
     public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
         String filter = requirement.getFilter();
-        
+
         IValidatorNode<String> root = null;
         try {
             root = ldapParser.parse(filter);
-            // asking for lazy generation of JPQL
-            root.visit();
         } catch (InvalidLdapFormatException e) {
             e.printStackTrace();
         }
-        
-        Query query = entityManager.createNamedQuery("Requirement.findCapabilities");
-        query.setParameter("namespace", namespace);
+
+        Query query = null;
         if (root != null) {
-            query.setParameter("req", root.getHandler().toQueryElement());
+            String alias = "cap";
+            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
+                            + namespace + "\' AND " + root.getHandler().toQueryElement();
+            query = entityManager.createQuery(sql);
+            System.out.println(sql);
         } else {
             // TODO: exception if parsed tree is null?
         }
-        @SuppressWarnings("unchecked")
-        List<Capability> results = query.getResultList();
-        
+
         Set<Capability> capabilities = new HashSet<Capability>();
-        capabilities.addAll(results);
+
+        if (query != null) {
+            @SuppressWarnings("unchecked")
+            List<Capability> results = query.getResultList();
+
+            capabilities.addAll(results);
+            System.out.println(capabilities.size() + " capabilities match this requirement.");
+        }
+
         return capabilities;
     }
 }
