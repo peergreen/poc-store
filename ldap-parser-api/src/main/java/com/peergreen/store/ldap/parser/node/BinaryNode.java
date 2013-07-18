@@ -1,15 +1,14 @@
 package com.peergreen.store.ldap.parser.node;
 
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
-import com.peergreen.tree.Node;
 
 
-public class BinaryNode<T> extends ValidatorNodeHelper<T> {
+public class BinaryNode extends ValidatorNodeHelper {
     
-	private IValidatorNode<T> leftOperand;
-	private IValidatorNode<T> rightOperand;
+	private IValidatorNode<String> leftOperand;
+	private IValidatorNode<String> rightOperand;
 	
-    public BinaryNode(T data) {
+    public BinaryNode(String data) {
         super(data);
         leftOperand = null;
         rightOperand = null;
@@ -24,11 +23,11 @@ public class BinaryNode<T> extends ValidatorNodeHelper<T> {
     	}
     }
 
-    public Node<T> getLeftOperand() {
+    public IValidatorNode<String> getLeftOperand() {
         return leftOperand;
     }
     
-    public void setLeftOperand(IValidatorNode<T> leftOperand) {
+    public void setLeftOperand(IValidatorNode<String> leftOperand) {
         // remove previous left operand
         if (leftOperand != null) {
             getChildren().remove(leftOperand);
@@ -36,11 +35,11 @@ public class BinaryNode<T> extends ValidatorNodeHelper<T> {
         this.leftOperand = leftOperand;
     }
 
-    public Node<T> getRightOperand() {
+    public IValidatorNode<String> getRightOperand() {
         return rightOperand;
     }
     
-    public void setRightOperand(IValidatorNode<T> rightOperand) {
+    public void setRightOperand(IValidatorNode<String> rightOperand) {
         // remove previous right operand
         if (rightOperand != null) {
             getChildren().remove(rightOperand);

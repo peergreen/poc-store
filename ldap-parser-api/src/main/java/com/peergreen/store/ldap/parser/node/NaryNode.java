@@ -3,9 +3,9 @@ package com.peergreen.store.ldap.parser.node;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 
 
-public class NaryNode<T> extends ValidatorNodeHelper<T> {
+public class NaryNode extends ValidatorNodeHelper {
 
-    public NaryNode(T data) {
+    public NaryNode(String data) {
         super(data);
     }
     

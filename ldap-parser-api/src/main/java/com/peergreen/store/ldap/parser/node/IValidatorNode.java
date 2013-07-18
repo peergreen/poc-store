@@ -13,7 +13,7 @@ public interface IValidatorNode<T> extends Node<T> {
     IValidatorNode<T> getParentValidatorNode();
     List<IValidatorNode<T>> getChildrenValidatorNode();
     void addChild(IValidatorNode<T> child);
-    ILdapHandler<T> getHandler();
-    void setHandler(ILdapHandler<T> handler);
+    ILdapHandler getHandler();
+    void setHandler(ILdapHandler handler);
     void visit();
 }

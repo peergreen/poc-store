@@ -1,9 +1,9 @@
 package com.peergreen.store.ldap.parser.node;
 
 
-public class OperandNode<T> extends ValidatorNodeHelper<T> {
+public class OperandNode extends ValidatorNodeHelper {
 
-    public OperandNode(T data) {
+    public OperandNode(String data) {
         super(data);
     }
 

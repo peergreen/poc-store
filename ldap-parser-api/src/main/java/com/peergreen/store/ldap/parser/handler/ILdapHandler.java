@@ -3,7 +3,6 @@ package com.peergreen.store.ldap.parser.handler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
-import com.peergreen.tree.Node;
 
 
 /**
@@ -11,7 +10,7 @@ import com.peergreen.tree.Node;
  * 
  * @param <T> type wrapped on nodes
  */
-public interface ILdapHandler<T> {
+public interface ILdapHandler {
 
     /**
      * Method to generate a piece of JPQL query from
@@ -27,19 +26,19 @@ public interface ILdapHandler<T> {
      * 
      * @param created unary node
      */
-    void onUnaryNodeCreation(UnaryNode<T> node);
+    void onUnaryNodeCreation(UnaryNode node);
     
     /**
      * Method called when a binary node is created.
      * 
      * @param created binary node
      */
-    void onBinaryNodeCreation(BinaryNode<T> node);
+    void onBinaryNodeCreation(BinaryNode node);
     
     /**
      * Method called when an n-ary node is created.
      * 
      * @param created n-ary node
      */
-    void onNaryNodeCreation(NaryNode<T> node);
+    void onNaryNodeCreation(NaryNode node);
 }

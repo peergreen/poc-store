@@ -3,11 +3,11 @@ package com.peergreen.store.ldap.parser.node;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 
 
-public class UnaryNode<T> extends ValidatorNodeHelper<T> {
+public class UnaryNode extends ValidatorNodeHelper {
 
-    private IValidatorNode<T> child;
+    private IValidatorNode<String> child;
     
-    public UnaryNode(T data) {
+    public UnaryNode(String data) {
         super(data);
     }
 
@@ -19,11 +19,11 @@ public class UnaryNode<T> extends ValidatorNodeHelper<T> {
         }
     }
     
-    public IValidatorNode<T> getChild() {
+    public IValidatorNode<String> getChild() {
         return this.child;
     }
     
-    public void setChild(IValidatorNode<T> child) {
+    public void setChild(IValidatorNode<String> child) {
         this.child = child;
     }
 }

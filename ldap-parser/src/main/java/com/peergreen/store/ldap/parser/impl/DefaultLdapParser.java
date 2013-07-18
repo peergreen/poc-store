@@ -1,5 +1,6 @@
 package com.peergreen.store.ldap.parser.impl;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +22,8 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.OperandNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
+import com.peergreen.tree.Node;
+import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 
 
 /**
@@ -33,7 +36,14 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
-    private Set<ILdapHandler<String>> handlers;
+    private static TreePrettyPrintNodeVisitor<String> visitor = new TreePrettyPrintNodeVisitor<String>(System.out) {
+        @Override
+        protected void doPrintInfo(PrintStream stream, Node<String> node) {
+            stream.printf("%s%n", node.getData());
+        }
+    };
+    
+    private Set<ILdapHandler> handlers;
     
     /**
      * Default constructor.
@@ -47,7 +57,7 @@ public class DefaultLdapParser implements ILdapParser {
      * 
      * @param handler handler to add
      */
-    private void register(ILdapHandler<String> handler) {
+    public void register(ILdapHandler handler) {
         handlers.add(handler);
     }
     
@@ -71,7 +81,7 @@ public class DefaultLdapParser implements ILdapParser {
         }
 
         if (!tokens.get(tokens.size() - 1).equals(")")) {
-            throw new InvalidLdapFormatException("Malformed LDAP expression. closing parenthesis expected.");
+            throw new InvalidLdapFormatException("Malformed LDAP expression. Closing parenthesis expected.");
         }
 
         // read all tokens
@@ -98,7 +108,7 @@ public class DefaultLdapParser implements ILdapParser {
                         parentNode = parsedNode;
                     } else {
                         // else add parsed node to parentNode
-                        parentNode.getChildren().add(parsedNode);
+                        parentNode.addChild(parsedNode);
                         parsedNode.setParent(parentNode);
 
                         // if parsed node is an operator, wait for operand(s)
@@ -107,7 +117,13 @@ public class DefaultLdapParser implements ILdapParser {
                             parentNode = parsedNode;
                         }
                     }
+                    
+                    // valid node => generate JPQL
+                    parsedNode.getHandler().toQueryElement();
+                } /* else {
+                    throw new InvalidLdapFormatException("Failed to parse a node.");
                 }
+                */
                 i++;
             } else if (s.equals(")")) {
                 // go back a level
@@ -122,6 +138,7 @@ public class DefaultLdapParser implements ILdapParser {
             }
         }
 
+        root.walk(visitor);
         return root;
     }
 
@@ -208,23 +225,23 @@ public class DefaultLdapParser implements ILdapParser {
     protected IValidatorNode<String> createOperatorNode (String op) {
         IValidatorNode<String> opNode = null;
         if (UnaryOperators.isUnaryOperator(op)) {
-            UnaryNode<String> node = new UnaryNode<String>(op);
+            UnaryNode node = new UnaryNode(op);
             // notify registered handlers
-            for (ILdapHandler<String> handler : handlers) {
+            for (ILdapHandler handler : handlers) {
                 handler.onUnaryNodeCreation(node);
             }
             opNode = node;
         } else if (BinaryOperators.isBinaryOperator(op)) {
-            BinaryNode<String> node = new BinaryNode<String>(op);
+            BinaryNode node = new BinaryNode(op);
             // notify registered handlers
-            for (ILdapHandler<String> handler : handlers) {
+            for (ILdapHandler handler : handlers) {
                 handler.onBinaryNodeCreation(node);
             }
             opNode = node;
         } else if (NaryOperators.isNaryOperator(op)) {
-            NaryNode<String> node = new NaryNode<String>(op);
+            NaryNode node = new NaryNode(op);
             // notify registered handlers
-            for (ILdapHandler<String> handler : handlers) {
+            for (ILdapHandler handler : handlers) {
                 handler.onNaryNodeCreation(node);
             }
             opNode = node;
@@ -241,7 +258,7 @@ public class DefaultLdapParser implements ILdapParser {
      * @throws InvalidLdapFormatException 
      */
     protected IValidatorNode<String> createBinaryNode(String filter) throws InvalidLdapFormatException {
-        // create an comparison operator node and operand nodes
+        // create a comparison operator node and operand nodes
         String operator = "";
         String[] operands = null;
         for (ComparisonOperators compOp : ComparisonOperators.values()) {
@@ -252,20 +269,24 @@ public class DefaultLdapParser implements ILdapParser {
             }
         }
 
-        BinaryNode<String> node = new BinaryNode<String>(operator);
+        BinaryNode node = new BinaryNode(operator);
 
         // create operand nodes
         if (!operator.isEmpty()) {
             operands = filter.split(operator);
-            OperandNode<String> left = new OperandNode<String>(operands[0]);
+            OperandNode left = new OperandNode(operands[0]);
             left.setParent(node);
-            OperandNode<String> right = new OperandNode<String>(operands[1]);
+            node.setLeftOperand(left);
+            node.addChild(left);
+            OperandNode right = new OperandNode(operands[1]);
             right.setParent(node);
+            node.setRightOperand(right);
+            node.addChild(right);
         }
 
         if (node.validate()) {
             // notify registered handlers
-            for (ILdapHandler<String> handler : handlers) {
+            for (ILdapHandler handler : handlers) {
                 handler.onBinaryNodeCreation(node);
             }
             return node;
