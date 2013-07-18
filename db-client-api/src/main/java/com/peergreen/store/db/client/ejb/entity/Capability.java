@@ -36,7 +36,7 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
     ),
     @NamedQuery (
             name = "Requirement.findCapabilities",
-            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace AND :req"
+            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
     )
 })
 @Entity
