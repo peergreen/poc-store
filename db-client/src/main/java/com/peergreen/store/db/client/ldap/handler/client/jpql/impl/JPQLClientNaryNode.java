@@ -26,7 +26,8 @@ public class JPQLClientNaryNode implements ILdapHandler {
 
         int i = 0;
         for (IValidatorNode<String> n : node.getChildrenValidatorNode()) {
-            String req = n.getHandler().toQueryElement();
+//            String req = n.getHandler().toQueryElement();
+            String req = n.getJpql();
 
             if (i == 0) {
                 query += "(" + req;
