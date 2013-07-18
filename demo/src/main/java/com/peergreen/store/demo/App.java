@@ -76,14 +76,16 @@ public class App {
         
         Requirement req = null;
         try {
-            req = petalController.createRequirement("test", "test", "(&(artifactId=Store)(version=0.1.0-beta))");
+            req = petalController.createRequirement("test", "test", "(&(capabilityName=tut)(version=1))");
         } catch (EntityAlreadyExistsException e) {
             e.printStackTrace();
         }
         
         Collection<Capability> listResolvedCapabilities = requirementSession.findCapabilities("test", req);
+        int i = 1;
         for (Capability c : listResolvedCapabilities) {
-            System.out.println(c.getCapabilityName());
+            System.out.println(i + "\t" + c.getCapabilityName());
+            i++;
         }
         
         Collection<Petal> petalsList = storeManagement.collectPetalsFromLocal();
