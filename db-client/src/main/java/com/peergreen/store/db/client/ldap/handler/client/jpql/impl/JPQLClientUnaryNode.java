@@ -19,11 +19,13 @@ public class JPQLClientUnaryNode implements ILdapHandler {
      */
     @Override
     public String toQueryElement() {
+        String query = "";
         if (node.getData().equals("!")) {
-            return "NOT " + node.getChild().getHandler().toQueryElement();
-        } else {
-            return "";
+            query += "NOT " + node.getChild().getHandler().toQueryElement();
         }
+        node.setJpql(query);
+        
+        return query;
     }
     
     /**

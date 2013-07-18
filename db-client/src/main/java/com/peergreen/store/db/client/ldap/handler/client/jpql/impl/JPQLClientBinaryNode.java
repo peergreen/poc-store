@@ -27,6 +27,7 @@ public class JPQLClientBinaryNode implements ILdapHandler {
         String query = "";
 
         query += alias + "." + node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
+        node.setJpql(query);
         
         return query;
     }

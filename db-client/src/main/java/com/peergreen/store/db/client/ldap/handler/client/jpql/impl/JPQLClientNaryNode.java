@@ -14,7 +14,7 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  */
 public class JPQLClientNaryNode implements ILdapHandler {
     private NaryNode node;
-    
+
     /**
      * Method to generate the piece of JPQL for the node.
      * 
@@ -27,7 +27,7 @@ public class JPQLClientNaryNode implements ILdapHandler {
         int i = 0;
         for (IValidatorNode<String> n : node.getChildrenValidatorNode()) {
             String req = n.getHandler().toQueryElement();
-            
+
             if (i == 0) {
                 query += "(" + req;
             } else if ((i % 2) == 0) {
@@ -44,31 +44,32 @@ public class JPQLClientNaryNode implements ILdapHandler {
                 } else if (node.getData().equals("|")) {
                     op = "OR";
                 }
-                
+
                 if (i == node.getChildrenValidatorNode().size() - 1) {
                     query += " "  + op + " " + req + ")";
                 } else {
                     query += " " + op + " " + req;
                 }
             }
-            
+
             i++;
         }
+
+        node.setJpql(query);
 
         return query;
     }
 
     @Override
     public void onUnaryNodeCreation(UnaryNode node) {
-     // This is a NaryNode, nothing to do on UnaryNode events.
-
+        // This is a NaryNode, nothing to do on UnaryNode events.
     }
 
     @Override
     public void onBinaryNodeCreation(BinaryNode node) {
         // This is a NaryNode, nothing to do on BinaryNode events.
     }
-    
+
     /**
      * Register this handler on a NaryNode 
      * 
@@ -79,5 +80,4 @@ public class JPQLClientNaryNode implements ILdapHandler {
         node.setHandler(this);
         this.node = node;
     }
-
 }

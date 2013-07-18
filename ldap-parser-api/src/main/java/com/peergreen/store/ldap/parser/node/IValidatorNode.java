@@ -15,5 +15,6 @@ public interface IValidatorNode<T> extends Node<T> {
     void addChild(IValidatorNode<T> child);
     ILdapHandler getHandler();
     void setHandler(ILdapHandler handler);
-    void visit();
+    String getJpql();
+    void setJpql(String jpql);
 }

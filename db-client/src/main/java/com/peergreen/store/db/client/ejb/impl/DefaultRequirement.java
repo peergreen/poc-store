@@ -43,7 +43,7 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 @Stateless
 public class DefaultRequirement implements ISessionRequirement {
     private EntityManager entityManager;
-
+    
     @OSGiResource
     private ILdapParser ldapParser;
 

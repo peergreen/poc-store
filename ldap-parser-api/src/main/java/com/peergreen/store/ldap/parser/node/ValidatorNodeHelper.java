@@ -3,7 +3,6 @@ package com.peergreen.store.ldap.parser.node;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.peergreen.store.ldap.parser.enumeration.Operators;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.tree.node.SimpleNode;
 
@@ -13,12 +12,14 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     private IValidatorNode<String> parent;
     private List<IValidatorNode<String>> children;
     private ILdapHandler handler;
+    private String jpql;
     
     public ValidatorNodeHelper(String data) {
         super(data);
         parent = null;
         children = new ArrayList<>();
         handler = null;
+        jpql = "";
     }
     
     @Override
@@ -54,16 +55,12 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     }
     
     @Override
-    public void visit() {
-        System.out.println(getData());
-        
-        for (IValidatorNode<String> n : getChildrenValidatorNode()) {
-            // recursive call
-            n.visit();
-            // ask for lazy generation
-            if (Operators.isOperator(n.getData())) {
-                n.getHandler().toQueryElement();
-            }
-        }
+    public String getJpql() {
+        return jpql;
+    }
+
+    @Override
+    public void setJpql(String jpql) {
+        this.jpql = jpql;
     }
 }
