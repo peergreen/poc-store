@@ -232,7 +232,6 @@ public class DefaultRequirement implements ISessionRequirement {
             String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
                             + namespace + "\' AND " + root.getHandler().toQueryElement();
             query = entityManager.createQuery(sql);
-            System.out.println(sql);
         } else {
             // TODO: exception if parsed tree is null?
         }
