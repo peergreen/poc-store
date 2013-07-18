@@ -10,7 +10,12 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  *JPQL Client for handle BinaryNode and generate a piece of JPQL query 
  */
 public class JPQLClientBinaryNode implements ILdapHandler {
+    private String alias;
     private BinaryNode node;
+    
+    public JPQLClientBinaryNode() {
+        this.alias = "cap";
+    }
     
     /**
      * Method to generate the piece of JPQL for the node.
@@ -21,7 +26,7 @@ public class JPQLClientBinaryNode implements ILdapHandler {
     public String toQueryElement() {
         String query = "";
 
-        query += node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
+        query += alias + "." + node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
         
         return query;
     }
