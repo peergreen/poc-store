@@ -50,6 +50,13 @@ public class Requirement {
     private Set<Petal> petals;
     
     /**
+     * Default constructor
+     */
+    public Requirement() {
+        
+    }
+    
+    /**
      * Constructor with initializations.
      * 
      * @param requirementName requirement name
