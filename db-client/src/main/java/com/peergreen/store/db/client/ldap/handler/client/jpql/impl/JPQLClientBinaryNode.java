@@ -9,17 +9,8 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
 /**
  *JPQL Client for handle BinaryNode and generate a piece of JPQL query 
  */
-public class JPQLClientBinaryNode implements ILdapHandler<String> {
-    private BinaryNode<String> node;
-    
-    /**
-     * Constructor with initialization.
-     * 
-     * @param node node associated to the JPQL handler.
-     */
-    public JPQLClientBinaryNode(BinaryNode<String> node) {
-        this.node = node;
-    }
+public class JPQLClientBinaryNode implements ILdapHandler {
+    private BinaryNode node;
     
     /**
      * Method to generate the piece of JPQL for the node.
@@ -30,30 +21,30 @@ public class JPQLClientBinaryNode implements ILdapHandler<String> {
     public String toQueryElement() {
         String query = "";
 
-        query += node.getLeftOperand() + " " + node.getData() + " " + node.getRightOperand();
+        query += node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
         
         return query;
     }
 
     @Override
-    public void onUnaryNodeCreation(UnaryNode<String> node) {
-        // TODO Auto-generated method stub
-
+    public void onUnaryNodeCreation(UnaryNode node) {
+        // This is a BinaryNode, nothing to do on UnaryNode events.
     }
+    
     /**
      * Register this handler on a binaryNode 
      * 
      * @param node The BinaryNode created
      */
     @Override
-    public void onBinaryNodeCreation(BinaryNode<String> node) {
+    public void onBinaryNodeCreation(BinaryNode node) {
         node.setHandler(this);
+        this.node = node;
     }
 
     @Override
-    public void onNaryNodeCreation(NaryNode<String> node) {
-        // TODO Auto-generated method stub
-
+    public void onNaryNodeCreation(NaryNode node) {
+        // This is a BinaryNode, nothing to do on NaryNode events.
     }
 
 }

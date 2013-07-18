@@ -12,17 +12,8 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  *JPQL Client for handle NaryNode and generate a piece of JPQL query 
  *
  */
-public class JPQLClientNaryNode implements ILdapHandler<String> {
-    private NaryNode<String> node;
-    
-    /**
-     * Constructor with initialization.
-     * 
-     * @param node node associated to the JPQL handler.
-     */
-    public JPQLClientNaryNode(NaryNode<String> node) {
-        this.node = node;
-    }
+public class JPQLClientNaryNode implements ILdapHandler {
+    private NaryNode node;
     
     /**
      * Method to generate the piece of JPQL for the node.
@@ -38,11 +29,27 @@ public class JPQLClientNaryNode implements ILdapHandler<String> {
             String req = n.getHandler().toQueryElement();
             
             if (i == 0) {
-                query += req;
+                query += "(" + req;
             } else if ((i % 2) == 0) {
-                query += " " + req;
+                if (i == node.getChildrenValidatorNode().size() - 1) {
+                    query += " " + req + ")";
+                } else {
+                    query += " " + req;
+                }
             } else if ((i % 2) == 1) {
-                query += " " + node.getData() + " " + req;
+                // handle operators
+                String op = "";
+                if (node.getData().equals("&")) {
+                    op = "AND";
+                } else if (node.getData().equals("|")) {
+                    op = "OR";
+                }
+                
+                if (i == node.getChildrenValidatorNode().size() - 1) {
+                    query += " "  + op + " " + req + ")";
+                } else {
+                    query += " " + op + " " + req;
+                }
             }
             
             i++;
@@ -52,15 +59,14 @@ public class JPQLClientNaryNode implements ILdapHandler<String> {
     }
 
     @Override
-    public void onUnaryNodeCreation(UnaryNode<String> node) {
-        // TODO Auto-generated method stub
+    public void onUnaryNodeCreation(UnaryNode node) {
+     // This is a NaryNode, nothing to do on UnaryNode events.
 
     }
 
     @Override
-    public void onBinaryNodeCreation(BinaryNode<String> node) {
-        // TODO Auto-generated method stub
-
+    public void onBinaryNodeCreation(BinaryNode node) {
+        // This is a NaryNode, nothing to do on BinaryNode events.
     }
     
     /**
@@ -69,8 +75,9 @@ public class JPQLClientNaryNode implements ILdapHandler<String> {
      * @param node The NaryNode created
      */
     @Override
-    public void onNaryNodeCreation(NaryNode<String> node) {
+    public void onNaryNodeCreation(NaryNode node) {
         node.setHandler(this);
+        this.node = node;
     }
 
 }

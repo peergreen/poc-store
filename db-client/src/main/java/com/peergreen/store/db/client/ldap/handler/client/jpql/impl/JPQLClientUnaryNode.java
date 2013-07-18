@@ -9,17 +9,8 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
 /**
  * JPQL Client to handle UnaryNode and generate a piece of JPQL query.
  */
-public class JPQLClientUnaryNode implements ILdapHandler<String> {
-    private UnaryNode<String> node;
-    
-    /**
-     * Constructor with initialization.
-     * 
-     * @param node node associated to the JPQL handler.
-     */
-    public JPQLClientUnaryNode(UnaryNode<String> node) {
-        this.node = node;
-    }
+public class JPQLClientUnaryNode implements ILdapHandler {
+    private UnaryNode node;
     
     /**
      * Method to generate the piece of JPQL for the node.
@@ -41,21 +32,18 @@ public class JPQLClientUnaryNode implements ILdapHandler<String> {
      * @param node The unaryNode created
      */
     @Override
-    public void onUnaryNodeCreation(UnaryNode<String> node) {
+    public void onUnaryNodeCreation(UnaryNode node) {
         node.setHandler(this);
+        this.node = node;
     }
 
     @Override
-    public void onBinaryNodeCreation(BinaryNode<String> node) {
-        // TODO Auto-generated method stub
-
+    public void onBinaryNodeCreation(BinaryNode node) {
+        // This is an UnaryNode, nothing to do on BinaryNode events.
     }
 
     @Override
-    public void onNaryNodeCreation(NaryNode<String> node) {
-        // TODO Auto-generated method stub
-
+    public void onNaryNodeCreation(NaryNode node) {
+     // This is an UnaryNode, nothing to do on NaryNode events.
     }
-
-
 }
