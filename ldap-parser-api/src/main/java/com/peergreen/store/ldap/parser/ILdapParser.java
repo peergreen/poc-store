@@ -1,6 +1,7 @@
 package com.peergreen.store.ldap.parser;
 
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
+import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
 /**
@@ -9,6 +10,13 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
  * @author Guillaume Dupraz Canard
  */
 public interface ILdapParser {
+    
+    /**
+     * Method to register handlers for JPQL generation.
+     * 
+     * @param handler handler to register
+     */
+    void register(ILdapHandler handler);
 
     /**
      * Method to parse a LDAP filter to a tree.<br />
