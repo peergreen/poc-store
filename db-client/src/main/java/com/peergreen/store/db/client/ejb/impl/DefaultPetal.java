@@ -138,7 +138,7 @@ public class DefaultPetal implements ISessionPetal {
             Set<Capability> capabilities, Set<Requirement> requirements,
             Origin origin) throws NoEntityFoundException, EntityAlreadyExistsException {
 
-        Group group = sessionGroup.findGroup("Administrateur");
+        Group group = sessionGroup.findGroup("Administrator");
 
         // group 'Administrator' must exists
         if (group == null) {
@@ -442,6 +442,7 @@ public class DefaultPetal implements ISessionPetal {
     public Collection<Petal> collectPetals() {
 
         Query petals = entityManager.createNamedQuery("Petal.findAll");
+        @SuppressWarnings("unchecked")
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
@@ -460,6 +461,7 @@ public class DefaultPetal implements ISessionPetal {
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.LOCAL);
 
+        @SuppressWarnings("unchecked")
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
@@ -478,6 +480,7 @@ public class DefaultPetal implements ISessionPetal {
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.STAGING);
 
+        @SuppressWarnings("unchecked")
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
@@ -496,6 +499,7 @@ public class DefaultPetal implements ISessionPetal {
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.REMOTE);
 
+        @SuppressWarnings("unchecked")
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);

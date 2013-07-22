@@ -130,7 +130,7 @@ public class DefaultPetalTest {
     public void shouldAddPetal() throws NoEntityFoundException, EntityAlreadyExistsException {
 
         //Given
-        when(sessionGroup.findGroup("Administrateur")).thenReturn(mockgroup);
+        when(sessionGroup.findGroup("Administrator")).thenReturn(mockgroup);
         Set<Capability> capabilities = new HashSet<Capability>();
         capabilities.add(mockcapability);
 
