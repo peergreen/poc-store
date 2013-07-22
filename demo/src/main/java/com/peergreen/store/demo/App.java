@@ -2,7 +2,9 @@ package com.peergreen.store.demo;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -23,6 +25,7 @@ import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.enumeration.Origin;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 @Component
 @Instantiate
@@ -55,7 +58,9 @@ public class App {
 
         // create a capability
         // add it to the capabilities list
-        Capability cap = petalController.createCapability("tut", "1", "test", null);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("toto", "a");
+        Capability cap = petalController.createCapability("tut", "1", "test", properties);
         Set<Capability> capabilities = new HashSet<>();
         capabilities.add(cap);
         
@@ -71,8 +76,13 @@ public class App {
         File petalBinary = new File("C:\\Users\\user2\\.m2\\repository\\com\\peergreen\\" +
         		"store\\controller\\1.0-SNAPSHOT\\controller-1.0-SNAPSHOT.jar");
         
-        petalController.addPetal(vendor, "Store", "0.1.0-beta", "Apps Store for Peergreen Platform",
-                category, requirements, capabilities, Origin.LOCAL, petalBinary);
+        try {
+            petalController.addPetal(vendor, "Store", "0.1.0-beta", "Apps Store for Peergreen Platform",
+                    category, requirements, capabilities, Origin.LOCAL, petalBinary);
+        } catch (NoEntityFoundException e) {
+            // TODO
+            e.printStackTrace();
+        }
         
         Requirement req = null;
         try {
