@@ -38,45 +38,28 @@ public class DefaultGroupControllerTestCase {
     }
 
     @Test
-    public void testAddGroup() {
+    public void testAddGroup() throws EntityAlreadyExistsException, NoEntityFoundException {
         String groupName = "myGroup";
         groupController.addGroup(groupName);
-        try {
-            verify(groupSession).addGroup(groupName);
-        } catch (EntityAlreadyExistsException | NoEntityFoundException e) {
-            // TODO
-        }
+        verify(groupSession).addGroup(groupName);
     }
 
-//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
-    public void shouldThrowExceptionGroupAlreadyExist() {
+    public void shouldThrowExceptionGroupAlreadyExist() throws EntityAlreadyExistsException, NoEntityFoundException {
         //Given
         String groupName = "Administrator";
+        //When
         groupController.addGroup(groupName);
-        //When 
-        groupController.addGroup(groupName);
-        //then, this should throw an exception 
+        //then
+        verify(groupSession).addGroup(groupName);
     }
 
     @Test
     public void testRemoveGroup() {
         String groupName = "myGroup";
 
-        // create entity instance with name = groupName
-        Group group = new Group();
-        group.setGroupname(groupName);
-
         // verify groupSession.deleteGroup(...) is called
         groupController.removeGroup(groupName);
         verify(groupSession).deleteGroup(groupName);
-    }
-
-    //    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionCauseGroupNonExistent() {
-        //when
-        groupController.removeGroup("Inexist");
-        //then throw an Illegal Argument Exception
-            // no need to throw an exception
     }
 
     @Test
@@ -90,14 +73,6 @@ public class DefaultGroupControllerTestCase {
         // verify groupSession.collectUsers(...) is called
         groupController.collectUsers(groupName);
         verify(groupSession).collectUsers(groupName);
-    }
-
-    //    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionCauseGroupNonExistentBis() {
-
-        //when
-        groupController.collectUsers("Inexist");
-        //then throw an Illegal Argument Exception 
     }
 
     @Test

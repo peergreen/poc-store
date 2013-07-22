@@ -158,13 +158,6 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession, times(1)).removeAccesToGroup(eq(petal), any(Group.class));
     }
 
-    /*
-    Petal updatePetal(Vendor vendor, String artifactId,
-            String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities,
-            File petalBinary);
-     */
-
 //    @Test
     public void testCreateCapability() throws EntityAlreadyExistsException {
         String capabilityName = "my capability";
@@ -175,21 +168,6 @@ public class DefaultPetalControllerTestCase {
         // verify capabilitySession.addCapability(...) is called
         petalController.createCapability(capabilityName,version, namespace, properties);
         verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
-    }
-
-//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
-    public void shouldThrowEntityExistExceptionForCapability() throws EntityAlreadyExistsException {
-        String capabilityName = "my capability";
-        String namespace = "service";
-        String version = "1.0";
-        Map<String, String> properties = new HashMap<String,String>();
-
-        // verify capabilitySession.addCapability(...) is called
-        petalController.createCapability(capabilityName, version, namespace, properties);
-        petalController.createCapability(capabilityName, version, namespace, properties);
-        
-        // TODO
-//        verify(petalController).addCapability(vendor, artifactId, version, capability);
     }
 
     @Test
@@ -212,7 +190,7 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).collectCapabilities(petal);
     }
 
-//    @Test
+    @Test
     public void shouldReturnNullWhenCollectCapabilitiesCausePetalNonExistent() {
         //Given
         Vendor vendor = new Vendor();
@@ -223,7 +201,7 @@ public class DefaultPetalControllerTestCase {
         //when
         List<Capability> capabilities = petalController.collectCapabilities(vendor, artifactId, version);
 
-        Assert.assertNull(capabilities);
+        Assert.assertTrue(capabilities.size() == 0);
     }
 
     @Test
@@ -245,18 +223,6 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).addCapability(petal, capability);
     }
 
-//    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenAddCapabilityCausePetalNonExistent() {
-        //Given
-        Vendor vendor = new Vendor();
-        String artifactId = "";
-        String version = "";
-        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
-
-        //when
-        petalController.addCapability(vendor, artifactId, version, mockcapability);
-    }
-
     @Test
     public void testRemoveCapability() {
         Petal petal = new Petal();
@@ -271,18 +237,6 @@ public class DefaultPetalControllerTestCase {
         // verify petalSession.remove
         petalController.removeCapability(vendor, artifactId, version, capability);
         verify(petalSession).removeCapability(petal, capability);
-    }
-
-//    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenRemoveCapabilityCausePetalNonExistent() {
-        //Given
-        Vendor vendor = new Vendor();
-        String artifactId = "";
-        String version = "";
-        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
-
-        //when
-        petalController.removeCapability(vendor, artifactId, version, mockcapability);
     }
 
     @Test
@@ -326,7 +280,7 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).collectRequirements(petal);
     }
 
-  //  @Test
+    @Test
     public void shouldReturnNullWhenCollectRequirementCausePetalNonExistent() {
         //Given
         Vendor vendor = new Vendor();
@@ -337,7 +291,7 @@ public class DefaultPetalControllerTestCase {
         //when
         List<Requirement> requirements = petalController.collectRequirements(vendor, artifactId, version);
 
-        Assert.assertNull(requirements);
+        Assert.assertTrue(requirements.size() == 0);
     }
 
     @Test
@@ -356,18 +310,6 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).addRequirement(petal, requirement);
     }
 
-   // @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenAddRequirementCausePetalNonExistent() {
-        //Given
-        Vendor vendor = new Vendor();
-        String artifactId = "";
-        String version = "";
-        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
-
-        //when
-        petalController.addRequirement(vendor, artifactId, version, mockrequirement);
-    }
-
     @Test
     public void testRemoveRequirement() {
         Vendor vendor = new Vendor();
@@ -384,18 +326,6 @@ public class DefaultPetalControllerTestCase {
         verify(petalSession).removeRequirement(petal, requirement);
     }
 
-//    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenRemoveRequirementCausePetalNonExistent() {
-        //Given
-        Vendor vendor = new Vendor();
-        String artifactId = "";
-        String version = "";
-        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
-
-        //when
-        petalController.removeRequirement(vendor, artifactId, version, mockrequirement);
-    }
-
     @Test
     public void testCreateCategory() throws EntityAlreadyExistsException {
         String categoryName = "Administration";
@@ -403,15 +333,6 @@ public class DefaultPetalControllerTestCase {
         // verify categorySession.addCategory(...) is called
         petalController.createCategory(categoryName);
         verify(categorySession).addCategory(categoryName);
-    }
-
-//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
-    public void shouldThrowEntityExistExceptionForCategory() throws EntityAlreadyExistsException {
-        String categoryName = "Administration";
-
-        // verify categorySession.addCategory(...) is called
-        petalController.createCategory(categoryName);
-        petalController.createCategory(categoryName);
     }
 
     @Test
@@ -427,19 +348,6 @@ public class DefaultPetalControllerTestCase {
         // verify petalSession.getCategory(...) is called
         petalController.getCategory(vendor, artifactId, version);
         verify(petalSession).getCategory(petal);
-    }
-
-   // @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenGetCategoryCausePetalNonExistent() {
-        Vendor vendor = new Vendor();
-        String artifactId = "Tomcat HTTP service";
-        String version = "7.0.39";
-
-        // mock => always return targeted petal
-        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
-
-        // verify petalSession.getCategory(...) is called
-        petalController.getCategory(vendor, artifactId, version);
     }
 
     @Test
@@ -480,14 +388,5 @@ public class DefaultPetalControllerTestCase {
         // verify vendorSession.addVendor(...) is called
         petalController.createVendor(vendorName, vendorDescription);
         verify(vendorSession).addVendor(vendorName, vendorDescription);
-    }
-
-//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
-    public void shouldThrowEntityAlreadyExistException() throws EntityAlreadyExistsException {
-        String vendorName = "Peergreen";
-        String vendorDescription = "Software company started by the core team who created JOnAS";
-
-        petalController.createVendor(vendorName, vendorDescription);
-        petalController.createVendor(vendorName, vendorDescription);
     }
 }

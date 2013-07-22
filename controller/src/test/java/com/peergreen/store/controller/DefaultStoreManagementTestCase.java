@@ -14,7 +14,7 @@ import junit.framework.Assert;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
@@ -56,11 +56,12 @@ public class DefaultStoreManagementTestCase {
     private ISessionCategory categorySession;
 
 
-    @BeforeClass
+    @BeforeMethod
     public void oneTimeSetUp() {
         storeManagement = new DefaultStoreManagement();
         MockitoAnnotations.initMocks(this);
         stringCaptor = ArgumentCaptor.forClass(String.class);
+        storeManagement.bindCategorySession(categorySession);
         storeManagement.bindPetalsPersistence(petalsPersistence);
         storeManagement.bindGroupSession(groupSession);
         storeManagement.bindLinkSession(linkSession);
@@ -77,32 +78,12 @@ public class DefaultStoreManagementTestCase {
         verify(linkSession).addLink(url, description);
     }
 
-    //  @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowEntityExistsException() {
-
-        String url = "https://store.peergreen.com";
-        String description = "Peergreen central store";
-
-        storeManagement.addLink(url, description);
-        storeManagement.addLink(url, description);
-    }
-
     @Test
     void testRemoveLink() {
         String url = "https://store.peergreen.com";
         storeManagement.removeLink(url);
 
         verify(linkSession).deleteLink(url);
-    }
-
-    // @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentException() {
-
-        String url = "https://store.peergreen.com";
-        String description = "Peergreen central store";
-
-        storeManagement.addLink(url, description);
-        storeManagement.addLink(url, description);
     }
 
     @Test
@@ -149,15 +130,6 @@ public class DefaultStoreManagementTestCase {
         verify(userSession).findUserByPseudo("Robert");
     }
 
-    // @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgExceptionCauseUserNonExistent() {
-
-        when(userSession.findUserByPseudo("Robert")).thenReturn(null);
-
-        storeManagement.collectPetalsForUser("Robert");
-
-    }
-
     @Test
     public void testCollectPetalsFromLocal() {
         storeManagement.collectPetalsFromLocal();
@@ -201,29 +173,8 @@ public class DefaultStoreManagementTestCase {
         HashSet<Capability> capabilities = new HashSet<>();
 
         storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
-        verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
-        /* optional: can used collectPetals instead
-        verify(groupSession).addGroup("admin");
-         */
         verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
-    }
-
-    // @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowEntityExistsExceptionWhenSubmitPetal() {
-
-        String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
-        String artifactId = "Tomcat HTTP service";
-        String version = "7.0.39";
-        File binary = new File("/home/toto/petal.jar");
-        Category category = new Category();
-        HashSet<Requirement> requirements = new HashSet<>();
-        HashSet<Capability> capabilities = new HashSet<>();
-
-        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
-        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
-
+        verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
 
     @Test
@@ -247,28 +198,9 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
         verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);
-
     }
 
-    //@Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowEntityExistsExceptionWhenValidatePetal() {
-
-        String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
-        String artifactId = "Tomcat HTTP service";
-        String version = "7.0.39";
-        File binary = new File("/home/toto/petal.jar");
-        Category category = new Category();
-        HashSet<Requirement> requirements = new HashSet<>();
-        HashSet<Capability> capabilities = new HashSet<>();
-
-        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
-        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
-
-    }
-
-    // @Test
+    @Test
     public void shouldAddcategory() throws EntityAlreadyExistsException {
         String name = "Persistence";
 
@@ -278,28 +210,18 @@ public class DefaultStoreManagementTestCase {
         Assert.assertEquals(name, stringCaptor.getValue());
     }
 
-//     @Test(expectedExceptions = EntityAlreadyExistsException.class)
-    public void shouldThrowEntityExistExceptionForCategory() throws EntityAlreadyExistsException {
+    @Test
+    public void shouldRemoveCategory() throws EntityAlreadyExistsException {
         String name = "Persistence";
 
-        storeManagement.addCategory(name);
-        storeManagement.addCategory(name);
-
-        verify(categorySession).addCategory(stringCaptor.capture());
+        storeManagement.removeCategory(name);
+        verify(categorySession).deleteCategory(name);
+        
+//        verify(categorySession).deleteCategory(stringCaptor.capture());
+//        Assert.assertEquals(name, stringCaptor.getValue());
     }
 
-    // @Test
-    public void shouldRemovecategory() throws EntityAlreadyExistsException {
-
-        String name = "Persistence";
-
-        storeManagement.addCategory(name);
-
-        verify(categorySession).deleteCategory(stringCaptor.capture());
-        Assert.assertEquals(name, stringCaptor.getValue());
-    }
-
-    //  @Test
+    @Test
     public void shouldCollectCategories() {
         storeManagement.collectCategories();
         verify(categorySession).collectCategories();
