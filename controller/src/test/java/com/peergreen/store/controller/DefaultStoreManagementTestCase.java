@@ -33,6 +33,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultStoreManagementTestCase {
@@ -68,7 +69,7 @@ public class DefaultStoreManagementTestCase {
     }
 
     @Test
-    public void testAddLink() {
+    public void testAddLink() throws EntityAlreadyExistsException {
         String url = "https://store.peergreen.com";
         String description = "Peergreen central store";
 
@@ -188,7 +189,7 @@ public class DefaultStoreManagementTestCase {
     }
 
     @Test
-    public void testSubmitPetal() {
+    public void testSubmitPetal() throws NoEntityFoundException, EntityAlreadyExistsException {
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
         vendor.setVendorName(vendorName);
@@ -268,8 +269,7 @@ public class DefaultStoreManagementTestCase {
     }
 
     // @Test
-    public void shouldAddcategory() {
-
+    public void shouldAddcategory() throws EntityAlreadyExistsException {
         String name = "Persistence";
 
         storeManagement.addCategory(name);
@@ -278,19 +278,18 @@ public class DefaultStoreManagementTestCase {
         Assert.assertEquals(name, stringCaptor.getValue());
     }
 
-    // @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowEntityExistExceptionForCategory() {
+//     @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowEntityExistExceptionForCategory() throws EntityAlreadyExistsException {
         String name = "Persistence";
 
         storeManagement.addCategory(name);
+        storeManagement.addCategory(name);
 
         verify(categorySession).addCategory(stringCaptor.capture());
-        verify(categorySession).addCategory(stringCaptor.capture());
-
     }
 
     // @Test
-    public void shouldRemovecategory() {
+    public void shouldRemovecategory() throws EntityAlreadyExistsException {
 
         String name = "Persistence";
 
@@ -305,7 +304,4 @@ public class DefaultStoreManagementTestCase {
         storeManagement.collectCategories();
         verify(categorySession).collectCategories();
     }
-
-
-
 }

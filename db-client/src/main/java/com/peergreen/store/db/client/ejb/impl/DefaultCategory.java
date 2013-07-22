@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -15,6 +14,8 @@ import javax.persistence.Query;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Class defining an entity session to manage the entity Category
@@ -40,22 +41,21 @@ public class DefaultCategory implements ISessionCategory{
     }
 
     /**
-     * Method to add a new category in the database. It throws
-     * an exception "EntityExistsException " when the entity already exist in the database
-     * The attributes petals are null when creating the category
+     * Method to add a new category in the database.<br />
+     * Throws EntityAlreadyExistsException when a category
+     *  with same name already exist in the database.<br />
      * 
-     * @param categoryName the category's name
-     * @return A new instance of Category
+     * @param categoryName category name
+     * @return created Category instance
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Category addCategory(String categoryName) throws EntityExistsException{
+    public Category addCategory(String categoryName) throws EntityAlreadyExistsException {
         Category temp = findCategory(categoryName);
 
         if(temp != null ) {      
-            throw new EntityExistsException();
-        }
-
-        else {
+            throw new EntityAlreadyExistsException("Category with name " + categoryName + " already exists in database.");
+        } else {
             Category category = new Category(categoryName);  
             entityManager.persist(category);  
             return category ;
@@ -63,33 +63,23 @@ public class DefaultCategory implements ISessionCategory{
     }
 
     /**
-     * Method to delete the category with the name categoryName.
-     * It throws an IllegalArgumentException if the entity to remove
-     * doesn't exist in the database.
+     * Method to delete a specified category.
      * 
-     * @param categoryName the name of the category to delete
+     * @param categoryName name of the category to delete
      */
     @Override
-    public void deleteCategory(String categoryName) throws IllegalArgumentException{
+    public void deleteCategory(String categoryName) {
         Category temp = findCategory(categoryName);
-
         if (temp != null){
-
             entityManager.remove(temp);
-        }
-        else{
-            String message = "the category to delete doesn't exist";
-            throw new IllegalArgumentException(message);
         }
     }
 
     /**
-     * Method to find the category with the name categoryName.
-     * It returns null if the category doesn't exist. 
+     * Method to find a specified category.<br />
      * 
-     * @param categoryName the name of the category to find
-     * 
-     * @return the category with the name categoryName
+     * @param categoryName name of the category to find
+     * @return category with the name categoryName
      */
     @Override
     public Category findCategory(String categoryName){
@@ -98,80 +88,75 @@ public class DefaultCategory implements ISessionCategory{
         Category result;
         try{
             result = (Category)q.getSingleResult();
-        }catch(NoResultException e){
+        } catch(NoResultException e) {
             result = null;
         }
         return result;
     }
 
     /**
-     * Method to collect all the petals which belongs to the category
-     * with the name categoryName. It throws an IllegalArgumentException
-     * when the category doesn't exist.
+     * Method to collect all the petals which belongs to the specified category.<br />
+     * Throws {@link NoEntityFoundException} when Category doesn't exist in database.
      * 
-     * @param categoryName the name of the category whose petals are collected
-     *  
-     * @return A collection of petals which belongs to this category
+     * @param categoryName name of the category whose petals are collected
+     * @return collection of petals which belongs to this category
+     * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Petal> collectPetals(String categoryName) throws IllegalArgumentException{
+    public Collection<Petal> collectPetals(String categoryName) throws NoEntityFoundException {
         Category category = findCategory(categoryName);
 
-        if(category != null){
-
+        if (category != null) {
             return category.getPetals();
-
+        } else{
+            throw new NoEntityFoundException("Category " + categoryName + " does not exist in database.");
         }
-        else{
-            throw new IllegalArgumentException();
-        }
-
     }
 
     /**
-     * Method to add a new petal to a category.
+     * Method to add a new petal to the list of petals associated to this category.
      * 
-     * @param category the category to which add a new petal
-     * @param petal the petal to add to the category
+     * @param category category to which add a petal
+     * @param petal petal to add to the category
      * 
-     * @return A new category with new petals included the petal added 
+     * @return modified Category instance (updated list of associated petals)
      */
     @Override
     public Category addPetal(Category category, Petal petal) {
         Set<Petal> petals = category.getPetals();
         petals.add(petal);
         category.setPetals(petals);
-        category =  entityManager.merge(category);
+        category = entityManager.merge(category);
         return category;
     }
 
     /**
-     * Method to remove a petal from a category
+     * Method to remove a petal from a category.
      * 
-     * @param category the category to which remove a petal
-     * @param petal the petal to remove from the category
-     * 
-     * 
-     * @return A new category with petals excluded the petal removed 
+     * @param category category from which remove a petal
+     * @param petal petal to remove from the category
+     * @return modified Category instance (updated list of associated Petal instances)
      */
     @Override
     public Category removePetal(Category category, Petal petal) {
+        // TODO verify if instances are present in database
+        // => use entityManager.find(Category.class, category) for instance
         category.getPetals().remove(petal);
-        category =  entityManager.merge(category);
+        category = entityManager.merge(category);
         return category;
     }
 
     /**
-     * Method to collect all the category in the database
+     * Method to collect all categories present in database
      * 
-     * @return A collection of categories in the database
+     * @return collection of categories present in database
      */
     @Override
     public Collection<Category> collectCategories() {
         Query query = entityManager.createNamedQuery("Category.findAll");
+        @SuppressWarnings("unchecked")
         List<Category> catList = query.getResultList();
         Set<Category> categorySet = new HashSet<Category>(catList);
         return categorySet;
     }
-
 }

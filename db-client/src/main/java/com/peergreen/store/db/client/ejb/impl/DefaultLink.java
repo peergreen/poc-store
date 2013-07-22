@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -14,6 +13,7 @@ import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 /**
  * Class defining an entity session to manage the entity Link:
@@ -37,97 +37,89 @@ public class DefaultLink implements ISessionLink {
     }
 
     /**
-     * Method to add a new instance of Link in the database
-     * It throws an exception "EntityExistsException" 
-     * when the entity already exist in the database
+     * Method to add a new instance of Link in the database.
+     * Throws {@link EntityAlreadyExistsException}
+     *  if a link with same URL already exists in the database.
      *  
-     * @param url the link's url
-     * @param description the link's description
-     * 
-     * @return A new instance of link
+     * @param url link's url
+     * @param description link's description
+     * @return created Link instance
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Link addLink(String url, String description) throws EntityExistsException{
+    public Link addLink(String url, String description) throws EntityAlreadyExistsException {
         Link link = findLink(url);
-        if(link != null){
-            throw new EntityExistsException();
-        }else{
+        if (link != null) {
+            throw new EntityAlreadyExistsException("Link with URL: " + url + " already exists in database.");
+        } else {
             link = new Link(url, description);
             entityManager.persist(link);
             return link;
         }
-
     }
 
     /**
-     * Method to delete an instance of link with the url 'linkUrl'
-     * It throws an IllegalArgumentException if the entity to remove
-     * doesn't exist in the database.
+     * Method to delete an instance of link.<br />
      * 
-     * @param linkUrl the url of the link to delete
+     * @param linkUrl url of the link to delete
      */
     @Override
-    public void deleteLink(String linkUrl) throws IllegalArgumentException {
-
+    public void deleteLink(String linkUrl) {
         Link temp = findLink(linkUrl);
         if(temp != null){
             entityManager.remove(temp);
         }
-        else{
-            throw new IllegalArgumentException();
-        }
     }
 
     /**
-     * Method to find the link with the url 'linkUrl'
-     * It returns null if the link doesn't exist.
+     * Method to find a link with thanks to its URL.
      *  
-     * @param linkUrl the url of the link to find
-     * 
-     * @return The link with the url linkUrl
+     * @param linkUrl url of the link to find
+     * @return Link instance found, or {@link null} if no instance found
      */
     @Override
     public Link findLink(String linkUrl) {
         Query q = entityManager.createNamedQuery("LinkByUrl");
         q.setParameter("url", linkUrl);
+
         Link result;
-        try{
+        try {
             result = (Link)q.getSingleResult();
-        }catch(NoResultException e) {
+        } catch (NoResultException e) {
             result = null;
         }
+
         return result;
     }
 
     /**
-     * Method to collect all existing links on database.
+     * Method to collect all existing links in database.
      * 
      * @return links list
      */
     @Override
     public Collection<Link> collectLinks() {
-
         Query links = entityManager.createNamedQuery("Link.findAll");
+        @SuppressWarnings("unchecked")
         List<Link> usersList = links.getResultList();
         Set<Link> linkSet = new HashSet<Link>();
         linkSet.addAll(usersList);
         return linkSet;
     }
-    
+
     /**
-     * Method to modify the description of an Link
+     * Method to modify the description of a Link
      * 
-     * @param oldLink the link to modify
-     * @param newDescription the new description of the Link
-     * 
-     * @return the modify link
+     * @param link the link to modify
+     * @param newDescription the new link description
+     * @return modified Link instance (updated description)
      */
     @Override
-    public Link updateDescription(Link oldLink, String newDescription) {
-
-        oldLink.setDescription(newDescription);
-
-        return entityManager.merge(oldLink);
+    public Link updateDescription(Link link, String newDescription) {
+        // TODO verify if Link instance correspond to an attached entity
+        // => use entityManager.find(Link.class, link);
+        link.setDescription(newDescription);
+        return entityManager.merge(link);
     }
 }
 

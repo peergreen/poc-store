@@ -72,8 +72,6 @@ public class DefaultGroupTest {
         queryString = "Series.findAll";
         queryString2 = "GroupByName";
         groupList = new ArrayList<Group>();
-
-
     }
 
     @Test
@@ -89,8 +87,6 @@ public class DefaultGroupTest {
         Assert.assertEquals(groupname, groupArgument.getValue().getGroupname());
         Assert.assertTrue(groupArgument.getValue().getPetals().isEmpty());
         Assert.assertTrue(groupArgument.getValue().getUsers().contains(mockuser));
-
-
     }
 
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
@@ -137,7 +133,6 @@ public class DefaultGroupTest {
         sessionGroup.deleteGroup(groupname);
         //then
         verify(entityManager).remove(mockgroup);
-
     }
 
     @Test
@@ -225,7 +220,7 @@ public class DefaultGroupTest {
     }
 
     @Test
-    public void shouldCollectPetals(){
+    public void shouldCollectPetals() throws NoEntityFoundException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
@@ -236,8 +231,8 @@ public class DefaultGroupTest {
 
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting() throws NoEntityFoundException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);

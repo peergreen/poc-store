@@ -35,9 +35,9 @@ public interface ISessionGroup {
      *  but one user is automatically added to users list: Administrator.
      * </p>
      * <p>
-     * Throws EntityAlreadyExistsException
+     * Throws {@link EntityAlreadyExistsException}
      *  when an entity with same id already exists in the database.<br />
-     * Throws NoEntityFoundException if user Administrator doesn't already exist.
+     * Throws {@link NoEntityFoundException} if user Administrator doesn't already exist.
      * </p>
      * 
      * @param groupName group name to create
@@ -56,13 +56,13 @@ public interface ISessionGroup {
     Group findGroup(String groupName);
 
     /**
-     * Method to delete the group with the name groupName.<br />
+     * Method to delete the group thanks to its name.<br />
      * Throws an IllegalArgumentException if the entity to remove
-     * doesn't exist in the database.
+     *  doesn't exist in the database.
      * 
      * @param groupName the name of the group to delete
      */
-    void deleteGroup(String groupName) /* throws NoEntityFoundException */;
+    void deleteGroup(String groupName);
 
     /**
      * Method to add a user to a group.
@@ -84,7 +84,7 @@ public interface ISessionGroup {
 
     /**
      * Method to collect the users which belong to a specified group.<br />
-     * Throws an NoEntityFoundException when the group doesn't exist.
+     * Throws {@link NoEntityFoundException} when the group doesn't exist.
      * 
      * @param groupName group's name
      * @return collection of users which belong to the group
@@ -93,35 +93,35 @@ public interface ISessionGroup {
     Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
 
     /**
-     * Method to add a new Petal to the list of petals that are accessible from the Group 'group'
+     * Method to make a petal accessible to all the members of a group.
      * 
-     * @param group the group to which add a new petal 
-     * @param petal the petal to make available from the Group 'group'
-     * 
-     * @return A new group with the new petal
+     * @param group group to which grant access to the petal 
+     * @param petal petal to make available for the group
+     * @return modified Group instance (updated list of accessible petals)
      */
     Group addPetal(Group group, Petal petal);
 
     /**
-     * Method to remove a Petal from the list of petals that are accessible from the Group 'group'
+     * Method to remove a Petal from the list of petals that are accessible for a group
      * 
-     * @param group the group to which remove the petal 
-     * @param petal the petal to make inaccessible from the Group 'group'
-     * @return
+     * @param group group to which remove the petal 
+     * @param petal petal to make inaccessible for the Group
+     * @return modified Group instance (updated list of accessible petals)
      */
     Group removePetal(Group group, Petal petal);
 
     /**
-     * Method to collect the petals which are accessible from the Group 'group'
+     * Method to collect petals which are accessible for a specified group.<br />
+     * Throws {@link NoEntityFoundException} if the group doesn't exist.
      * 
-     * @param groupName the group's name
-     * 
-     * @return A collection of petals which are accessible from the group
+     * @param groupName group name
+     * @return collection of petals which are accessible for the group
+     * @throws NoEntityFoundException
      */
-    Collection<Petal> collectPetals(String groupName);
+    Collection<Petal> collectPetals(String groupName) throws NoEntityFoundException;
 
     /**
-     * Method to collect all existing groups on database.
+     * Method to collect all existing groups in database.
      * 
      * @return groups list
      */

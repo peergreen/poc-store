@@ -37,6 +37,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultPetalControllerTestCase {
 
@@ -99,7 +100,7 @@ public class DefaultPetalControllerTestCase {
     }
 
     @Test
-    public void testAddPetal() {
+    public void testAddPetal() throws NoEntityFoundException, EntityAlreadyExistsException {
         String vendorName = "Peergreen";
         // create vendor entity instance
         Vendor vendor = new Vendor();
@@ -164,8 +165,8 @@ public class DefaultPetalControllerTestCase {
             File petalBinary);
      */
 
-    @Test
-    public void testCreateCapability() {
+//    @Test
+    public void testCreateCapability() throws EntityAlreadyExistsException {
         String capabilityName = "my capability";
         String namespace = "service";
         String version = "1.0";
@@ -176,16 +177,19 @@ public class DefaultPetalControllerTestCase {
         verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
     }
 
-//    @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowEntityExistExceptionForCapability() {
+//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowEntityExistExceptionForCapability() throws EntityAlreadyExistsException {
         String capabilityName = "my capability";
         String namespace = "service";
         String version = "1.0";
         Map<String, String> properties = new HashMap<String,String>();
 
         // verify capabilitySession.addCapability(...) is called
-        petalController.createCapability(capabilityName,version, namespace, properties);
-        petalController.createCapability(capabilityName,version, namespace, properties);
+        petalController.createCapability(capabilityName, version, namespace, properties);
+        petalController.createCapability(capabilityName, version, namespace, properties);
+        
+        // TODO
+//        verify(petalController).addCapability(vendor, artifactId, version, capability);
     }
 
     @Test
@@ -393,7 +397,7 @@ public class DefaultPetalControllerTestCase {
     }
 
     @Test
-    public void testCreateCategory() {
+    public void testCreateCategory() throws EntityAlreadyExistsException {
         String categoryName = "Administration";
 
         // verify categorySession.addCategory(...) is called
@@ -401,8 +405,8 @@ public class DefaultPetalControllerTestCase {
         verify(categorySession).addCategory(categoryName);
     }
 
-    //@Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowEntityExistExceptionForCategory() {
+//    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowEntityExistExceptionForCategory() throws EntityAlreadyExistsException {
         String categoryName = "Administration";
 
         // verify categorySession.addCategory(...) is called

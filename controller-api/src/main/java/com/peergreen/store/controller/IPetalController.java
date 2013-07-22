@@ -14,6 +14,7 @@ import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.enumeration.Origin;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Interface defining all petal related operations:
@@ -96,11 +97,13 @@ public interface IPetalController {
      * @param origin the petal's origin
      * @param petalBinary petal's binary
      * @return corresponding Petal instance
+     * @throws EntityAlreadyExistsException 
+     * @throws NoEntityFoundException 
      */
     Petal addPetal(Vendor vendor, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
-            Origin origin, File petalBinary);
+            Origin origin, File petalBinary) throws NoEntityFoundException, EntityAlreadyExistsException;
 
     /**
      * Method to remove a petal from the store thanks to its information.
@@ -137,8 +140,10 @@ public interface IPetalController {
      * @param version capability's version
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
+     * @throws EntityAlreadyExistsException 
      */
-    Capability createCapability(String capabilityName, String version, String namespace, Map<String,String> properties);
+    Capability createCapability(String capabilityName, String version,
+            String namespace, Map<String,String> properties) throws EntityAlreadyExistsException;
 
     /**
      * Method to collect all the capabilities provided by a petal.
@@ -216,8 +221,9 @@ public interface IPetalController {
      * Method to add a new category to the database.
      * 
      * @param categoryName cetegory's name
+     * @throws EntityAlreadyExistsException 
      */
-    Category createCategory(String categoryName);
+    Category createCategory(String categoryName) throws EntityAlreadyExistsException;
 
     /**
      * Method to retrieve a petal's category.

@@ -4,17 +4,21 @@ import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public interface ISessionCategory {
 
     /**
-     * Method to add a new category in the database
-     * The attributes petals are null when creating the category
+     * Method to add a new category in the database.<br />
+     * Throws EntityAlreadyExistsException when a category
+     *  with same name already exist in the database.<br />
      * 
-     * @param categoryName the category's name
-     * @return A new instance of Category
+     * @param categoryName category name
+     * @return created Category instance
+     * @throws EntityAlreadyExistsException
      */
-    Category addCategory(String categoryName);
+    Category addCategory(String categoryName) throws EntityAlreadyExistsException;
 
     /**
      * Method to delete the category with the name categoryName
@@ -33,14 +37,14 @@ public interface ISessionCategory {
     Category findCategory(String categoryName);
 
     /**
-     * Method to collect all the petals which belongs to the category
-     * with the name categoryName
+     * Method to collect all the petals which belongs to the specified category.<br />
+     * Throws {@link NoEntityFoundException} when Category doesn't exist in database.
      * 
-     * @param categoryName the name of the category whose petals are collected
-     *  
-     * @return A collection of petals which belongs to this category
+     * @param categoryName name of the category whose petals are collected
+     * @return collection of petals which belongs to this category
+     * @throws NoEntityFoundException
      */
-    Collection<Petal> collectPetals(String categoryName);
+    Collection<Petal> collectPetals(String categoryName) throws NoEntityFoundException;
 
     /**
      * Method to add a new petal to a category

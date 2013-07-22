@@ -12,6 +12,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 /**
  * Interface defining high level operations to manage server.
@@ -34,7 +35,7 @@ public interface IStoreManagment {
      * 
      * @param url path to the remote store
      * @param description link's description
-     * @retun created link instance
+     * @return created link instance
      */
     Link addLink(String url, String description);
 
@@ -57,8 +58,9 @@ public interface IStoreManagment {
      * 
      * @param name of the category
      * @return created Category instance
+     * @throws EntityAlreadyExistsException
      */
-    Category addCategory(String name);
+    Category addCategory(String name) throws EntityAlreadyExistsException;
 
     /**
      * Method to remove a category from the database.

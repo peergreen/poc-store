@@ -4,7 +4,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -17,6 +16,7 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.impl.DefaultLink;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 public class DefaultLinkTest {
 
@@ -51,7 +51,7 @@ public class DefaultLinkTest {
     }
 
     @Test
-    public void shouldAddLink() {
+    public void shouldAddLink() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionLink.findLink(anyString())).thenReturn(null);
@@ -64,8 +64,8 @@ public class DefaultLinkTest {
 
     }
 
-    @Test(expectedExceptions = EntityExistsException.class)
-    public void shouldThrowExceptionWhenAddLinkCauseAlreadyExist() {
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shouldThrowExceptionWhenAddLinkCauseAlreadyExist() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionLink.findLink(anyString())).thenReturn(mocklink);
@@ -86,7 +86,7 @@ public class DefaultLinkTest {
         verify(entityManager).remove(mocklink);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);

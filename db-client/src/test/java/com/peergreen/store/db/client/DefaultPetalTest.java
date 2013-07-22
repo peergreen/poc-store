@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 
 import junit.framework.Assert;
@@ -36,6 +35,8 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultPetalTest {
 
@@ -126,7 +127,7 @@ public class DefaultPetalTest {
     }
 
     @Test
-    public void shouldAddPetal() {
+    public void shouldAddPetal() throws NoEntityFoundException, EntityAlreadyExistsException {
 
         //Given
         when(sessionGroup.findGroup("Administrateur")).thenReturn(mockgroup);
@@ -153,8 +154,8 @@ public class DefaultPetalTest {
 
     }
 
-    @Test(expectedExceptions = EntityNotFoundException.class)
-    public void shouldThrowExceptionWhenAddCauseGroupAdministratorDoesNotExist() {
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenAddCauseGroupAdministratorDoesNotExist() throws NoEntityFoundException, EntityAlreadyExistsException {
         //Given
         when(sessionGroup.findGroup("Administrateur")).thenReturn(null);    
 

@@ -8,9 +8,7 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -28,6 +26,9 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
+
 
 /**
  * Class defining an entity session to manage the entity Petal
@@ -113,47 +114,44 @@ public class DefaultPetal implements ISessionPetal {
         this.entityManager = entityManager;
     }
 
-
     /**
-     * Method to create an instance of a petal and add it in the database.
-     * The group administrator has access to all the petals, so it have to be created before
-     * adding petals.
-     * It will throw an EntiyNotFoundException if the group administrator doesn't exist, and
-     * EntityExistsException if the petal already exist
+     * Method to add a petal in the database.<br />
+     * Group 'Administrator' must be created first (has access to all petals). <br />
+     * Throws {@link NoEntityFoundException} if the group 'Administrator' doesn't exist.<br />
+     * Throws {@link EntityAlreadyExistsException} if the petal already exists.
      * 
-     * 
-     * @param vendorName The petal's vendor name
-     * @param artifactId The petal's artifactId
-     * @param version The petal's version
-     * @param description The petal's description
-     * @param category The petal's category
-     * @param capabilities The petal's capabilities 
-     * @param requirements The petal's requirements
-     * @param Origin the petal's origin 
-     * 
-     * @return A new instance of petal 
+     * @param vendorName petal vendor name
+     * @param artifactId petal artifactId
+     * @param version petal version
+     * @param description petal description
+     * @param category petal category
+     * @param capabilities petal capabilities
+     * @param requirements petal requirements
+     * @param Origin petal origin
+     * @return created Petal instance
+     * @throws NoEntityFoundException
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin)throws EntityNotFoundException, EntityExistsException {
+    public Petal addPetal(Vendor vendor, String artifactId, String version,
+            String description, Category category,
+            Set<Capability> capabilities, Set<Requirement> requirements,
+            Origin origin) throws NoEntityFoundException, EntityAlreadyExistsException {
 
         Group group = sessionGroup.findGroup("Administrateur");
-        /*
-         * All the petals should be accessible via the group "Administrateur" at least.
-         * So if it doesn't exist, this method will throw an exception 
-         * 
-         */
-        if(group == null){
-            throw new EntityNotFoundException("The group Administrateur must be created first at all");
-        }
-        else{
+
+        // group 'Administrator' must exists
+        if (group == null) {
+            throw new NoEntityFoundException("The group Administrator must be created first at all.");
+        } else {
             Petal petal = findPetal(vendor, artifactId, version);
-            if(petal != null){
-                throw new EntityExistsException();
-            }
-            else {
+            if (petal != null) {
+                String msg = "Petal " + artifactId + " provided by " + vendor +
+                            " in version " + version + " is already present in database.";
+                throw new EntityAlreadyExistsException(msg);
+            } else {
                 petal = new Petal(vendor, artifactId, version, category,
-                        description, (Set<Requirement>)requirements,(Set<Capability>) capabilities, origin);
+                        description, requirements, capabilities, origin);
                 Set<Group> groups = new HashSet<Group>();
                 groups.add(group);
                 petal.setGroups(groups);
@@ -174,28 +172,24 @@ public class DefaultPetal implements ISessionPetal {
                 }
             }
 
-
             return petal;
-
         }
     }
 
     /**
      * Method to find a petal.
-     * It returns null if the petals doesn't exist.
      * 
-     * @param vendor the petal's vendor
-     * @param artifactId the petal's artifactId!
-     * @param version the petal's version
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version
      * 
-     * @return The petal with the attributes given in parameters
+     * @return petal found in database with the attributes corresponding
+     *  to given parameters, or {@literal null} if not found.
      */
     @Override
     public Petal findPetal(Vendor vendor, String artifactId, String version) {
-
         PetalId petalId = new PetalId(vendor, artifactId, version);
-        Petal petal =entityManager.find(Petal.class, petalId);
-        return petal;
+        return entityManager.find(Petal.class, petalId);
     }
 
     /**

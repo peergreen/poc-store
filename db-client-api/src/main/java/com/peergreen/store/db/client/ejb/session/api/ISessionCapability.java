@@ -5,18 +5,22 @@ import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public interface ISessionCapability {
 
     /**
      * Method to add a new capability in the database.
      * 
-     * @param capabilityName the capability's name
-     * @param namespace the capability's namespace
-     * @param properties the capability's properties
-     * @return The capability creates
+     * @param capabilityName the capability name
+     * @param version capability version
+     * @param namespace capability namespace
+     * @param properties capability properties
+     * @return created Capability instance
+     * @throws EntityAlreadyExistsException
      */
-    Capability addCapability(String capabilityName,String version, String namespace, Map<String,String> properties);
+    Capability addCapability(String capabilityName,String version, String namespace, Map<String,String> properties) throws EntityAlreadyExistsException;
 
     /**
      * Method to delete a capability in the database
@@ -51,13 +55,14 @@ public interface ISessionCapability {
     Capability updateProperties (Capability capability, Map<String,String> prooperties);
 
     /**
-     * Method to collect the petals which give the capability with the name 'capabilityName'
+     * Method to collect the petals which provides the specified capability.
      * 
      * @param name the capability's name
      * @param version the version of the capability to delete
      * @return A collection of all the petals which give this capability
+     * @throws NoEntityFoundException 
      */
-    Collection<Petal> collectPetals(String capabilityName, String version);
+    Collection<Petal> collectPetals(String capabilityName, String version) throws NoEntityFoundException;
 
     /**
      * Method to add a petal to the list of petals which give the capability

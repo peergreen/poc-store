@@ -1,6 +1,7 @@
 package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
+import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
@@ -9,26 +10,34 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public interface ISessionPetal {
 
     /**
-     * Method to create an instance of a petal and add it in the database
+     * Method to add a petal in the database.<br />
+     * Group 'Administrator' must be created first (has access to all petals). <br />
+     * Throws {@link NoEntityFoundException} if the group 'Administrator' doesn't exist.<br />
+     * Throws {@link EntityAlreadyExistsException} if the petal already exists.
      * 
-     * @param vendorName The petal's vendor name
-     * @param artifactId The petal's artifactId
-     * @param version The petal's version
-     * @param description The petal's description
-     * @param category The petal's category
-     * @param capabilities The petal's capabilities 
-     * @param requirements The petal's requirements
-     * @param Origin the petal's origin 
-     * 
-     * @return A new instance of petal 
+     * @param vendorName petal vendor name
+     * @param artifactId petal artifactId
+     * @param version petal version
+     * @param description petal description
+     * @param category petal category
+     * @param capabilities petal capabilities
+     * @param requirements petal requirements
+     * @param Origin petal origin
+     * @return created Petal instance
+     * @throws NoEntityFoundException
+     * @throws EntityAlreadyExistsException
      */
     Petal addPetal(Vendor vendor, String artifactId, 
             String version, String description, Category category, 
-            Collection<Capability> capabilities, Collection<Requirement> requirements, Origin origin);
+            Set<Capability> capabilities,
+            Set<Requirement> requirements, Origin origin)
+            throws NoEntityFoundException, EntityAlreadyExistsException;
 
 
     /**

@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -36,6 +33,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.enumeration.Origin;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Interface defining all petal related operations:
@@ -221,23 +219,15 @@ public class DefaultPetalController implements IPetalController {
      * @param capabilities petal's capabilities
      * @param petalBinary petal's binary
      * @param Origin the petal's origin 
+     * @throws EntityAlreadyExistsException 
+     * @throws NoEntityFoundException 
      */
     @Override
     public Petal addPetal(Vendor vendor, String artifactId, String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) {
+            Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) throws NoEntityFoundException, EntityAlreadyExistsException {
 
         petalPersistence.addToLocal(vendor, artifactId, version, petalBinary);
-
-        Petal petal = null;
-
-        try{
-            petal = petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin);
-        }catch(EntityNotFoundException e){
-
-        }catch(EntityExistsException e1){
-
-        }
-        return petal; 
+        return petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin); 
     }
 
     /**
@@ -296,15 +286,17 @@ public class DefaultPetalController implements IPetalController {
      * @param version capability's version
      * @param namespace capability's related namespace
      * @param properties capability's properties (metadata)
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Capability createCapability(String capabilityName,String version, String namespace, Map<String,String> properties) {
-        Capability capability = null; 
-        try{
-            capability= capabilitySession.addCapability(capabilityName,version, namespace, properties);
-        }
-        catch(EntityExistsException e){
-
+    public Capability createCapability(String capabilityName, String version,
+            String namespace, Map<String,String> properties) throws EntityAlreadyExistsException {
+        
+        Capability capability = null;
+        try {
+            capability = capabilitySession.addCapability(capabilityName, version, namespace, properties);
+        } catch (EntityAlreadyExistsException e) {
+            throw e;
         }
         return capability;
     }
@@ -412,17 +404,11 @@ public class DefaultPetalController implements IPetalController {
      * Method to add a new category to the database.
      * 
      * @param categoryName cetegory's name
+     * @throws EntityAlreadyExistsException 
      */
     @Override
-    public Category createCategory(String categoryName) {
-        Category category = null;
-        try{
-            category = categorySession.addCategory(categoryName);
-        }
-        catch(EntityExistsException e){
-
-        }
-        return category;
+    public Category createCategory(String categoryName) throws EntityAlreadyExistsException {
+        return categorySession.addCategory(categoryName);
     }
 
     /**
@@ -483,5 +469,4 @@ public class DefaultPetalController implements IPetalController {
     public void bindPetalPersistence(IPetalsPersistence petalPersistence) {
         this.petalPersistence = petalPersistence;
     }
-
 }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -25,6 +24,8 @@ import org.testng.annotations.Test;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 
 public class DefaultCapabilityTest {
@@ -70,7 +71,7 @@ public class DefaultCapabilityTest {
     /**
      * Test to check that adding a capability     
      */
-    public void shouldAddCapability() {
+    public void shouldAddCapability() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
@@ -85,8 +86,8 @@ public class DefaultCapabilityTest {
         Assert.assertTrue(capability1.getValue().getPetals().isEmpty());
     }
 
-    @Test(expectedExceptions = EntityExistsException.class)
-    public void shoudThrowExceptionWhenAddCauseEntityAlreadyExits() {
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void shoudThrowExceptionWhenAddCauseEntityAlreadyExits() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(mockcapability);
@@ -95,8 +96,7 @@ public class DefaultCapabilityTest {
 
         //when
         sessionCapability.addCapability("capabilityName",version, "namespace", properties);
-
-
+        sessionCapability.addCapability("capabilityName",version, "namespace", properties);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class DefaultCapabilityTest {
         verify(entityManager).remove(mockcapability);
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     /**
      *Test to check if the delete feature works well  
      */
@@ -229,21 +229,18 @@ public class DefaultCapabilityTest {
     /**
      * Test to check if the feature to collect petals which provides a capability works well
      */
-    public void shouldCollectPetals(){
+    public void shouldCollectPetals() throws NoEntityFoundException{
         //Given 
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(mockcapability);
         //When
         sessionCapability.collectPetals("capabilityName",version);
-
         //Then
-
         verify(mockcapability).getPetals();
-
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenCollectCauseEntityNotExistent() {
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenCollectCauseEntityNotExistent() throws NoEntityFoundException {
         //Given 
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);

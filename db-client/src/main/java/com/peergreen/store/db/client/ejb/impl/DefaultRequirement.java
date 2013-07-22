@@ -11,6 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.MapJoin;
+import javax.persistence.criteria.Root;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
@@ -229,8 +233,23 @@ public class DefaultRequirement implements ISessionRequirement {
         Query query = null;
         if (root != null) {
             String alias = "cap";
-            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
-                            + namespace + "\' AND " + root.getHandler().toQueryElement();
+//            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
+//                            + namespace + "\' AND " + root.getHandler().toQueryElement();
+            // TODO testing purpose
+            String sql = "SELECT " + alias + " FROM Capability " + alias + " JOIN " + alias +
+                    ".properties m WHERE KEY(m)=\'toto\' AND VALUE(m)=\'a\' AND "
+                    + alias + ".namespace=\'" + namespace + "\'";
+            
+//            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+//            CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
+//            Root<Capability> capabilityRoot = criteria.from(Capability.class);
+//            criteria.select(capabilityRoot);
+//            MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
+//
+//            criteria.where(builder.equal(propertiesRoot.key(), "toto"));
+//
+//            System.out.println(entityManager.createQuery(criteria).getResultList());
+            
             query = entityManager.createQuery(sql);
         } else {
             // TODO: exception if parsed tree is null?

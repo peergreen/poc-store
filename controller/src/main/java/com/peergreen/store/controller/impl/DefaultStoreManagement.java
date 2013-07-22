@@ -6,9 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
@@ -30,6 +27,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.enumeration.Origin;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
@@ -70,9 +68,8 @@ public class DefaultStoreManagement implements IStoreManagment {
         Link link = null;
         try{
             link = linkSession.addLink(url, description);
-        }
-        catch(EntityExistsException e){
-
+        } catch(EntityAlreadyExistsException e) {
+            // TODO
         }
         return link;
     }
@@ -84,12 +81,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public void removeLink(String linkUrl) {
-        try{
-            linkSession.deleteLink(linkUrl);
-        }
-        catch(IllegalArgumentException e){
-
-        }
+        linkSession.deleteLink(linkUrl);
     }
 
     /**
@@ -107,14 +99,14 @@ public class DefaultStoreManagement implements IStoreManagment {
      * 
      * @param name of the category
      * @return created Category instance
+     * @throws EntityAlreadyExistsException
      */
-    public Category addCategory(String name) {
+    public Category addCategory(String name) throws EntityAlreadyExistsException {
         Category category = null;
-        try{
+        try {
             category = categorySession.addCategory(name);
-        }
-        catch(EntityExistsException e){
-
+        } catch(EntityAlreadyExistsException e) {
+            throw e;
         }
         return category;
     }
@@ -251,13 +243,13 @@ public class DefaultStoreManagement implements IStoreManagment {
     public Petal submitPetal(Vendor vendor, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
         petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
-        try{
+        try {
             petalSession.addPetal(vendor, artifactId, version, description,
                     category, capabilities, requirements, Origin.STAGING);
-        }catch(EntityNotFoundException e){
-
-        }catch(EntityExistsException e1){
-
+        } catch(EntityAlreadyExistsException e) {
+            // TODO
+        } catch (NoEntityFoundException e) {
+            // TODO
         }
 
 

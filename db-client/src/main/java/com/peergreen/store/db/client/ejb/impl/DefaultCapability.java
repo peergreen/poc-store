@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -16,6 +15,9 @@ import javax.persistence.Query;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
+
 
 /**
  * Class defining an entity session to manage the entity Capability
@@ -44,114 +46,93 @@ public class DefaultCapability implements ISessionCapability{
 
     /**
      * Method to add a new capability in the database.
-     * The attributes petals is empty when the capability is created
      * 
-     * @param capabilityName the capability's name
-     * @param namespace the capability's namespace
-     * @param properties the capability's properties
-
-     * @return The capability that was created
+     * @param capabilityName the capability name
+     * @param version capability version
+     * @param namespace capability namespace
+     * @param properties capability properties
+     * @return created Capability instance
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Capability addCapability(String capabilityName,String version, String namespace, Map<String, String> properties) throws EntityExistsException {
+    public Capability addCapability(String capabilityName, String version, String namespace,
+            Map<String, String> properties) throws EntityAlreadyExistsException {
 
         Capability temp = findCapability(capabilityName, version);
-        if(temp != null){
-
-            throw new EntityExistsException();
-        }
-        else
-        {
-            Capability  capability = new Capability(capabilityName, version, namespace, properties);
-
+        if (temp != null) {
+            throw new EntityAlreadyExistsException("Capability " + capabilityName +
+                    " in version " + version + " already exists on database.");
+        } else {
+            Capability capability = new Capability(capabilityName, version, namespace, properties);
             entityManager.persist(capability); 
 
             return capability;
         }
-
     }
 
     /**
      * Method to delete a capability in the database.
-     * We throw an exception if the capability to delete doesn't exist
      * 
-     * @param capabilityName the capability's name
-     * @param version the capability's version 
+     * @param capabilityName capability name
+     * @param version capability version 
      */
     @Override
-    public void deleteCapability(String capabilityName, String version)throws IllegalArgumentException {
-
+    public void deleteCapability(String capabilityName, String version) {
         Capability temp = findCapability(capabilityName,version);
-        if(temp != null)
-        {
+        if (temp != null) {
             entityManager.remove(temp);
-        }
-        else
-        {
-            throw new IllegalArgumentException();
         }
     }
 
     /**
-     * Method to find a capability in the database.
-     * If the capability to find doesn't exist, we return null
+     * Method to find a capability in the database. <br />
+     * If the capability to find doesn't exist, we return {@literal null}.
      * 
      * @param capabilityName the capability's name
-     * @return the capacity with the name 'capabilityName'
+     * @return retrieved Capability instance or {@literal null} if no matching instance found
      */
     @Override
-    public Capability findCapability(String capabilityName, String version){
-
+    public Capability findCapability(String capabilityName, String version) {
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
         q.setParameter("version", version);
 
         Capability capabilityResult;
-        try{ 
+        try { 
             capabilityResult = (Capability)q.getSingleResult();
-
-        }catch (NoResultException e){
+        } catch (NoResultException e) {
             capabilityResult = null ; 
         }
-
         return capabilityResult;
-
     }
 
     /**
-     * Method to collect the petals which give a capability.
-     * We throw a new exception when the capability doesn't exist 
+     * Method to collect the petals which provides a specific capability.<br />
+     * Throws {@literal NoEntityFoundException} if capability doesn't exist.
      * 
-     * @param name the capability's name
-     * @param version the capability's version 
-     * 
-     * @return A collection of all the petals which give this capability
+     * @param name capability name
+     * @param version capability version 
+     * @return collection of all petals providing this specific capability
      */
     @Override
-    public Collection<Petal> collectPetals(String capabilityName, String version) throws IllegalArgumentException {
-
+    public Collection<Petal> collectPetals(String capabilityName, String version) throws NoEntityFoundException {
         Capability capability = findCapability(capabilityName,version);
-        if(capability != null){
+        if (capability != null) {
             return capability.getPetals();
-        }
-        else
-        {
-            String message = " The capability doesn't exist";
-            throw new IllegalArgumentException(message);
+        } else {
+            throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
         }
     }
 
     /**
-     * Method to add a petal to the list of petals which give the capability
+     * Method to add a petal to the list of petals which give the capability.
      * 
-     * @param capability the capability that is given by the petal
-     * @param petal the petal to add 
-     * 
-     * @return A new capability with a new list of petals 
+     * @param capability capability provided by the petal
+     * @param petal petal to add 
+     * @return modified Capability instance (updated list of providers)
      */
     @Override
     public Capability addPetal(Capability capability, Petal petal) {
-
         Set<Petal> petals = capability.getPetals();
         petals.add(petal);
         capability.setPetals(petals);
@@ -160,42 +141,36 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     /**
-     * Method to remove a petal to the list of petals which give the capability
+     * Method to remove a petal from the petals list providing a capability.
      * 
-     * @param capability the capability that is given by the petal
-     * @param petal the petal to remove
-     * 
-     * @return A new capability with a new list of petals 
+     * @param capability capability provided by the petal.
+     * @param petal petal to remove
+     * @return modified Capability instance (updated list of providers)
      */
     @Override
     public Capability removePetal(Capability capability, Petal petal) {
-
         Set<Petal> petals = capability.getPetals();
         petals.remove(petal);
-        /**
-         * If any petal doesn't give this capability no longer
-         * so we can delete it
-         */
-        if(petals.isEmpty()){
+        
+        // We can delete this capability if no petal provides this capability any more.
+        if (petals.isEmpty()) {
             entityManager.remove(capability);
             capability = null;
-        }
-        else {
+        } else {
             capability = entityManager.merge(capability);
-
         }
         return capability;
     }
 
     /**
-     * Method to collect all the capabilities in the database 
+     * Method to collect all capabilities present in database.
      * 
-     * @return A collection of all the capabilities which are stored in the database 
+     * @return collection of all capabilities which are stored in the database
      */
     @Override
     public Collection<Capability> collectCapabilities() {
-
         Query capQuery = entityManager.createNamedQuery("Capability.findAll");
+        @SuppressWarnings("unchecked")
         List<Capability> capList = capQuery.getResultList();
         Set<Capability> capSet = new HashSet<Capability>();
         capSet.addAll(capList);
@@ -204,36 +179,28 @@ public class DefaultCapability implements ISessionCapability{
     }
 
     /**
-     * Method to change a capability's namespace
+     * Method to change capability namespace.
      * 
-     * @param capability the capability to modify 
-     * @param namespace the new namespace 
-     * 
-     * @return The capability with new attribute 
+     * @param capability capability to modify 
+     * @param namespace new namespace 
+     * @return modified Capability instance
      */
     @Override
     public Capability updateNamespace(Capability capability, String namespace) {
-
         capability.setNamespace(namespace);
         return entityManager.merge(capability);
-
     }
     
     /**
-     * Method to change a capability's properties
+     * Method to change capability properties.
      * 
-     * @param capability the capability to modify 
+     * @param capability capability to modify 
      * @param properties new properties for the capability 
-     * 
-     * @return The capability with new attribute 
+     * @return modified Capability instance
      */
     @Override
     public Capability updateProperties(Capability capability, Map<String, String> properties) {
-
         capability.setProperties(properties);
         return entityManager.merge(capability);
-
     }
-
-
 }
