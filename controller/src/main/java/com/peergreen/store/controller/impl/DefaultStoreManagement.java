@@ -62,14 +62,15 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param url path to the remote store
      * @param description link's description
      * @param created link instance
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Link addLink(String url, String description) {
+    public Link addLink(String url, String description) throws EntityAlreadyExistsException {
         Link link = null;
-        try{
+        try {
             link = linkSession.addLink(url, description);
         } catch(EntityAlreadyExistsException e) {
-            // TODO
+            throw e;
         }
         return link;
     }
@@ -251,9 +252,6 @@ public class DefaultStoreManagement implements IStoreManagment {
         } catch (NoEntityFoundException e) {
             // TODO
         }
-
-
-        //     Vendor vendor = vendorSession.findVendor(vendorName);
 
         return petalSession.findPetal(vendor, artifactId, version);
     }

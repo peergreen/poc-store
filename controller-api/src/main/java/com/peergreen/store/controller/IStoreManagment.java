@@ -36,8 +36,9 @@ public interface IStoreManagment {
      * @param url path to the remote store
      * @param description link's description
      * @return created link instance
+     * @throws EntityAlreadyExistsException 
      */
-    Link addLink(String url, String description);
+    Link addLink(String url, String description) throws EntityAlreadyExistsException;
 
     /**
      * Method to remove a link between a remote store and the current one.
