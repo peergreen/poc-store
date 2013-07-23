@@ -1,6 +1,5 @@
 package com.peergreen.store.ldap.parser.impl;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,8 +21,6 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
 import com.peergreen.store.ldap.parser.node.OperandNode;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
-import com.peergreen.tree.Node;
-import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 
 
 /**
@@ -36,13 +33,6 @@ import com.peergreen.tree.visitor.print.TreePrettyPrintNodeVisitor;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
-    private static TreePrettyPrintNodeVisitor<String> visitor = new TreePrettyPrintNodeVisitor<String>(System.out) {
-        @Override
-        protected void doPrintInfo(PrintStream stream, Node<String> node) {
-            stream.printf("%s%n", node.getData());
-        }
-    };
-    
     private Set<ILdapHandler> handlers;
     
     /**
@@ -72,18 +62,28 @@ public class DefaultLdapParser implements ILdapParser {
     @Override
     public IValidatorNode<String> parse(String filter) throws InvalidLdapFormatException {
         ArrayList<String> tokens = getTokens(filter);
+        
         int i = 0;
         IValidatorNode<String> root = null;
         IValidatorNode<String> parentNode = null;
 
+        // check if there is as many opening parenthesis as closing parenthesis
+        int openBr = filter.length() - filter.replace("(", "").length();
+        int closeBr = filter.length() - filter.replace(")", "").length();
+        if (openBr - closeBr != 0) {
+            throw new InvalidLdapFormatException("Malformed LDAP filter: not the same number of opening and closing parenthesis.");
+        }
+        
+        // check if filter begins with opening parenthesis
         if (!tokens.get(0).equals("(")) {
-            throw new InvalidLdapFormatException("Malformed LDAP expression. Opening parenthesis expected.");
+            throw new InvalidLdapFormatException("Malformed LDAP expression: opening parenthesis expected.");
         }
 
+        // check if filter ends with closing parenthesis
         if (!tokens.get(tokens.size() - 1).equals(")")) {
-            throw new InvalidLdapFormatException("Malformed LDAP expression. Closing parenthesis expected.");
+            throw new InvalidLdapFormatException("Malformed LDAP expression: closing parenthesis expected.");
         }
-
+        
         // read all tokens
         while (i < tokens.size()) {
             String s = tokens.get(i);
@@ -99,6 +99,10 @@ public class DefaultLdapParser implements ILdapParser {
                 } else {
                     // parse an operand
                     parsedNode = createBinaryNode(tokens.get(i));
+                    
+                    if (!parsedNode.validate()) {
+                        throw new InvalidLdapFormatException("Failed to parse a valid BinaryNode.");
+                    }
                 }
 
                 if (parsedNode != null) {
@@ -119,11 +123,12 @@ public class DefaultLdapParser implements ILdapParser {
                     }
                     
                     // valid node => generate JPQL
-                    parsedNode.getHandler().toQueryElement();
-                } /* else {
+                    if (parentNode.getHandler() != null) {
+                        parsedNode.getHandler().toQueryElement();
+                    }
+                } else {
                     throw new InvalidLdapFormatException("Failed to parse a node.");
                 }
-                */
                 i++;
             } else if (s.equals(")")) {
                 // go back a level
@@ -138,7 +143,6 @@ public class DefaultLdapParser implements ILdapParser {
             }
         }
 
-        root.walk(visitor);
         return root;
     }
 
@@ -147,8 +151,9 @@ public class DefaultLdapParser implements ILdapParser {
      * 
      * @param filter LDAP filter
      * @return list of tokens
+     * @throws InvalidLdapFormatException 
      */
-    protected ArrayList<String> getTokens(String filter) {
+    protected ArrayList<String> getTokens(String filter) throws InvalidLdapFormatException {
         ArrayList<String> tokens = new ArrayList<>();
 
         int pos = 0;
@@ -174,6 +179,12 @@ public class DefaultLdapParser implements ILdapParser {
                     while (i < filter.length() && filter.charAt(i) != ')') {
                         s += Character.toString(filter.charAt(i));
                         i++;
+                    }
+                    
+                    // If we got an opening parenthesis during reading an item, there is a problem.
+                    // It is due to non recognition of an invalid operator (e.g. #)
+                    if (s.contains("(")) {
+                        throw new InvalidLdapFormatException("Malformed LDAP filter: nvalid operator.");
                     }
 
                     tokens.add(s);
