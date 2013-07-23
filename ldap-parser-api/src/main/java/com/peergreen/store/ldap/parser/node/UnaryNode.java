@@ -9,10 +9,11 @@ public class UnaryNode extends ValidatorNodeHelper {
     
     public UnaryNode(String data) {
         super(data);
+        child = null;
     }
 
     public boolean validate() throws InvalidLdapFormatException {
-        if (getChildren().size() == 1) {
+        if (child != null) {
         	return true;
         } else {
         	throw new InvalidLdapFormatException("Invalid unary node. One and only one child expected.");
@@ -24,6 +25,9 @@ public class UnaryNode extends ValidatorNodeHelper {
     }
     
     public void setChild(IValidatorNode<String> child) {
+        if (child != null) {
+            getChildren().remove(child);
+        }
         this.child = child;
     }
 }
