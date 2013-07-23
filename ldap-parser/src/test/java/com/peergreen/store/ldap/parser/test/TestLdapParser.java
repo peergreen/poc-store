@@ -3,6 +3,9 @@ package com.peergreen.store.ldap.parser.test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientBinaryNode;
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientNaryNode;
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientUnaryNode;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.impl.DefaultLdapParser;
 
@@ -14,8 +17,15 @@ public class TestLdapParser {
     @BeforeMethod
     public void setUp() {
         parser = new DefaultLdapParser();
+        JPQLClientUnaryNode unaryHandler = new JPQLClientUnaryNode();
+        JPQLClientBinaryNode binaryHandler = new JPQLClientBinaryNode();
+        JPQLClientNaryNode naryHandler = new JPQLClientNaryNode();
+        parser.register(unaryHandler);
+        parser.register(binaryHandler);
+        parser.register(naryHandler);
     }
 
+    /*
     @Test(expectedExceptions = InvalidLdapFormatException.class)
     public void missingInitialOpeningParenthesisTest() throws InvalidLdapFormatException {
         filter = "!(name=jpa))";
@@ -33,6 +43,7 @@ public class TestLdapParser {
         filter = "(!(name=jpa))";
         parser.parse(filter);
     }
+    */
     
     @Test(expectedExceptions = InvalidLdapFormatException.class)
     public void invalidUnaryNodeTest() throws InvalidLdapFormatException {
@@ -103,6 +114,12 @@ public class TestLdapParser {
     @Test
     public void surnumeraryWhitespacesTest() throws InvalidLdapFormatException {
         filter = "(&(name  =     PrintService    )(  version=  4.3))";
+        parser.parse(filter);
+    }
+    
+    @Test
+    public void composedOperatorTest() throws InvalidLdapFormatException {
+        filter = "(name~=tomcat)";
         parser.parse(filter);
     }
 }

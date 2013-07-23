@@ -34,14 +34,14 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
 public class DefaultLdapParser implements ILdapParser {
 
     private Set<ILdapHandler> handlers;
-    
+
     /**
      * Default constructor.
      */
     public DefaultLdapParser() {
         handlers = new HashSet<>();
     }
-    
+
     /**
      * Method to add a new handler to the parser.
      * 
@@ -50,7 +50,7 @@ public class DefaultLdapParser implements ILdapParser {
     public void register(ILdapHandler handler) {
         handlers.add(handler);
     }
-    
+
     /**
      * Method to parse a LDAP filter to a tree.<br />
      * Automatically check if output tree is valid.
@@ -62,7 +62,7 @@ public class DefaultLdapParser implements ILdapParser {
     @Override
     public IValidatorNode<String> parse(String filter) throws InvalidLdapFormatException {
         ArrayList<String> tokens = getTokens(filter);
-        
+
         int i = 0;
         IValidatorNode<String> root = null;
         IValidatorNode<String> parentNode = null;
@@ -73,17 +73,7 @@ public class DefaultLdapParser implements ILdapParser {
         if (openBr - closeBr != 0) {
             throw new InvalidLdapFormatException("Malformed LDAP filter: not the same number of opening and closing parenthesis.");
         }
-        
-        // check if filter begins with opening parenthesis
-        if (!tokens.get(0).equals("(")) {
-            throw new InvalidLdapFormatException("Malformed LDAP expression: opening parenthesis expected.");
-        }
 
-        // check if filter ends with closing parenthesis
-        if (!tokens.get(tokens.size() - 1).equals(")")) {
-            throw new InvalidLdapFormatException("Malformed LDAP expression: closing parenthesis expected.");
-        }
-        
         // read all tokens
         while (i < tokens.size()) {
             String s = tokens.get(i);
@@ -95,14 +85,13 @@ public class DefaultLdapParser implements ILdapParser {
                 if (Operators.isOperator(tokens.get(i)) && !ComparisonOperators.isComparisonOperator(tokens.get(i))) {
                     // parse an operator
                     String op = tokens.get(i);
+                    // TODO
+                    System.out.println(op);
+                    
                     parsedNode = createOperatorNode(op);
                 } else {
                     // parse an operand
                     parsedNode = createBinaryNode(tokens.get(i));
-                    
-                    if (!parsedNode.validate()) {
-                        throw new InvalidLdapFormatException("Failed to parse a valid BinaryNode.");
-                    }
                 }
 
                 if (parsedNode != null) {
@@ -121,26 +110,16 @@ public class DefaultLdapParser implements ILdapParser {
                             parentNode = parsedNode;
                         }
                     }
-                    
-                    // valid node => generate JPQL
-                    if (parentNode.getHandler() != null) {
-                        parsedNode.getHandler().toQueryElement();
-                    }
-                } else {
-                    throw new InvalidLdapFormatException("Failed to parse a node.");
                 }
-                i++;
             } else if (s.equals(")")) {
                 // go back a level
                 if (tokens.get(i-1).equals(")")) {
                     parentNode.validate();
+                    System.out.println("validate " + parentNode.getClass().getSimpleName().toString());
                     parentNode = parentNode.getParentValidatorNode();
                 }
-
-                i++;
-            } else {
-                throw new InvalidLdapFormatException("Invalid LDAP expression. Parenthesis expected.");
             }
+            i++;
         }
 
         return root;
@@ -180,11 +159,11 @@ public class DefaultLdapParser implements ILdapParser {
                         s += Character.toString(filter.charAt(i));
                         i++;
                     }
-                    
+
                     // If we got an opening parenthesis during reading an item, there is a problem.
                     // It is due to non recognition of an invalid operator (e.g. #)
                     if (s.contains("(")) {
-                        throw new InvalidLdapFormatException("Malformed LDAP filter: nvalid operator.");
+                        throw new InvalidLdapFormatException("Malformed LDAP filter: invalid operator.");
                     }
 
                     tokens.add(s);
@@ -213,13 +192,17 @@ public class DefaultLdapParser implements ILdapParser {
 
             if (Operators.isOperator(s)) {
                 op = s;
-            }
 
-            pos += 1;
-            if (pos < filter.length()) {
-                String s2 = filter.substring(pos - 1, pos + 1);
-                if (Operators.isOperator(s2)) {
-                    op = s2;
+                // try to read a composed operator
+                while (pos < filter.length()) {
+                    pos += 1;
+
+                    String tmp = op + filter.charAt(pos);
+                    if (Operators.isOperator(tmp)) {
+                        op = tmp;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -242,13 +225,6 @@ public class DefaultLdapParser implements ILdapParser {
                 handler.onUnaryNodeCreation(node);
             }
             opNode = node;
-        } else if (BinaryOperators.isBinaryOperator(op)) {
-            BinaryNode node = new BinaryNode(op);
-            // notify registered handlers
-            for (ILdapHandler handler : handlers) {
-                handler.onBinaryNodeCreation(node);
-            }
-            opNode = node;
         } else if (NaryOperators.isNaryOperator(op)) {
             NaryNode node = new NaryNode(op);
             // notify registered handlers
@@ -257,7 +233,7 @@ public class DefaultLdapParser implements ILdapParser {
             }
             opNode = node;
         }
-        
+
         return opNode;
     }
 
@@ -272,10 +248,10 @@ public class DefaultLdapParser implements ILdapParser {
         // create a comparison operator node and operand nodes
         String operator = "";
         String[] operands = null;
-        for (ComparisonOperators compOp : ComparisonOperators.values()) {
-            operands = filter.split(compOp.getComparisonOperator());
+        for (BinaryOperators binOp : BinaryOperators.values()) {
+            operands = filter.split(binOp.getBinaryOperator());
             if (operands.length == 2) {
-                operator = compOp.getComparisonOperator();
+                operator = binOp.getBinaryOperator();
                 break;
             }
         }
@@ -293,13 +269,12 @@ public class DefaultLdapParser implements ILdapParser {
             right.setParent(node);
             node.setRightOperand(right);
             node.addChild(right);
-        }
-
-        if (node.validate()) {
+            
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
                 handler.onBinaryNodeCreation(node);
             }
+            
             return node;
         } else {
             throw new InvalidLdapFormatException("Comparison operator must be applied on two operands.");
