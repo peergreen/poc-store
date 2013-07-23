@@ -99,4 +99,10 @@ public class TestLdapParser {
         filter = "(&(name=jpa)())";
         parser.parse(filter);
     }
+    
+    @Test
+    public void surnumeraryWhitespacesTest() throws InvalidLdapFormatException {
+        filter = "(&(name  =     PrintService    )(  version=  4.3))";
+        parser.parse(filter);
+    }
 }

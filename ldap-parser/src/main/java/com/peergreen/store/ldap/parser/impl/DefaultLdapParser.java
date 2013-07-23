@@ -285,11 +285,11 @@ public class DefaultLdapParser implements ILdapParser {
         // create operand nodes
         if (!operator.isEmpty()) {
             operands = filter.split(operator);
-            OperandNode left = new OperandNode(operands[0]);
+            OperandNode left = new OperandNode(operands[0].trim());
             left.setParent(node);
             node.setLeftOperand(left);
             node.addChild(left);
-            OperandNode right = new OperandNode(operands[1]);
+            OperandNode right = new OperandNode(operands[1].trim());
             right.setParent(node);
             node.setRightOperand(right);
             node.addChild(right);
