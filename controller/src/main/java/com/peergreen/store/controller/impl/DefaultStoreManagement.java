@@ -156,7 +156,7 @@ public class DefaultStoreManagement implements IStoreManagment {
         Collection<Group> groups = null;
         Collection<Petal> petals = null;
 
-        try{
+        try {
             groups = userSession.collectGroups(pseudo);
             Iterator<Group> it = groups.iterator();
             // retrieve all petals for each group
@@ -170,7 +170,7 @@ public class DefaultStoreManagement implements IStoreManagment {
                 }
             }
         } catch (NoEntityFoundException e) {
-            // TODO
+            System.err.println(e.getMessage());
         }
 
         return petals;
