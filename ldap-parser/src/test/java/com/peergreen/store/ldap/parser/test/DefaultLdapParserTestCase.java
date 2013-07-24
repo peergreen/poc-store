@@ -10,7 +10,7 @@ import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.impl.DefaultLdapParser;
 
 
-public class TestLdapParser {
+public class DefaultLdapParserTestCase {
     private DefaultLdapParser parser; 
     private String filter;
     
@@ -25,7 +25,6 @@ public class TestLdapParser {
         parser.register(naryHandler);
     }
 
-    /*
     @Test(expectedExceptions = InvalidLdapFormatException.class)
     public void missingInitialOpeningParenthesisTest() throws InvalidLdapFormatException {
         filter = "!(name=jpa))";
@@ -43,7 +42,6 @@ public class TestLdapParser {
         filter = "(!(name=jpa))";
         parser.parse(filter);
     }
-    */
     
     @Test(expectedExceptions = InvalidLdapFormatException.class)
     public void invalidUnaryNodeTest() throws InvalidLdapFormatException {
