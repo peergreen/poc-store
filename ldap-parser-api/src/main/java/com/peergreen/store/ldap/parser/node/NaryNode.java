@@ -16,4 +16,9 @@ public class NaryNode extends ValidatorNodeHelper {
     		throw new InvalidLdapFormatException("Invalid n-ary node. At least two children expected.");
     	}
     }
+    
+    @Override
+    public void addChildValidatorNode(IValidatorNode<String> child) {
+        super.addChild(child);
+    }
 }

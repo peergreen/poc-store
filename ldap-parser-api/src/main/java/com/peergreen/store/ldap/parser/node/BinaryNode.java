@@ -22,7 +22,12 @@ public class BinaryNode extends ValidatorNodeHelper {
     		throw new InvalidLdapFormatException("Invalid binary node. Doesn't have two operands.");
     	}
     }
-
+    
+    @Override
+    public void addChildValidatorNode(IValidatorNode<String> child) {
+        super.addChild(child);
+    }
+    
     public IValidatorNode<String> getLeftOperand() {
         return leftOperand;
     }
@@ -33,6 +38,7 @@ public class BinaryNode extends ValidatorNodeHelper {
             getChildren().remove(leftOperand);
         }
         this.leftOperand = leftOperand;
+        addChildValidatorNode(leftOperand);
     }
 
     public IValidatorNode<String> getRightOperand() {
@@ -45,5 +51,6 @@ public class BinaryNode extends ValidatorNodeHelper {
             getChildren().remove(rightOperand);
         }
         this.rightOperand = rightOperand;
+        addChildValidatorNode(rightOperand);
     }
 }

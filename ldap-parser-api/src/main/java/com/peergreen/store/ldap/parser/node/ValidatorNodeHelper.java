@@ -9,41 +9,35 @@ import com.peergreen.tree.node.SimpleNode;
 
 public abstract class ValidatorNodeHelper extends SimpleNode<String> implements IValidatorNode<String> {
 
-    private IValidatorNode<String> parent;
-    private List<IValidatorNode<String>> children;
+    private IValidatorNode<String> parentValidator;
+    private List<IValidatorNode<String>> childrenValidator;
     private ILdapHandler handler;
     private String jpql;
     
     public ValidatorNodeHelper(String data) {
         super(data);
-        parent = null;
-        children = new ArrayList<>();
+        parentValidator = null;
+        childrenValidator = new ArrayList<>();
         handler = null;
         jpql = "";
     }
     
     @Override
     public IValidatorNode<String> getParentValidatorNode() {
-        return this.parent;
+        return this.parentValidator;
     }
 
     @Override
-    public void setParent(IValidatorNode<String> parentNode) {
+    public void setParentValidatorNode(IValidatorNode<String> parentNode) {
         super.setParent(parentNode);
-        this.parent = parentNode;
+        this.parentValidator = parentNode;
     }
     
     @Override
     public List<IValidatorNode<String>> getChildrenValidatorNode() {
-        return children;
+        return childrenValidator;
     }
     
-    @Override
-    public void addChild(IValidatorNode<String> child) {
-        super.addChild(child);
-        children.add(child);
-    }
-
     @Override
     public ILdapHandler getHandler() {
         return handler;

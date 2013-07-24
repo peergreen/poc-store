@@ -85,9 +85,6 @@ public class DefaultLdapParser implements ILdapParser {
                 if (Operators.isOperator(tokens.get(i)) && !ComparisonOperators.isComparisonOperator(tokens.get(i))) {
                     // parse an operator
                     String op = tokens.get(i);
-                    // TODO
-                    System.out.println(op);
-                    
                     parsedNode = createOperatorNode(op);
                 } else {
                     // parse an operand
@@ -101,8 +98,8 @@ public class DefaultLdapParser implements ILdapParser {
                         parentNode = parsedNode;
                     } else {
                         // else add parsed node to parentNode
-                        parentNode.addChild(parsedNode);
-                        parsedNode.setParent(parentNode);
+                        parentNode.addChildValidatorNode(parsedNode);
+                        parsedNode.setParentValidatorNode(parentNode);
 
                         // if parsed node is an operator, wait for operand(s)
                         if (Operators.isOperator(parsedNode.getData()) &&
@@ -262,11 +259,11 @@ public class DefaultLdapParser implements ILdapParser {
         if (!operator.isEmpty()) {
             operands = filter.split(operator);
             OperandNode left = new OperandNode(operands[0].trim());
-            left.setParent(node);
+            left.setParentValidatorNode(node);
             node.setLeftOperand(left);
             node.addChild(left);
             OperandNode right = new OperandNode(operands[1].trim());
-            right.setParent(node);
+            right.setParentValidatorNode(node);
             node.setRightOperand(right);
             node.addChild(right);
             

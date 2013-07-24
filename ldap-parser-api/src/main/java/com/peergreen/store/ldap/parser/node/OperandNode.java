@@ -11,4 +11,9 @@ public class OperandNode extends ValidatorNodeHelper {
     public boolean validate() {
         return getData() != null;
     }
+
+    @Override
+    public void addChildValidatorNode(IValidatorNode<String> child) {
+        super.addChild(child);
+    }
 }
