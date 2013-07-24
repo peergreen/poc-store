@@ -112,7 +112,6 @@ public class DefaultLdapParser implements ILdapParser {
                 // go back a level
                 if (tokens.get(i-1).equals(")")) {
                     parentNode.validate();
-                    System.out.println("validate " + parentNode.getClass().getSimpleName().toString());
                     parentNode = parentNode.getParentValidatorNode();
                 }
             }
