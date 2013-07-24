@@ -1,2 +1,0 @@
-Import-Package: org.osgi.framework;version=1.6.0,\
-	*
