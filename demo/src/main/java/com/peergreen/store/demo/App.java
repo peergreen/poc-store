@@ -50,7 +50,7 @@ public class App {
 
         userController.addUser("Administrator", "pwd", "tut@hotmail.com");
         
-        groupController.addGroup("Administrateur");
+        groupController.addGroup("Administrator");
         
         storeManagement.addLink("https://store.peergreen.com/community", "Store Community");
 
