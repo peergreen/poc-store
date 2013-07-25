@@ -258,28 +258,6 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
-     * Method to update a petal.
-     * 
-     * @param vendor petal's vendor
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @param description petal's description
-     * @param category petal's category
-     * @param requirements petal's requirements
-     * @param capabilities petal's capabilities
-     * @param properties petal's properties
-     * @param petalBinary petal's petalBinary
-     * @return updated petal
-     */
-    @Override
-    public Petal updatePetal(Vendor vendor, String artifactId, String version, String description,
-            Category category, Set<Requirement> requirements, Set<Capability> capabilities,
-            Origin origin, File petalBinary) {
-        // TODO Is it really usefull? Versions are not removed (still in use) but a new one is created
-        return null;
-    }
-
-    /**
      * Method to add a new Capability to the database.
      * 
      * @param capabilityName capability's name

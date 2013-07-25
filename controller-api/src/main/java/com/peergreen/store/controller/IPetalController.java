@@ -115,25 +115,6 @@ public interface IPetalController {
     void removePetal(Vendor vendor, String artifactId, String version);
 
     /**
-     * Method to update a petal.
-     * 
-     * @param vendor petal's vendor
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @param description petal's description
-     * @param category petal's category
-     * @param requirements petal's requirements
-     * @param capabilities petal's capabilities
-     * @param origin the petal's origin
-     * @param petalBinary petal's petalBinary
-     * @return updated Petal instance
-     */
-    Petal updatePetal(Vendor vendor, String artifactId,
-            String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities,
-            Origin origin, File petalBinary);
-
-    /**
      * Method to add a new Capability to the database.
      * 
      * @param capabilityName capability's name
