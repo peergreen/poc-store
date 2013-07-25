@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -64,6 +65,7 @@ public class Petal {
         this.version = version;
         this.category = category;
         this.description = description;
+        this.groupSet = new HashSet<>();
         this.requirements = requirements;
         this.capabilities = capabilities;
         this.origin = origin;
