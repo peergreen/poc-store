@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -14,8 +15,10 @@ import javax.persistence.Query;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
+
 
 /**
  * Class defining an entity session to manage the entity Category
@@ -31,10 +34,12 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * 
  */
 @Stateless
-public class DefaultCategory implements ISessionCategory{
+public class DefaultCategory implements ISessionCategory {
 
     private EntityManager entityManager;
 
+    private ISessionPetal petalSession;
+    
     @PersistenceContext 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -53,7 +58,7 @@ public class DefaultCategory implements ISessionCategory{
     public Category addCategory(String categoryName) throws EntityAlreadyExistsException {
         Category temp = findCategory(categoryName);
 
-        if(temp != null ) {      
+        if (temp != null ) {      
             throw new EntityAlreadyExistsException("Category with name " + categoryName + " already exists in database.");
         } else {
             Category category = new Category(categoryName);  
@@ -70,7 +75,7 @@ public class DefaultCategory implements ISessionCategory{
     @Override
     public void deleteCategory(String categoryName) {
         Category temp = findCategory(categoryName);
-        if (temp != null){
+        if (temp != null) {
             entityManager.remove(temp);
         }
     }
@@ -86,7 +91,7 @@ public class DefaultCategory implements ISessionCategory{
         Query q = entityManager.createNamedQuery("CategoryByName");
         q.setParameter("name", categoryName);
         Category result;
-        try{
+        try {
             result = (Category)q.getSingleResult();
         } catch(NoResultException e) {
             result = null;
@@ -123,11 +128,13 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category addPetal(Category category, Petal petal) {
-        Set<Petal> petals = category.getPetals();
-        petals.add(petal);
-        category.setPetals(petals);
-        category = entityManager.merge(category);
-        return category;
+        // retrieve attached category entity
+        Category c = findCategory(category.getCategoryName());
+        // retrieve attached petal entity
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
+        
+        c.getPetals().remove(p);
+        return entityManager.merge(c);
     }
 
     /**
@@ -139,11 +146,13 @@ public class DefaultCategory implements ISessionCategory{
      */
     @Override
     public Category removePetal(Category category, Petal petal) {
-        // TODO verify if instances are present in database
-        // => use entityManager.find(Category.class, category) for instance
-        category.getPetals().remove(petal);
-        category = entityManager.merge(category);
-        return category;
+        // retrieve attached category
+        Category c = findCategory(category.getCategoryName());
+        // retrieve attached petal entity
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        
+        c.getPetals().remove(p);
+        return entityManager.merge(c);
     }
 
     /**
@@ -158,5 +167,10 @@ public class DefaultCategory implements ISessionCategory{
         List<Category> catList = query.getResultList();
         Set<Category> categorySet = new HashSet<Category>(catList);
         return categorySet;
+    }
+    
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.petalSession = sessionPetal;
     }
 }

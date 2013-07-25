@@ -66,7 +66,7 @@ public class DefaultLink implements ISessionLink {
     @Override
     public void deleteLink(String linkUrl) {
         Link temp = findLink(linkUrl);
-        if(temp != null){
+        if (temp != null) {
             entityManager.remove(temp);
         }
     }
@@ -116,10 +116,11 @@ public class DefaultLink implements ISessionLink {
      */
     @Override
     public Link updateDescription(Link link, String newDescription) {
-        // TODO verify if Link instance correspond to an attached entity
-        // => use entityManager.find(Link.class, link);
-        link.setDescription(newDescription);
-        return entityManager.merge(link);
+        // retrieve attached link
+        Link l = findLink(link.getUrl());
+        
+        l.setDescription(newDescription);
+        return entityManager.merge(l);
     }
 }
 

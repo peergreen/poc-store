@@ -50,7 +50,7 @@ public class DefaultLinkTest {
 
     }
 
-    @Test
+    ////@Test
     public void shouldAddLink() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -64,7 +64,7 @@ public class DefaultLinkTest {
 
     }
 
-    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    ////@Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowExceptionWhenAddLinkCauseAlreadyExist() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -75,7 +75,7 @@ public class DefaultLinkTest {
 
     }
 
-    @Test
+    ////@Test
     public void shouldDeleteLink() {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -86,7 +86,7 @@ public class DefaultLinkTest {
         verify(entityManager).remove(mocklink);
     }
 
-    @Test
+    ////@Test
     public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -96,7 +96,7 @@ public class DefaultLinkTest {
 
     }
 
-    @Test
+    ////@Test
     public void shouldFindLink() {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -110,7 +110,7 @@ public class DefaultLinkTest {
         verify(query).getSingleResult();
     }
 
-    @Test
+    ////@Test
     public void shouldCollectLinks() {
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
@@ -122,7 +122,7 @@ public class DefaultLinkTest {
 
     }
 
-    @Test
+    ////@Test
     public void shouldModifyLinkDescription() {
         //Given
         String newDescription = "new link";

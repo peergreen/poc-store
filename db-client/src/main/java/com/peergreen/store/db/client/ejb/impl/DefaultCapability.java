@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -15,6 +16,7 @@ import javax.persistence.Query;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -38,6 +40,8 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 public class DefaultCapability implements ISessionCapability{
 
     private EntityManager entityManager;
+
+    private ISessionPetal petalSession;
 
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
@@ -133,11 +137,16 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability addPetal(Capability capability, Petal petal) {
-        Set<Petal> petals = capability.getPetals();
-        petals.add(petal);
-        capability.setPetals(petals);
-        entityManager.merge(capability);
-        return capability;
+        // retrieve attached capability entity
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        // retrieve attached petal entity
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());       
+        
+        Set<Petal> petals = c.getPetals();
+        petals.add(p);
+        c.setPetals(petals);
+        
+        return entityManager.merge(c);
     }
 
     /**
@@ -145,21 +154,28 @@ public class DefaultCapability implements ISessionCapability{
      * 
      * @param capability capability provided by the petal.
      * @param petal petal to remove
-     * @return modified Capability instance (updated list of providers)
+     * @return modified Capability instance (updated list of providers),
+     *  or {@literal null} if no more petals provide this capability
      */
     @Override
     public Capability removePetal(Capability capability, Petal petal) {
-        Set<Petal> petals = capability.getPetals();
-        petals.remove(petal);
+        // retrieve attached capability entity
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        // retrieve attached petal entity
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
+        
+        Set<Petal> petals = c.getPetals();
+        petals.remove(p);
         
         // We can delete this capability if no petal provides this capability any more.
         if (petals.isEmpty()) {
-            entityManager.remove(capability);
-            capability = null;
+            entityManager.remove(c);
+            c = null;
         } else {
-            capability = entityManager.merge(capability);
+            c = entityManager.merge(c);
         }
-        return capability;
+        
+        return c;
     }
 
     /**
@@ -187,8 +203,11 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability updateNamespace(Capability capability, String namespace) {
-        capability.setNamespace(namespace);
-        return entityManager.merge(capability);
+        // retrieve attached capability entity
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        
+        c.setNamespace(namespace);
+        return entityManager.merge(c);
     }
     
     /**
@@ -200,7 +219,15 @@ public class DefaultCapability implements ISessionCapability{
      */
     @Override
     public Capability updateProperties(Capability capability, Map<String, String> properties) {
-        capability.setProperties(properties);
-        return entityManager.merge(capability);
+        // retrieve attached capability entity
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        
+        c.setProperties(properties);
+        return entityManager.merge(c);
+    }
+    
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.petalSession = sessionPetal;
     }
 }

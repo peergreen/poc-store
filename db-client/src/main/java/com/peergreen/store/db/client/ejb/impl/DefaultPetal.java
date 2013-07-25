@@ -61,20 +61,21 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 @Stateless
 public class DefaultPetal implements ISessionPetal {
 
-    private ISessionVendor sessionVendor;
-    private ISessionCategory sessionCategory;
     private ISessionCapability sessionCapability;
-    private ISessionRequirement sessionRequirement;
+    private ISessionCategory sessionCategory;
     private ISessionGroup sessionGroup;
+    private ISessionPetal sessionPetal;
+    private ISessionRequirement sessionRequirement;
+    private ISessionVendor sessionVendor;
 
     private EntityManager entityManager;
 
     /**
-     * @param sessionVendor the sessionVendor to set
+     * @param sessionCapability the sessionCapability to set
      */
     @EJB
-    public void setSessionVendor(ISessionVendor sessionVendor) {
-        this.sessionVendor = sessionVendor;
+    public void setSessionCapability(ISessionCapability sessionCapability) {
+        this.sessionCapability = sessionCapability;
     }
 
     /**
@@ -86,11 +87,19 @@ public class DefaultPetal implements ISessionPetal {
     }
 
     /**
-     * @param sessionCapability the sessionCapability to set
+     * @param sessionGroup the sessionGroup to set
      */
     @EJB
-    public void setSessionCapability(ISessionCapability sessionCapability) {
-        this.sessionCapability = sessionCapability;
+    public void setSessionGroup(ISessionGroup sessionGroup) {
+        this.sessionGroup = sessionGroup;
+    }
+
+    /**
+     * @param sessionPetal the sessionPetal to set
+     */
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.sessionPetal = sessionPetal;
     }
 
     /**
@@ -102,11 +111,11 @@ public class DefaultPetal implements ISessionPetal {
     }
 
     /**
-     * @param sessionGroup the sessionGroup to set
+     * @param sessionVendor the sessionVendor to set
      */
     @EJB
-    public void setSessionGroup(ISessionGroup sessionGroup) {
-        this.sessionGroup = sessionGroup;
+    public void setSessionVendor(ISessionVendor sessionVendor) {
+        this.sessionVendor = sessionVendor;
     }
 
     @PersistenceContext
@@ -117,7 +126,8 @@ public class DefaultPetal implements ISessionPetal {
     /**
      * Method to add a petal in the database.<br />
      * Group 'Administrator' must be created first (has access to all petals). <br />
-     * Throws {@link NoEntityFoundException} if the group 'Administrator' doesn't exist.<br />
+     * Throws {@link NoEntityFoundException} if the group 'Administrator' doesn't exist
+     *  or if a requirement or a capability cannot be found in database.<br />
      * Throws {@link EntityAlreadyExistsException} if the petal already exists.
      * 
      * @param vendorName petal vendor name
@@ -138,37 +148,51 @@ public class DefaultPetal implements ISessionPetal {
             Set<Capability> capabilities, Set<Requirement> requirements,
             Origin origin) throws NoEntityFoundException, EntityAlreadyExistsException {
 
+        Vendor v = sessionVendor.findVendor(vendor.getVendorName());
+        Category c = sessionCategory.findCategory(category.getCategoryName());
         Group group = sessionGroup.findGroup("Administrator");
 
         // group 'Administrator' must exists
         if (group == null) {
             throw new NoEntityFoundException("The group Administrator must be created first at all.");
         } else {
-            Petal petal = findPetal(vendor, artifactId, version);
+            Petal petal = findPetal(v, artifactId, version);
             if (petal != null) {
                 String msg = "Petal " + artifactId + " provided by " + vendor +
-                            " in version " + version + " is already present in database.";
+                        " in version " + version + " is already present in database.";
                 throw new EntityAlreadyExistsException(msg);
             } else {
-                petal = new Petal(vendor, artifactId, version, category,
+                petal = new Petal(v, artifactId, version, c,
                         description, requirements, capabilities, origin);
-                Set<Group> groups = new HashSet<Group>();
-                groups.add(group);
-                petal.setGroups(groups);
+                petal.getGroups().add(group);
                 entityManager.persist(petal);
 
-                sessionVendor.addPetal(vendor, petal);
-                sessionCategory.addPetal(category, petal);
+                sessionVendor.addPetal(v, petal);
+                sessionCategory.addPetal(c, petal);
                 sessionGroup.addPetal(group, petal);
 
                 Iterator<Capability> it = capabilities.iterator();
                 while(it.hasNext()) {
-                    sessionCapability.addPetal(it.next(), petal);
+                    Capability cap = it.next();
+
+                    Capability loopC = sessionCapability.findCapability(cap.getCapabilityName(), cap.getVersion());
+                    if (loopC != null) {
+                        sessionCapability.addPetal(loopC, petal);
+                    } else {
+                        throw new NoEntityFoundException("Capability " + cap.getCapabilityName() + " doesn't exist in database.");
+                    }
                 }
 
                 Iterator<Requirement> itreq = requirements.iterator();
                 while(itreq.hasNext()) {
-                    sessionRequirement.addPetal(itreq.next(), petal);
+                    Requirement req = itreq.next();
+
+                    Requirement loopR = sessionRequirement.findRequirement(req.getRequirementName());
+                    if (loopR != null) {
+                        sessionRequirement.addPetal(loopR, petal);
+                    } else {
+                        throw new NoEntityFoundException("Requirement " + req.getRequirementName() + " doesn't exist in database.");
+                    }
                 }
             }
 
@@ -201,8 +225,9 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Group> collectGroups(Petal petal) {
-
-        return petal.getGroups();
+        // retrieve attached petal
+        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        return p.getGroups();
     }
 
     /**
@@ -214,8 +239,9 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Capability> collectCapabilities(Petal petal) {
-
-        return petal.getCapabilities();
+        // retrieve attached petal
+        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        return p.getCapabilities();
     }
 
     /**
@@ -227,10 +253,10 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Requirement> collectRequirements(Petal petal) {
-
-        return petal.getRequirements();
+        // retrieve attached petal
+        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        return p.getRequirements();
     }
-
 
     /**
      * Method to delete an instance of petal
@@ -239,8 +265,11 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public void deletePetal(Petal petal) {
-
-        entityManager.remove(petal);
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        if (p != null) {
+            entityManager.remove(p);
+        }
     }
 
     /**
@@ -251,10 +280,11 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal updateDescription(Petal petal, String newDescription) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
-        petal.setDescription(newDescription);
-        return entityManager.merge(petal);
-
+        p.setDescription(newDescription);
+        return entityManager.merge(p);
     }
 
     /**
@@ -265,9 +295,11 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal updateOrigin(Petal petal, Origin newOrigin) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
-        petal.setOrigin(newOrigin);
-        return entityManager.merge(petal);
+        p.setOrigin(newOrigin);
+        return entityManager.merge(p);
 
     }
 
@@ -281,15 +313,15 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal giveAccesToGroup(Petal petal, Group group) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached group
+        Group g = sessionGroup.findGroup(group.getGroupname());
 
-        Set<Group> groups = petal.getGroups();
-        groups.add(group);
-        petal.setGroups(groups);
-        entityManager.merge(petal);
+        p.getGroups().add(g);
+        sessionGroup.addPetal(g, p);
 
-        sessionGroup.addPetal(group,petal);
-
-        return petal;
+        return entityManager.merge(p);
     }
 
     /**
@@ -302,15 +334,15 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeAccesToGroup(Petal petal, Group group) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached category
+        Group g = sessionGroup.findGroup(group.getGroupname());
 
-        Set<Group> groups = petal.getGroups();
-        groups.remove(group);
-        petal.setGroups(groups);
-        entityManager.merge(petal);
+        p.getGroups().remove(g);
+        sessionGroup.removePetal(g, p);
 
-        sessionGroup.removePetal(group, petal);
-
-        return petal;
+        return entityManager.merge(p);
     }
 
     /**
@@ -323,13 +355,15 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addCategory(Petal petal, Category category) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached category
+        Category c = sessionCategory.findCategory(category.getCategoryName());
 
-        petal.setCategory(category);
-        entityManager.merge(petal);
+        p.setCategory(c);
+        sessionCategory.addPetal(c, p);
 
-        sessionCategory.addPetal(category, petal);
-
-        return petal;
+        return entityManager.merge(p);
     }
 
     /**
@@ -341,8 +375,9 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Category getCategory(Petal petal) {
-
-        return petal.getCategory();
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        return p.getCategory();
     }
 
     /**
@@ -355,16 +390,15 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addCapability(Petal petal, Capability capability) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached capability
+        Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion());
 
-        Set<Capability> capabilities = petal.getCapabilities();
-        capabilities.add(capability);
-        petal.setCapabilities(capabilities);
+        p.getCapabilities().add(c);
+        sessionCapability.addPetal(c, p);
 
-        entityManager.merge(petal);
-
-        sessionCapability.addPetal(capability, petal);
-
-        return petal;
+        return entityManager.merge(p);
     }
 
     /**
@@ -377,11 +411,12 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeCapability(Petal petal, Capability capability) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached capability
+        Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion());
 
-        Set<Capability> capabilities = petal.getCapabilities();
-        capabilities.remove(capability);
-        petal.setCapabilities(capabilities);
-
+        p.getCapabilities().remove(c);
         entityManager.merge(petal);
 
         sessionCapability.removePetal(capability, petal);
@@ -399,16 +434,15 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal addRequirement(Petal petal, Requirement requirement) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached requirement
+        Requirement r = sessionRequirement.findRequirement(requirement.getRequirementName());
 
-        Set<Requirement> requirements = petal.getRequirements();
-        requirements.add(requirement);
-        petal.setRequirements(requirements);
+        p.getRequirements().add(r);
+        sessionRequirement.addPetal(r, p);
 
-        entityManager.merge(petal);
-
-        sessionRequirement.addPetal(requirement, petal);
-
-        return petal;
+        return entityManager.merge(petal);
     }
 
     /**
@@ -421,16 +455,15 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Petal removeRequirement(Petal petal, Requirement requirement) {
+        // retrieve attached petal
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        // retrieve attached requirement
+        Requirement r = sessionRequirement.findRequirement(requirement.getRequirementName());
 
-        Set<Requirement> requirements = petal.getRequirements();
-        requirements.remove(requirement);
-        petal.setRequirements(requirements);
+        p.getRequirements().remove(r);
+        sessionRequirement.removePetal(r, p);
 
-        entityManager.merge(petal);
-
-        sessionRequirement.removePetal(requirement, petal);
-
-        return petal;
+        return entityManager.merge(p);
     }
 
     /**
@@ -440,14 +473,12 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetals() {
-
         Query petals = entityManager.createNamedQuery("Petal.findAll");
         @SuppressWarnings("unchecked")
         List<Petal> petalsList = petals.getResultList();
         Set<Petal> petalSet = new HashSet<Petal>();
         petalSet.addAll(petalsList);
         return petalSet;
-
     }
 
     /**
@@ -457,7 +488,6 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromLocal() {
-
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.LOCAL);
 
@@ -476,7 +506,6 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromStaging() {
-
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.STAGING);
 
@@ -495,7 +524,6 @@ public class DefaultPetal implements ISessionPetal {
      */
     @Override
     public Collection<Petal> collectPetalsFromRemote() {
-
         Query petals = entityManager.createQuery("select p from Petal p where p.origin = :origin");
         petals.setParameter("origin", Origin.REMOTE);
 

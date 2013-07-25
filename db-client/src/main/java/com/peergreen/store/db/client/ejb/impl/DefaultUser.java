@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ import javax.persistence.Query;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -40,6 +42,8 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 public class DefaultUser implements ISessionUser {
     private EntityManager entityManager;
 
+    private ISessionGroup groupSession;
+    
     /**
      * Method to create a new instance of User and add it in the database.<br />
      * Others attributes are null when creating the user.
@@ -110,7 +114,10 @@ public class DefaultUser implements ISessionUser {
      */
     @Override
     public void removeUser(User myUser) {
-        entityManager.remove(myUser);
+        User u = findUserByPseudo(myUser.getPseudo());
+        if (u != null) {
+            entityManager.remove(u);
+        }
     }
 
     /**
@@ -122,11 +129,13 @@ public class DefaultUser implements ISessionUser {
      */
     @Override
     public User addGroup(User user, Group group) {
-        Set<Group> groups = user.getGroupSet();
-        groups.add(group);
-        user.setGroupSet(groups);
-        user =  entityManager.merge(user);
-        return user;
+        // retrieve attached user
+        User u = findUserByPseudo(user.getPseudo());
+        // retrieve attached group
+        Group g = groupSession.findGroup(group.getGroupname());
+        
+        u.getGroupSet().add(g);
+        return entityManager.merge(u);
     }
 
     /**
@@ -138,12 +147,13 @@ public class DefaultUser implements ISessionUser {
      */
     @Override
     public User removeGroup(User user, Group group) {
-        Set<Group> groups = user.getGroupSet();
-        groups.remove(group);
-        user.setGroupSet(groups);
-
-        user = entityManager.merge(user);
-        return user;
+        // retrieve attached user
+        User u = findUserByPseudo(user.getPseudo());
+        // retrieve attached group
+        Group g = groupSession.findGroup(group.getGroupname());
+        
+        u.getGroupSet().remove(g);
+        return entityManager.merge(u);
     }
 
     /**
@@ -225,5 +235,10 @@ public class DefaultUser implements ISessionUser {
     public User updateMail(User oldUser, String email) {
         oldUser.setPassword(email);
         return entityManager.merge(oldUser);
+    }
+    
+    @EJB
+    public void setGroupSession(ISessionGroup groupSession) {
+        this.groupSession = groupSession;
     }
 }

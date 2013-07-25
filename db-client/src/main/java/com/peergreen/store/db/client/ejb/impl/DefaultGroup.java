@@ -16,6 +16,7 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -43,6 +44,8 @@ public class DefaultGroup implements ISessionGroup {
 
     private EntityManager entityManager;
 
+    private ISessionPetal sessionPetal;
+    
     private ISessionUser sessionUser;
 
     public EntityManager getEntityManager() {
@@ -75,7 +78,7 @@ public class DefaultGroup implements ISessionGroup {
     public Group addGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException {
         Group group = findGroup(groupName) ;
 
-        if(group != null) {
+        if (group != null) {
             throw new EntityAlreadyExistsException("This group already exists on database.");
         } else {
             group = new Group(groupName);
@@ -110,13 +113,11 @@ public class DefaultGroup implements ISessionGroup {
 
     /**
      * Method to delete the group thanks to its name.<br />
-     * Throws an IllegalArgumentException if the entity to remove
-     *  doesn't exist in the database.
      * 
      * @param groupName the name of the group to delete
      */
     @Override
-    public void deleteGroup(String groupName) /* throws NoEntityFoundException */ {
+    public void deleteGroup(String groupName) {
         Group group = findGroup(groupName);
         if  (group != null) {
             entityManager.remove(group);
@@ -132,12 +133,14 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group addUser(Group group, User myUser) {
-        Set<User> users = group.getUsers();
-        users.add(myUser);
-        group.setUsers(users);
-        group=  entityManager.merge(group);
-        sessionUser.addGroup(myUser, group);
-        return group;
+        // retrieve attached group
+        Group g = findGroup(group.getGroupname());
+        // retrieve attached user
+        User u = sessionUser.findUserByPseudo(myUser.getPseudo());
+        
+        g.getUsers().add(u);
+        sessionUser.addGroup(u, g);
+        return entityManager.merge(g);
     }
 
     /**
@@ -149,12 +152,14 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group removeUser(Group group, User user) {
-        Set<User> users = group.getUsers();
-        users.remove(user);
-        group.setUsers(users);
-        group=  entityManager.merge(group);
-        sessionUser.removeGroup(user, group);
-        return group;
+        // retrieve attached group
+        Group g = findGroup(group.getGroupname());
+        // retrieve attached user
+        User u = sessionUser.findUserByPseudo(user.getPseudo());
+        
+        g.getUsers().remove(u);
+        sessionUser.removeGroup(u, g);
+        return entityManager.merge(g);
     }
 
     /**
@@ -185,11 +190,14 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group addPetal(Group group, Petal petal) {
-        Set<Petal> petals = group.getPetals();
-        petals.add(petal);
-        group.setPetals(petals);
-        group = entityManager.merge(group);
-        return group;
+        // retrieve attached group
+        Group g = findGroup(group.getGroupname());
+        // retrieve attached petal
+        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+
+        g.getPetals().add(p);
+        // TODO update petal.groups?
+        return entityManager.merge(group);
     }
 
     /**
@@ -201,11 +209,14 @@ public class DefaultGroup implements ISessionGroup {
      */
     @Override
     public Group removePetal(Group group, Petal petal) {
-        Set<Petal> petals = group.getPetals();
-        petals.remove(petal);
-        group.setPetals(petals);
-        group = entityManager.merge(group);
-        return group;
+        // retrieve attached group
+        Group g = findGroup(group.getGroupname());
+        // retrieve attached petal
+        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+
+        g.getPetals().remove(p);
+        // TODO update petal.groups?
+        return entityManager.merge(group);
     }
 
     /**
@@ -242,7 +253,11 @@ public class DefaultGroup implements ISessionGroup {
         return groupSet;
     }
 
-
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.sessionPetal = sessionPetal;
+    }
+    
     /**
      * @param sessionUser the sessionUser to set
      */
@@ -250,5 +265,4 @@ public class DefaultGroup implements ISessionGroup {
     public void setSessionUser(ISessionUser sessionUser) {
         this.sessionUser = sessionUser;
     }
-
 }

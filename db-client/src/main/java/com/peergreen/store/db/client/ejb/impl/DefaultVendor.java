@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,6 +13,7 @@ import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -33,6 +35,8 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 public class DefaultVendor implements ISessionVendor {
 
     private EntityManager entityManager;
+    private ISessionPetal petalSession;
+    private ISessionVendor vendorSession;
 
     /**
      * Method to add a new instance of vendor in the database.<br />
@@ -48,7 +52,7 @@ public class DefaultVendor implements ISessionVendor {
     public Vendor addVendor(String vendorName, String vendorDescription) throws EntityAlreadyExistsException {
 
         Vendor vendor = entityManager.find(Vendor.class, vendorName);
-        if(vendor != null) {
+        if (vendor != null) {
             throw new EntityAlreadyExistsException("A vendor with name " + vendorName + " already exists in database.");
         } else {
             vendor = new Vendor(vendorName, vendorDescription);
@@ -108,11 +112,13 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public Vendor addPetal(Vendor vendor, Petal petal) {
-        Set<Petal> petals = vendor.getPetals();
-        petals.add(petal);
-        vendor.setPetals(petals);
-        vendor =  entityManager.merge(vendor);
-        return vendor;
+        // retrieve attached vendor
+        Vendor v = vendorSession.findVendor(vendor.getVendorName());
+        // retrieve attached petal
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        
+        v.getPetals().add(p);
+        return entityManager.merge(v);
     }
 
     /**
@@ -124,12 +130,13 @@ public class DefaultVendor implements ISessionVendor {
      */
     @Override
     public Vendor removePetal(Vendor vendor, Petal petal) {
-        Set<Petal> petals = vendor.getPetals();
-        petals.remove(petal);
-        vendor.setPetals(petals);
-
-        entityManager.merge(vendor);
-        return vendor;
+        // retrieve attached vendor
+        Vendor v = vendorSession.findVendor(vendor.getVendorName());
+        // retrieve attached petal
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        
+        v.getPetals().remove(p);
+        return entityManager.merge(vendor);
     }
 
     /**
@@ -156,4 +163,13 @@ public class DefaultVendor implements ISessionVendor {
         return vendorSet;   
     }
 
+    @EJB
+    public void setPetalSession(ISessionPetal petalSession) {
+        this.petalSession = petalSession;
+    }
+    
+    @EJB
+    public void setVendorSession(ISessionVendor vendorSession) {
+        this.vendorSession = vendorSession;
+    }
 }

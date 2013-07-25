@@ -6,21 +6,19 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.MapJoin;
-import javax.persistence.criteria.Root;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -47,9 +45,11 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 @Stateless
 public class DefaultRequirement implements ISessionRequirement {
     private EntityManager entityManager;
-    
+
     @OSGiResource
     private ILdapParser ldapParser;
+
+    private ISessionPetal petalSession;
 
     public EntityManager getEntityManager() {
         return entityManager;
@@ -149,10 +149,13 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement addPetal(Requirement requirement, Petal petal) {
-        Set<Petal> petals = requirement.getPetals();
-        petals.add(petal);
-        requirement.setPetals(petals);
-        return entityManager.merge(requirement);
+        // retrieve attached requirement
+        Requirement r = findRequirement(requirement.getRequirementName());
+        // retrieve attached petal
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+
+        r.getPetals().add(p);
+        return entityManager.merge(r);
     }
 
     /**
@@ -164,10 +167,13 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement removePetal(Requirement requirement, Petal petal) {
-        Set<Petal> petals = requirement.getPetals();
-        petals.remove(petal);
-        requirement.setPetals(petals);
-        return entityManager.merge(requirement);
+        // retrieve attached requirement
+        Requirement r = findRequirement(requirement.getRequirementName());
+        // retrieve attached petal
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+
+        r.getPetals().remove(p);
+        return entityManager.merge(r);
     }
 
     /**
@@ -194,8 +200,11 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement updateNamespace(Requirement requirement, String namespace) {
-        requirement.setNamespace(namespace);
-        return entityManager.merge(requirement);
+        // retrieve attached requirement
+        Requirement r = findRequirement(requirement.getRequirementName());
+
+        r.setNamespace(namespace);
+        return entityManager.merge(r);
     }
 
     /**
@@ -207,8 +216,11 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Requirement updateFilter(Requirement requirement, String filter) {
-        requirement.setFilter(filter);
-        return entityManager.merge(requirement);
+        // retrieve attached requirement
+        Requirement r = findRequirement(requirement.getRequirementName());
+
+        r.setFilter(filter);
+        return entityManager.merge(r);
     }
 
     /**
@@ -221,7 +233,10 @@ public class DefaultRequirement implements ISessionRequirement {
      */
     @Override
     public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
-        String filter = requirement.getFilter();
+        // retrieve attached requirement
+        Requirement r = findRequirement(requirement.getRequirementName());
+        
+        String filter = r.getFilter();
 
         IValidatorNode<String> root = null;
         try {
@@ -233,23 +248,23 @@ public class DefaultRequirement implements ISessionRequirement {
         Query query = null;
         if (root != null) {
             String alias = "cap";
-//            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
-//                            + namespace + "\' AND " + root.getHandler().toQueryElement();
+            //            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
+            //                            + namespace + "\' AND " + root.getHandler().toQueryElement();
             // TODO testing purpose
             String sql = "SELECT " + alias + " FROM Capability " + alias + " JOIN " + alias +
                     ".properties m WHERE KEY(m)=\'toto\' AND VALUE(m)=\'a\' AND "
                     + alias + ".namespace=\'" + namespace + "\'";
-            
-//            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//            CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
-//            Root<Capability> capabilityRoot = criteria.from(Capability.class);
-//            criteria.select(capabilityRoot);
-//            MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
-//
-//            criteria.where(builder.equal(propertiesRoot.key(), "toto"));
-//
-//            System.out.println(entityManager.createQuery(criteria).getResultList());
-            
+
+            //            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            //            CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
+            //            Root<Capability> capabilityRoot = criteria.from(Capability.class);
+            //            criteria.select(capabilityRoot);
+            //            MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
+            //
+            //            criteria.where(builder.equal(propertiesRoot.key(), "toto"));
+            //
+            //            System.out.println(entityManager.createQuery(criteria).getResultList());
+
             query = entityManager.createQuery(sql);
         } else {
             // TODO: exception if parsed tree is null?
@@ -266,5 +281,10 @@ public class DefaultRequirement implements ISessionRequirement {
         }
 
         return capabilities;
+    }
+
+    @EJB
+    public void setPetalSession(ISessionPetal petalSession) {
+        this.petalSession = petalSession;
     }
 }
