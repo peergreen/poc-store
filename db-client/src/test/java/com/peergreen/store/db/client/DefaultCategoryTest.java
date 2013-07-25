@@ -108,17 +108,6 @@ public class DefaultCategoryTest {
         Assert.assertSame(mockcategory,category.getValue() );
     }
     
-    // TODO remove does not throw Exception anymore
-//    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
-        //Given
-        String categoryName = "totoService";
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(null);
-        //When
-        sessionCategory.deleteCategory(categoryName);
-    }
-    
 //    @Test
     public void shouldAddPetal() {
         //Given
