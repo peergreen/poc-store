@@ -3,6 +3,7 @@ package com.peergreen.store.controller;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -65,14 +66,16 @@ public class DefaultUserControllerTestCase {
     @Test
     public void shouldModifyUserPassword () {
         String password = "pwd";
-        userController.modifyUserPassword(oldUser, password );
+        when(userSession.findUserByPseudo(PSEUDO)).thenReturn(oldUser);
+        userController.modifyUserPassword(PSEUDO, password );
         verify(userSession).updatePassword(oldUser, password);
     }
     
     @Test
     public void shouldModifyUserMail () {
         String mail = "admin@pg.com";
-        userController.modifyUserPassword(oldUser, mail );
+        when(userSession.findUserByPseudo(PSEUDO)).thenReturn(oldUser);
+        userController.modifyUserPassword(PSEUDO, mail );
         verify(userSession).updatePassword(oldUser, mail);
     }
 

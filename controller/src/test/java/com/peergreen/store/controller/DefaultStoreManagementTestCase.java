@@ -67,6 +67,7 @@ public class DefaultStoreManagementTestCase {
         storeManagement.bindLinkSession(linkSession);
         storeManagement.bindPetalSession(petalSession);
         storeManagement.bindUserSession(userSession);
+        storeManagement.bindVendorSession(vendorSession);
     }
 
     @Test
@@ -171,8 +172,9 @@ public class DefaultStoreManagementTestCase {
         Category category = new Category();
         HashSet<Requirement> requirements = new HashSet<>();
         HashSet<Capability> capabilities = new HashSet<>();
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
-        storeManagement.submitPetal(vendor, artifactId, version, "", category, requirements, capabilities, binary);
+        storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
         verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
@@ -194,7 +196,7 @@ public class DefaultStoreManagementTestCase {
         when(petalsPersistence.getPetalFromStaging(vendor, artifactId, version)).thenReturn(binary);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
-        storeManagement.validatePetal(vendor, artifactId, version);
+        storeManagement.validatePetal(vendorName, artifactId, version);
         verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
         verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);

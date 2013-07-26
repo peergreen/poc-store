@@ -37,21 +37,17 @@ public interface IPetalController {
     /**
      * Method to retrieve metadata related to a petal.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return petal related metadata
      */
-    Map<String, Object> getPetalMetadata(Vendor vendor, String artifactId, String version);
+    Map<String, Object> getPetalMetadata(String vendorName, String artifactId, String version);
 
     /**
      * Method to retrieve all petals available for each required capability.
      * 
-     * @param vendor petal's vendor
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @param map indexing all petals providing each required capability
-     * @param requirements that can't be satisfied
+     * @param request DependencyRequest containing all constraints.
      * @return list of all petals available for each required capability
      */
     DependencyResult getTransitiveDependencies(DependencyRequest request);
@@ -76,18 +72,18 @@ public interface IPetalController {
     /**
      * Method to retrieve a petal from the local store.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal or <em>null</em> if not available
      */
-    File getPetal(Vendor vendor, String artifactId, String version);
+    File getPetal(String vendorName, String artifactId, String version);
 
     /**
      * Method to directly add a petal to the store.<br />
      * This method make the petal persistent in the store.
      * 
-     * @param vendor petal's vendor 
+     * @param vendorName the name of the petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -100,7 +96,7 @@ public interface IPetalController {
      * @throws EntityAlreadyExistsException 
      * @throws NoEntityFoundException 
      */
-    Petal addPetal(Vendor vendor, String artifactId,
+    Petal addPetal(String vendorName, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
             Origin origin, File petalBinary) throws NoEntityFoundException, EntityAlreadyExistsException;
@@ -108,11 +104,11 @@ public interface IPetalController {
     /**
      * Method to remove a petal from the store thanks to its information.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
-    void removePetal(Vendor vendor, String artifactId, String version);
+    void removePetal(String vendorName, String artifactId, String version);
 
     /**
      * Method to add a new Capability to the database.
@@ -129,34 +125,34 @@ public interface IPetalController {
     /**
      * Method to collect all the capabilities provided by a petal.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the petal of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return list of all the capabilities provided by a petal
      */
-    Collection<Capability> collectCapabilities(Vendor vendor, String artifactId, String version);
+    Collection<Capability> collectCapabilities(String vendorName, String artifactId, String version);
 
     /**
      * Method to add a capability to a petal's provided capabilities list.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the petal of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param capability capability to add to the provided capabilites list of the petal
+     * @param capability capability to add to the provided capabilities list of the petal
      * @return updated petal
      */
-    Petal addCapability(Vendor vendor, String artifactId, String version, Capability capability);
+    Petal addCapability(String vendorName, String artifactId, String version, Capability capability);
 
     /**
      * Method to remove a capability from a petal's provided capabilities list.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param capability capability to remove from the provided capabilites  list of the petal
+     * @param capability capability to remove from the provided capabilities  list of the petal
      * @return updated petal
      */
-    Petal removeCapability(Vendor vendor, String artifactId, String version, Capability capability);
+    Petal removeCapability(String vendorName, String artifactId, String version, Capability capability);
 
     /**
      * Method to add a new Requirement to the database.
@@ -170,33 +166,33 @@ public interface IPetalController {
     /**
      * Method to collect all the petal's requirements.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      */
-    Collection<Requirement> collectRequirements(Vendor vendor, String artifactId, String version);
+    Collection<Requirement> collectRequirements(String vendorName, String artifactId, String version);
 
     /**
      * Method to add a requirement to a petal's requirements list.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param requirement requirement to add to the petal's requirements list
      * @return updated petal
      */
-    Petal addRequirement(Vendor vendor, String artifactId, String version, Requirement requirement);
+    Petal addRequirement(String vendorName, String artifactId, String version, Requirement requirement);
 
     /**
      * Method to remove a requirement from a petal's requirements list.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param requirement requirement to remove from the petal's requirements
      * @return updated petal
      */
-    Petal removeRequirement(Vendor vendor, String artifactId, String version, Requirement requirement);
+    Petal removeRequirement(String vendorName, String artifactId, String version, Requirement requirement);
 
     /**
      * Method to add a new category to the database.
@@ -209,22 +205,22 @@ public interface IPetalController {
     /**
      * Method to retrieve a petal's category.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return petal's category
      */
-    Category getCategory(Vendor vendor, String artifactId, String version);
+    Category getCategory(String vendorName, String artifactId, String version);
 
     /**
      * Method to set the petal's category.
      * 
-     * @param vendor petal's vendor
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param category petal's category
      * @return updated category
      */
-    Petal setCategory(Vendor vendor, String artifactId, String version, Category category);
+    Petal setCategory(String vendorName, String artifactId, String version, Category category);
     
 }

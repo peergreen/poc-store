@@ -56,22 +56,22 @@ public interface IUserController {
     /**
      * Method to modify a user account.
      * 
-     * @param oldUser the user to modify
+     * @param pseudo the pseudo of the user 
      * @param password user's password
      * @return modified user
      */
     
-    public User modifyUserPassword(User oldUser, String password);
+    public User modifyUserPassword(String pseudo, String password);
     
     /**
      * Method to modify a user account.
      * 
-     * @param oldUser the user to modify
+     * @param  pseudo the pseudo of the user 
      * @param email user's mail
      * @return modified user
      */
     
-    public User modifyUserEmail(User oldUser, String email);
+    public User modifyUserEmail(String pseudo, String email);
 
     /**
      * Method to collect all user's groups.

@@ -103,24 +103,26 @@ public class DefaultUserController implements IUserController {
     /**
      * Method to modify a user account.
      * 
-     * @param oldUser the user to modify
+     * @param  pseudo the pseudo of the user 
      * @param password user's password
      * @return modified user
      */
     @Override
-    public User modifyUserPassword(User oldUser, String password) {
+    public User modifyUserPassword(String pseudo, String password) {
+        User oldUser = userSession.findUserByPseudo(pseudo);
         return userSession.updatePassword(oldUser, password);
     }
 
     /**
      * Method to modify a user account.
      * 
-     * @param oldUser the user to modify
+     * @param  pseudo the pseudo of the user 
      * @param email user's email
      * @return modified user
      */
     @Override
-    public User modifyUserEmail(User oldUser,String email) {
+    public User modifyUserEmail(String pseudo,String email) {
+        User oldUser = userSession.findUserByPseudo(pseudo);
         return userSession.updateMail(oldUser, email);
     }
 

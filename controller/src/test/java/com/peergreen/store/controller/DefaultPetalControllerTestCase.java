@@ -89,12 +89,12 @@ public class DefaultPetalControllerTestCase {
         petal.setVersion(version);
 
         File binary = new File("/home/toto/petal.jar");
-
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         // verify getPetal is called when petalPersistence.getPetal is used
         when(petalPersistence.getPetal(vendor, artifactId, version)).thenReturn(binary);
 
         // verify persistence.getPetal is called
-        petalController.getPetal(vendor, artifactId, version);
+        petalController.getPetal(vendorName, artifactId, version);
 
         verify(petalPersistence).getPetalFromLocal(vendor, artifactId, version);
     }
@@ -112,9 +112,10 @@ public class DefaultPetalControllerTestCase {
         File petal = new File("/home/toto/petal.jar");
 
         // nothing to mock, void return
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
         // verify petalPersitence.addToLocal is called
-        petalController.addPetal(vendor, artifactId,
+        petalController.addPetal(vendorName, artifactId,
                 version, "", new Category(),
                 new HashSet<Requirement>(),
                 new HashSet<Capability>(),
@@ -149,12 +150,14 @@ public class DefaultPetalControllerTestCase {
         petal.setGroups(groups);
 
         // mock => return needed objects to verify method call
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.collectGroups(petal)).thenReturn(groups);
 
         // verify petalSession.removeAccesToGroup is called
         // as many times there are allowed groups - 1 (admin group)
-        petalController.removePetal(vendor, artifactId, version);
+        petalController.removePetal(vendorName, artifactId, version);
         verify(petalSession, times(1)).removeAccesToGroup(eq(petal), any(Group.class));
     }
 
@@ -173,7 +176,9 @@ public class DefaultPetalControllerTestCase {
     @Test
     public void testCollectCapabilities() {
         // create a petal
+        String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
@@ -182,24 +187,26 @@ public class DefaultPetalControllerTestCase {
         Collection<Capability> list = new ArrayList<>();
 
         // mock petalSession.collectCapabilites behavior
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.collectCapabilities(petal)).thenReturn(list);
 
         // verify petalSession.collectCapabilites(...) is called
-        petalController.collectCapabilities(vendor, artifactId, version);
+        petalController.collectCapabilities(vendorName, artifactId, version);
         verify(petalSession).collectCapabilities(petal);
     }
 
     @Test
     public void shouldReturnNullWhenCollectCapabilitiesCausePetalNonExistent() {
         //Given
+        String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
         String artifactId = "";
         String version = "";
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
 
         //when
-        List<Capability> capabilities = petalController.collectCapabilities(vendor, artifactId, version);
+        List<Capability> capabilities = petalController.collectCapabilities(vendorName, artifactId, version);
 
         Assert.assertTrue(capabilities.size() == 0);
     }
@@ -210,16 +217,18 @@ public class DefaultPetalControllerTestCase {
         Capability capability = new Capability();
         // petal
         Petal petal = new Petal();
+        String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
         // mock => return the specified petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.addCapability(petal, capability)).thenReturn(petal);
 
         // verify capabilitySession.addCapability(...) is called
-        petalController.addCapability(vendor, artifactId, version, capability);
+        petalController.addCapability(vendorName, artifactId, version, capability);
         verify(petalSession).addCapability(petal, capability);
     }
 
@@ -227,15 +236,18 @@ public class DefaultPetalControllerTestCase {
     public void testRemoveCapability() {
         Petal petal = new Petal();
         Capability capability = new Capability();
+        String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
         // mock => always return target petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
         // verify petalSession.remove
-        petalController.removeCapability(vendor, artifactId, version, capability);
+        petalController.removeCapability(vendorName, artifactId, version, capability);
         verify(petalSession).removeCapability(petal, capability);
     }
 
@@ -264,6 +276,7 @@ public class DefaultPetalControllerTestCase {
     public void testCollectRequirements() {
         // create a petal
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
@@ -272,11 +285,12 @@ public class DefaultPetalControllerTestCase {
         Collection<Requirement> list = new ArrayList<>();
 
         // mock petalSession.collectCapabilites behavior
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.collectRequirements(petal)).thenReturn(list);
 
         // verify petalSession.collectCapabilites(...) is called
-        petalController.collectRequirements(vendor, artifactId, version);
+        petalController.collectRequirements(vendorName, artifactId, version);
         verify(petalSession).collectRequirements(petal);
     }
 
@@ -284,12 +298,13 @@ public class DefaultPetalControllerTestCase {
     public void shouldReturnNullWhenCollectRequirementCausePetalNonExistent() {
         //Given
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "";
         String version = "";
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
 
         //when
-        List<Requirement> requirements = petalController.collectRequirements(vendor, artifactId, version);
+        List<Requirement> requirements = petalController.collectRequirements(vendorName, artifactId, version);
 
         Assert.assertTrue(requirements.size() == 0);
     }
@@ -297,32 +312,37 @@ public class DefaultPetalControllerTestCase {
     @Test
     public void testAddRequirement() {
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
         Requirement requirement = mock(Requirement.class);
 
         // mock => always return targeted petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
         // verify petalSession.addRequirement(...) is called
-        petalController.addRequirement(vendor, artifactId, version, requirement);
+        petalController.addRequirement(vendorName, artifactId, version, requirement);
         verify(petalSession).addRequirement(petal, requirement);
     }
 
     @Test
     public void testRemoveRequirement() {
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
         Requirement requirement = mock(Requirement.class);
 
         // mock => always return targeted petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
         // verify petalSession.removeRequirement(...) is called
-        petalController.removeRequirement(vendor, artifactId, version, requirement);
+        petalController.removeRequirement(vendorName, artifactId, version, requirement);
         verify(petalSession).removeRequirement(petal, requirement);
     }
 
@@ -338,37 +358,44 @@ public class DefaultPetalControllerTestCase {
     @Test
     public void testGetCategory() {
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
 
         // mock => always return targeted petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
         // verify petalSession.getCategory(...) is called
-        petalController.getCategory(vendor, artifactId, version);
+        petalController.getCategory(vendorName, artifactId, version);
         verify(petalSession).getCategory(petal);
     }
 
     @Test
     public void testSetCategory() {
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
         Category category = new Category();
 
         // mock => always return targeted petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
         // verify petalSession.getCategory(...) is called
-        petalController.setCategory(vendor, artifactId, version, category);
+        petalController.setCategory(vendorName, artifactId, version, category);
         verify(petalSession).addCategory(petal, category);
     }
 
    // @Test(expectedExceptions = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenSetCategoryCausePetalNonExistent() {
         Vendor vendor = new Vendor();
+        String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Category category = new Category();
@@ -377,7 +404,7 @@ public class DefaultPetalControllerTestCase {
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
 
         // verify petalSession.getCategory(...) is called
-        petalController.setCategory(vendor, artifactId, version, category);
+        petalController.setCategory(vendorName, artifactId, version, category);
     }
 
 //    @Test
