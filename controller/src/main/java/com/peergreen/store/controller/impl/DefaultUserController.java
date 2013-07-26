@@ -101,29 +101,25 @@ public class DefaultUserController implements IUserController {
     }
 
     /**
-     * Method to modify a user account.
+     * Method to modify a user account.<br />
+     * All attributes must be provided but can be unchanged if needed.
      * 
-     * @param  pseudo the pseudo of the user 
+     * @param user pseudo of the user to modify
      * @param password user's password
+     * @param email user's mail
      * @return modified user
+     * @throws NoEntityFoundException
      */
     @Override
-    public User modifyUserPassword(String pseudo, String password) {
-        User oldUser = userSession.findUserByPseudo(pseudo);
-        return userSession.updatePassword(oldUser, password);
-    }
-
-    /**
-     * Method to modify a user account.
-     * 
-     * @param  pseudo the pseudo of the user 
-     * @param email user's email
-     * @return modified user
-     */
-    @Override
-    public User modifyUserEmail(String pseudo,String email) {
-        User oldUser = userSession.findUserByPseudo(pseudo);
-        return userSession.updateMail(oldUser, email);
+    public User updateUser(String pseudo, String password, String email) throws NoEntityFoundException {
+        User u = userSession.findUserByPseudo(pseudo);
+        if (u != null) {
+            userSession.updatePassword(u, password);
+            userSession.updateMail(u, email);
+            return u;
+        } else {
+            throw new NoEntityFoundException("The user " + pseudo + " does not exist in database.");
+        }
     }
 
     /**

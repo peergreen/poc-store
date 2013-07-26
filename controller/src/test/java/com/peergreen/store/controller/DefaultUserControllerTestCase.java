@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 import com.peergreen.store.controller.impl.DefaultUserController;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultUserControllerTestCase {
 
@@ -64,22 +65,15 @@ public class DefaultUserControllerTestCase {
     }
 
     @Test
-    public void shouldModifyUserPassword () {
+    public void shouldUpdateUser() throws NoEntityFoundException {
         String password = "pwd";
+        String email = "my@mail.com";
+        oldUser.setPseudo(PSEUDO);
+        oldUser = userSession.findUserByPseudo(PSEUDO);
+        
+        userController.updateUser(PSEUDO, password, email);
         when(userSession.findUserByPseudo(PSEUDO)).thenReturn(oldUser);
-        userController.modifyUserPassword(PSEUDO, password );
         verify(userSession).updatePassword(oldUser, password);
-    }
-    
-    @Test
-    public void shouldModifyUserMail () {
-        String mail = "admin@pg.com";
-        when(userSession.findUserByPseudo(PSEUDO)).thenReturn(oldUser);
-        userController.modifyUserPassword(PSEUDO, mail );
-        verify(userSession).updatePassword(oldUser, mail);
-    }
-
-
-
-
+        verify(userSession).updateMail(oldUser, email);
+    }   
 }

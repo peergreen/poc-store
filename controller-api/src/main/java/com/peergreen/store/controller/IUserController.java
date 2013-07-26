@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Interface defining all user related operations:
  * <ul>
  *      <li>retrieve metadata</li>
- *      <li>retrieve instance</li>
  *      <li>add instance on database</li>
  *      <li>remove instance from database</li>
  *      <li>modify instance on database</li>
@@ -56,22 +56,13 @@ public interface IUserController {
     /**
      * Method to modify a user account.
      * 
-     * @param pseudo the pseudo of the user 
+     * @param user pseudo of the user to modify
      * @param password user's password
-     * @return modified user
-     */
-    
-    public User modifyUserPassword(String pseudo, String password);
-    
-    /**
-     * Method to modify a user account.
-     * 
-     * @param  pseudo the pseudo of the user 
      * @param email user's mail
      * @return modified user
+     * @throws NoEntityFoundException 
      */
-    
-    public User modifyUserEmail(String pseudo, String email);
+    public User updateUser(String pseudo, String password, String email) throws NoEntityFoundException;
 
     /**
      * Method to collect all user's groups.
