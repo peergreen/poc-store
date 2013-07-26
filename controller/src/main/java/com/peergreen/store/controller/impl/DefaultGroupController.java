@@ -42,7 +42,7 @@ public class DefaultGroupController implements IGroupController {
      * @return created group instance
      */
     @Override
-    public Group addGroup(String groupName) {
+    public Group createGroup(String groupName) {
         try{
             return groupSession.addGroup(groupName);
         } catch (EntityAlreadyExistsException e) {
@@ -60,7 +60,7 @@ public class DefaultGroupController implements IGroupController {
      * @param groupName group's name
      */
     @Override
-    public void removeGroup(String groupName) {
+    public void deleteGroup(String groupName) {
         try{
             groupSession.deleteGroup(groupName);
         }catch(IllegalArgumentException e){

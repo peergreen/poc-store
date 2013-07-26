@@ -40,7 +40,7 @@ public class DefaultGroupControllerTestCase {
     @Test
     public void testAddGroup() throws EntityAlreadyExistsException, NoEntityFoundException {
         String groupName = "myGroup";
-        groupController.addGroup(groupName);
+        groupController.createGroup(groupName);
         verify(groupSession).addGroup(groupName);
     }
 
@@ -48,7 +48,7 @@ public class DefaultGroupControllerTestCase {
         //Given
         String groupName = "Administrator";
         //When
-        groupController.addGroup(groupName);
+        groupController.createGroup(groupName);
         //then
         verify(groupSession).addGroup(groupName);
     }
@@ -58,7 +58,7 @@ public class DefaultGroupControllerTestCase {
         String groupName = "myGroup";
 
         // verify groupSession.deleteGroup(...) is called
-        groupController.removeGroup(groupName);
+        groupController.deleteGroup(groupName);
         verify(groupSession).deleteGroup(groupName);
     }
 

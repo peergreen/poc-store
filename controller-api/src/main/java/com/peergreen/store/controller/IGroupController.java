@@ -14,6 +14,8 @@ import com.peergreen.store.db.client.ejb.entity.User;
  *      <li>Retrieve group's member list</li>
  *      <li>Add a user to group</li>
  *      <li>Remove user from group</li>
+ *      <li>Retrieve all users member of this group</li>
+ *      <li>Retrieve all petals to those this group has access</li>
  * </ul>
  * 
  */
@@ -25,15 +27,14 @@ public interface IGroupController {
      * @param groupName group's name
      * @return created group instance
      */
-    Group addGroup(String groupName);
-    
+    Group createGroup(String groupName);
     
     /**
      * Method to remove a group from the database.
      * 
      * @param groupName group's name
      */
-    void removeGroup(String groupName);
+    void deleteGroup(String groupName);
     
     /**
      * Method to collect all the group's users.
@@ -60,5 +61,16 @@ public interface IGroupController {
      * @return updated group
      */
     Group removeUser(String groupName, String pseudo);
+ 
+    // TODO
+    /**
+     * Method to collect all users member of a group.<br />
+     * Throws NoEntityFoundException if specified group does not exist.
+     * 
+     * @param name group name
+     * @return list of all users member of the specified group
+     * @throw NoEntityFoundException
+     */
+    // Collection<User> collectUsers(String name);
     
 }
