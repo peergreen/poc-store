@@ -27,7 +27,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionPetal;
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
@@ -38,9 +38,9 @@ import com.peergreen.store.db.client.enumeration.Origin;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-public class DefaultPetalTest {
+public class DefaultSessionPetalTest {
 
-    private DefaultPetal sessionPetal;
+    private DefaultSessionPetal sessionPetal;
 
     private ArgumentCaptor<String> stringArgumentCaptor;
     private ArgumentCaptor<Petal> petalArgumentCaptor;
@@ -102,7 +102,7 @@ public class DefaultPetalTest {
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
 
-        sessionPetal = new DefaultPetal();
+        sessionPetal = new DefaultSessionPetal();
         sessionPetal.setEntityManager(entityManager);
         sessionPetal.setSessionCapability(sessionCapability);
         sessionPetal.setSessionCategory(sessionCategory);

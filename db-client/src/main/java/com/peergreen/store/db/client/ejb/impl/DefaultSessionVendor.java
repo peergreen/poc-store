@@ -32,7 +32,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * 
  */
 @Stateless
-public class DefaultVendor implements ISessionVendor {
+public class DefaultSessionVendor implements ISessionVendor {
 
     private EntityManager entityManager;
     private ISessionPetal petalSession;

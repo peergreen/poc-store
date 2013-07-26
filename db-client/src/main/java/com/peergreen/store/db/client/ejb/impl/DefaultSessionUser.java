@@ -39,7 +39,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * 
  */
 @Stateless
-public class DefaultUser implements ISessionUser {
+public class DefaultSessionUser implements ISessionUser {
     private EntityManager entityManager;
 
     private ISessionGroup groupSession;

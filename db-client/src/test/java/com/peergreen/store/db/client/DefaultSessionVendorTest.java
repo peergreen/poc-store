@@ -19,13 +19,13 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.impl.DefaultVendor;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionVendor;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-public class DefaultVendorTest {
+public class DefaultSessionVendorTest {
 
-    private DefaultVendor vendorSession;
+    private DefaultSessionVendor vendorSession;
     ArgumentCaptor<Vendor> vendorArgument;
     ArgumentCaptor<Petal> petalArgument;
     ArgumentCaptor<String> id ;
@@ -46,7 +46,7 @@ public class DefaultVendorTest {
 
     @BeforeMethod
     public void setUp() {
-        vendorSession = new DefaultVendor();
+        vendorSession = new DefaultSessionVendor();
         MockitoAnnotations.initMocks(this);
         vendorSession.setEntityManager(entityManager);
         vendorArgument = ArgumentCaptor.forClass(Vendor.class);

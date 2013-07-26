@@ -18,13 +18,13 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.impl.DefaultCategory;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionCategory;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-public class DefaultCategoryTest {
+public class DefaultSessionCategoryTest {
 
-    private DefaultCategory sessionCategory;
+    private DefaultSessionCategory sessionCategory;
     private String queryString;
     private String queryString2;
 
@@ -46,7 +46,7 @@ public class DefaultCategoryTest {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        sessionCategory = new DefaultCategory();
+        sessionCategory = new DefaultSessionCategory();
         sessionCategory.setEntityManager(entityManager);       
         category = ArgumentCaptor.forClass(Category.class);
         name = ArgumentCaptor.forClass(String.class);

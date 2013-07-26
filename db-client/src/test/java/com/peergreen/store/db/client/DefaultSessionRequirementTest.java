@@ -18,13 +18,13 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
-import com.peergreen.store.db.client.ejb.impl.DefaultRequirement;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionRequirement;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-public class DefaultRequirementTest {
+public class DefaultSessionRequirementTest {
 
-    private DefaultRequirement sessionRequirement;
+    private DefaultSessionRequirement sessionRequirement;
     private ArgumentCaptor<Requirement> requirementArgument;
     private ArgumentCaptor<String> idArgument;
     private ArgumentCaptor<Petal> petalArgument;
@@ -49,7 +49,7 @@ public class DefaultRequirementTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        sessionRequirement = new DefaultRequirement();
+        sessionRequirement = new DefaultSessionRequirement();
         sessionRequirement.setEntityManager(entityManager);
         requirementArgument = ArgumentCaptor.forClass(Requirement.class);
         idArgument = ArgumentCaptor.forClass(String.class);

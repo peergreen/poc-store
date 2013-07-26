@@ -27,7 +27,7 @@ import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
  * 
  */
 @Stateless
-public class DefaultLink implements ISessionLink {
+public class DefaultSessionLink implements ISessionLink {
 
     private EntityManager entityManager;
 

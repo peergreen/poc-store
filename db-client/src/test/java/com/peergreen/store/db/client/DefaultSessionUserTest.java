@@ -25,13 +25,13 @@ import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
-import com.peergreen.store.db.client.ejb.impl.DefaultUser;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionUser;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-public class DefaultUserTest {
+public class DefaultSessionUserTest {
 
-    private DefaultUser sessionUser;
+    private DefaultSessionUser sessionUser;
     private String pseudo;
     private String password;
     private String email;
@@ -61,7 +61,7 @@ public class DefaultUserTest {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        sessionUser = new DefaultUser();
+        sessionUser = new DefaultSessionUser();
         sessionUser.setEntityManager(entityManager);
         pseudo = "toto";
         password = "pwd";

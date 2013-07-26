@@ -37,7 +37,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * 
  */
 @Stateless
-public class DefaultCapability implements ISessionCapability{
+public class DefaultSessionCapability implements ISessionCapability{
 
     private EntityManager entityManager;
 

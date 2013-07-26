@@ -59,7 +59,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * 
  */
 @Stateless
-public class DefaultPetal implements ISessionPetal {
+public class DefaultSessionPetal implements ISessionPetal {
 
     private ISessionCapability sessionCapability;
     private ISessionCategory sessionCategory;

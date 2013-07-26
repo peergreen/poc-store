@@ -34,7 +34,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * 
  */
 @Stateless
-public class DefaultCategory implements ISessionCategory {
+public class DefaultSessionCategory implements ISessionCategory {
 
     private EntityManager entityManager;
 

@@ -15,12 +15,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
-import com.peergreen.store.db.client.ejb.impl.DefaultLink;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionLink;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
-public class DefaultLinkTest {
+public class DefaultSessionLinkTest {
 
-    private DefaultLink sessionLink;
+    private DefaultSessionLink sessionLink;
     private String url;
     private String description;
     private String queryString;
@@ -39,7 +39,7 @@ public class DefaultLinkTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        sessionLink = new DefaultLink();
+        sessionLink = new DefaultSessionLink();
         sessionLink.setEntityManager(entityManager);
         linkArgument = ArgumentCaptor.forClass(Link.class);
         value = ArgumentCaptor.forClass(String.class);

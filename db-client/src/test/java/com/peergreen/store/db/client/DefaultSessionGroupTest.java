@@ -21,15 +21,15 @@ import org.testng.annotations.Test;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
-import com.peergreen.store.db.client.ejb.impl.DefaultGroup;
-import com.peergreen.store.db.client.ejb.impl.DefaultPetal;
-import com.peergreen.store.db.client.ejb.impl.DefaultUser;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionGroup;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionPetal;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionUser;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
-public class DefaultGroupTest {
+public class DefaultSessionGroupTest {
 
-    private DefaultGroup sessionGroup ; 
+    private DefaultSessionGroup sessionGroup ; 
     private String groupname;
     ArgumentCaptor<Group> groupArgument;
     ArgumentCaptor<String> name;
@@ -54,14 +54,14 @@ public class DefaultGroupTest {
     @Mock
     private Query query;
     @Mock
-    private DefaultPetal sessionPetal;
+    private DefaultSessionPetal sessionPetal;
     @Mock
-    private DefaultUser sessionUser;
+    private DefaultSessionUser sessionUser;
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        sessionGroup = new DefaultGroup();
+        sessionGroup = new DefaultSessionGroup();
         sessionGroup.setEntityManager(entityManager); 
         sessionGroup.setSessionUser(sessionUser);
         groupArgument = ArgumentCaptor.forClass(Group.class);

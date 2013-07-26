@@ -23,14 +23,14 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.impl.DefaultCapability;
+import com.peergreen.store.db.client.ejb.impl.DefaultSessionCapability;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 
-public class DefaultCapabilityTest {
+public class DefaultSessionCapabilityTest {
 
-    private DefaultCapability sessionCapability;
+    private DefaultSessionCapability sessionCapability;
     private String queryString;
     private String version; 
     private List<Capability> capabilityList;
@@ -55,7 +55,7 @@ public class DefaultCapabilityTest {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        sessionCapability = new DefaultCapability();
+        sessionCapability = new DefaultSessionCapability();
         sessionCapability.setEntityManager(entityManager);       
         capability1 = ArgumentCaptor.forClass(Capability.class);
         value = ArgumentCaptor.forClass(String.class);
