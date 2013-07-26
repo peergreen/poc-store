@@ -99,38 +99,6 @@ public class DefaultStoreManagementTestCase {
         verify(petalSession).collectPetals();
     }
 
-   // @Test
-    // TODO handle exception
-    public void testCollectPetalsForUser() throws NoEntityFoundException {
-        User user = new User();
-        user.setPseudo("Robert");
-        Group group1 = new Group();
-        group1.setGroupname("admin");
-        Group group2 = new Group();
-        group2.setGroupname("Web Devs");
-        Set<Group> groups = new HashSet<>();
-        groups.add(group1);
-        groups.add(group2);
-        user.setGroupSet(groups);
-
-        Set<Petal> petals = new HashSet<>();
-        Petal petal1 = new Petal();
-        Petal petal2 = new Petal();
-        petals.add(petal1);
-        petals.add(petal2);
-
-        group1.setPetals(petals);
-        group2.setPetals(petals);
-
-        // mock => always return user's groups
-        when(userSession.collectGroups(user.getPseudo())).thenReturn(groups);
-
-
-        storeManagement.collectPetalsForUser(user.getPseudo());
-        verify(groupSession, times(2)).collectPetals(any(String.class));
-        verify(userSession).findUserByPseudo("Robert");
-    }
-
     @Test
     public void testCollectPetalsFromLocal() {
         storeManagement.collectPetalsFromLocal();
@@ -206,7 +174,7 @@ public class DefaultStoreManagementTestCase {
     public void shouldAddcategory() throws EntityAlreadyExistsException {
         String name = "Persistence";
 
-        storeManagement.addCategory(name);
+        storeManagement.createCategory(name);
 
         verify(categorySession).addCategory(stringCaptor.capture());
         Assert.assertEquals(name, stringCaptor.getValue());

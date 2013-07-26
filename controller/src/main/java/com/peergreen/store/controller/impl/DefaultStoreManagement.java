@@ -104,7 +104,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @return created Category instance
      * @throws EntityAlreadyExistsException
      */
-    public Category addCategory(String name) throws EntityAlreadyExistsException {
+    public Category createCategory(String name) throws EntityAlreadyExistsException {
         Category category = null;
         try {
             category = categorySession.addCategory(name);
@@ -145,37 +145,6 @@ public class DefaultStoreManagement implements IStoreManagment {
     @Override
     public Collection<Petal> collectPetals() {
         return petalSession.collectPetals();
-    }
-
-    /**
-     * Method to collect available petals.<br />
-     * Retrieve available petals only for a specific user.
-     * 
-     * @return list of available petals for a specific user
-     */
-    @Override
-    public Collection<Petal> collectPetalsForUser(String pseudo) {
-        Collection<Group> groups = null;
-        Collection<Petal> petals = null;
-
-        try {
-            groups = userSession.collectGroups(pseudo);
-            Iterator<Group> it = groups.iterator();
-            // retrieve all petals for each group
-            while (it.hasNext()) {
-                Group g = it.next();
-                Collection<Petal> p = groupSession.collectPetals(g.getGroupname());
-                if (petals != null) {
-                    petals.addAll(p);
-                } else {
-                    petals = p;
-                }
-            }
-        } catch (NoEntityFoundException e) {
-            System.err.println(e.getMessage());
-        }
-
-        return petals;
     }
 
     /**

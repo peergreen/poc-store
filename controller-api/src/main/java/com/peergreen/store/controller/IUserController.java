@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -71,9 +72,7 @@ public interface IUserController {
      * @return list of all user's groups
      */
     Collection<Group> collectGroups(String pseudo);
-
     
-    // TODO
     /**
      * Method to collect all petals to which the user has access.<br />
      * Throws NoEntityFoundException if the user does not exist in database.
@@ -82,5 +81,5 @@ public interface IUserController {
      * @return list of all petals accessible to the user.
      * @throw NoEntityFoundException
      */
-    // Collection<Petal> collectPetals(String pseudo);
+    Collection<Petal> collectPetals(String pseudo);
 }

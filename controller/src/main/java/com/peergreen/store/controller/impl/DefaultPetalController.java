@@ -387,17 +387,6 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
-     * Method to add a new category to the database.
-     * 
-     * @param categoryName cetegory's name
-     * @throws EntityAlreadyExistsException 
-     */
-    @Override
-    public Category createCategory(String categoryName) throws EntityAlreadyExistsException {
-        return categorySession.addCategory(categoryName);
-    }
-
-    /**
      * Method to retrieve a petal's category.
      * 
      * @param vendorName the name of the petal's vendor

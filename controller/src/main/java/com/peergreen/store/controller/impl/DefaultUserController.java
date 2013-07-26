@@ -2,6 +2,7 @@ package com.peergreen.store.controller.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.felix.ipojo.annotations.Bind;
@@ -12,7 +13,9 @@ import org.apache.felix.ipojo.annotations.Requires;
 
 import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -34,6 +37,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 @Provides
 public class DefaultUserController implements IUserController {
 
+    private ISessionGroup groupSession;
     private ISessionUser userSession;
 
     public DefaultUserController(@Requires ISessionUser userSession) {
@@ -139,6 +143,44 @@ public class DefaultUserController implements IUserController {
         return groups; 
     }
 
+    /**
+     * Method to collect all petals to which the user has access.<br />
+     * Throws NoEntityFoundException if the user does not exist in database.
+     * 
+     * @param pseudo user's pseudo
+     * @return list of all petals accessible to the user.
+     * @throw NoEntityFoundException
+     */
+    @Override
+    public Collection<Petal> collectPetals(String pseudo) {
+        Collection<Group> groups = null;
+        Collection<Petal> petals = null;
+
+        try {
+            groups = userSession.collectGroups(pseudo);
+            Iterator<Group> it = groups.iterator();
+            // retrieve all petals for each group
+            while (it.hasNext()) {
+                Group g = it.next();
+                Collection<Petal> p = groupSession.collectPetals(g.getGroupname());
+                if (petals != null) {
+                    petals.addAll(p);
+                } else {
+                    petals = p;
+                }
+            }
+        } catch (NoEntityFoundException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return petals;
+    }
+
+    @Bind
+    private void bindGroupSession(ISessionGroup groupSession) {
+        this.groupSession = groupSession;
+    }
+    
     @Bind
     private void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;

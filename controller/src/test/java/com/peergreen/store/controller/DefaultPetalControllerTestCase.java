@@ -347,15 +347,6 @@ public class DefaultPetalControllerTestCase {
     }
 
     @Test
-    public void testCreateCategory() throws EntityAlreadyExistsException {
-        String categoryName = "Administration";
-
-        // verify categorySession.addCategory(...) is called
-        petalController.createCategory(categoryName);
-        verify(categorySession).addCategory(categoryName);
-    }
-
-    @Test
     public void testGetCategory() {
         Vendor vendor = new Vendor();
         String vendorName = "Peergreen";

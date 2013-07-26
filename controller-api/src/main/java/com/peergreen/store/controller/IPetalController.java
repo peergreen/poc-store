@@ -195,14 +195,6 @@ public interface IPetalController {
     Petal removeRequirement(String vendorName, String artifactId, String version, Requirement requirement);
 
     /**
-     * Method to add a new category to the database.
-     * 
-     * @param categoryName cetegory's name
-     * @throws EntityAlreadyExistsException 
-     */
-    Category createCategory(String categoryName) throws EntityAlreadyExistsException;
-
-    /**
      * Method to retrieve a petal's category.
      * 
      * @param vendorName the name of the petal's vendor

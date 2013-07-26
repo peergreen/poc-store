@@ -11,7 +11,6 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
-import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 
 /**
@@ -61,7 +60,7 @@ public interface IStoreManagment {
      * @return created Category instance
      * @throws EntityAlreadyExistsException
      */
-    Category addCategory(String name) throws EntityAlreadyExistsException;
+    Category createCategory(String name) throws EntityAlreadyExistsException;
 
     /**
      * Method to remove a category from the database.
@@ -84,14 +83,6 @@ public interface IStoreManagment {
      * @return list of available petals
      */
     Collection<Petal> collectPetals();
-
-    /**
-     * Method to collect available petals.<br />
-     * Retrieve available petals only for a specific user.
-     * 
-     * @return list of available petals for a specific user
-     */
-    Collection<Petal> collectPetalsForUser(String pseudo);
 
     /**
      * Method to collect petals in the local repository.
