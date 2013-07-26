@@ -72,4 +72,15 @@ public interface IUserController {
      */
     Collection<Group> collectGroups(String pseudo);
 
+    
+    // TODO
+    /**
+     * Method to collect all petals to which the user has access.<br />
+     * Throws NoEntityFoundException if the user does not exist in database.
+     * 
+     * @param pseudo user's pseudo
+     * @return list of all petals accessible to the user.
+     * @throw NoEntityFoundException
+     */
+    // Collection<Petal> collectPetals(String pseudo);
 }
