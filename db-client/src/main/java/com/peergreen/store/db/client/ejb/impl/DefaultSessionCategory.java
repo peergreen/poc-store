@@ -80,6 +80,7 @@ public class DefaultSessionCategory implements ISessionCategory {
     public void deleteCategory(String categoryName) {
         Category temp = findCategory(categoryName);
         if (temp != null) {
+            // TODO Remove petals associated ??? 
             entityManager.remove(temp);
         }
     }

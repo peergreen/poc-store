@@ -282,7 +282,55 @@ public class DefaultSessionPetal implements ISessionPetal {
     public void deletePetal(Petal petal) {
         // retrieve attached petal
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+
+        Vendor v = sessionVendor.findVendor(petal.getVendor().getVendorName());
+        Category c = sessionCategory.findCategory(petal.getCategory().getCategoryName());
         if (p != null) {
+            try {
+                //Make that the vendor does not provide the petal anymore
+                sessionVendor.removePetal(v, p);
+                //Remove the petal from the category to which he belonged
+                sessionCategory.removePetal(c, p);
+
+            } catch (NoEntityFoundException e) {
+                e.getMessage();
+            }
+
+            Set<Capability> capabilities = petal.getCapabilities();
+            Iterator<Capability> it = capabilities .iterator();
+            while(it.hasNext()) {
+                Capability cap = it.next();
+                try {
+                    sessionCapability.removePetal(cap, p);
+                } catch (NoEntityFoundException e) {
+                   e.getMessage();
+                }
+            }
+
+            Set<Requirement> requirements =petal.getRequirements();
+            Iterator<Requirement> itreq = requirements .iterator();
+            while(itreq.hasNext()) {
+                Requirement req = itreq.next();
+                try {
+                    sessionRequirement.removePetal(req, petal);
+                } catch (NoEntityFoundException e) {
+                   e.getMessage();
+                }
+
+            }
+
+            Collection<Group> groups;
+            try {
+                groups = collectGroups(petal);
+                Iterator<Group> itgrp = groups.iterator();
+                while (itgrp.hasNext()) {
+                    Group group = itgrp.next();
+                    removeAccesToGroup(petal, group);
+                }
+            } catch (NoEntityFoundException e) {
+              e.getMessage();
+            }
+
             entityManager.remove(p);
         }
     }

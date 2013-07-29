@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -127,9 +128,34 @@ public class DefaultSessionGroup implements ISessionGroup {
      */
     @Override
     public void deleteGroup(String groupName) {
+        // retrieve attached group 
         Group group = findGroup(groupName);
-        if  (group != null) {
+        try {
+            //Collect all the petals accessible via this group
+            Collection<Petal> petals = collectPetals(groupName);
+            Iterator<Petal> it = petals.iterator();
+            
+            //Remove access to each petal for the group
+            while(it.hasNext()) {
+                Petal p = it.next();
+                sessionPetal.removeAccesToGroup(p, group);
+            }
+            
+          //Collect all users of the group
+            Collection<User> users = collectUsers(groupName);
+            Iterator<User> itU = users.iterator();
+            
+            //Remove each user from the group
+            while(itU.hasNext()) {
+                User u = itU.next();
+                sessionUser.removeGroup(u, group);
+            }
+            
+            //Then remove the group from the database 
             entityManager.remove(group);
+
+        } catch (NoEntityFoundException e) {
+           e.getMessage();
         }
     }
 

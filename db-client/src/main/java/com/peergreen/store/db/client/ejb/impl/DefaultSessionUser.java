@@ -101,10 +101,25 @@ public class DefaultSessionUser implements ISessionUser {
      */
     @Override
     public void removeUserbyPseudo(String pseudo) {
+        // retrieve attached user
         User user = entityManager.find(User.class, pseudo);
-        if (user != null) {
+        try {
+            //Collect all the groups to which the user belongs
+            Collection<Group> groups = collectGroups(pseudo);
+            Iterator<Group> it = groups.iterator();
+            
+            //Remove the user from each group
+            while(it.hasNext()) {
+                Group g = it.next();
+                groupSession.removeUser(g, user);
+            }
+            //Then remove the user from the database 
             entityManager.remove(user);
+
+        } catch (NoEntityFoundException e) {
+           e.getMessage();
         }
+
     }
 
     /**

@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,9 +83,23 @@ public class DefaultSessionCapability implements ISessionCapability{
      */
     @Override
     public void deleteCapability(String capabilityName, String version) {
-        Capability temp = findCapability(capabilityName,version);
-        if (temp != null) {
-            entityManager.remove(temp);
+        // retrieve attached capability 
+        Capability cap = findCapability(capabilityName,version);
+        try {
+            //Collect all the petals which provided the capability which will be delete
+            Collection<Petal> petals = collectPetals(capabilityName,version);
+            Iterator<Petal> it = petals.iterator();
+            
+            //Remove the capability from each petal 
+            while(it.hasNext()) {
+                Petal p = it.next();
+                petalSession.removeCapability(p, cap);
+            }
+            //Then remove the capability from the database
+            entityManager.remove(cap);
+
+        } catch (NoEntityFoundException e) {
+           e.getMessage();
         }
     }
 

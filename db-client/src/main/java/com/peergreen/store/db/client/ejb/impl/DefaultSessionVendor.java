@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -68,119 +69,131 @@ public class DefaultSessionVendor implements ISessionVendor {
      */
     @Override
     public void deleteVendor(String vendorName) {
+        try {
+            //Collect all the petals provided by the vendor 
+            Collection<Petal> petals = collectPetals(vendorName);
+            Iterator<Petal> it = petals.iterator();
+            //Remove each of them from the database 
+            while(it.hasNext()) {
+                Petal p = it.next();
+                petalSession.deletePetal(p);
+            }
+        } catch (NoEntityFoundException e) {
+            e.getMessage();
+        }
         Vendor vendor = entityManager.find(Vendor.class, vendorName);
-        if (vendor != null) {
-            entityManager.remove(vendor);
-        }
+        //Then remove the vendor from the database
+        entityManager.remove(vendor);
     }
 
-    /**
-     * Method to find a vendor thanks to its name in the database.
-     * 
-     * @param vendorName name of the vendor to find
-     * @return found vendor instance or {@literal null} if no instance found
-     */
-    @Override
-    public Vendor findVendor(String vendorName) {
-        return entityManager.find(Vendor.class, vendorName);
+
+/**
+ * Method to find a vendor thanks to its name in the database.
+ * 
+ * @param vendorName name of the vendor to find
+ * @return found vendor instance or {@literal null} if no instance found
+ */
+@Override
+public Vendor findVendor(String vendorName) {
+    return entityManager.find(Vendor.class, vendorName);
+}
+
+/**
+ * Method to collect all petals provided by a vendor with a specified name.<br />
+ * Throws an NoEntityFoundException if no vendor correspond to the given vendor name.
+ *  
+ * @param vendorName the vendor's name to which we collect petals which he provides
+ * @return collection of petals which are provided by the specified vendor
+ * @throws NoEntityFoundException
+ */
+@Override
+public Collection<Petal> collectPetals(String vendorName) throws NoEntityFoundException {
+    Vendor vendor = entityManager.find(Vendor.class, vendorName);
+    if (vendor != null) {
+        return vendor.getPetals();
+    } else {
+        throw new NoEntityFoundException("No vendor with name " + vendorName + " found in database.");
+    }
+}
+
+/**
+ * Method to add a new petal to those provided by a vendor.
+ * 
+ * @param vendor vendor to which add a new petal to provided petals list
+ * @param petal petal to add to provided petals list
+ * @return modified vendor entity with update provided petals list
+ * @throws NoEntityFoundException
+ */
+@Override
+public Vendor addPetal(Vendor vendor, Petal petal) throws NoEntityFoundException{
+    // retrieve attached vendor
+    Vendor v = vendorSession.findVendor(vendor.getVendorName());
+    if(v!=null){
+        // retrieve attached petal
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        v.getPetals().add(p);
+        return entityManager.merge(v);
+    }
+    else{
+        throw new NoEntityFoundException("Vendor " + vendor.getVendorName() + " doesn't exist in database.");
+    }
+}
+
+/**
+ * Method to delete a petal from those provided by a vendor.
+ * 
+ * @param vendor vendor from which remove a petal
+ * @param petal petal to remove from the vendor list of provided petals
+ * @return modified vendor entity with update provided petals list
+ * @throws NoEntityFoundException
+ */
+@Override
+public Vendor removePetal(Vendor vendor, Petal petal)throws NoEntityFoundException {
+    // retrieve attached vendor
+    Vendor v = vendorSession.findVendor(vendor.getVendorName());
+    if(v!=null){
+        // retrieve attached petal
+        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        v.getPetals().remove(p);
+        return entityManager.merge(vendor);
+    }
+    else{
+        throw new NoEntityFoundException("Vendor " + vendor.getVendorName() + " doesn't exist in database.");
     }
 
-    /**
-     * Method to collect all petals provided by a vendor with a specified name.<br />
-     * Throws an NoEntityFoundException if no vendor correspond to the given vendor name.
-     *  
-     * @param vendorName the vendor's name to which we collect petals which he provides
-     * @return collection of petals which are provided by the specified vendor
-     * @throws NoEntityFoundException
-     */
-    @Override
-    public Collection<Petal> collectPetals(String vendorName) throws NoEntityFoundException {
-        Vendor vendor = entityManager.find(Vendor.class, vendorName);
-        if (vendor != null) {
-            return vendor.getPetals();
-        } else {
-            throw new NoEntityFoundException("No vendor with name " + vendorName + " found in database.");
-        }
-    }
+}
 
-    /**
-     * Method to add a new petal to those provided by a vendor.
-     * 
-     * @param vendor vendor to which add a new petal to provided petals list
-     * @param petal petal to add to provided petals list
-     * @return modified vendor entity with update provided petals list
-     * @throws NoEntityFoundException
-     */
-    @Override
-    public Vendor addPetal(Vendor vendor, Petal petal) throws NoEntityFoundException{
-        // retrieve attached vendor
-        Vendor v = vendorSession.findVendor(vendor.getVendorName());
-        if(v!=null){
-            // retrieve attached petal
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-            v.getPetals().add(p);
-            return entityManager.merge(v);
-        }
-        else{
-            throw new NoEntityFoundException("Vendor " + vendor.getVendorName() + " doesn't exist in database.");
-        }
-    }
+/**
+ * Method to manually set the entity manager.
+ * 
+ * @param entityManager used
+ */
+@PersistenceContext
+public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
+}
 
-    /**
-     * Method to delete a petal from those provided by a vendor.
-     * 
-     * @param vendor vendor from which remove a petal
-     * @param petal petal to remove from the vendor list of provided petals
-     * @return modified vendor entity with update provided petals list
-     * @throws NoEntityFoundException
-     */
-    @Override
-    public Vendor removePetal(Vendor vendor, Petal petal)throws NoEntityFoundException {
-        // retrieve attached vendor
-        Vendor v = vendorSession.findVendor(vendor.getVendorName());
-        if(v!=null){
-            // retrieve attached petal
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-            v.getPetals().remove(p);
-            return entityManager.merge(vendor);
-        }
-        else{
-            throw new NoEntityFoundException("Vendor " + vendor.getVendorName() + " doesn't exist in database.");
-        }
+/**
+ * Method to collect all existing vendor in database.
+ * 
+ * @return collection of all existing vendors in database
+ */
+@Override
+public Collection<Vendor> collectVendors() {
+    Query query = entityManager.createNamedQuery("Vendor.findAll");
+    @SuppressWarnings("unchecked")
+    List<Vendor> vendorList = query.getResultList();
+    Set<Vendor> vendorSet = new HashSet<Vendor>(vendorList);
+    return vendorSet;   
+}
 
-    }
+@EJB
+public void setPetalSession(ISessionPetal petalSession) {
+    this.petalSession = petalSession;
+}
 
-    /**
-     * Method to manually set the entity manager.
-     * 
-     * @param entityManager used
-     */
-    @PersistenceContext
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    /**
-     * Method to collect all existing vendor in database.
-     * 
-     * @return collection of all existing vendors in database
-     */
-    @Override
-    public Collection<Vendor> collectVendors() {
-        Query query = entityManager.createNamedQuery("Vendor.findAll");
-        @SuppressWarnings("unchecked")
-        List<Vendor> vendorList = query.getResultList();
-        Set<Vendor> vendorSet = new HashSet<Vendor>(vendorList);
-        return vendorSet;   
-    }
-
-    @EJB
-    public void setPetalSession(ISessionPetal petalSession) {
-        this.petalSession = petalSession;
-    }
-
-    @EJB
-    public void setVendorSession(ISessionVendor vendorSession) {
-        this.vendorSession = vendorSession;
-    }
+@EJB
+public void setVendorSession(ISessionVendor vendorSession) {
+    this.vendorSession = vendorSession;
+}
 }

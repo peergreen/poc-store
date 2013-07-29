@@ -2,6 +2,7 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -97,10 +98,25 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      */
     @Override
     public void deleteRequirement(String requirementName) {
+        // retrieve attached requirement
         Requirement req = findRequirement(requirementName);
-        if (req != null) {
+        try {
+            //Collect all the petals which have this requirement
+            Collection<Petal> petals = collectPetals(requirementName);
+            Iterator<Petal> it = petals.iterator();
+            
+            //Remove the requirement from each petal's requirements
+            while(it.hasNext()) {
+                Petal p = it.next();
+                petalSession.removeRequirement(p, req);
+            }
+            //Then remove the requirement from the database 
             entityManager.remove(req);
+
+        } catch (NoEntityFoundException e) {
+           e.getMessage();
         }
+     
     }
 
     /**
