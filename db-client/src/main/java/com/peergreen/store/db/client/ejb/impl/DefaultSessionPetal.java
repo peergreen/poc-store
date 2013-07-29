@@ -296,7 +296,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 e.getMessage();
             }
 
-            Set<Capability> capabilities = petal.getCapabilities();
+            Set<Capability> capabilities = p.getCapabilities();
             Iterator<Capability> it = capabilities .iterator();
             while(it.hasNext()) {
                 Capability cap = it.next();
@@ -307,7 +307,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 }
             }
 
-            Set<Requirement> requirements =petal.getRequirements();
+            Set<Requirement> requirements =p.getRequirements();
             Iterator<Requirement> itreq = requirements .iterator();
             while(itreq.hasNext()) {
                 Requirement req = itreq.next();
@@ -321,7 +321,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
             Collection<Group> groups;
             try {
-                groups = collectGroups(petal);
+                groups = collectGroups(p);
                 Iterator<Group> itgrp = groups.iterator();
                 while (itgrp.hasNext()) {
                     Group group = itgrp.next();
