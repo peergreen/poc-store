@@ -136,7 +136,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         if (requirement != null) {
             return requirement.getPetals();
         } else {
-            throw new NoEntityFoundException("Cannot find this requirement on database.");
+            throw new NoEntityFoundException("Requirement " + requirementName + " doesn't exist in database.");
         }
     }
 
@@ -146,34 +146,44 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @param requirement requirement that is needed by the petal
      * @param petal petal to add 
      * @return modified requirement (updated list of petals which share this requirement) 
+     * @throws NoEntityFoundException
      */
     @Override
-    public Requirement addPetal(Requirement requirement, Petal petal) {
+    public Requirement addPetal(Requirement requirement, Petal petal) throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        // retrieve attached petal
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        if(r!=null){
+            // retrieve attached petal
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
-        r.getPetals().add(p);
-        return entityManager.merge(r);
+            r.getPetals().add(p);
+            return entityManager.merge(r);
+        }
+        else{
+            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+        }
     }
-
     /**
      * Method to remove a petal from the list of petals which share this specific requirement.
      * 
      * @param requirement requirement needed by the petal
      * @param petal petal to remove
      * @return modified requirement (updated list of petals which share this requirement) 
+     * @throws NoEntityFoundException
      */
     @Override
-    public Requirement removePetal(Requirement requirement, Petal petal) {
+    public Requirement removePetal(Requirement requirement, Petal petal)throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        // retrieve attached petal
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-
-        r.getPetals().remove(p);
-        return entityManager.merge(r);
+        if(r!=null){
+            // retrieve attached petal
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            r.getPetals().remove(p);
+            return entityManager.merge(r);
+        }
+        else{
+            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+        }
     }
 
     /**
@@ -197,14 +207,19 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @param requirement requirement to modify 
      * @param namespace new namespace 
      * @return updated Requirement
+     * @throws NoEntityFoundException
      */
     @Override
-    public Requirement updateNamespace(Requirement requirement, String namespace) {
+    public Requirement updateNamespace(Requirement requirement, String namespace)throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-
-        r.setNamespace(namespace);
-        return entityManager.merge(r);
+        if(r!=null){
+            r.setNamespace(namespace);
+            return entityManager.merge(r);
+        }
+        else{
+            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+        }
     }
 
     /**
@@ -213,14 +228,20 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @param requirement requirement to modify
      * @param filter new filter
      * @return updated Requirement
+     * @throws NoEntityFoundException
      */
     @Override
-    public Requirement updateFilter(Requirement requirement, String filter) {
+    public Requirement updateFilter(Requirement requirement, String filter) throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
+        if(r!=null){
+            r.setFilter(filter);
+            return entityManager.merge(r);
+        }
+        else{
+            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
 
-        r.setFilter(filter);
-        return entityManager.merge(r);
+        }
     }
 
     /**
@@ -229,13 +250,14 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @param namespace request namespace
      * @param requirement requirement containing all constaints to resolve
      * @return collection of Capability that meets the given requirement
+     * @throws NoEntityFoundException
      * @see DefaultLdapParser
      */
     @Override
     public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        
+
         String filter = r.getFilter();
 
         IValidatorNode<String> root = null;

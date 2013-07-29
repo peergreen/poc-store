@@ -59,8 +59,9 @@ public interface ISessionUser {
      * @param password the new user's password
      * 
      * @return The oldUser modify with the new information
+     * @throws NoEntityFoundException
      */
-    User updatePassword( User oldUser, String password);
+    User updatePassword( User oldUser, String password) throws NoEntityFoundException;
 
     /**
      * Method to modify a user's mail 
@@ -69,8 +70,9 @@ public interface ISessionUser {
      * @param email the new user's email
      * 
      * @return The oldUser modify with the new information
+     * @throws NoEntityFoundException
      */
-    User updateMail( User oldUser, String email);
+    User updateMail( User oldUser, String email) throws NoEntityFoundException;
 
     /**
      * Method to add a group to the list of groups to which a user belongs 
@@ -79,8 +81,9 @@ public interface ISessionUser {
      * @param group The group to which add the user
      * 
      * @return A user with new list of groups 
+     * @throws NoEntityFoundException
      */
-    User addGroup(User user, Group group);
+    User addGroup(User user, Group group) throws NoEntityFoundException;
 
     /**
      * Method to remove a group from the list of groups to which a user belongs 
@@ -88,8 +91,9 @@ public interface ISessionUser {
      * @param user The user to remove from the group
      * @param group The group to which is removed the user
      * @return A user with new list of groups
+     * @throws NoEntityFoundException
      */
-    User removeGroup(User user, Group group);
+    User removeGroup(User user, Group group) throws NoEntityFoundException;
 
     /**
      * Method to collect all the groups to which a user belongs.

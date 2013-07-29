@@ -70,8 +70,9 @@ public interface ISessionGroup {
      * @param group group to which add the user
      * @param myUser user to add to the group 
      * @return modified Group instance
+     * @throws NoEntityFoundException
      */
-    Group addUser(Group group, User myUser);  
+    Group addUser(Group group, User myUser) throws NoEntityFoundException;  
 
     /**
      * Method to remove a user from a group.
@@ -79,8 +80,9 @@ public interface ISessionGroup {
      * @param group group from which remove the user
      * @param user user to remove from the group
      * @return modified group
+     * @throws NoEntityFoundException
      */
-    Group removeUser(Group group, User user);
+    Group removeUser(Group group, User user) throws NoEntityFoundException;
 
     /**
      * Method to collect the users which belong to a specified group.<br />
@@ -98,8 +100,9 @@ public interface ISessionGroup {
      * @param group group to which grant access to the petal 
      * @param petal petal to make available for the group
      * @return modified Group instance (updated list of accessible petals)
+     * @throws NoEntityFoundException
      */
-    Group addPetal(Group group, Petal petal);
+    Group addPetal(Group group, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to remove a Petal from the list of petals that are accessible for a group
@@ -107,8 +110,9 @@ public interface ISessionGroup {
      * @param group group to which remove the petal 
      * @param petal petal to make inaccessible for the Group
      * @return modified Group instance (updated list of accessible petals)
+     * @throws NoEntityFoundException
      */
-    Group removePetal(Group group, Petal petal);
+    Group removePetal(Group group, Petal petal)throws NoEntityFoundException;
 
     /**
      * Method to collect petals which are accessible for a specified group.<br />

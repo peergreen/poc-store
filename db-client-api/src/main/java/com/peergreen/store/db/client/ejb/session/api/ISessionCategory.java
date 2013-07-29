@@ -53,8 +53,9 @@ public interface ISessionCategory {
      * @param petal the petal to add to the category
      * 
      * @return A new category with new petals included the petal added 
+     * @throws NoEntityFoundException
      */
-    Category addPetal(Category category, Petal petal);
+    Category addPetal(Category category, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to remove a petal from a category
@@ -64,8 +65,9 @@ public interface ISessionCategory {
      * 
      * 
      * @return A new category with petals excluded the petal removed 
+     * @throws NoEntityFoundException
      */
-    Category removePetal(Category category, Petal petal);
+    Category removePetal(Category category, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to collect all the category in the database

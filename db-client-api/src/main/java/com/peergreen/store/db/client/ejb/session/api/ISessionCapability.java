@@ -43,16 +43,18 @@ public interface ISessionCapability {
      * @param capability the capability to modify 
      * @param namespace the new namespace of the capability
      * @return The capability with the change updated
+     * @throws NoEntityFoundException 
      */
-    Capability updateNamespace (Capability capability, String namespace);
+    Capability updateNamespace (Capability capability, String namespace)throws NoEntityFoundException;
 
     /**
      * Method to change a capability existing properties
      * @param capability the capability to modify 
      * @param properties the new properties of the capability
      * @return The capability with the change updated
+     * @throws NoEntityFoundException 
      */
-    Capability updateProperties (Capability capability, Map<String,String> prooperties);
+    Capability updateProperties (Capability capability, Map<String,String> prooperties)throws NoEntityFoundException;
 
     /**
      * Method to collect the petals which provides the specified capability.
@@ -71,8 +73,9 @@ public interface ISessionCapability {
      * @param petal the petal to add 
      * 
      * @return A new capability with a new list of petals 
+     * @throws NoEntityFoundException 
      */
-    Capability addPetal(Capability capability, Petal petal);
+    Capability addPetal(Capability capability, Petal petal)throws NoEntityFoundException;
 
     /**
      * Method to remove a petal to the list of petals which give the capability
@@ -81,8 +84,9 @@ public interface ISessionCapability {
      * @param petal the petal to remove
      * 
      * @return A new capability with a new list of petals 
+     * @throws NoEntityFoundException 
      */
-    Capability removePetal (Capability capability, Petal petal);
+    Capability removePetal (Capability capability, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to collect all the capability in the database

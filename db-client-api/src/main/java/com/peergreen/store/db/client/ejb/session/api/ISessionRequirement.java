@@ -53,8 +53,9 @@ public interface ISessionRequirement {
      * @param requirement requirement that is needed by the petal
      * @param petal petal to add 
      * @return modified requirement (updated list of petals which share this requirement) 
+     * @throws NoEntityFoundException
      */
-    Requirement addPetal(Requirement requirement,Petal petal);
+    Requirement addPetal(Requirement requirement,Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to remove a petal from the list of petals which share this specific requirement.
@@ -62,8 +63,9 @@ public interface ISessionRequirement {
      * @param requirement requirement needed by the petal
      * @param petal petal to remove
      * @return modified requirement (updated list of petals which share this requirement) 
+     * @throws NoEntityFoundException
      */
-    Requirement removePetal(Requirement requirement, Petal petal);
+    Requirement removePetal(Requirement requirement, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to collect all existing requirements in database.
@@ -78,8 +80,9 @@ public interface ISessionRequirement {
      * @param requirement requirement to modify
      * @param namespace new namespace
      * @return updated Requirement
+     * @throws NoEntityFoundException
      */
-    Requirement updateNamespace(Requirement requirement, String namespace);
+    Requirement updateNamespace(Requirement requirement, String namespace) throws NoEntityFoundException;
 
     /**
      * Method to modify a requirement's filter.
@@ -87,8 +90,9 @@ public interface ISessionRequirement {
      * @param requirement requirement to modify
      * @param filter new filter
      * @return updated Requirement
+     * @throws NoEntityFoundException
      */
-    Requirement updateFilter(Requirement requirement, String filter);
+    Requirement updateFilter(Requirement requirement, String filter) throws NoEntityFoundException;
     
     /**
      * Method to find matching between LDAP expression (Requirement filter) and Capabilities.
@@ -96,7 +100,8 @@ public interface ISessionRequirement {
      * @param namespace request namespace
      * @param requirement requirement containing all constaints to resolve
      * @return collection of Capability that meets the given requirement
+     * @throws NoEntityFoundException
      * @see DefaultLdapParser
      */
-    Collection<Capability> findCapabilities(String namespace, Requirement requirement);
+    Collection<Capability> findCapabilities(String namespace, Requirement requirement) throws NoEntityFoundException;
 }

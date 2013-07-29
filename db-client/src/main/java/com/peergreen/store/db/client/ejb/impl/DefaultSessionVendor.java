@@ -109,16 +109,21 @@ public class DefaultSessionVendor implements ISessionVendor {
      * @param vendor vendor to which add a new petal to provided petals list
      * @param petal petal to add to provided petals list
      * @return modified vendor entity with update provided petals list
+     * @throws NoEntityFoundException
      */
     @Override
-    public Vendor addPetal(Vendor vendor, Petal petal) {
+    public Vendor addPetal(Vendor vendor, Petal petal) throws NoEntityFoundException{
         // retrieve attached vendor
         Vendor v = vendorSession.findVendor(vendor.getVendorName());
-        // retrieve attached petal
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-        
-        v.getPetals().add(p);
-        return entityManager.merge(v);
+        if(v!=null){
+            // retrieve attached petal
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            v.getPetals().add(p);
+            return entityManager.merge(v);
+        }
+        else{
+            throw new NoEntityFoundException("Vendor " + vendor.getVendorName() + " doesn't exist in database.");
+        }
     }
 
     /**
@@ -127,16 +132,22 @@ public class DefaultSessionVendor implements ISessionVendor {
      * @param vendor vendor from which remove a petal
      * @param petal petal to remove from the vendor list of provided petals
      * @return modified vendor entity with update provided petals list
+     * @throws NoEntityFoundException
      */
     @Override
-    public Vendor removePetal(Vendor vendor, Petal petal) {
+    public Vendor removePetal(Vendor vendor, Petal petal)throws NoEntityFoundException {
         // retrieve attached vendor
         Vendor v = vendorSession.findVendor(vendor.getVendorName());
-        // retrieve attached petal
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-        
-        v.getPetals().remove(p);
-        return entityManager.merge(vendor);
+        if(v!=null){
+            // retrieve attached petal
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            v.getPetals().remove(p);
+            return entityManager.merge(vendor);
+        }
+        else{
+            throw new NoEntityFoundException("Vendor " + vendor.getVendorName() + " doesn't exist in database.");
+        }
+
     }
 
     /**
@@ -167,7 +178,7 @@ public class DefaultSessionVendor implements ISessionVendor {
     public void setPetalSession(ISessionPetal petalSession) {
         this.petalSession = petalSession;
     }
-    
+
     @EJB
     public void setVendorSession(ISessionVendor vendorSession) {
         this.vendorSession = vendorSession;

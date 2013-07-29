@@ -39,12 +39,16 @@ public class DefaultSessionCategory implements ISessionCategory {
     private EntityManager entityManager;
 
     private ISessionPetal petalSession;
-    
+
     @PersistenceContext 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.petalSession = sessionPetal;
+    }
     /**
      * Method to add a new category in the database.<br />
      * Throws EntityAlreadyExistsException when a category
@@ -127,14 +131,20 @@ public class DefaultSessionCategory implements ISessionCategory {
      * @return modified Category instance (updated list of associated petals)
      */
     @Override
-    public Category addPetal(Category category, Petal petal) {
+    public Category addPetal(Category category, Petal petal)throws NoEntityFoundException {
         // retrieve attached category entity
         Category c = findCategory(category.getCategoryName());
-        // retrieve attached petal entity
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
-        
-        c.getPetals().remove(p);
-        return entityManager.merge(c);
+        if(c!=null){
+            // retrieve attached petal entity
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
+
+            c.getPetals().remove(p);
+            return entityManager.merge(c);
+
+        } else{
+            throw new NoEntityFoundException("Category " + category.getCategoryName() + " does not exist in database.");
+        }
+
     }
 
     /**
@@ -143,16 +153,21 @@ public class DefaultSessionCategory implements ISessionCategory {
      * @param category category from which remove a petal
      * @param petal petal to remove from the category
      * @return modified Category instance (updated list of associated Petal instances)
+     * @throws NoEntityFoundException
      */
     @Override
-    public Category removePetal(Category category, Petal petal) {
+    public Category removePetal(Category category, Petal petal)throws NoEntityFoundException {
         // retrieve attached category
         Category c = findCategory(category.getCategoryName());
-        // retrieve attached petal entity
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-        
-        c.getPetals().remove(p);
-        return entityManager.merge(c);
+        if(c!=null){
+            // retrieve attached petal entity
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+
+            c.getPetals().remove(p);
+            return entityManager.merge(c);
+        } else{
+            throw new NoEntityFoundException("Category " + category.getCategoryName() + " does not exist in database.");
+        }
     }
 
     /**
@@ -167,10 +182,5 @@ public class DefaultSessionCategory implements ISessionCategory {
         List<Category> catList = query.getResultList();
         Set<Category> categorySet = new HashSet<Category>(catList);
         return categorySet;
-    }
-    
-    @EJB
-    public void setSessionPetal(ISessionPetal sessionPetal) {
-        this.petalSession = sessionPetal;
     }
 }

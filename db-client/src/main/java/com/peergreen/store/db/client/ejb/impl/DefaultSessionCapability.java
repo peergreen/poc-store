@@ -134,19 +134,26 @@ public class DefaultSessionCapability implements ISessionCapability{
      * @param capability capability provided by the petal
      * @param petal petal to add 
      * @return modified Capability instance (updated list of providers)
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Capability addPetal(Capability capability, Petal petal) {
+    public Capability addPetal(Capability capability, Petal petal) throws NoEntityFoundException{
         // retrieve attached capability entity
         Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        // retrieve attached petal entity
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());       
-        
-        Set<Petal> petals = c.getPetals();
-        petals.add(p);
-        c.setPetals(petals);
-        
-        return entityManager.merge(c);
+
+        if(c!=null){
+            // retrieve attached petal entity
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());       
+
+            Set<Petal> petals = c.getPetals();
+            petals.add(p);
+            c.setPetals(petals);
+
+            return entityManager.merge(c); 
+        }
+        else{
+            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
+        }
     }
 
     /**
@@ -156,26 +163,32 @@ public class DefaultSessionCapability implements ISessionCapability{
      * @param petal petal to remove
      * @return modified Capability instance (updated list of providers),
      *  or {@literal null} if no more petals provide this capability
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Capability removePetal(Capability capability, Petal petal) {
+    public Capability removePetal(Capability capability, Petal petal)throws NoEntityFoundException {
         // retrieve attached capability entity
         Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        // retrieve attached petal entity
-        Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
-        
-        Set<Petal> petals = c.getPetals();
-        petals.remove(p);
-        
-        // We can delete this capability if no petal provides this capability any more.
-        if (petals.isEmpty()) {
-            entityManager.remove(c);
-            c = null;
-        } else {
-            c = entityManager.merge(c);
+        if(c!=null){
+            // retrieve attached petal entity
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
+
+            Set<Petal> petals = c.getPetals();
+            petals.remove(p);
+
+            // We can delete this capability if no petal provides this capability any more.
+            if (petals.isEmpty()) {
+                entityManager.remove(c);
+                c = null;
+            } else {
+                c = entityManager.merge(c);
+            }
+
+            return c;
         }
-        
-        return c;
+        else{
+            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
+        }
     }
 
     /**
@@ -200,32 +213,42 @@ public class DefaultSessionCapability implements ISessionCapability{
      * @param capability capability to modify 
      * @param namespace new namespace 
      * @return modified Capability instance
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Capability updateNamespace(Capability capability, String namespace) {
+    public Capability updateNamespace(Capability capability, String namespace)throws NoEntityFoundException {
         // retrieve attached capability entity
         Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        
-        c.setNamespace(namespace);
-        return entityManager.merge(c);
+        if(c != null){
+            c.setNamespace(namespace);
+            return entityManager.merge(c);
+        }
+        else{
+            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
+        }
     }
-    
+
     /**
      * Method to change capability properties.
      * 
      * @param capability capability to modify 
      * @param properties new properties for the capability 
      * @return modified Capability instance
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Capability updateProperties(Capability capability, Map<String, String> properties) {
+    public Capability updateProperties(Capability capability, Map<String, String> properties)throws NoEntityFoundException {
         // retrieve attached capability entity
         Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        
-        c.setProperties(properties);
-        return entityManager.merge(c);
+        if(c!=null){
+            c.setProperties(properties);
+            return entityManager.merge(c);
+        }
+        else{
+            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
+        }
     }
-    
+
     @EJB
     public void setSessionPetal(ISessionPetal sessionPetal) {
         this.petalSession = sessionPetal;

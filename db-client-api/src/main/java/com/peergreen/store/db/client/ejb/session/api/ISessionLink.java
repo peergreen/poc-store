@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Interface defining an entity session to manage the entity Link:
@@ -57,7 +58,8 @@ public interface ISessionLink {
      * @param link the link to modify
      * @param newDescription the new link description
      * @return modified Link instance (updated description)
+     * @throws NoEntityFoundException
      */
-    Link updateDescription(Link link, String newDescription);
+    Link updateDescription(Link link, String newDescription) throws NoEntityFoundException;
 
 }

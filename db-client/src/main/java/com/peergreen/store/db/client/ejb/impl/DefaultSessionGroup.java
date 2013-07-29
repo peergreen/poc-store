@@ -45,7 +45,7 @@ public class DefaultSessionGroup implements ISessionGroup {
     private EntityManager entityManager;
 
     private ISessionPetal sessionPetal;
-    
+
     private ISessionUser sessionUser;
 
     public EntityManager getEntityManager() {
@@ -57,6 +57,15 @@ public class DefaultSessionGroup implements ISessionGroup {
         this.entityManager = entityManager;
     }
 
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.sessionPetal = sessionPetal;
+    }
+
+    @EJB
+    public void setSessionUser(ISessionUser sessionUser) {
+        this.sessionUser = sessionUser;
+    }
     /**
      * <p>
      * Method to add a new group in the database.<br />
@@ -130,17 +139,27 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @param group group to which add the user
      * @param myUser user to add to the group 
      * @return modified Group instance
+     * @throws NoEntityFoundException
      */
     @Override
-    public Group addUser(Group group, User myUser) {
+    public Group addUser(Group group, User myUser)throws NoEntityFoundException{
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
-        // retrieve attached user
-        User u = sessionUser.findUserByPseudo(myUser.getPseudo());
-        
-        g.getUsers().add(u);
-        sessionUser.addGroup(u, g);
-        return entityManager.merge(g);
+        if(g!=null){
+            // retrieve attached user
+            User u = sessionUser.findUserByPseudo(myUser.getPseudo());
+
+            g.getUsers().add(u);
+            try{
+                sessionUser.addGroup(u, g);
+            }catch(NoEntityFoundException e){
+                e.getMessage();
+            }
+            return entityManager.merge(g);
+        }
+        else{
+            throw new NoEntityFoundException("You have to create the administrator first at all.");
+        }
     }
 
     /**
@@ -149,19 +168,27 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @param group group from which remove the user
      * @param user user to remove from the group
      * @return modified group
+     * @throws NoEntityFoundException
      */
     @Override
-    public Group removeUser(Group group, User user) {
+    public Group removeUser(Group group, User user)throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
-        // retrieve attached user
-        User u = sessionUser.findUserByPseudo(user.getPseudo());
-        
-        g.getUsers().remove(u);
-        sessionUser.removeGroup(u, g);
-        return entityManager.merge(g);
-    }
+        if(g!=null){
+            // retrieve attached user
+            User u = sessionUser.findUserByPseudo(user.getPseudo());
+            g.getUsers().remove(u);
+            try{
+                sessionUser.removeGroup(u, g);
+            }catch(NoEntityFoundException e){
+                e.getMessage();
+            }
 
+            return entityManager.merge(g);
+        }else{
+            throw new NoEntityFoundException("You have to create the administrator first at all.");
+        }
+    }
     /**
      * Method to collect the users which belong to a specified group.<br />
      * Throws {@link NoEntityFoundException} when the group doesn't exist.
@@ -189,15 +216,20 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @return modified Group instance (updated list of accessible petals)
      */
     @Override
-    public Group addPetal(Group group, Petal petal) {
+    public Group addPetal(Group group, Petal petal)throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
-        // retrieve attached petal
-        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        if(g!=null){
+            // retrieve attached petal
+            Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
-        g.getPetals().add(p);
-        // TODO update petal.groups?
-        return entityManager.merge(group);
+            g.getPetals().add(p);
+            // TODO update petal.groups?
+            return entityManager.merge(group);
+        }
+        else{
+            throw new NoEntityFoundException("You have to create the administrator first at all.");
+        }
     }
 
     /**
@@ -206,17 +238,24 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @param group group to which remove the petal 
      * @param petal petal to make inaccessible for the Group
      * @return modified Group instance (updated list of accessible petals)
+     * @exception NoEntityFoundException
      */
     @Override
-    public Group removePetal(Group group, Petal petal) {
+    public Group removePetal(Group group, Petal petal)throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
-        // retrieve attached petal
-        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        if(g!=null){
+            // retrieve attached petal
+            Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
-        g.getPetals().remove(p);
-        // TODO update petal.groups?
-        return entityManager.merge(group);
+            g.getPetals().remove(p);
+            // TODO update petal.groups?
+            return entityManager.merge(group);
+        }
+        else{
+            throw new NoEntityFoundException("You have to create the administrator first at all.");
+
+        }
     }
 
     /**
@@ -253,16 +292,4 @@ public class DefaultSessionGroup implements ISessionGroup {
         return groupSet;
     }
 
-    @EJB
-    public void setSessionPetal(ISessionPetal sessionPetal) {
-        this.sessionPetal = sessionPetal;
-    }
-    
-    /**
-     * @param sessionUser the sessionUser to set
-     */
-    @EJB
-    public void setSessionUser(ISessionUser sessionUser) {
-        this.sessionUser = sessionUser;
-    }
 }

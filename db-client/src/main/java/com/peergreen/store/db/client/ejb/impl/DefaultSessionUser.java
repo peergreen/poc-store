@@ -43,7 +43,7 @@ public class DefaultSessionUser implements ISessionUser {
     private EntityManager entityManager;
 
     private ISessionGroup groupSession;
-    
+
     /**
      * Method to create a new instance of User and add it in the database.<br />
      * Others attributes are null when creating the user.
@@ -126,16 +126,21 @@ public class DefaultSessionUser implements ISessionUser {
      * @param user The user that must change the list of groups belonging
      * @param group The group to which add the user
      * @return A user with new list of groups 
+     * @throws NoEntityFoundException
      */
     @Override
-    public User addGroup(User user, Group group) {
+    public User addGroup(User user, Group group) throws NoEntityFoundException{
         // retrieve attached user
         User u = findUserByPseudo(user.getPseudo());
-        // retrieve attached group
-        Group g = groupSession.findGroup(group.getGroupname());
-        
-        u.getGroupSet().add(g);
-        return entityManager.merge(u);
+        if(u!=null){
+            // retrieve attached group
+            Group g = groupSession.findGroup(group.getGroupname());
+            u.getGroupSet().add(g);
+            return entityManager.merge(u);
+        }
+        else{
+            throw new NoEntityFoundException("User with pseudo " + user.getPseudo() + " doesn't exist in database.");
+        }
     }
 
     /**
@@ -144,17 +149,23 @@ public class DefaultSessionUser implements ISessionUser {
      * @param user The user to remove from the group
      * @param group The group to which is removed the user
      * @return A user with new list of groups
+     * @throws NoEntityFoundException
      */
     @Override
-    public User removeGroup(User user, Group group) {
+    public User removeGroup(User user, Group group)throws NoEntityFoundException {
         // retrieve attached user
         User u = findUserByPseudo(user.getPseudo());
-        // retrieve attached group
-        Group g = groupSession.findGroup(group.getGroupname());
-        
-        u.getGroupSet().remove(g);
-        return entityManager.merge(u);
+        if(u!=null){
+            // retrieve attached group
+            Group g = groupSession.findGroup(group.getGroupname());
+            u.getGroupSet().remove(g);
+            return entityManager.merge(u);
+        }
+        else{
+            throw new NoEntityFoundException("User with pseudo " + user.getPseudo() + " doesn't exist in database.");
+        }
     }
+
 
     /**
      * Method to collect all the groups to which a user belongs.<br />
@@ -170,7 +181,7 @@ public class DefaultSessionUser implements ISessionUser {
         if (user != null) {
             return user.getGroupSet();
         } else {
-            throw new NoEntityFoundException("This user doesn't exist in the database.");
+            throw new NoEntityFoundException("User with pseudo " + pseudo + " doesn't exist in database.");
         }
     }
 
@@ -185,7 +196,7 @@ public class DefaultSessionUser implements ISessionUser {
     @Override
     public Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException {
         User user = entityManager.find(User.class, pseudo);
-        
+
         if (user != null) {
             Set<Petal> petals = new HashSet<Petal>();
             Set<Group> groups = user.getGroupSet();
@@ -197,7 +208,7 @@ public class DefaultSessionUser implements ISessionUser {
 
             return petals;
         } else{
-            throw new NoEntityFoundException("This user doesn't exist in the database.");
+            throw new NoEntityFoundException("User with pseudo " + pseudo + " doesn't exist in database.");
         }
     }
 
@@ -217,11 +228,19 @@ public class DefaultSessionUser implements ISessionUser {
      * @param oldUser the user to modify
      * @param password the new user's password
      * @return The oldUser modify with the new information
+     * @throws NoEntityFoundException
      */
     @Override
-    public User updatePassword(User oldUser, String password) {
-        oldUser.setPassword(password);
-        return entityManager.merge(oldUser);
+    public User updatePassword(User oldUser, String password)throws NoEntityFoundException {
+        User u = findUserByPseudo(oldUser.getPseudo());
+        if(u!=null){
+            u.setPassword(password);
+            return entityManager.merge(u);
+        }
+        else{
+            throw new NoEntityFoundException("User with pseudo " + oldUser.getPseudo() + " doesn't exist in database.");
+        }
+
     }
 
     /**
@@ -230,13 +249,20 @@ public class DefaultSessionUser implements ISessionUser {
      * @param oldUser the user to modify
      * @param email the new user's email
      * @return The oldUser modify with the new information
+     * @throws NoEntityFoundException
      */
     @Override
-    public User updateMail(User oldUser, String email) {
-        oldUser.setPassword(email);
-        return entityManager.merge(oldUser);
+    public User updateMail(User oldUser, String email) throws NoEntityFoundException{
+        User u = findUserByPseudo(oldUser.getPseudo());
+        if(u!=null){
+            u.setEmail(email);
+            return entityManager.merge(u);
+        }
+        else{
+            throw new NoEntityFoundException("User with pseudo " + oldUser.getPseudo() + " doesn't exist in database.");
+        }
     }
-    
+
     @EJB
     public void setGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;

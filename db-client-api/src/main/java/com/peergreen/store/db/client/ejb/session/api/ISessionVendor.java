@@ -66,8 +66,9 @@ public interface ISessionVendor {
      * @param vendor vendor to which add a new petal to provided petals list
      * @param petal petal to add to provided petals list
      * @return modified vendor entity with update provided petals list
+     * @throws NoEntityFoundException
      */
-    Vendor addPetal(Vendor vendor, Petal petal);
+    Vendor addPetal(Vendor vendor, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to delete a petal from those provided by a vendor.
@@ -75,8 +76,9 @@ public interface ISessionVendor {
      * @param vendor vendor from which remove a petal
      * @param petal petal to remove from the vendor list of provided petals
      * @return modified vendor entity with update provided petals list
+     * @throws NoEntityFoundException
      */
-    Vendor removePetal(Vendor vendor, Petal petal);
+    Vendor removePetal(Vendor vendor, Petal petal) throws NoEntityFoundException;
 
     /**
      * Method to collect all existing vendor in database.

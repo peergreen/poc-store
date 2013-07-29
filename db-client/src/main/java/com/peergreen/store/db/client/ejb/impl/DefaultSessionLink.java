@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.session.api.ISessionLink;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Class defining an entity session to manage the entity Link:
@@ -113,15 +114,18 @@ public class DefaultSessionLink implements ISessionLink {
      * @param link the link to modify
      * @param newDescription the new link description
      * @return modified Link instance (updated description)
+     * @throws NoEntityFoundException
      */
     @Override
-    public Link updateDescription(Link link, String newDescription) {
+    public Link updateDescription(Link link, String newDescription) throws NoEntityFoundException {
         // retrieve attached link
         Link l = findLink(link.getUrl());
-        
-        l.setDescription(newDescription);
-        return entityManager.merge(l);
+        if (l != null){
+            l.setDescription(newDescription);
+            return entityManager.merge(l);
+        } else {
+            throw new NoEntityFoundException("Link with url: " + link.getUrl() + " does not exist in database.");
+        }  
     }
+
 }
-
-
