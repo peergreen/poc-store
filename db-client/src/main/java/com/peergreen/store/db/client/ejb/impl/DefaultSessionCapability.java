@@ -85,21 +85,23 @@ public class DefaultSessionCapability implements ISessionCapability{
     public void deleteCapability(String capabilityName, String version) {
         // retrieve attached capability 
         Capability cap = findCapability(capabilityName,version);
-        try {
-            //Collect all the petals which provided the capability which will be delete
-            Collection<Petal> petals = collectPetals(capabilityName,version);
-            Iterator<Petal> it = petals.iterator();
-            
-            //Remove the capability from each petal 
-            while(it.hasNext()) {
-                Petal p = it.next();
-                petalSession.removeCapability(p, cap);
-            }
-            //Then remove the capability from the database
-            entityManager.remove(cap);
+        if(cap!=null){
+            try {
+                //Collect all the petals which provided the capability which will be delete
+                Collection<Petal> petals = cap.getPetals();
+                Iterator<Petal> it = petals.iterator();
 
-        } catch (NoEntityFoundException e) {
-           e.getMessage();
+                //Remove the capability from each petal 
+                while(it.hasNext()) {
+                    Petal p = it.next();
+                    petalSession.removeCapability(p, cap);
+                }
+                //Then remove the capability from the database
+                entityManager.remove(cap);
+
+            } catch (NoEntityFoundException e) {
+                e.getMessage();
+            }
         }
     }
 

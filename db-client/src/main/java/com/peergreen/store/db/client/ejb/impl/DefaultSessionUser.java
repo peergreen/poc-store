@@ -105,7 +105,7 @@ public class DefaultSessionUser implements ISessionUser {
         User user = entityManager.find(User.class, pseudo);
         try {
             //Collect all the groups to which the user belongs
-            Collection<Group> groups = collectGroups(pseudo);
+            Collection<Group> groups = user.getGroupSet();
             Iterator<Group> it = groups.iterator();
             
             //Remove the user from each group

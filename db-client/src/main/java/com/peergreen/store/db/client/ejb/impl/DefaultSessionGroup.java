@@ -130,32 +130,34 @@ public class DefaultSessionGroup implements ISessionGroup {
     public void deleteGroup(String groupName) {
         // retrieve attached group 
         Group group = findGroup(groupName);
-        try {
-            //Collect all the petals accessible via this group
-            Collection<Petal> petals = collectPetals(groupName);
-            Iterator<Petal> it = petals.iterator();
-            
-            //Remove access to each petal for the group
-            while(it.hasNext()) {
-                Petal p = it.next();
-                sessionPetal.removeAccesToGroup(p, group);
-            }
-            
-          //Collect all users of the group
-            Collection<User> users = collectUsers(groupName);
-            Iterator<User> itU = users.iterator();
-            
-            //Remove each user from the group
-            while(itU.hasNext()) {
-                User u = itU.next();
-                sessionUser.removeGroup(u, group);
-            }
-            
-            //Then remove the group from the database 
-            entityManager.remove(group);
+        if(group != null){
+            try {
+                //Collect all the petals accessible via this group
+                Collection<Petal> petals = group.getPetals();
+                Iterator<Petal> it = petals.iterator();
 
-        } catch (NoEntityFoundException e) {
-           e.getMessage();
+                //Remove access to each petal for the group
+                while(it.hasNext()) {
+                    Petal p = it.next();
+                    sessionPetal.removeAccesToGroup(p, group);
+                }
+
+                //Collect all users of the group
+                Collection<User> users = group.getUsers();
+                Iterator<User> itU = users.iterator();
+
+                //Remove each user from the group
+                while(itU.hasNext()) {
+                    User u = itU.next();
+                    sessionUser.removeGroup(u, group);
+                }
+
+                //Then remove the group from the database 
+                entityManager.remove(group);
+
+            } catch (NoEntityFoundException e) {
+                e.getMessage();
+            }
         }
     }
 

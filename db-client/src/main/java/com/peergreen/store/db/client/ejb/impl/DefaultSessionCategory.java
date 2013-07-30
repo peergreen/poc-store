@@ -138,8 +138,7 @@ public class DefaultSessionCategory implements ISessionCategory {
         if(c!=null){
             // retrieve attached petal entity
             Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
-
-            c.getPetals().remove(p);
+            c.getPetals().add(p);
             return entityManager.merge(c);
 
         } else{

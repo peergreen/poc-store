@@ -100,23 +100,24 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public void deleteRequirement(String requirementName) {
         // retrieve attached requirement
         Requirement req = findRequirement(requirementName);
-        try {
-            //Collect all the petals which have this requirement
-            Collection<Petal> petals = collectPetals(requirementName);
-            Iterator<Petal> it = petals.iterator();
-            
-            //Remove the requirement from each petal's requirements
-            while(it.hasNext()) {
-                Petal p = it.next();
-                petalSession.removeRequirement(p, req);
-            }
-            //Then remove the requirement from the database 
-            entityManager.remove(req);
+        if(req != null){
+            try {
+                //Collect all the petals which have this requirement
+                Collection<Petal> petals = req.getPetals();
+                Iterator<Petal> it = petals.iterator();
 
-        } catch (NoEntityFoundException e) {
-           e.getMessage();
+                //Remove the requirement from each petal's requirements
+                while(it.hasNext()) {
+                    Petal p = it.next();
+                    petalSession.removeRequirement(p, req);
+                }
+                //Then remove the requirement from the database 
+                entityManager.remove(req);
+
+            } catch (NoEntityFoundException e) {
+                e.getMessage();
+            }
         }
-     
     }
 
     /**
