@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionLink;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 public class DefaultSessionLinkTest {
 
@@ -41,20 +42,23 @@ public class DefaultSessionLinkTest {
         MockitoAnnotations.initMocks(this);
         sessionLink = new DefaultSessionLink();
         sessionLink.setEntityManager(entityManager);
+
         linkArgument = ArgumentCaptor.forClass(Link.class);
         value = ArgumentCaptor.forClass(String.class);
+
         url = "urlname";
         description = "link ";
         queryString="Link.findAll";
         queryString2 = "LinkByUrl";
 
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+
     }
 
-    ////@Test
+    @Test
     public void shouldAddLink() throws EntityAlreadyExistsException {
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionLink.findLink(anyString())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionLink.addLink(url, description);
         //Then
@@ -64,42 +68,30 @@ public class DefaultSessionLinkTest {
 
     }
 
-    ////@Test(expectedExceptions = EntityAlreadyExistsException.class)
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowExceptionWhenAddLinkCauseAlreadyExist() throws EntityAlreadyExistsException {
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionLink.findLink(anyString())).thenReturn(mocklink);
+        //Given: The link already exist in the database
+        when(query.getSingleResult()).thenReturn(mocklink);
 
         //When
         sessionLink.addLink(url, description);
 
+        //Then throw a new EntityAlreadyExistsException
     }
 
-    ////@Test
+    @Test
     public void shouldDeleteLink() {
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionLink.findLink(anyString())).thenReturn(mocklink);
+        when(query.getSingleResult()).thenReturn(mocklink);
         //when
         sessionLink.deleteLink(url);
         //Then
         verify(entityManager).remove(mocklink);
     }
 
-    ////@Test
-    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(null);
-        //When
-        sessionLink.deleteLink(url);
 
-    }
-
-    ////@Test
+    @Test
     public void shouldFindLink() {
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         //when
         sessionLink.findLink(url);
         //Then
@@ -110,10 +102,8 @@ public class DefaultSessionLinkTest {
         verify(query).getSingleResult();
     }
 
-    ////@Test
+    @Test
     public void shouldCollectLinks() {
-        //Given
-        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         //when
         sessionLink.collectLinks();
         //Then
@@ -122,15 +112,29 @@ public class DefaultSessionLinkTest {
 
     }
 
-    ////@Test
-    public void shouldModifyLinkDescription() {
+    @Test
+    public void shouldModifyLinkDescription() throws NoEntityFoundException {
         //Given
         String newDescription = "new link";
+        when(query.getSingleResult()).thenReturn(mocklink);
+
         //when
         sessionLink.updateDescription(mocklink, newDescription);
+
         //then
         verify(mocklink).setDescription(value.capture());
         Assert.assertEquals(newDescription, value.getValue());
         verify(entityManager).merge(mocklink);
+    }
+    
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseUpdatingLinkInexistent() throws NoEntityFoundException {
+        //Given: The link doesn't exist in the database
+        when(query.getSingleResult()).thenReturn(null);
+        String newDescription = "new link";
+        //When
+        sessionLink.updateDescription(mocklink, newDescription);
+
+        //Then throw a new NoEntityFoundException
     }
 }

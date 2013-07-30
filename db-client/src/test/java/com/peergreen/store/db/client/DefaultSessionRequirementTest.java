@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,7 +19,9 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionRequirement;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -43,6 +46,8 @@ public class DefaultSessionRequirementTest {
     private Set<Petal> petals;
     @Mock
     private Query query;
+    @Mock
+    private ISessionPetal sessionPetal;
 
 
 
@@ -51,6 +56,8 @@ public class DefaultSessionRequirementTest {
         MockitoAnnotations.initMocks(this);
         sessionRequirement = new DefaultSessionRequirement();
         sessionRequirement.setEntityManager(entityManager);
+        sessionRequirement.setPetalSession(sessionPetal);
+        
         requirementArgument = ArgumentCaptor.forClass(Requirement.class);
         idArgument = ArgumentCaptor.forClass(String.class);
         petalArgument = ArgumentCaptor.forClass(Petal.class);
@@ -59,9 +66,14 @@ public class DefaultSessionRequirementTest {
         filter="namespace=service";
         queryString = "Requirement.findAll";
         queryString2 = "RequirementByName";
+        
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(mockrequirement.getRequirementName()).thenReturn("name");
+        when(sessionPetal.findPetal(any(Vendor.class), anyString(), anyString())).thenReturn(petal);
+
     }
 
-    //@Test
+    @Test
     public void shouldAddRequirement() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -76,7 +88,7 @@ public class DefaultSessionRequirementTest {
         Assert.assertTrue(requirementArgument.getValue().getPetals().isEmpty());
     }
 
-    //@Test(expectedExceptions = EntityAlreadyExistsException.class)
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowExceptionWhenAddCauseAlreadyExist() throws EntityAlreadyExistsException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -86,7 +98,7 @@ public class DefaultSessionRequirementTest {
         sessionRequirement.addRequirement(requirementName, namespace, filter);
     }
 
-    //@Test
+    @Test
     public void shouldDeleteRequirement() {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -98,7 +110,7 @@ public class DefaultSessionRequirementTest {
         Assert.assertSame(mockrequirement,requirementArgument.getValue());
     }
 
-    //@Test
+    @Test
     public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -107,7 +119,7 @@ public class DefaultSessionRequirementTest {
         sessionRequirement.deleteRequirement(requirementName);
     }
 
-    //@Test
+    @Test
     public void shouldFindRequirement() {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -121,7 +133,7 @@ public class DefaultSessionRequirementTest {
         verify(query).getSingleResult();
     }
 
-    //@Test
+    @Test
     public void shouldCollectPetals() throws NoEntityFoundException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
@@ -132,19 +144,19 @@ public class DefaultSessionRequirementTest {
         verify(mockrequirement).getPetals();
     }
 
-    //@Test(expectedExceptions = NoEntityFoundException.class)
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting() throws NoEntityFoundException {
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(null);  
         //When
         sessionRequirement.collectPetals(requirementName);
     }
-    
-    //@Test
-    public void shouldAddPetalTorequirement(){
-        //Given
-        when(mockrequirement.getPetals()).thenReturn(petals);
 
+    @Test
+    public void shouldAddPetalTorequirement() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(mockrequirement);
+        when(mockrequirement.getPetals()).thenReturn(petals);
         //When
         sessionRequirement.addPetal(mockrequirement,petal);
 
@@ -152,13 +164,13 @@ public class DefaultSessionRequirementTest {
         verify(mockrequirement).getPetals();
         verify(petals).add(petalArgument.capture());
         Assert.assertSame(petal,petalArgument.getValue());
-        verify(mockrequirement).setPetals(petals);
         verify(entityManager).merge(mockrequirement);
     }
 
-    //@Test
-    public void shouldRemovePetalFromRequirement(){
+    @Test
+    public void shouldRemovePetalFromRequirement() throws NoEntityFoundException{
         //Given
+        when(query.getSingleResult()).thenReturn(mockrequirement);
         when(mockrequirement.getPetals()).thenReturn(petals);
         //When
         sessionRequirement.removePetal(mockrequirement, petal);
@@ -171,7 +183,7 @@ public class DefaultSessionRequirementTest {
 
     }
 
-    //@Test
+    @Test
     public void shouldCollectRequirements() {
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
@@ -182,9 +194,10 @@ public class DefaultSessionRequirementTest {
         verify(query).getResultList();
     }
 
-    //@Test
-    public void shouldUpdateNamespace(){
-
+    @Test
+    public void shouldUpdateNamespace() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(mockrequirement);
         //when
         sessionRequirement.updateNamespace(mockrequirement, namespace);
         //then
@@ -193,9 +206,10 @@ public class DefaultSessionRequirementTest {
         verify(entityManager).merge(mockrequirement);
     }
 
-    //@Test
-    public void shouldUpdateFilter() {
-
+    @Test
+    public void shouldUpdateFilter() throws NoEntityFoundException {
+        //Given
+        when(query.getSingleResult()).thenReturn(mockrequirement);
         //when
         sessionRequirement.updateFilter(mockrequirement, filter);
         //then

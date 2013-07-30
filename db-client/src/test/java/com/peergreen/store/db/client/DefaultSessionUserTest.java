@@ -26,6 +26,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionUser;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -47,6 +48,8 @@ public class DefaultSessionUserTest {
     private User mockuser;
     @Mock
     private Set<Group> groups;
+    @Mock
+    private ISessionGroup sessionGroup;
 
     private Group groupArray[];
 
@@ -63,6 +66,8 @@ public class DefaultSessionUserTest {
         MockitoAnnotations.initMocks(this);
         sessionUser = new DefaultSessionUser();
         sessionUser.setEntityManager(entityManager);
+        sessionUser.setGroupSession(sessionGroup);
+        
         pseudo = "toto";
         password = "pwd";
         email = "toto@peergreen.com";
@@ -73,9 +78,11 @@ public class DefaultSessionUserTest {
         groupArgument = ArgumentCaptor.forClass(Group.class);
         value = ArgumentCaptor.forClass(String.class);
         userList = new ArrayList<User>();
+        
+        when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
     }
 
-    //@Test
+    @Test
     public void shouldAddUserNonExistent() throws EntityAlreadyExistsException {
         //When 
         sessionUser.addUser(pseudo, password, email);
@@ -87,9 +94,10 @@ public class DefaultSessionUserTest {
         Assert.assertEquals(email, userArgument.getValue().getEmail());
     }
 
-    //@Test
-    public void shouldUpdateUserPassword(){
+    @Test
+    public void shouldUpdateUserPassword() throws NoEntityFoundException{
         //Given
+        when(entityManager.find(eq(User.class),anyString())).thenReturn(mockuser);
         String password1 = "pwdbis";
         //When
         sessionUser.updatePassword(mockuser, password1);
@@ -104,9 +112,10 @@ public class DefaultSessionUserTest {
         Assert.assertEquals(password1, userArgument.getValue().getPassword());
     }
     
-    //@Test
-    public void shouldUpdateUserMail(){
+    @Test
+    public void shouldUpdateUserMail() throws NoEntityFoundException{
         //Given
+        when(entityManager.find(eq(User.class),anyString())).thenReturn(mockuser);
         String email1 = "titi@peergreen.com";
         //When
         sessionUser.updatePassword(mockuser, email1);
@@ -121,11 +130,12 @@ public class DefaultSessionUserTest {
         Assert.assertEquals(email1, userArgument.getValue().getPassword());
     }
 
-    //@Test
+    @Test
     public void shouldRemoveUserByPseudo() {
         //Given
-        when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
-        //WHen
+        when(entityManager.find(eq(User.class),anyString())).thenReturn(mockuser);
+
+        //When
         sessionUser.removeUserbyPseudo(pseudo);
         //Then
         verify(entityManager).find(eq(User.class), value.capture());
@@ -135,19 +145,13 @@ public class DefaultSessionUserTest {
 
     }
 
-    //@Test(expectedExceptions= EntityAlreadyExistsException.class)
+    @Test(expectedExceptions= EntityAlreadyExistsException.class)
     public void shouldThrowsExceptionWhenAddCauseUserExistent() throws EntityAlreadyExistsException {
         when(entityManager.find(eq(User.class),anyString())).thenReturn(mockuser);
         sessionUser.addUser(pseudo,password,email);
     }
     
-    //@Test
-    public void shouldThrowsExceptionWhenDeleteCauseUserExistent() throws NoEntityFoundException {
-        when(entityManager.find(eq(User.class),anyString())).thenReturn(null);
-        sessionUser.removeUserbyPseudo(pseudo);
-    }
-
-    //@Test
+    @Test
     public void shouldFindUser() {
         //When
         sessionUser.findUserByPseudo(pseudo);
@@ -156,7 +160,7 @@ public class DefaultSessionUserTest {
         Assert.assertEquals(pseudo, value.getValue());
     }
 
-    //@Test
+    @Test
     public void shouldCollectUsers(){
         //Given
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
@@ -169,9 +173,10 @@ public class DefaultSessionUserTest {
         verify(query).getResultList();
     }
 
-    //@Test
-    public void shouldAddGroup(){
+    @Test
+    public void shouldAddGroup() throws NoEntityFoundException{
         //Given
+        when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
         when(mockuser.getGroupSet()).thenReturn(groups);
         //When
         sessionUser.addGroup(mockuser, mockgroup);
@@ -179,12 +184,11 @@ public class DefaultSessionUserTest {
         verify(mockuser).getGroupSet();
         verify(groups).add(groupArgument.capture());
         Assert.assertSame(mockgroup, groupArgument.getValue());
-        verify(mockuser).setGroupSet(groups);
         verify(entityManager).merge(mockuser);
 
     }
 
-    //@Test
+    @Test
     public void shouldCollectGroup() throws NoEntityFoundException{
         //Given
         when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
@@ -196,7 +200,7 @@ public class DefaultSessionUserTest {
         verify(mockuser).getGroupSet();
     }
 
-    //@Test(expectedExceptions = NoEntityFoundException.class)
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectGroupCauseEntityNotExisting() throws NoEntityFoundException{
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
@@ -204,9 +208,10 @@ public class DefaultSessionUserTest {
         sessionUser.collectGroups(pseudo);
     }
 
-    //@Test
-    public void shouldRemoveGroup(){
+    @Test
+    public void shouldRemoveGroup() throws NoEntityFoundException{
         //Given
+        when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
         when(mockuser.getGroupSet()).thenReturn(groups);
 
         //when
@@ -218,7 +223,7 @@ public class DefaultSessionUserTest {
         verify(entityManager).merge(mockuser);
     }
 
-    //@Test
+    @Test
     public void shouldCollectPetal() throws NoEntityFoundException {
         //Given
         when(entityManager.find(eq(User.class), anyString())).thenReturn(mockuser);
@@ -242,7 +247,7 @@ public class DefaultSessionUserTest {
         verify(group).getPetals();
     }
     
-    //@Test(expectedExceptions = NoEntityFoundException.class)
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectPetalCauseEntityNotExisting() throws NoEntityFoundException{
         //Given
         when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);

@@ -1,10 +1,14 @@
 package com.peergreen.store.db.client;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +25,10 @@ import org.testng.annotations.Test;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionGroup;
-import com.peergreen.store.db.client.ejb.impl.DefaultSessionPetal;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionUser;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -31,13 +36,15 @@ public class DefaultSessionGroupTest {
 
     private DefaultSessionGroup sessionGroup ; 
     private String groupname;
+    private String queryString;
+    private String queryString2;
+    private List<Group> groupList;
+
     ArgumentCaptor<Group> groupArgument;
     ArgumentCaptor<String> name;
     ArgumentCaptor<Petal> petalArgument;
     ArgumentCaptor<User> userArgument;
-    private String queryString;
-    private String queryString2;
-    private List<Group> groupList;
+
 
     @Mock
     private EntityManager entityManager;
@@ -54,9 +61,14 @@ public class DefaultSessionGroupTest {
     @Mock
     private Query query;
     @Mock
-    private DefaultSessionPetal sessionPetal;
+    private ISessionPetal sessionPetal;
     @Mock
     private DefaultSessionUser sessionUser;
+    @Mock
+    private Iterator<Petal> itP;
+    @Mock
+    private Iterator<User> itU;
+
 
     @BeforeMethod
     public void beforeMethod() {
@@ -64,22 +76,33 @@ public class DefaultSessionGroupTest {
         sessionGroup = new DefaultSessionGroup();
         sessionGroup.setEntityManager(entityManager); 
         sessionGroup.setSessionUser(sessionUser);
+        sessionGroup.setSessionPetal(sessionPetal);
+
         groupArgument = ArgumentCaptor.forClass(Group.class);
         name = ArgumentCaptor.forClass(String.class);
         petalArgument  = ArgumentCaptor.forClass(Petal.class);
         userArgument  = ArgumentCaptor.forClass(User.class);
-        groupname="usersgroup";
+
+        groupname= "Dev2";
         queryString = "Series.findAll";
         queryString2 = "GroupByName";
         groupList = new ArrayList<Group>();
+
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+        when(sessionPetal.findPetal(any(Vendor.class), anyString(), anyString())).thenReturn(mockpetal);
+        when(sessionUser.findUserByPseudo(anyString())).thenReturn(mockuser);
+
+
+        when(petals.iterator()).thenReturn(itP);
+        when(users.iterator()).thenReturn(itU);
+
+
     }
 
-    //@Test
+    @Test
     public void shouldAddGroupNonExistent() throws NoEntityFoundException, EntityAlreadyExistsException{
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionGroup.findGroup(anyString())).thenReturn(null);
-        when(sessionUser.findUserByPseudo(anyString())).thenReturn(mockuser);
+        //Given : The Group doesn't exist in the database
+        when(query.getSingleResult()).thenReturn(null);
         //When
         sessionGroup.addGroup(groupname);
         //Then
@@ -89,31 +112,25 @@ public class DefaultSessionGroupTest {
         Assert.assertTrue(groupArgument.getValue().getUsers().contains(mockuser));
     }
 
-    //@Test(expectedExceptions = EntityAlreadyExistsException.class)
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowExceptionWhenAddGroupCauseAlreadyExist() throws NoEntityFoundException, EntityAlreadyExistsException {
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
-
+        //Given: The Group already exists in the database
+        when(query.getSingleResult()).thenReturn(mockgroup);
         //When
         sessionGroup.addGroup(groupname);
     }
 
-    //@Test(expectedExceptions = NoEntityFoundException.class)
-    public void shouldThrowExceptionWhenAddGroupCauseNoAdmin() throws NoEntityFoundException, EntityAlreadyExistsException {
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenAddGroupCauseNoUserAdmin() throws NoEntityFoundException, EntityAlreadyExistsException {
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionGroup.findGroup(anyString())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionUser.findUserByPseudo(anyString())).thenReturn(null);
-
         //When
         sessionGroup.addGroup(groupname);
     }
-    
-    //@Test
+
+    @Test
     public void shouldFindGroup() {
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         //when
         sessionGroup.findGroup(groupname);
         //Then
@@ -124,58 +141,81 @@ public class DefaultSessionGroupTest {
         verify(query).getSingleResult();
     }
 
-    //@Test
-    public void shouldDeleteGroup(){
-        //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
+    @Test
+    public void shouldDeleteGroup() throws NoEntityFoundException{
+        //Given : A group with 2 users and 1 petal accessible
+        when(query.getSingleResult()).thenReturn(mockgroup);
+        when(mockgroup.getPetals()).thenReturn(petals);
+        when(mockgroup.getUsers()).thenReturn(users);
+        when(itP.hasNext()).thenReturn(true,false);
+        when(itU.hasNext()).thenReturn(true,true,false);
         //when
         sessionGroup.deleteGroup(groupname);
         //then
+        verify(mockgroup).getUsers();
+        verify(sessionUser,times(2)).removeGroup((User) anyObject(), groupArgument.capture());
+        Assert.assertEquals(mockgroup, groupArgument.getValue());
+
+        verify(mockgroup).getPetals();
+        verify(sessionPetal).removeAccesToGroup((Petal) anyObject(), groupArgument.capture());
+        Assert.assertEquals(mockgroup, groupArgument.getValue());
+
         verify(entityManager).remove(mockgroup);
     }
 
-    //@Test
-    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+    @Test
+    public void shouldAddUserToAGroup() throws NoEntityFoundException{
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(query.getSingleResult()).thenReturn(null);
-        //When
-        sessionGroup.deleteGroup(groupname);
-    }
-
-    //@Test
-    public void shouldAddUserToAGroup(){
-        //Given
+        when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getUsers()).thenReturn(users);
         //when
         sessionGroup.addUser(mockgroup,mockuser);
         //Then
         verify(mockgroup).getUsers();
         verify(users).add(userArgument.capture());
+        verify(sessionUser).addGroup(mockuser, mockgroup);
         Assert.assertEquals(mockuser, userArgument.getValue());
-        verify(mockgroup).setUsers(users);
 
     }
 
-    //@Test
-    public void shouldRemoveUserFromAgroup(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseAddUserToGroupInexistent() throws NoEntityFoundException{
         //Given
+        when(query.getSingleResult()).thenReturn(null);
+        //when
+        sessionGroup.addUser(mockgroup,mockuser);
+        //Then throw NoEntityFoundException
+    }
+
+    @Test
+    public void shouldRemoveUserFromAgroup() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getUsers()).thenReturn(users);
         //when
+
         sessionGroup.removeUser(mockgroup,mockuser);
+
         //Then
         verify(mockgroup).getUsers();
         verify(users).remove(userArgument.capture());
         Assert.assertEquals(mockuser, userArgument.getValue());
-        verify(mockgroup).setUsers(users);
     }
 
-    //@Test 
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseRemoveUserFromGroupInexistent() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        //when
+        sessionGroup.removeUser(mockgroup,mockuser);
+
+        //Then throw NoEntityFoundException
+    }
+
+    @Test 
     public void shouldCollectUserOfGroup() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
         //when
         sessionGroup.collectUsers(groupname);
@@ -184,46 +224,66 @@ public class DefaultSessionGroupTest {
 
     }
 
-    //@Test(expectedExceptions = NoEntityFoundException.class)
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectCauseEntityNotExisting() throws NoEntityFoundException{
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
         //When
         sessionGroup.collectUsers(groupname);      
     }
 
-    //@Test
-    public void shouldAddPetal() {
+    @Test
+    public void shouldAddPetal() throws NoEntityFoundException {
         //Given
+        when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
         when(mockgroup.getPetals()).thenReturn(petals);
         //when
         sessionGroup.addPetal(mockgroup,mockpetal);
+
         //Then
         verify(mockgroup).getPetals();
         verify(petals).add(petalArgument.capture());
         Assert.assertEquals(mockpetal, petalArgument.getValue());
-        verify(mockgroup).setPetals(petals);
     }
 
-    //@Test
-    public void shouldRemovePetal(){
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseGiveAccessToPetalForGroupInexistent() throws NoEntityFoundException{
         //Given
+        when(sessionGroup.findGroup(anyString())).thenReturn(null);
+        //when
+        sessionGroup.addPetal(mockgroup,mockpetal);
+
+        //Then throw NoEntityFoundException 
+    }
+
+    @Test
+    public void shouldRemovePetal() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getPetals()).thenReturn(petals);
         //when
+        
         sessionGroup.removePetal(mockgroup,mockpetal);
+
         //Then
         verify(mockgroup).getPetals();
         verify(petals).remove(petalArgument.capture());
         Assert.assertEquals(mockpetal, petalArgument.getValue());
-        verify(mockgroup).setPetals(petals);
     }
 
-    //@Test
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseRemoveAccessToPetalForGroupInexistent() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        //when
+        sessionGroup.removePetal(mockgroup,mockpetal);
+        //Then throw NoEntityFoundException 
+    }
+     
+    @Test
     public void shouldCollectPetals() throws NoEntityFoundException {
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
-        when(sessionGroup.findGroup(anyString())).thenReturn(mockgroup);
+        when(query.getSingleResult()).thenReturn(mockgroup);
         //when
         sessionGroup.collectPetals(groupname);
         //Then
@@ -231,21 +291,18 @@ public class DefaultSessionGroupTest {
 
     }
 
-    //@Test(expectedExceptions = NoEntityFoundException.class)
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectPetalsCauseEntityNotExisting() throws NoEntityFoundException {
         //Given
-        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
         //When
         sessionGroup.collectPetals(groupname);
     }
 
-    //@Test
+    @Test
     public void shouldCollectAllGroups(){
         //Given
-        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getResultList()).thenReturn(groupList);
-
         //when
         sessionGroup.collectGroups();
         //Then
