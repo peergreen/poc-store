@@ -64,7 +64,6 @@ public class DefaultSessionPetal implements ISessionPetal {
     private ISessionCapability sessionCapability;
     private ISessionCategory sessionCategory;
     private ISessionGroup sessionGroup;
-    private ISessionPetal sessionPetal;
     private ISessionRequirement sessionRequirement;
     private ISessionVendor sessionVendor;
 
@@ -92,14 +91,6 @@ public class DefaultSessionPetal implements ISessionPetal {
     @EJB
     public void setSessionGroup(ISessionGroup sessionGroup) {
         this.sessionGroup = sessionGroup;
-    }
-
-    /**
-     * @param sessionPetal the sessionPetal to set
-     */
-    @EJB
-    public void setSessionPetal(ISessionPetal sessionPetal) {
-        this.sessionPetal = sessionPetal;
     }
 
     /**
@@ -227,7 +218,7 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Collection<Group> collectGroups(Petal petal) throws NoEntityFoundException {
         // retrieve attached petal
-        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
         if( p!=null)
             return p.getGroups();
         else
@@ -246,7 +237,7 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Collection<Capability> collectCapabilities(Petal petal)throws NoEntityFoundException {
         // retrieve attached petal
-        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
         if(p!=null)
             return p.getCapabilities();
         else
@@ -265,7 +256,7 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Collection<Requirement> collectRequirements(Petal petal) throws NoEntityFoundException{
         // retrieve attached petal
-        Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
         if(p!=null)
             return p.getRequirements();
         else
