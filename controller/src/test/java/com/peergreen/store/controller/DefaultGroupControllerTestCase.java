@@ -76,7 +76,7 @@ public class DefaultGroupControllerTestCase {
     }
 
     @Test
-    public void testAddUser() {
+    public void testAddUser() throws NoEntityFoundException {
         // user to add
         String pseudo = "toto";
         User user = new User();
@@ -111,7 +111,7 @@ public class DefaultGroupControllerTestCase {
     }
 
     @Test
-    public void testRemoveUser() {
+    public void testRemoveUser() throws NoEntityFoundException {
         // user to add
         String pseudo = "toto";
         User user = new User();

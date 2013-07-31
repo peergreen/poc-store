@@ -6,6 +6,7 @@ import java.util.Map;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
@@ -44,8 +45,9 @@ public interface IUserController {
      * @param password user's password
      * @param email user's email
      * @return created user
+     * @throws EntityAlreadyExistsException 
      */
-    User addUser(String pseudo, String password, String email);
+    User addUser(String pseudo, String password, String email) throws EntityAlreadyExistsException;
 
     /**
      * Method to remove a user from the database.
@@ -70,8 +72,9 @@ public interface IUserController {
      * 
      * @param pseudo user's pseudo
      * @return list of all user's groups
+     * @throws NoEntityFoundException 
      */
-    Collection<Group> collectGroups(String pseudo);
+    Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException;
     
     /**
      * Method to collect all petals to which the user has access.<br />
@@ -79,7 +82,8 @@ public interface IUserController {
      * 
      * @param pseudo user's pseudo
      * @return list of all petals accessible to the user.
+     * @throws NoEntityFoundException 
      * @throw NoEntityFoundException
      */
-    Collection<Petal> collectPetals(String pseudo);
+    Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException;
 }

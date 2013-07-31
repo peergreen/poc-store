@@ -126,11 +126,9 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param ame of the category to remove
      */
     public void removeCategory(String name) {
-        try{
-            categorySession.deleteCategory(name);
-        }catch(IllegalArgumentException e){
 
-        }
+        categorySession.deleteCategory(name);
+
     }
 
     /**
@@ -216,10 +214,11 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
      * @return corresponding petal on database
+     * @throws EntityAlreadyExistsException, NoEntityFoundException 
      */
     @Override
     public Petal submitPetal(String vendorName, String artifactId, String version, String description, Category category,
-            Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) {
+            Set<Requirement> requirements, Set<Capability> capabilities, File petalBinary) throws EntityAlreadyExistsException, NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
 
         petalsPersistence.addToStaging(vendor, artifactId, version, petalBinary);
@@ -247,9 +246,10 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal on database
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Petal validatePetal(String vendorName, String artifactId, String version) {
+    public Petal validatePetal(String vendorName, String artifactId, String version) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         // retrieve petal from staging repository
         File binary = petalsPersistence.getPetalFromStaging(vendor, artifactId, version);
@@ -257,7 +257,12 @@ public class DefaultStoreManagement implements IStoreManagment {
         petalsPersistence.addToLocal(vendor, artifactId, version, binary);
         // change origin attribute to LOCAL
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        petalSession.updateOrigin(petal, Origin.LOCAL);
+        try {
+            petalSession.updateOrigin(petal, Origin.LOCAL);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
 
         return petal;
     }
@@ -291,7 +296,7 @@ public class DefaultStoreManagement implements IStoreManagment {
     public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
     }
-    
+
     @Bind
     public void bindVendorSession(ISessionVendor vendorSession) {
         this.vendorSession = vendorSession;

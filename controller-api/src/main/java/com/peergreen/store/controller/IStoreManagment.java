@@ -12,6 +12,7 @@ import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Interface defining high level operations to manage server.
@@ -132,11 +133,13 @@ public interface IStoreManagment {
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
      * @return corresponding petal on database
+     * @throws NoEntityFoundException
+     * @throws EntityAlreadyExistsException
      */
     Petal submitPetal(String vendorName, String artifactId,
             String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,
-            File petalBinary);
+            File petalBinary) throws EntityAlreadyExistsException, NoEntityFoundException;
 
     /**
      * Method to validate a petal's submission thanks to its information.<br />
@@ -145,7 +148,8 @@ public interface IStoreManagment {
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal on database
+     * @throws NoEntityFoundException 
      */
-    Petal validatePetal(String vendorName, String artifactId, String version);
+    Petal validatePetal(String vendorName, String artifactId, String version) throws NoEntityFoundException;
 
 }

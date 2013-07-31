@@ -43,8 +43,8 @@ public class DefaultGroupController implements IGroupController {
      * 
      * @param groupName group's name
      * @return created group instance
-     * @throws NoEntityFoundException
-     * @throws EntityAlreadyExistsException
+     * @throws NoEntityFoundException 
+     * @throws EntityAlreadyExistsException 
      */
     @Override
     public Group createGroup(String groupName) throws  EntityAlreadyExistsException, NoEntityFoundException{
@@ -69,11 +69,7 @@ public class DefaultGroupController implements IGroupController {
      */
     @Override
     public void deleteGroup(String groupName) {
-        try{
-            groupSession.deleteGroup(groupName);
-        }catch(IllegalArgumentException e){
-
-        }
+        groupSession.deleteGroup(groupName);
     }
 
     /**
@@ -81,7 +77,7 @@ public class DefaultGroupController implements IGroupController {
      * 
      * @param groupName group's name
      * @return list of all the group's users
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException 
      */
     @Override
     public Collection<User> collectUsers(String groupName) throws NoEntityFoundException {
@@ -100,12 +96,19 @@ public class DefaultGroupController implements IGroupController {
      * @param pseudo user's pseudo
      * @param groupName group's name
      * @return updated group
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Group addUser(String groupName, String pseudo) {
+    public Group addUser(String groupName, String pseudo) throws NoEntityFoundException {
         Group group = groupSession.findGroup(groupName);
         User user = userSession.findUserByPseudo(pseudo);
-        return groupSession.addUser(group, user);
+        try {
+            return groupSession.addUser(group, user);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+
+        }
     }
 
     /**
@@ -114,12 +117,18 @@ public class DefaultGroupController implements IGroupController {
      * @param groupName group's name
      * @param pseudo user's pseudo
      * @return updated group
+     * @throws NoEntityFoundException 
      */
     @Override
-    public Group removeUser(String groupName, String pseudo) {
+    public Group removeUser(String groupName, String pseudo) throws NoEntityFoundException {
         Group group = groupSession.findGroup(groupName);
         User user = userSession.findUserByPseudo(pseudo);
-        return groupSession.removeUser(group, user);
+        try {
+            return groupSession.removeUser(group, user);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
     }
 
     @Bind

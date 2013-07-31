@@ -41,7 +41,7 @@ public class DefaultUserController implements IUserController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;
-
+    
     private static Logger theLogger =
             Logger.getLogger(DefaultUserController.class.getName());
 
@@ -84,7 +84,7 @@ public class DefaultUserController implements IUserController {
      * @param password user's password
      * @param email user's email
      * @return created user
-     * @throws EntityAlreadyExistsException
+     * @throws EntityAlreadyExistsException 
      */
     @Override
     public User addUser(String pseudo, String password, String email) throws EntityAlreadyExistsException {
@@ -139,7 +139,7 @@ public class DefaultUserController implements IUserController {
      * 
      * @param pseudo user's pseudo
      * @return list of all user's groups
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException 
      */
     @Override
     public Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException {
@@ -159,10 +159,11 @@ public class DefaultUserController implements IUserController {
      * 
      * @param pseudo user's pseudo
      * @return list of all petals accessible to the user.
+     * @throws NoEntityFoundException 
      * @throw NoEntityFoundException
      */
     @Override
-    public Collection<Petal> collectPetals(String pseudo) {
+    public Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException {
         Collection<Group> groups = null;
         Collection<Petal> petals = null;
 

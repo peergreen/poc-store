@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
+import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
  * Interface defining all group related operations:
@@ -26,8 +28,10 @@ public interface IGroupController {
      * 
      * @param groupName group's name
      * @return created group instance
+     * @throws NoEntityFoundException 
+     * @throws EntityAlreadyExistsException 
      */
-    Group createGroup(String groupName);
+    Group createGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException;
     
     /**
      * Method to remove a group from the database.
@@ -41,8 +45,9 @@ public interface IGroupController {
      * 
      * @param groupName group's name
      * @return list of all the group's users
+     * @throws NoEntityFoundException 
      */
-    Collection<User> collectUsers(String groupName);
+    Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
     
     /**
      * Method to add a user to a group.
@@ -50,8 +55,9 @@ public interface IGroupController {
      * @param groupName group's name
      * @param pseudo user's pseudo
      * @return updated group
+     * @throws NoEntityFoundException 
      */
-    Group addUser(String groupName, String pseudo);
+    Group addUser(String groupName, String pseudo) throws NoEntityFoundException;
     
     /**
      * Method to remove a user from a group.
@@ -59,8 +65,9 @@ public interface IGroupController {
      * @param groupName group's name
      * @param pseudo user's pseudo
      * @return updated group
+     * @throws NoEntityFoundException 
      */
-    Group removeUser(String groupName, String pseudo);
+    Group removeUser(String groupName, String pseudo) throws NoEntityFoundException;
  
     // TODO
     /**

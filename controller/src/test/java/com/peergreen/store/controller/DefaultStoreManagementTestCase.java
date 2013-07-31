@@ -1,13 +1,10 @@
 package com.peergreen.store.controller;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -21,10 +18,8 @@ import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.controller.impl.DefaultStoreManagement;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
-import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
-import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
@@ -148,7 +143,7 @@ public class DefaultStoreManagementTestCase {
     }
 
     @Test
-    public void testValidatePetal() {
+    public void testValidatePetal() throws NoEntityFoundException {
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
         vendor.setVendorName(vendorName);
