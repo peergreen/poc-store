@@ -1,6 +1,8 @@
 package com.peergreen.store.controller.impl;
 
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
@@ -34,23 +36,29 @@ public class DefaultGroupController implements IGroupController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;
-
+    private static Logger theLogger =
+            Logger.getLogger(DefaultGroupController.class.getName());
     /**
      * Method to add a new group in database.
      * 
      * @param groupName group's name
      * @return created group instance
+     * @throws NoEntityFoundException
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public Group createGroup(String groupName) {
+    public Group createGroup(String groupName) throws  EntityAlreadyExistsException, NoEntityFoundException{
         try{
             return groupSession.addGroup(groupName);
         } catch (EntityAlreadyExistsException e) {
-            // TODO
+           theLogger.log(Level.SEVERE, e.getMessage());
+            throw new EntityAlreadyExistsException(e);
+
         } catch (NoEntityFoundException e) {
-            // TODO
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+
         }
-        return null;
     }
 
 
@@ -73,15 +81,17 @@ public class DefaultGroupController implements IGroupController {
      * 
      * @param groupName group's name
      * @return list of all the group's users
+     * @throws NoEntityFoundException
      */
     @Override
-    public Collection<User> collectUsers(String groupName) {
+    public Collection<User> collectUsers(String groupName) throws NoEntityFoundException {
         try{
             return groupSession.collectUsers(groupName);
         } catch (NoEntityFoundException e) {
-            // TODO
+            theLogger.log(Level.SEVERE,e.getMessage());
+            throw new NoEntityFoundException(e);
+
         }
-        return null;
     }
 
     /**

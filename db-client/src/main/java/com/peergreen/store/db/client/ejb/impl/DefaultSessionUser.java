@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -43,6 +45,8 @@ public class DefaultSessionUser implements ISessionUser {
     private EntityManager entityManager;
 
     private ISessionGroup groupSession;
+
+    private static Logger theLogger = Logger.getLogger(DefaultSessionUser.class.getName());
 
     /**
      * Method to create a new instance of User and add it in the database.<br />
@@ -117,7 +121,7 @@ public class DefaultSessionUser implements ISessionUser {
             entityManager.remove(user);
 
         } catch (NoEntityFoundException e) {
-           e.getMessage();
+            theLogger .log(Level.SEVERE,e.getMessage());
         }
 
     }

@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -44,6 +46,8 @@ public class DefaultSessionCapability implements ISessionCapability{
 
     private ISessionPetal petalSession;
 
+    private static Logger theLogger =
+            Logger.getLogger(DefaultSessionCapability.class.getName());
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -100,7 +104,7 @@ public class DefaultSessionCapability implements ISessionCapability{
                 entityManager.remove(cap);
 
             } catch (NoEntityFoundException e) {
-                e.getMessage();
+                theLogger.log(Level.SEVERE,e.getMessage());
             }
         }
     }

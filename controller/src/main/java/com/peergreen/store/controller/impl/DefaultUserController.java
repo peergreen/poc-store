@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
@@ -39,6 +41,9 @@ public class DefaultUserController implements IUserController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;
+
+    private static Logger theLogger =
+            Logger.getLogger(DefaultUserController.class.getName());
 
     public DefaultUserController(@Requires ISessionUser userSession) {
         this.userSession = userSession;
@@ -79,16 +84,19 @@ public class DefaultUserController implements IUserController {
      * @param password user's password
      * @param email user's email
      * @return created user
+     * @throws EntityAlreadyExistsException
      */
     @Override
-    public User addUser(String pseudo, String password, String email) {
+    public User addUser(String pseudo, String password, String email) throws EntityAlreadyExistsException {
         User user = null;
 
         try {
             user = userSession.addUser(pseudo, password, email);
         } catch(EntityAlreadyExistsException e) {
-            System.out.println("User--------------------");
-            System.err.println("User already exists.");
+//            System.out.println("User--------------------");
+//            System.err.println("User already exists.");
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new EntityAlreadyExistsException(e);
         }
         
         return user;
@@ -131,14 +139,16 @@ public class DefaultUserController implements IUserController {
      * 
      * @param pseudo user's pseudo
      * @return list of all user's groups
+     * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Group> collectGroups(String pseudo) {
+    public Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException {
         Collection<Group> groups = null;
         try {
             groups = userSession.collectGroups(pseudo);
         } catch (NoEntityFoundException e) {
-            // TODO
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
         }
         return groups; 
     }
@@ -170,7 +180,8 @@ public class DefaultUserController implements IUserController {
                 }
             }
         } catch (NoEntityFoundException e) {
-            System.err.println(e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
         }
 
         return petals;

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -49,6 +51,9 @@ public class DefaultSessionGroup implements ISessionGroup {
 
     private ISessionUser sessionUser;
 
+    private static Logger theLogger =
+            Logger.getLogger(DefaultSessionGroup.class.getName());
+    
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -156,7 +161,7 @@ public class DefaultSessionGroup implements ISessionGroup {
                 entityManager.remove(group);
 
             } catch (NoEntityFoundException e) {
-                e.getMessage();
+                theLogger.log(Level.SEVERE, e.getMessage());
             }
         }
     }
@@ -181,7 +186,7 @@ public class DefaultSessionGroup implements ISessionGroup {
             try{
                 sessionUser.addGroup(u, g);
             }catch(NoEntityFoundException e){
-                e.getMessage();
+                theLogger.log(Level.SEVERE, e.getMessage());
             }
             return entityManager.merge(g);
         }
@@ -209,7 +214,7 @@ public class DefaultSessionGroup implements ISessionGroup {
             try{
                 sessionUser.removeGroup(u, g);
             }catch(NoEntityFoundException e){
-                e.getMessage();
+                theLogger.log(Level.SEVERE, e.getMessage());               
             }
 
             return entityManager.merge(g);
@@ -252,7 +257,6 @@ public class DefaultSessionGroup implements ISessionGroup {
             Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
             g.getPetals().add(p);
-            // TODO update petal.groups?
             return entityManager.merge(group);
         }
         else{
@@ -277,7 +281,6 @@ public class DefaultSessionGroup implements ISessionGroup {
             Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
             g.getPetals().remove(p);
-            // TODO update petal.groups?
             return entityManager.merge(group);
         }
         else{

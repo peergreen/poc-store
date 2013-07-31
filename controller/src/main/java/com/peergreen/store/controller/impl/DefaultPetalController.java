@@ -3,10 +3,11 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
@@ -75,6 +76,8 @@ public class DefaultPetalController implements IPetalController {
     Map<Resource, Wiring> wirings;
     Collection<Resource> mandatoryResources;
 
+    private static Logger theLogger =
+            Logger.getLogger(DefaultPetalController.class.getName());
     /**
      * Method to retrieve metadata related to a petal.
      * 

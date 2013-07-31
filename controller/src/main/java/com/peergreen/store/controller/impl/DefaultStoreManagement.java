@@ -3,8 +3,9 @@ package com.peergreen.store.controller.impl;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
@@ -58,6 +59,8 @@ public class DefaultStoreManagement implements IStoreManagment {
     private ISessionUser userSession;
     private ISessionVendor vendorSession;
 
+    private static Logger theLogger =
+            Logger.getLogger(DefaultStoreManagement.class.getName());
     /**
      * Method to a link between a remote store and the current one.
      * 
@@ -72,7 +75,9 @@ public class DefaultStoreManagement implements IStoreManagment {
         try {
             link = linkSession.addLink(url, description);
         } catch(EntityAlreadyExistsException e) {
-            throw e;
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new EntityAlreadyExistsException(e);
+
         }
         return link;
     }
@@ -109,7 +114,8 @@ public class DefaultStoreManagement implements IStoreManagment {
         try {
             category = categorySession.addCategory(name);
         } catch(EntityAlreadyExistsException e) {
-            throw e;
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new EntityAlreadyExistsException(e);
         }
         return category;
     }
@@ -221,13 +227,16 @@ public class DefaultStoreManagement implements IStoreManagment {
         try {
             petalSession.addPetal(vendor, artifactId, version, description,
                     category, capabilities, requirements, Origin.STAGING);
+            return petalSession.findPetal(vendor, artifactId, version);
+
         } catch(EntityAlreadyExistsException e) {
-            // TODO
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new EntityAlreadyExistsException(e);
         } catch (NoEntityFoundException e) {
-            // TODO
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
         }
 
-        return petalSession.findPetal(vendor, artifactId, version);
     }
 
     /**

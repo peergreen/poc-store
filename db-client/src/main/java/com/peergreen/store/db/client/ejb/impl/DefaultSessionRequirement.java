@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -52,6 +54,9 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     private ISessionPetal petalSession;
 
+    private static Logger theLogger =
+            Logger.getLogger(DefaultSessionPetal.class.getName());
+    
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -115,7 +120,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 entityManager.remove(req);
 
             } catch (NoEntityFoundException e) {
-                e.getMessage();
+                theLogger.log(Level.SEVERE,e.getMessage());
             }
         }
     }
@@ -281,7 +286,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         try {
             root = ldapParser.parse(filter);
         } catch (InvalidLdapFormatException e) {
-            e.printStackTrace();
+            theLogger.log(Level.SEVERE,e.getMessage());
         }
 
         Query query = null;
