@@ -4,8 +4,6 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -35,8 +33,6 @@ public class User {
     @CheckEmail(message= "THIS IS NOT AN EMAIL ")
     private String email;
 
-    @ElementCollection  
-    @CollectionTable(name = "groupsofuser")
     @ManyToMany(mappedBy="users", fetch = FetchType.EAGER)
     private Set<Group> groupSet;
 
