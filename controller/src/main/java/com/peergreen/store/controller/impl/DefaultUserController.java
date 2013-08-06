@@ -41,9 +41,7 @@ public class DefaultUserController implements IUserController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;
-    
-    private static Logger theLogger =
-            Logger.getLogger(DefaultUserController.class.getName());
+    private static Logger theLogger = Logger.getLogger(DefaultUserController.class.getName());
 
     public DefaultUserController(@Requires ISessionUser userSession) {
         this.userSession = userSession;
@@ -93,8 +91,6 @@ public class DefaultUserController implements IUserController {
         try {
             user = userSession.addUser(pseudo, password, email);
         } catch(EntityAlreadyExistsException e) {
-//            System.out.println("User--------------------");
-//            System.err.println("User already exists.");
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
         }

@@ -58,9 +58,8 @@ public class DefaultStoreManagement implements IStoreManagment {
     private ISessionPetal petalSession;
     private ISessionUser userSession;
     private ISessionVendor vendorSession;
-
-    private static Logger theLogger =
-            Logger.getLogger(DefaultStoreManagement.class.getName());
+    private static Logger theLogger = Logger.getLogger(DefaultStoreManagement.class.getName());
+    
     /**
      * Method to a link between a remote store and the current one.
      * 
@@ -77,7 +76,6 @@ public class DefaultStoreManagement implements IStoreManagment {
         } catch(EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
-
         }
         return link;
     }
@@ -126,9 +124,7 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param ame of the category to remove
      */
     public void removeCategory(String name) {
-
         categorySession.deleteCategory(name);
-
     }
 
     /**
@@ -301,6 +297,4 @@ public class DefaultStoreManagement implements IStoreManagment {
     public void bindVendorSession(ISessionVendor vendorSession) {
         this.vendorSession = vendorSession;
     }
-
-
 }

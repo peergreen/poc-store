@@ -224,5 +224,5 @@ public interface IPetalController {
      * @throws NoEntityFoundException 
      */
     Petal setCategory(String vendorName, String artifactId, String version, Category category)throws NoEntityFoundException;
-    
+
 }

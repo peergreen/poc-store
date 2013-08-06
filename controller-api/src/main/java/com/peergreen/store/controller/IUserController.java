@@ -75,7 +75,7 @@ public interface IUserController {
      * @throws NoEntityFoundException 
      */
     Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException;
-    
+
     /**
      * Method to collect all petals to which the user has access.<br />
      * Throws NoEntityFoundException if the user does not exist in database.

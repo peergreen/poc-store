@@ -53,7 +53,7 @@ public interface IStoreManagment {
      * @return list of all existing links in database
      */
     Collection<Link> collectLinks();
-    
+
     /**
      * Method to add a new category to the database.
      * 
@@ -91,14 +91,14 @@ public interface IStoreManagment {
      * @return list of available petals in local repository
      */
     Collection<Petal> collectPetalsFromLocal();
-    
+
     /**
      * Method to collect petals in the staging repository.
      * 
      * @return list of available petals in staging repository
      */
     Collection<Petal> collectPetalsFromStaging();
-    
+
     /**
      * Method to collect petals in all associated remote repositories.
      * 

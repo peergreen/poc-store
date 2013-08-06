@@ -74,9 +74,8 @@ public class DefaultPetalController implements IPetalController {
     Collection<Resource> resources;
     Map<Resource, Wiring> wirings;
     Collection<Resource> mandatoryResources;
-
-    private static Logger theLogger =
-            Logger.getLogger(DefaultPetalController.class.getName());
+    private static Logger theLogger = Logger.getLogger(DefaultPetalController.class.getName());
+    
     /**
      * Method to retrieve metadata related to a petal.
      * 
@@ -102,8 +101,6 @@ public class DefaultPetalController implements IPetalController {
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-
-
         }
 
         return metadata;
@@ -145,13 +142,12 @@ public class DefaultPetalController implements IPetalController {
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
                 throw new NoEntityFoundException(e);
-
             }
-
         }
+        
         return result;
-
     }
+    
     /*
     public Collection<PetalId> getTransitiveRequirements(
             Vendor vendor,
@@ -280,7 +276,6 @@ public class DefaultPetalController implements IPetalController {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         petalSession.deletePetal(petal);
-
     }
 
     /**
@@ -324,7 +319,7 @@ public class DefaultPetalController implements IPetalController {
         try {
             return (List<Capability>) petalSession.collectCapabilities(petal);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
 
         }
@@ -349,7 +344,6 @@ public class DefaultPetalController implements IPetalController {
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-
         }
     }
 
@@ -372,7 +366,6 @@ public class DefaultPetalController implements IPetalController {
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-
         }
     }
 
@@ -403,7 +396,7 @@ public class DefaultPetalController implements IPetalController {
         try {
             return (List<Requirement>) petalSession.collectRequirements(petal);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
         }
     }
@@ -425,9 +418,8 @@ public class DefaultPetalController implements IPetalController {
         try {
             return petalSession.addRequirement(petal, requirement);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-
         }
     }
 
@@ -448,9 +440,8 @@ public class DefaultPetalController implements IPetalController {
         try {
             return petalSession.removeRequirement(petal, requirement);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-
         }
     }
 
@@ -470,9 +461,8 @@ public class DefaultPetalController implements IPetalController {
         try {
             return petalSession.getCategory(petal);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-
         }
     }
 
@@ -493,7 +483,7 @@ public class DefaultPetalController implements IPetalController {
         try {
             return petalSession.addCategory(petal, category);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
         }
     }

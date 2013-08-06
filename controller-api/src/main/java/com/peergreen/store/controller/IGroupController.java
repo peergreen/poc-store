@@ -16,7 +16,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  *      <li>Add a user to group</li>
  *      <li>Remove user from group</li>
  *      <li>Retrieve all users member of this group</li>
- *      <li>Retrieve all petals to those this group has access</li>
+ *      <li>Retrieve all petals to those this group has access to</li>
  * </ul>
  * 
  */
@@ -31,14 +31,14 @@ public interface IGroupController {
      * @throws EntityAlreadyExistsException 
      */
     Group createGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException;
-    
+
     /**
      * Method to remove a group from the database.
      * 
      * @param groupName group's name
      */
     void deleteGroup(String groupName);
-    
+
     /**
      * Method to add a user to a group.
      * 
@@ -48,7 +48,7 @@ public interface IGroupController {
      * @throws NoEntityFoundException 
      */
     Group addUser(String groupName, String pseudo) throws NoEntityFoundException;
-    
+
     /**
      * Method to remove a user from a group.
      * 
@@ -58,7 +58,7 @@ public interface IGroupController {
      * @throws NoEntityFoundException 
      */
     Group removeUser(String groupName, String pseudo) throws NoEntityFoundException;
- 
+
     /**
      * Method to collect all users member of a group.<br />
      * Throws NoEntityFoundException if specified group does not exist.
@@ -67,16 +67,16 @@ public interface IGroupController {
      * @return list of all users member of the specified group
      * @throw NoEntityFoundException
      */
-     Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
-    
-     /**
-      * Method to collect all accessible petals for a group.<br />
-      * Throws NoEntityFoundException if specified group does not exist.
-      * 
-      * @param groupName group name
-      * @return list of all accessible petals for the group
-      * @throw NoEntityFoundException
-      */
-      Collection<Petal> collectPetals(String groupName) throws NoEntityFoundException;
-      
+    Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
+
+    /**
+     * Method to collect all accessible petals for a group.<br />
+     * Throws NoEntityFoundException if specified group does not exist.
+     * 
+     * @param groupName group name
+     * @return list of all accessible petals for the group
+     * @throw NoEntityFoundException
+     */
+    Collection<Petal> collectPetals(String groupName) throws NoEntityFoundException;
+
 }
