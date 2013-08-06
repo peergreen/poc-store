@@ -156,4 +156,11 @@ public class DefaultGroupController implements IGroupController {
         this.userSession = userSession;
     }
 
+
+    @Override
+    public Collection<Petal> collectPetals(String name) throws NoEntityFoundException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
