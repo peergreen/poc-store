@@ -41,15 +41,6 @@ public interface IGroupController {
     void deleteGroup(String groupName);
     
     /**
-     * Method to collect all the group's users.
-     * 
-     * @param groupName group's name
-     * @return list of all the group's users
-     * @throws NoEntityFoundException 
-     */
-    Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
-    
-    /**
      * Method to add a user to a group.
      * 
      * @param groupName group's name
@@ -69,7 +60,6 @@ public interface IGroupController {
      */
     Group removeUser(String groupName, String pseudo) throws NoEntityFoundException;
  
-    // TODO
     /**
      * Method to collect all users member of a group.<br />
      * Throws NoEntityFoundException if specified group does not exist.
@@ -78,6 +68,6 @@ public interface IGroupController {
      * @return list of all users member of the specified group
      * @throw NoEntityFoundException
      */
-    // Collection<User> collectUsers(String name);
+     Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
     
 }

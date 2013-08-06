@@ -73,24 +73,6 @@ public class DefaultGroupController implements IGroupController {
     }
 
     /**
-     * Method to collect all the group's users.
-     * 
-     * @param groupName group's name
-     * @return list of all the group's users
-     * @throws NoEntityFoundException 
-     */
-    @Override
-    public Collection<User> collectUsers(String groupName) throws NoEntityFoundException {
-        try{
-            return groupSession.collectUsers(groupName);
-        } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
-            throw new NoEntityFoundException(e);
-
-        }
-    }
-
-    /**
      * Method to add a user to a group.
      * 
      * @param pseudo user's pseudo
@@ -131,6 +113,24 @@ public class DefaultGroupController implements IGroupController {
         }
     }
 
+    /**
+     * Method to collect all users member of a group.<br />
+     * Throws NoEntityFoundException if specified group does not exist.
+     * 
+     * @param groupName group name
+     * @return list of all users member of the specified group
+     * @throw NoEntityFoundException
+     */
+    @Override
+    public Collection<User> collectUsers(String groupName) throws NoEntityFoundException {
+        try {
+            return groupSession.collectUsers(groupName);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE,e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+    }
+    
     @Bind
     public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;
