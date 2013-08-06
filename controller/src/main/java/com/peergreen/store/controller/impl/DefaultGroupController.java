@@ -11,6 +11,7 @@ import org.apache.felix.ipojo.annotations.Provides;
 
 import com.peergreen.store.controller.IGroupController;
 import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
@@ -126,10 +127,28 @@ public class DefaultGroupController implements IGroupController {
         try {
             return groupSession.collectUsers(groupName);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
         }
     }
+    
+    /**
+     * Method to collect all accessible petals for a group.<br />
+     * Throws NoEntityFoundException if specified group does not exist.
+     * 
+     * @param groupName group name
+     * @return list of all accessible petals for the group
+     * @throw NoEntityFoundException
+     */
+    @Override
+    public Collection<Petal> collectPetals(String groupName) throws NoEntityFoundException {
+        try {
+            return groupSession.collectPetals(groupName);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+     }
     
     @Bind
     public void bindGroupSession(ISessionGroup groupSession) {

@@ -3,6 +3,7 @@ package com.peergreen.store.controller;
 import java.util.Collection;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
+import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -11,9 +12,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  * Interface defining all group related operations:
  * <ul>
  *      <li>Create group on database</li>
- *      <li>Modify existing group on database</li>
  *      <li>Remove group from database</li>
- *      <li>Retrieve group's member list</li>
  *      <li>Add a user to group</li>
  *      <li>Remove user from group</li>
  *      <li>Retrieve all users member of this group</li>
@@ -64,10 +63,20 @@ public interface IGroupController {
      * Method to collect all users member of a group.<br />
      * Throws NoEntityFoundException if specified group does not exist.
      * 
-     * @param name group name
+     * @param groupName group name
      * @return list of all users member of the specified group
      * @throw NoEntityFoundException
      */
      Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
     
+     /**
+      * Method to collect all accessible petals for a group.<br />
+      * Throws NoEntityFoundException if specified group does not exist.
+      * 
+      * @param groupName group name
+      * @return list of all accessible petals for the group
+      * @throw NoEntityFoundException
+      */
+      Collection<Petal> collectPetals(String groupName) throws NoEntityFoundException;
+      
 }
