@@ -54,14 +54,18 @@ public class DefaultUserController implements IUserController {
      * <em>null</em> if user doesn't exist.
      */
     @Override
-    public Map<String, String> getUserMetadata(String pseudo) {
+    public Map<String, String> getUserMetadata(String pseudo) throws NoEntityFoundException {
         User user = userSession.findUserByPseudo(pseudo);
+        if(user != null){
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("pseudo", user.getPseudo());
         metadata.put("password", user.getPassword());
         metadata.put("email", user.getEmail());
 
-        return metadata;
+        return metadata;}
+        else{
+            throw new NoEntityFoundException("User with pseudo " + pseudo + " doesn't exist in database.");
+        }
     }
 
     /**

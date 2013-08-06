@@ -27,8 +27,9 @@ public interface IUserController {
      * 
      * @return indexed collection of user's information or
      * <em>null</em> if user doesn't exist.
+     * @throws NoEntityFoundException
      */
-    Map<String, String> getUserMetadata(String pseudo);
+    Map<String, String> getUserMetadata(String pseudo) throws NoEntityFoundException;
 
     /**
      * Method to retrieve a user instance from its pseudo.
