@@ -103,5 +103,5 @@ public interface ISessionRequirement {
      * @throws NoEntityFoundException
      * @see DefaultLdapParser
      */
-    Collection<Capability> findCapabilities(String namespace, Requirement requirement) throws NoEntityFoundException;
+    Collection<Capability> findCapabilities(Requirement requirement) throws NoEntityFoundException;
 }

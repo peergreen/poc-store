@@ -126,7 +126,7 @@ public class DefaultPetalController implements IPetalController {
             // retrieve capabilities which meet the requirements in a same namespace
             Collection<Capability> capabilities;
             try {
-                capabilities = requirementSession.findCapabilities(request.getNamspace(), req);
+                capabilities = requirementSession.findCapabilities(req);
                 // retrieve petals providing the capability
                 for (Capability capability : capabilities) {
                     Set<Petal> petals = capability.getPetals();

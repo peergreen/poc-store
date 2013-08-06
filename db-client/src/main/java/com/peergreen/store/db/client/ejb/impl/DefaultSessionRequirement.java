@@ -15,6 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
@@ -52,10 +56,15 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     @OSGiResource
     private ILdapParser ldapParser;
 
+    private JPQLClientBinaryNode jpqlClientBinaryNode;
+    
     private ISessionPetal petalSession;
 
-    private static Logger theLogger =
-            Logger.getLogger(DefaultSessionPetal.class.getName());
+    private static Logger theLogger = Logger.getLogger(DefaultSessionPetal.class.getName());
+    
+    private final String alias = "cap";
+    
+    private final String mapAlias = "m";
     
     public EntityManager getEntityManager() {
         return entityManager;
@@ -68,9 +77,11 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     @PostConstruct
     public void initHandlers() {
-        ldapParser.register(new JPQLClientUnaryNode());
-        ldapParser.register(new JPQLClientBinaryNode());
-        ldapParser.register(new JPQLClientNaryNode());
+        ldapParser.register(new JPQLClientUnaryNode(alias, mapAlias));
+        jpqlClientBinaryNode = new JPQLClientBinaryNode(alias, mapAlias);
+        jpqlClientBinaryNode.setEntityManager(entityManager);
+        ldapParser.register(jpqlClientBinaryNode);
+        ldapParser.register(new JPQLClientNaryNode(alias, mapAlias));
     }
 
     /**
@@ -276,10 +287,13 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @see DefaultLdapParser
      */
     @Override
-    public Collection<Capability> findCapabilities(String namespace, Requirement requirement) {
+    public Collection<Capability> findCapabilities(Requirement requirement) {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
 
+        // set JPQLClientBinaryNode namespace attribute
+        jpqlClientBinaryNode.setNamespace(r.getNamespace());
+        
         String filter = r.getFilter();
 
         IValidatorNode<String> root = null;
@@ -291,25 +305,27 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
         Query query = null;
         if (root != null) {
-            String alias = "cap";
-            //            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
-            //                            + namespace + "\' AND " + root.getHandler().toQueryElement();
-            // TODO testing purpose
+            // TODO: simple query which use generated query from tree
+//            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
+//                            + namespace + "\' AND " + root.getHandler().toQueryElement();
+            
+            // TODO: testing purpose => search in properties map with JPQL
             String sql = "SELECT " + alias + " FROM Capability " + alias + " JOIN " + alias +
-                    ".properties m WHERE KEY(m)=\'toto\' AND VALUE(m)=\'a\' AND "
-                    + alias + ".namespace=\'" + namespace + "\'";
-
-            //            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            //            CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
-            //            Root<Capability> capabilityRoot = criteria.from(Capability.class);
-            //            criteria.select(capabilityRoot);
-            //            MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
-            //
-            //            criteria.where(builder.equal(propertiesRoot.key(), "toto"));
-            //
-            //            System.out.println(entityManager.createQuery(criteria).getResultList());
-
+                    ".properties " + mapAlias + " WHERE KEY(" + mapAlias + ")=\'toto\' AND " +
+                    "VALUE(" + mapAlias + ")=\'a\' AND " + alias + ".namespace=\'" +
+                    requirement.getNamespace() + "\'";
             query = entityManager.createQuery(sql);
+
+            // TODO: testing purpose => search in properties map with Criteria
+//            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+//            CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
+//            Root<Capability> capabilityRoot = criteria.from(Capability.class);
+//            criteria.select(capabilityRoot);
+//            MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
+//
+//            criteria.where(builder.equal(propertiesRoot.key(), "toto"));
+//
+//            System.out.println(entityManager.createQuery(criteria).getResultList());
         } else {
             // TODO: exception if parsed tree is null?
         }
