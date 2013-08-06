@@ -11,6 +11,13 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  */
 public class JPQLClientUnaryNode implements ILdapHandler {
     private UnaryNode node;
+    private String alias;
+    private String mapAlias;
+    
+    public JPQLClientUnaryNode(String alias, String mapAlias) {
+        this.alias = alias;
+        this.mapAlias = mapAlias;
+    }
     
     /**
      * Method to generate the piece of JPQL for the node.
