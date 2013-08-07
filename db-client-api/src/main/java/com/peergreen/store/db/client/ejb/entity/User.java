@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -33,7 +32,7 @@ public class User {
     @CheckEmail(message= "THIS IS NOT AN EMAIL ")
     private String email;
 
-    @ManyToMany(mappedBy="users", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy="users")
     private Set<Group> groupSet;
 
     public User() {
