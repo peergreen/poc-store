@@ -3,8 +3,6 @@ package com.peergreen.store.db.client.ejb.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -26,7 +24,6 @@ import com.peergreen.store.db.client.enumeration.Origin;
 public class Petal {
     
     @ManyToOne
-    //  @JoinColumn(name = "vendorName", referencedColumnName = "name")
     @Id
     private Vendor vendor;
     @Id
@@ -39,8 +36,6 @@ public class Petal {
 
     private String description;
 
-    @ElementCollection  
-    @CollectionTable(name = "groupsforpetal")
     @ManyToMany(mappedBy="petals")
     private Set<Group> groupSet;
 
