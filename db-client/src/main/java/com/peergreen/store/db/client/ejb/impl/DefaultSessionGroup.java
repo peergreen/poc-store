@@ -53,7 +53,7 @@ public class DefaultSessionGroup implements ISessionGroup {
 
     private static Logger theLogger =
             Logger.getLogger(DefaultSessionGroup.class.getName());
-    
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -97,15 +97,11 @@ public class DefaultSessionGroup implements ISessionGroup {
             throw new EntityAlreadyExistsException("This group already exists on database.");
         } else {
             group = new Group(groupName);
-            User admin = sessionUser.findUserByPseudo("Administrator");
-            if (admin == null) {
-                throw new NoEntityFoundException("You have to create the administrator first at all.");
-            }
-            group.getUsers().add(admin);
             entityManager.persist(group);
             return group;
         }
     }
+
 
     /**
      * Method to find a group in the database.
@@ -235,7 +231,7 @@ public class DefaultSessionGroup implements ISessionGroup {
         Group group = findGroup(groupName);
         if (group != null) {
             //Create new HashSet to avoid lazily exceptions
-            Set<User> result = new HashSet<>();
+            Set<User> result = new HashSet<>(); 
             result.addAll(group.getUsers());
             return result;
         } else{
@@ -257,7 +253,6 @@ public class DefaultSessionGroup implements ISessionGroup {
         if(g!=null){
             // retrieve attached petal
             Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-
             g.getPetals().add(p);
             return entityManager.merge(group);
         }
@@ -304,7 +299,7 @@ public class DefaultSessionGroup implements ISessionGroup {
         Group group = findGroup(groupName);
         if (group != null) {
             //Create new HashSet to avoid lazily exception
-            Set<Petal> result = new HashSet<>();
+            Set<Petal> result = new HashSet<>(); 
             result.addAll(group.getPetals());
             return result;
         } else {

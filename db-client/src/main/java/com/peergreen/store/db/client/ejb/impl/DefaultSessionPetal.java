@@ -145,9 +145,13 @@ public class DefaultSessionPetal implements ISessionPetal {
             Origin origin) throws NoEntityFoundException, EntityAlreadyExistsException {
 
         Vendor v = sessionVendor.findVendor(vendor.getVendorName());
+        if (v == null) {
+            throw new NoEntityFoundException("Vendor " + vendor.getVendorName() +  "doesn't exist in database.");}
         Category c = sessionCategory.findCategory(category.getCategoryName());
+        if (c == null) {
+            throw new NoEntityFoundException("The Category of petals " + category.getCategoryName() +  "doesn't exist in database.");}
+      
         Group group = sessionGroup.findGroup("Administrator");
-
         // group 'Administrator' must exists
         if (group == null) {
             throw new NoEntityFoundException("The group Administrator must be created first at all.");
