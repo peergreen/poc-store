@@ -233,9 +233,11 @@ public class DefaultSessionGroup implements ISessionGroup {
     @Override
     public Collection<User> collectUsers(String groupName)throws NoEntityFoundException {
         Group group = findGroup(groupName);
-
         if (group != null) {
-            return group.getUsers();
+            //Create new HashSet to avoid lazily exceptions
+            Set<User> result = new HashSet<>();
+            result.addAll(group.getUsers());
+            return result;
         } else{
             throw new NoEntityFoundException("Group with name:" + groupName + "doesn't exist in database.");
         }
@@ -300,9 +302,11 @@ public class DefaultSessionGroup implements ISessionGroup {
     @Override
     public Collection<Petal> collectPetals(String groupName)throws NoEntityFoundException {
         Group group = findGroup(groupName);
-
         if (group != null) {
-            return group.getPetals();
+            //Create new HashSet to avoid lazily exception
+            Set<Petal> result = new HashSet<>();
+            result.addAll(group.getPetals());
+            return result;
         } else {
             throw new NoEntityFoundException("Group with " + groupName + " does not exist in database.");
         }

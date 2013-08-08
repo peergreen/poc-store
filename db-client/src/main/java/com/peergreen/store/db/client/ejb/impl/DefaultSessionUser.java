@@ -198,7 +198,10 @@ public class DefaultSessionUser implements ISessionUser {
     public Collection<Group> collectGroups(String pseudo) throws NoEntityFoundException {
         User user = entityManager.find(User.class, pseudo);
         if (user != null) {
-            return user.getGroupSet();
+            //Create new HashSet to avoid lazily exception
+            Set<Group> result = new HashSet<>();
+            result.addAll(user.getGroupSet());
+            return result;
         } else {
             throw new NoEntityFoundException("User with pseudo " + pseudo + " doesn't exist in database.");
         }
