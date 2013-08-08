@@ -109,22 +109,12 @@ public class DefaultSessionGroupTest {
         verify(entityManager).persist(groupArgument.capture());
         Assert.assertEquals(groupname, groupArgument.getValue().getGroupname());
         Assert.assertTrue(groupArgument.getValue().getPetals().isEmpty());
-        Assert.assertTrue(groupArgument.getValue().getUsers().contains(mockuser));
     }
 
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowExceptionWhenAddGroupCauseAlreadyExist() throws NoEntityFoundException, EntityAlreadyExistsException {
         //Given: The Group already exists in the database
         when(query.getSingleResult()).thenReturn(mockgroup);
-        //When
-        sessionGroup.addGroup(groupname);
-    }
-
-    @Test(expectedExceptions = NoEntityFoundException.class)
-    public void shouldThrowExceptionWhenAddGroupCauseNoUserAdmin() throws NoEntityFoundException, EntityAlreadyExistsException {
-        //Given
-        when(query.getSingleResult()).thenReturn(null);
-        when(sessionUser.findUserByPseudo(anyString())).thenReturn(null);
         //When
         sessionGroup.addGroup(groupname);
     }
