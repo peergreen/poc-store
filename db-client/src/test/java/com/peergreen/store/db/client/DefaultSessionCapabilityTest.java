@@ -31,6 +31,7 @@ import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionProperty;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -57,6 +58,8 @@ public class DefaultSessionCapabilityTest {
     private EntityManager entityManager; 
     @Mock
     private ISessionPetal sessionPetal;
+    @Mock
+    private ISessionProperty sessionProperty;
     @Mock 
     private Capability mockcapability;
     @Mock
@@ -85,6 +88,7 @@ public class DefaultSessionCapabilityTest {
         sessionCapability = new DefaultSessionCapability();
         sessionCapability.setEntityManager(entityManager);       
         sessionCapability.setSessionPetal(sessionPetal);
+        sessionCapability.setSessionProperty(sessionProperty);
 
         capabilityArgumentCaptor = ArgumentCaptor.forClass(Capability.class);
         value = ArgumentCaptor.forClass(String.class);

@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ejb.entity;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,17 +25,17 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
  */
 @NamedQueries({
     @NamedQuery (
-            name = "Capability.findAll",
-            query = "select cap from Capability cap"
-            ),
-            @NamedQuery (
-                    name = "CapabilityByName",
-                    query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
-                    ),
-                    @NamedQuery (
-                            name = "Requirement.findCapabilities",
-                            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
-                            )
+        name = "Capability.findAll",
+        query = "select cap from Capability cap"
+    ),
+    @NamedQuery (
+        name = "CapabilityByName",
+        query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
+    ),
+    @NamedQuery (
+        name = "Requirement.findCapabilities",
+        query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
+    )
 })
 @Entity
 @IdClass(CapabilityId.class)

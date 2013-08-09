@@ -83,6 +83,16 @@ public class DefaultSessionCapability implements ISessionCapability{
             throw new EntityAlreadyExistsException("Capability " + capabilityName +
                     " in version " + version + " already exists on database.");
         } else {
+            Set<Property> props = null;
+            if (properties != null) {
+                props = new HashSet<>(properties);
+            } else {
+                props = new HashSet<>();
+            }
+            props.add(propertySession.createProperty("capabilityName", capabilityName));
+            props.add(propertySession.createProperty("version", version));
+            props.add(propertySession.createProperty("namespace", namespace));
+
             Capability capability = new Capability(capabilityName, version, namespace, properties);
             entityManager.persist(capability); 
 
