@@ -1,10 +1,11 @@
 package com.peergreen.store.db.client.ejb.session.api;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -20,7 +21,7 @@ public interface ISessionCapability {
      * @return created Capability instance
      * @throws EntityAlreadyExistsException
      */
-    Capability addCapability(String capabilityName,String version, String namespace, Map<String,String> properties) throws EntityAlreadyExistsException;
+    Capability addCapability(String capabilityName, String version, String namespace, Set<Property> properties) throws EntityAlreadyExistsException;
 
     /**
      * Method to delete a capability in the database
@@ -54,7 +55,7 @@ public interface ISessionCapability {
      * @return The capability with the change updated
      * @throws NoEntityFoundException 
      */
-    Capability updateProperties (Capability capability, Map<String,String> prooperties)throws NoEntityFoundException;
+    Capability updateProperties (Capability capability, Set<Property> properties)throws NoEntityFoundException;
 
     /**
      * Method to collect the petals which provides the specified capability.

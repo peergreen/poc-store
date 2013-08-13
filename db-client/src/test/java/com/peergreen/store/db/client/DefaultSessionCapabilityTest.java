@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.testng.annotations.Test;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
@@ -42,7 +44,7 @@ public class DefaultSessionCapabilityTest {
     private String capabilityName; 
     private String namespace; 
     private List<Capability> capabilityList;
-    private Map<String,String> properties;
+    private Set<Property> properties;
 
     ArgumentCaptor<Capability> capabilityArgumentCaptor;
     ArgumentCaptor<String> value;
@@ -77,7 +79,7 @@ public class DefaultSessionCapabilityTest {
         namespace = "DB";
         version ="1.0";
         capabilityName = "name";
-        properties = new HashMap<String,String>();
+        properties = new HashSet<>();
         capabilityList = new ArrayList<Capability>() ;
 
         sessionCapability = new DefaultSessionCapability();
@@ -109,7 +111,7 @@ public class DefaultSessionCapabilityTest {
         //Given : the entity odesn't exist 
         when(query.getSingleResult()).thenReturn(null);
         //When 
-        sessionCapability.addCapability(capabilityName,version,namespace, properties);
+        sessionCapability.addCapability(capabilityName, version, namespace, properties);
         //Then 
         verify(entityManager).persist(capabilityArgumentCaptor.capture());
         Assert.assertEquals(capabilityName, capabilityArgumentCaptor.getValue().getCapabilityName());

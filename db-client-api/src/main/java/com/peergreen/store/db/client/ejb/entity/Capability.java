@@ -1,21 +1,19 @@
 package com.peergreen.store.db.client.ejb.entity;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
@@ -28,15 +26,15 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
     @NamedQuery (
             name = "Capability.findAll",
             query = "select cap from Capability cap"
-    ),
-    @NamedQuery (
-            name = "CapabilityByName",
-            query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
-    ),
-    @NamedQuery (
-            name = "Requirement.findCapabilities",
-            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
-    )
+            ),
+            @NamedQuery (
+                    name = "CapabilityByName",
+                    query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
+                    ),
+                    @NamedQuery (
+                            name = "Requirement.findCapabilities",
+                            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
+                            )
 })
 @Entity
 @IdClass(CapabilityId.class)
@@ -60,22 +58,26 @@ public class Capability{
     @Column(name="namespace", nullable=false)
     private String namespace;
 
-    @ElementCollection
-    @CollectionTable( name="Properties")
-    @MapKeyColumn (name="propertiesName")
-    @Column(name="properties",nullable=false)
-    private Map<String, String> properties; 
+//    @ElementCollection
+//    @CollectionTable( name="Properties")
+//    @MapKeyColumn (name="propertiesName")
+//    @Column(name="properties",nullable=false)
+//    private Map<String, String> properties;
+
+    @OneToMany(mappedBy="capability", cascade = {CascadeType.ALL})
+    @Column(name="properties", nullable=false)
+    private Set<Property> properties = new HashSet<>();
 
     @ManyToMany(mappedBy="capabilities")
     @Column(name="petals", nullable=false)
     private Set<Petal> petals = new HashSet<>();
 
-    public Capability(){
+    public Capability() {
 
     }
 
-    public Capability(String capabilityName,String version, String namespace,
-            Map<String, String> properties) {
+    public Capability(String capabilityName, String version, String namespace,
+            Set<Property> properties) {
         super();
         this.capabilityName = capabilityName;
         this.version = version;
@@ -150,9 +152,9 @@ public class Capability{
     /**
      * Method for retrieve the properties of the capability instance
      * 
-     * @return Map containing all the properties of the capability
+     * @return Set containing all the properties of the capability
      */
-    public Map<String, String> getProperties() {
+    public Set<Property> getProperties() {
         return properties;
     }
 
@@ -161,7 +163,7 @@ public class Capability{
      * 
      * @param properties the properties to set
      */
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(Set<Property> properties) {
         this.properties = properties;
     }
 

@@ -7,10 +7,8 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -25,6 +23,7 @@ import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
@@ -163,11 +162,11 @@ public class DefaultPetalControllerTestCase {
         String capabilityName = "my capability";
         String namespace = "service";
         String version = "1.0";
-        Map<String, String> properties = new HashMap<String,String>();
+        Set<Property> properties = new HashSet<>();
 
         // verify capabilitySession.addCapability(...) is called
         petalController.createCapability(capabilityName,version, namespace, properties);
-        verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
+        verify(capabilitySession).addCapability(capabilityName, version, namespace, properties);
     }
 
     @Test

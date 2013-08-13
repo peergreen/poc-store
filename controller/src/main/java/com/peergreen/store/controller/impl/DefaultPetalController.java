@@ -24,6 +24,7 @@ import com.peergreen.store.controller.util.DependencyResult;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
@@ -289,7 +290,7 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public Capability createCapability(String capabilityName, String version,
-            String namespace, Map<String,String> properties) throws EntityAlreadyExistsException {
+            String namespace, Set<Property> properties) throws EntityAlreadyExistsException {
 
         Capability capability = null;
 

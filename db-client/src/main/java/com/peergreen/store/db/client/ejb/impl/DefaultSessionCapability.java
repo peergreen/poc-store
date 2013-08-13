@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,8 +17,10 @@ import javax.persistence.Query;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
+import com.peergreen.store.db.client.ejb.session.api.ISessionProperty;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -43,14 +44,24 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 public class DefaultSessionCapability implements ISessionCapability{
 
     private EntityManager entityManager;
-
     private ISessionPetal petalSession;
+    private ISessionProperty propertySession;
 
-    private static Logger theLogger =
-            Logger.getLogger(DefaultSessionCapability.class.getName());
+    private static Logger theLogger = Logger.getLogger(DefaultSessionCapability.class.getName());
+    
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+    
+    @EJB
+    public void setSessionPetal(ISessionPetal sessionPetal) {
+        this.petalSession = sessionPetal;
+    }
+    
+    @EJB
+    public void setSessionProperty(ISessionProperty propertySession) {
+        this.propertySession = propertySession;
     }
 
     /**
@@ -65,7 +76,7 @@ public class DefaultSessionCapability implements ISessionCapability{
      */
     @Override
     public Capability addCapability(String capabilityName, String version, String namespace,
-            Map<String, String> properties) throws EntityAlreadyExistsException {
+            Set<Property> properties) throws EntityAlreadyExistsException {
 
         Capability temp = findCapability(capabilityName, version);
         if (temp != null) {
@@ -75,6 +86,16 @@ public class DefaultSessionCapability implements ISessionCapability{
             Capability capability = new Capability(capabilityName, version, namespace, properties);
             entityManager.persist(capability); 
 
+            Iterator<Property> it = properties.iterator();
+            while(it.hasNext()) {
+                Property p = it.next();
+                try {
+                    propertySession.setCapability(p.getId(), capability);
+                } catch (NoEntityFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            
             return capability;
         }
     }
@@ -258,20 +279,14 @@ public class DefaultSessionCapability implements ISessionCapability{
      * @throws NoEntityFoundException 
      */
     @Override
-    public Capability updateProperties(Capability capability, Map<String, String> properties)throws NoEntityFoundException {
+    public Capability updateProperties(Capability capability, Set<Property> properties) throws NoEntityFoundException {
         // retrieve attached capability entity
         Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        if(c!=null){
+        if(c != null){
             c.setProperties(properties);
             return entityManager.merge(c);
-        }
-        else{
+        } else {
             throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
         }
-    }
-
-    @EJB
-    public void setSessionPetal(ISessionPetal sessionPetal) {
-        this.petalSession = sessionPetal;
     }
 }
