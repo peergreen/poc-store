@@ -1,7 +1,9 @@
 package com.peergreen.store.ldap.parser.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -33,13 +35,38 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
+    private Map<Class<?>, Object> properties;
     private Set<ILdapHandler> handlers;
 
     /**
      * Default constructor.
      */
     public DefaultLdapParser() {
+        properties = new HashMap<>();
         handlers = new HashSet<>();
+    }
+    
+    /**
+     * Method to add a new property to the Map.
+     * 
+     * @param propClass property class
+     * @param prop property
+     */
+    public <Prop> void set(Class<Prop> propClass, Prop prop) {
+        if (prop == null) {
+            return;
+        }
+        this.properties.put(propClass, prop);
+    }
+
+    /**
+     * Method to retrieve a property from the Map.
+     * 
+     * @param propClass property class
+     * @return property
+     */
+    public <Prop> Prop get(Class<Prop> propClass) {
+        return propClass.cast(this.properties.get(propClass));
     }
 
     /**
@@ -49,6 +76,15 @@ public class DefaultLdapParser implements ILdapParser {
      */
     public void register(ILdapHandler handler) {
         handlers.add(handler);
+    }
+    
+    /**
+     * Method to remove a handler from the parser.
+     * 
+     * @param handler handler to remove
+     */
+    public void remove(ILdapHandler handler) {
+        handlers.remove(handler);
     }
 
     /**
