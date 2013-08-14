@@ -353,7 +353,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 builder.and(
                     builder.equal(prop.get("name"), "bundle"),
                     builder.equal(prop.get("value"), "true"),
-                    builder.not(builder.exists(subquery))
+                    builder.not(cap.in(subquery))
                 )
             );
             
@@ -388,7 +388,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
             while (it.hasNext()) {
                 Capability c = it.next();
                 
-                System.out.println(i + " - " + c.getCapabilityName());
+                System.out.println(i + " - " + c.getCapabilityId() + " - " + c.getCapabilityName());
                 i++;
             }
         } else {
