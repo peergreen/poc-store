@@ -329,21 +329,8 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 )
             );
             
-            System.out.println();
-            System.out.println();
             Collection<Capability> caps = entityManager.createQuery(mainQuery).getResultList();
 
-            int i = 1;
-            Iterator<Capability> it = caps.iterator();
-            System.out.println();
-            System.out.println("tut");
-            while (it.hasNext()) {
-                Capability c = it.next();
-                
-                System.out.println(i + " - " + c.getCapabilityId() + " - " + c.getCapabilityName());
-                i++;
-            }
-            
             return caps;
         } else {
             // TODO: exception if parsed tree is null?
