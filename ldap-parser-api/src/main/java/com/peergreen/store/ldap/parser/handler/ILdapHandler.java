@@ -1,8 +1,6 @@
 package com.peergreen.store.ldap.parser.handler;
 
-import com.peergreen.store.ldap.parser.node.BinaryNode;
-import com.peergreen.store.ldap.parser.node.NaryNode;
-import com.peergreen.store.ldap.parser.node.UnaryNode;
+import com.peergreen.store.ldap.parser.INodeContext;
 
 
 /**
@@ -26,19 +24,19 @@ public interface ILdapHandler {
      * 
      * @param created unary node
      */
-    void onUnaryNodeCreation(UnaryNode node);
+    void onUnaryNodeCreation(INodeContext<String> nodeContext);
     
     /**
      * Method called when a binary node is created.
      * 
      * @param created binary node
      */
-    void onBinaryNodeCreation(BinaryNode node);
+    void onBinaryNodeCreation(INodeContext<String> nodeContext);
     
     /**
      * Method called when an n-ary node is created.
      * 
      * @param created n-ary node
      */
-    void onNaryNodeCreation(NaryNode node);
+    void onNaryNodeCreation(INodeContext<String> nodeContext);
 }

@@ -1,5 +1,6 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
+import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
@@ -67,12 +68,12 @@ public class JPQLClientNaryNode implements ILdapHandler {
     }
 
     @Override
-    public void onUnaryNodeCreation(UnaryNode node) {
+    public void onUnaryNodeCreation(INodeContext<String> nodeContext) {
         // This is a NaryNode, nothing to do on UnaryNode events.
     }
 
     @Override
-    public void onBinaryNodeCreation(BinaryNode node) {
+    public void onBinaryNodeCreation(INodeContext<String> nodeContext) {
         // This is a NaryNode, nothing to do on BinaryNode events.
     }
 
@@ -82,8 +83,8 @@ public class JPQLClientNaryNode implements ILdapHandler {
      * @param node The NaryNode created
      */
     @Override
-    public void onNaryNodeCreation(NaryNode node) {
-        node.setHandler(this);
-        this.node = node;
+    public void onNaryNodeCreation(INodeContext<String> nodeContext) {
+        this.node = nodeContext.getProperty(NaryNode.class);
+        this.node.setHandler(this);
     }
 }

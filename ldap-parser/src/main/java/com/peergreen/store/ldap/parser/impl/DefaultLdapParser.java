@@ -35,38 +35,16 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
 @Provides
 public class DefaultLdapParser implements ILdapParser {
 
-    private Map<Class<?>, Object> properties;
+    private DefaultNodeContext<String> nodeContext;
     private Set<ILdapHandler> handlers;
 
     /**
      * Default constructor.
      */
     public DefaultLdapParser() {
-        properties = new HashMap<>();
+        nodeContext = new DefaultNodeContext<>();
+        nodeContext.setProperty(DefaultLdapParser.class, this);
         handlers = new HashSet<>();
-    }
-    
-    /**
-     * Method to add a new property to the Map.
-     * 
-     * @param propClass property class
-     * @param prop property
-     */
-    public <Prop> void set(Class<Prop> propClass, Prop prop) {
-        if (prop == null) {
-            return;
-        }
-        this.properties.put(propClass, prop);
-    }
-
-    /**
-     * Method to retrieve a property from the Map.
-     * 
-     * @param propClass property class
-     * @return property
-     */
-    public <Prop> Prop get(Class<Prop> propClass) {
-        return propClass.cast(this.properties.get(propClass));
     }
 
     /**
@@ -252,16 +230,22 @@ public class DefaultLdapParser implements ILdapParser {
         IValidatorNode<String> opNode = null;
         if (UnaryOperators.isUnaryOperator(op)) {
             UnaryNode node = new UnaryNode(op);
+            nodeContext.setNode(node);
+            nodeContext.setProperty(UnaryNode.class, node);
+            
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
-                handler.onUnaryNodeCreation(node);
+                handler.onUnaryNodeCreation(nodeContext);
             }
             opNode = node;
         } else if (NaryOperators.isNaryOperator(op)) {
             NaryNode node = new NaryNode(op);
+            nodeContext.setNode(node);
+            nodeContext.setProperty(NaryNode.class, node);
+            
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
-                handler.onNaryNodeCreation(node);
+                handler.onNaryNodeCreation(nodeContext);
             }
             opNode = node;
         }
@@ -302,9 +286,12 @@ public class DefaultLdapParser implements ILdapParser {
             node.setRightOperand(right);
             node.addChild(right);
             
+            nodeContext.setNode(node);
+            nodeContext.setProperty(BinaryNode.class, node);
+            
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
-                handler.onBinaryNodeCreation(node);
+                handler.onBinaryNodeCreation(nodeContext);
             }
             
             return node;

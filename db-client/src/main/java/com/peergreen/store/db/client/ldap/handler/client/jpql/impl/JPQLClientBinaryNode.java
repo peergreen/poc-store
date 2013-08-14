@@ -1,19 +1,10 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
-import static org.mockito.Matchers.endsWith;
-
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.MapJoin;
-import javax.persistence.criteria.Root;
 
-import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
-import com.peergreen.store.ldap.parser.node.NaryNode;
-import com.peergreen.store.ldap.parser.node.UnaryNode;
 
 
 /**
@@ -63,7 +54,7 @@ public class JPQLClientBinaryNode implements ILdapHandler {
     }
 
     @Override
-    public void onUnaryNodeCreation(UnaryNode node) {
+    public void onUnaryNodeCreation(INodeContext<String> nodeContext) {
         // This is a BinaryNode, nothing to do on UnaryNode events.
     }
     
@@ -73,13 +64,13 @@ public class JPQLClientBinaryNode implements ILdapHandler {
      * @param node The BinaryNode created
      */
     @Override
-    public void onBinaryNodeCreation(BinaryNode node) {
-        node.setHandler(this);
-        this.node = node;
+    public void onBinaryNodeCreation(INodeContext<String> nodeContext) {
+        this.node = nodeContext.getProperty(BinaryNode.class);
+        this.node.setHandler(this);
     }
 
     @Override
-    public void onNaryNodeCreation(NaryNode node) {
+    public void onNaryNodeCreation(INodeContext<String> nodeContext) {
         // This is a BinaryNode, nothing to do on NaryNode events.
     }
 
