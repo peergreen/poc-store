@@ -271,13 +271,12 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement updateFilter(Requirement requirement, String filter) throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        if(r!=null){
+        
+        if (r != null) {
             r.setFilter(filter);
             return entityManager.merge(r);
-        }
-        else{
+        } else{
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
-
         }
     }
 
@@ -307,34 +306,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
             theLogger.log(Level.SEVERE,e.getMessage());
         }
 
-        Query query = null;
         if (root != null) {
-            // TODO: simple query which use generated query from tree
-            //            String sql = "SELECT " + alias + " FROM Capability " + alias + " WHERE " + alias + ".namespace=\'"
-            //                            + namespace + "\' AND " + root.getHandler().toQueryElement();
-
-            // TODO: testing purpose => search in properties map with JPQL
-            //            String sql = "SELECT " + alias + " FROM Capability " + alias + " JOIN " + alias +
-            //                    ".properties " + mapAlias + " WHERE KEY(" + mapAlias + ")=\'toto\' AND " +
-            //                    "VALUE(" + mapAlias + ")=\'a\' AND " + alias + ".namespace=\'" +
-            //                    requirement.getNamespace() + "\'";
-            //            query = entityManager.createQuery(sql);
-
-            // TODO: testing purpose => search in properties map with Criteria
-            //            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            //            CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
-            //            Root<Capability> capabilityRoot = criteria.from(Capability.class);
-            //            criteria.select(capabilityRoot);
-            //            MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
-            //
-            //            criteria.where(builder.equal(propertiesRoot.key(), "toto"));
-            //
-            //            System.out.println(entityManager.createQuery(criteria).getResultList());
-
-            
-            // Criteria c = createCriteria(Visit.class).addCriteria("client").add(restrictions);
-            
-            
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Capability> mainQuery = builder.createQuery(Capability.class);
             
@@ -346,7 +318,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
             
             Subquery<Capability> subquery = mainQuery.subquery(Capability.class);
             Root<Capability> subRoot = subquery.from(Capability.class);
-            Join<Capability, Property> subProp = subquery.correlate(prop);
+//            Join<Capability, Property> subProp = subquery.correlate(prop);
             subquery.select(subRoot).where(builder.equal(subRoot.get("namespace"), "provider"));
             
             mainQuery.select(cap).where(
@@ -357,26 +329,6 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 )
             );
             
-//            Metamodel m = entityManager.getMetamodel();
-//            EntityType<Capability> Capability_ = m.entity(Capability.class);
-//
-//            Root<Capability> capa = mainQuery.from(Capability.class);
-//            SetJoin<Capability, Property> prop = capa.join(Capability_.getSet("properties"));
-//            mainQuery.select(capa).where(builder.equal(Capability_.capabilityName, "JPA"));
-            
-//            CriteriaQuery<Capability> mainQuery = builder.createQuery(Capability.class);
-//            Root<Capability> mainFrom = mainQuery.from(Capability.class);
-//            Join<Capability, Property> props = mainFrom.join("properties");
-//            EntityType<Capability> capMetamodel = m.entity(Capability.class);
-//            mainFrom.join(capMetamodel.getSet("properties", Property.class));
-            
-//            Subquery<Property> subquery = mainQuery.subquery(Property.class);
-//            Join<Capability, Property> sqProps = subquery.;
-
-//            mainQuery.select(mainFrom)..where(
-//                builder.equal(sqProps.get("name"), "bundle")
-//            );
-            //.where(builder.equal(mainFrom.get("namespace"), "provider"));
             System.out.println();
             System.out.println();
             Collection<Capability> caps = entityManager.createQuery(mainQuery).getResultList();
@@ -391,20 +343,13 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 System.out.println(i + " - " + c.getCapabilityId() + " - " + c.getCapabilityName());
                 i++;
             }
+            
+            return caps;
         } else {
             // TODO: exception if parsed tree is null?
         }
 
         Set<Capability> capabilities = new HashSet<Capability>();
-
-        if (query != null) {
-            @SuppressWarnings("unchecked")
-            List<Capability> results = query.getResultList();
-
-            capabilities.addAll(results);
-            System.out.println(capabilities.size() + " capabilities match this requirement.");
-        }
-
         return capabilities;
     }
 
