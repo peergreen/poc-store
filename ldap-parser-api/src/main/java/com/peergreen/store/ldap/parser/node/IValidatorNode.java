@@ -1,6 +1,6 @@
 package com.peergreen.store.ldap.parser.node;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
@@ -38,7 +38,7 @@ public interface IValidatorNode<T> extends Node<T> {
      * 
      * @return list of children nodes, using IValidatorNode<T> format.
      */
-    List<IValidatorNode<T>> getChildrenValidatorNode();
+    Collection<IValidatorNode<T>> getChildrenValidatorNode();
     
     /**
      * Method to add a new children to current node, using IValidatorNode<T> format.<br />

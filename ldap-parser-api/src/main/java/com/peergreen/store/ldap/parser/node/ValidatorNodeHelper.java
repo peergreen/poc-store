@@ -1,8 +1,10 @@
 package com.peergreen.store.ldap.parser.node;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.tree.node.SimpleNode;
@@ -11,14 +13,14 @@ import com.peergreen.tree.node.SimpleNode;
 public abstract class ValidatorNodeHelper extends SimpleNode<String> implements IValidatorNode<String> {
 
     private IValidatorNode<String> parentValidator;
-    private List<IValidatorNode<String>> childrenValidator;
+    private Set<IValidatorNode<String>> childrenValidator;
     private ILdapHandler handler;
     private Map<Class<?>, Object> properties;
 
     public ValidatorNodeHelper(String data) {
         super(data);
         parentValidator = null;
-        childrenValidator = new ArrayList<>();
+        childrenValidator = new HashSet<>();
         handler = null;
     }
 
@@ -49,7 +51,7 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
      * @return list of children nodes, using IValidatorNode<T> format.
      */
     @Override
-    public List<IValidatorNode<String>> getChildrenValidatorNode() {
+    public Collection<IValidatorNode<String>> getChildrenValidatorNode() {
         return childrenValidator;
     }
 
