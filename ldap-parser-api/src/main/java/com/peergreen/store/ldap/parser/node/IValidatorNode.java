@@ -64,20 +64,6 @@ public interface IValidatorNode<T> extends Node<T> {
     void setHandler(ILdapHandler handler);
     
     /**
-     * Method to get generated JPQL query for this node.
-     * 
-     * @return associated handler
-     */
-    String getJpql();
-    
-    /**
-     * Method to set generated JPQL query for this node.
-     * 
-     * @param generated query to set
-     */
-    void setJpql(String jpql);
-    
-    /**
      * Method to set (or replace) a property.
      * 
      * @param propClass property class

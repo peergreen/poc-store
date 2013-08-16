@@ -13,7 +13,6 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     private IValidatorNode<String> parentValidator;
     private List<IValidatorNode<String>> childrenValidator;
     private ILdapHandler handler;
-    private String jpql;
     private Map<Class<?>, Object> properties;
 
     public ValidatorNodeHelper(String data) {
@@ -21,7 +20,6 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
         parentValidator = null;
         childrenValidator = new ArrayList<>();
         handler = null;
-        jpql = "";
     }
 
     /**
@@ -73,26 +71,6 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     @Override
     public void setHandler(ILdapHandler handler) {
         this.handler = handler;
-    }
-
-    /**
-     * Method to get generated JPQL query for this node.
-     * 
-     * @return associated handler
-     */
-    @Override
-    public String getJpql() {
-        return jpql;
-    }
-
-    /**
-     * Method to set generated JPQL query for this node.
-     * 
-     * @param generated query to set
-     */
-    @Override
-    public void setJpql(String jpql) {
-        this.jpql = jpql;
     }
 
     /**
