@@ -33,14 +33,14 @@ public interface IGroupController {
      * @throws EntityAlreadyExistsException 
      */
     Group createGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException;
-    
+
     /**
      * Method to remove a group from the database.
      * 
      * @param groupName group's name
      */
     void deleteGroup(String groupName);
-    
+
     /**
      * Method to collect all the group's users.
      * 
@@ -49,7 +49,7 @@ public interface IGroupController {
      * @throws NoEntityFoundException 
      */
     Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
-    
+
     /**
      * Method to add a user to a group.
      * 
@@ -59,7 +59,7 @@ public interface IGroupController {
      * @throws NoEntityFoundException 
      */
     Group addUser(String groupName, String pseudo) throws NoEntityFoundException;
-    
+
     /**
      * Method to remove a user from a group.
      * 
@@ -70,8 +70,6 @@ public interface IGroupController {
      */
     Group removeUser(String groupName, String pseudo) throws NoEntityFoundException;
 
- 
-    // TODO
     /**
      * Method to collect all petals accessible for the members of a group.<br />
      * Throws NoEntityFoundException if specified group does not exist.
@@ -80,6 +78,6 @@ public interface IGroupController {
      * @return list of all petals accessible for members of the specified group
      * @throw NoEntityFoundException
      */
-     Collection<Petal> collectPetals(String name) throws NoEntityFoundException;
-    
+    Collection<Petal> collectPetals(String name) throws NoEntityFoundException;
+
 }
