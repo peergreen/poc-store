@@ -3,6 +3,7 @@ package com.peergreen.store.ldap.parser.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
@@ -11,7 +12,8 @@ public class DefaultNodeContext<T> implements INodeContext<T> {
 
     private IValidatorNode<T> node;
     private Map<Class<?>, Object> properties;
-    
+    private ILdapParser parser;
+
     public DefaultNodeContext() {
         this.properties = new HashMap<>();
     }
@@ -25,7 +27,7 @@ public class DefaultNodeContext<T> implements INodeContext<T> {
     public IValidatorNode<T> getNode() {
         return this.node;
     }
-    
+
     /**
      * Method to set associated node.
      * 
@@ -50,13 +52,30 @@ public class DefaultNodeContext<T> implements INodeContext<T> {
     }
 
     /**
-     * Method to retrieve a property from the Map.
+     * Method to retrieve a property from the Map.<br />
+     * If no element corresponding, method also search in parent Map (LdapFilter).
      * 
      * @param propClass property class
      * @return property corresponding property, {@literal null} otherwise
      */
     @Override
     public <Prop> Prop getProperty(Class<Prop> propClass) {
-        return propClass.cast(this.properties.get(propClass));
+        Prop elem = propClass.cast(this.properties.get(propClass));
+        
+        // if no corresponding element, search in parent properties Map
+        if (elem == null) {
+            elem = propClass.cast(parser.getProperty(propClass));
+        }
+        
+        return elem;
+    }
+    
+    /**
+     * Method to set parser reference.
+     * 
+     * @param parser parser reference to set
+     */
+    public void setParser(ILdapParser parser) {
+        this.parser = parser;
     }
 }

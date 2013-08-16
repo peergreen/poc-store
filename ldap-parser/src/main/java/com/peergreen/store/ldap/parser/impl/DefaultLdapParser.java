@@ -43,6 +43,7 @@ public class DefaultLdapParser implements ILdapParser {
      */
     public DefaultLdapParser() {
         nodeContext = new DefaultNodeContext<>();
+        nodeContext.setParser(this);
         nodeContext.setProperty(DefaultLdapParser.class, this);
         handlers = new HashSet<>();
     }
