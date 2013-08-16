@@ -3,9 +3,6 @@ package com.peergreen.store.ldap.parser.test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientBinaryNode;
-import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientNaryNode;
-import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientUnaryNode;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.impl.DefaultLdapParser;
 
@@ -17,12 +14,6 @@ public class DefaultLdapParserTestCase {
     @BeforeMethod
     public void setUp() {
         parser = new DefaultLdapParser();
-        JPQLClientUnaryNode unaryHandler = new JPQLClientUnaryNode();
-        JPQLClientBinaryNode binaryHandler = new JPQLClientBinaryNode();
-        JPQLClientNaryNode naryHandler = new JPQLClientNaryNode();
-        parser.register(unaryHandler);
-        parser.register(binaryHandler);
-        parser.register(naryHandler);
     }
 
     @Test(expectedExceptions = InvalidLdapFormatException.class)
@@ -41,6 +32,8 @@ public class DefaultLdapParserTestCase {
     public void validUnaryNodeTest() throws InvalidLdapFormatException {
         filter = "(!(name=jpa))";
         parser.parse(filter);
+        
+        // TODO: verify
     }
     
     @Test(expectedExceptions = InvalidLdapFormatException.class)
