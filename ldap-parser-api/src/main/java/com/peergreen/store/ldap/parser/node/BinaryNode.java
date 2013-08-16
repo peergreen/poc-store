@@ -14,6 +14,14 @@ public class BinaryNode extends ValidatorNodeHelper {
         rightOperand = null;
     }
     
+    /**
+     * Method to validate the node.<br />
+     * Mainly check cardinality consistency.<br />
+     * Throws {@link InvalidLdapFormatException} if node is invalid.
+     * 
+     * @return {@literal true} if node is valid
+     * @throws InvalidLdapFormatException
+     */
     @Override
     public boolean validate() throws InvalidLdapFormatException {
     	if (getChildren().size() == 2) {
@@ -23,15 +31,32 @@ public class BinaryNode extends ValidatorNodeHelper {
     	}
     }
     
+    /**
+     * Method to add a new children to current node, using IValidatorNode<T> format.<br />
+     * Throws {@link InvalidLdapFormatException} if operation does not respect node validity.
+     * 
+     * @param child child to add
+     * @throws InvalidLdapFormatException
+     */
     @Override
     public void addChildValidatorNode(IValidatorNode<String> child) {
         super.addChild(child);
     }
     
+    /**
+     * Method to retrieve left operand.
+     * 
+     * @return left operand
+     */
     public IValidatorNode<String> getLeftOperand() {
         return leftOperand;
     }
     
+    /**
+     * Method to set left operand.
+     * 
+     * @param leftOperand left operand to set
+     */
     public void setLeftOperand(IValidatorNode<String> leftOperand) {
         // remove previous left operand
         if (leftOperand != null) {
@@ -41,10 +66,20 @@ public class BinaryNode extends ValidatorNodeHelper {
         addChildValidatorNode(leftOperand);
     }
 
+    /**
+     * Method to retrieve right operand.
+     * 
+     * @return right operand
+     */
     public IValidatorNode<String> getRightOperand() {
         return rightOperand;
     }
     
+    /**
+     * Method to set right operand.
+     * 
+     * @param rightOperand right operand to set
+     */
     public void setRightOperand(IValidatorNode<String> rightOperand) {
         // remove previous right operand
         if (rightOperand != null) {
