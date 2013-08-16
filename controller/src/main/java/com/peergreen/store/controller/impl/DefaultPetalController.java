@@ -125,24 +125,19 @@ public class DefaultPetalController implements IPetalController {
 
         for (Requirement req : requirements) {
             // retrieve capabilities which meet the requirements in a same namespace
-            Collection<Capability> capabilities;
-            try {
-                capabilities = requirementSession.findCapabilities(req);
-                // retrieve petals providing the capability
-                for (Capability capability : capabilities) {
-                    Set<Petal> petals = capability.getPetals();
+            Collection<Capability> capabilities = requirementSession.findCapabilities(req);
+            
+            // retrieve petals providing the capability
+            for (Capability capability : capabilities) {
+                Set<Petal> petals = capability.getPetals();
 
-                    if (petals.isEmpty()) {
-                        // declare missing capability
-                        result.addUnresolvedRequirement(req);
-                    } else {
-                        // index petals providing the capability
-                        result.addResolvedDependency(req, petals);
-                    }
+                if (petals.isEmpty()) {
+                    // declare missing capability
+                    result.addUnresolvedRequirement(req);
+                } else {
+                    // index petals providing the capability
+                    result.addResolvedDependency(req, petals);
                 }
-            } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-                throw new NoEntityFoundException(e);
             }
         }
         
