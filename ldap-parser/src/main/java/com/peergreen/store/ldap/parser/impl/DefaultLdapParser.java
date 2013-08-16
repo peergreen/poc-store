@@ -1,9 +1,7 @@
 package com.peergreen.store.ldap.parser.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Component;
