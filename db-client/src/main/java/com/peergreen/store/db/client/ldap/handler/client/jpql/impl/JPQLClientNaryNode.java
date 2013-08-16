@@ -1,8 +1,17 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
-import javax.persistence.EntityManager;
+import java.util.Collection;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+
+import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.ldap.parser.INodeContext;
+import com.peergreen.store.ldap.parser.enumeration.NaryOperators;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
@@ -15,52 +24,47 @@ import com.peergreen.store.ldap.parser.node.NaryNode;
  */
 public class JPQLClientNaryNode implements ILdapHandler {
     private EntityManager entityManager;
+    private JpaContext<Capability> jpaContext;
     private String namespace;
     private NaryNode node;
 
     /**
-     * Method to generate the piece of JPQL for the node.
-     * 
-     * @return corresponding piece of JPQL query or {@literal empty String} if operator not supported.
+     * Method to generate query for the node.
      */
     @Override
-    public String toQueryElement() {
-        String query = "";
-
+    public void toQueryElement() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
+        Root<Capability> subRoot = subquery.from(Capability.class);
+        
+        // generate a var args containing all children subqueries
+        Collection<IValidatorNode<String>> children = node.getChildrenValidatorNode();
+        Predicate[] predicates = new Predicate[children.size()];
         int i = 0;
-        for (IValidatorNode<String> n : node.getChildrenValidatorNode()) {
-            String req = n.getJpql();
-
-            if (i == 0) {
-                query += "(" + req;
-            } else if ((i % 2) == 0) {
-                if (i == node.getChildrenValidatorNode().size() - 1) {
-                    query += " " + req + ")";
-                } else {
-                    query += " " + req;
-                }
-            } else if ((i % 2) != 0) {
-                // handle operators
-                String op = "";
-                if (node.getData().equals("&")) {
-                    op = "AND";
-                } else if (node.getData().equals("|")) {
-                    op = "OR";
-                }
-
-                if (i == node.getChildrenValidatorNode().size() - 1) {
-                    query += " "  + op + " " + req + ")";
-                } else {
-                    query += " " + op + " " + req;
-                }
-            }
-
-            i++;
+        for (IValidatorNode<String> n : children) {
+            predicates[i] = n.getProperty(Subquery.class).getRestriction();
+        }
+        
+        // create conjunction using right operator
+        if (node.getData().equals(NaryOperators.AND.getNaryOperator())) {
+            subquery.select(subRoot).where(
+                builder.and(
+                    builder.equal(subRoot.get("namespace"), namespace),
+                    builder.and(predicates)
+                )
+            );
+        } else if (node.getData().equals(NaryOperators.OR.getNaryOperator())) {
+            subquery.select(subRoot).where(
+                    builder.and(
+                        builder.equal(subRoot.get("namespace"), namespace),
+                        builder.or(predicates)
+                    )
+            );
         }
 
-        node.setJpql(query);
-
-        return query;
+        // store resultant query in node
+        this.jpaContext.setGeneratedQuery(subquery);
+        this.node.setProperty(JpaContext.class, jpaContext);
     }
 
     @Override
@@ -78,14 +82,22 @@ public class JPQLClientNaryNode implements ILdapHandler {
      * 
      * @param node The NaryNode created
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void onNaryNodeCreation(INodeContext<String> nodeContext) {
         this.node = nodeContext.getProperty(NaryNode.class);
         this.node.setHandler(this);
-    }
-    
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
+        
+        // check if node is root
+        if (nodeContext.getProperty(Boolean.class)) {
+            // to remove warning, create a wrapping class without generic type
+            this.jpaContext.setParentQuery(nodeContext.getProperty(CriteriaQuery.class));
+        } else {
+            // to remove warning, create a wrapping class without generic type
+            this.jpaContext.setParentQuery(nodeContext.getProperty(Subquery.class));
+        }
+        
+        this.namespace = nodeContext.getProperty(String.class);
     }
     
     public void setEntityManager(EntityManager entityManager) {

@@ -1,8 +1,15 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
+import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.ldap.parser.INodeContext;
+import com.peergreen.store.ldap.parser.enumeration.BinaryOperators;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.BinaryNode;
 
@@ -12,30 +19,55 @@ import com.peergreen.store.ldap.parser.node.BinaryNode;
  */
 public class JPQLClientBinaryNode implements ILdapHandler {
     private EntityManager entityManager;
+    private JpaContext<Capability> jpaContext;
     private String namespace;
     private BinaryNode node;
     
     /**
-     * Method to generate the piece of JPQL for the node.
-     * 
-     * @return corresponding piece of JPQL query or {@literal empty String} if operator not supported.
+     * Method to generate query for the node.
      */
     @Override
-    public String toQueryElement() {
-        String query = "";
-        // TODO: JPQL style
-//        String innerRequest = "SELECT c FROM Capability c WHERE c.namespace=\'" + namespace +
-//                "\' AND KEY(" + mapAlias + ")=\'" + node.getLeftOperand() + "\'";
-//      query += "((" + innerRequest + ")" + node.getData() + node.getRightOperand() + ")";
-
-//        query += alias + "." + node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
-//        node.setJpql(query);
+    public void toQueryElement() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
+        Root<Capability> subRoot = subquery.from(Capability.class);
         
-        // TODO: Criteria style
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        Subquery<Capability> subquery = mainQuery.subquery(Capability.class);
+        if (node.getData().equals(BinaryOperators.EQUAL.getBinaryOperator())) {
+            subquery.select(subRoot).where(
+                builder.and(
+                    builder.equal(subRoot.get("namespace"), namespace),
+                    builder.equal(subRoot.get(node.getLeftOperand().getData()), node.getRightOperand().getData())
+                )
+            );
+        } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
+            Expression<String> leftOperand = subRoot.get(node.getLeftOperand().getData());
+            subquery.select(subRoot).where(
+                builder.and(
+                    builder.equal(subRoot.get("namespace"), namespace),
+                    builder.like(leftOperand, node.getRightOperand().getData())
+                )
+            );
+        } else if (node.getData().equals(BinaryOperators.GREATER_THAN_EQUAL.getBinaryOperator())) {
+            Expression<String> leftOperand = subRoot.get(node.getLeftOperand().getData());
+            subquery.select(subRoot).where(
+                builder.and(
+                    builder.equal(subRoot.get("namespace"), namespace),
+                    builder.greaterThanOrEqualTo(leftOperand, node.getRightOperand().getData())
+                )
+            );
+        } else if (node.getData().equals(BinaryOperators.LESSER_THAN_EQUAL.getBinaryOperator())) {
+            Expression<String> leftOperand = subRoot.get(node.getLeftOperand().getData());
+            subquery.select(subRoot).where(
+                builder.and(
+                    builder.equal(subRoot.get("namespace"), namespace),
+                    builder.lessThanOrEqualTo(leftOperand, node.getRightOperand().getData())
+                )
+            );
+        }
         
-        return query;
+        // store resultant query in node
+        this.jpaContext.setGeneratedQuery(subquery);
+        this.node.setProperty(JpaContext.class, jpaContext);
     }
 
     @Override
@@ -48,10 +80,22 @@ public class JPQLClientBinaryNode implements ILdapHandler {
      * 
      * @param node The BinaryNode created
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void onBinaryNodeCreation(INodeContext<String> nodeContext) {
         this.node = nodeContext.getProperty(BinaryNode.class);
         this.node.setHandler(this);
+        
+        // check if node is root
+        if (nodeContext.getProperty(Boolean.class)) {
+            // to remove warning, create a wrapping class without generic type
+            this.jpaContext.setParentQuery(nodeContext.getProperty(CriteriaQuery.class));
+        } else {
+            // to remove warning, create a wrapping class without generic type
+            this.jpaContext.setParentQuery(nodeContext.getProperty(Subquery.class));
+        }
+        
+        this.namespace = nodeContext.getProperty(String.class);
     }
 
     @Override
@@ -59,10 +103,6 @@ public class JPQLClientBinaryNode implements ILdapHandler {
         // This is a BinaryNode, nothing to do on NaryNode events.
     }
 
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-    
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

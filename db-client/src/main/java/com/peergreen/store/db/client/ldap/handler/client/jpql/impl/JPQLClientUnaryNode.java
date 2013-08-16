@@ -1,7 +1,12 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
+import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
@@ -12,23 +17,29 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  */
 public class JPQLClientUnaryNode implements ILdapHandler {
     private EntityManager entityManager;
+    private JpaContext<Capability> jpaContext;
     private String namespace;
     private UnaryNode node;
     
     /**
-     * Method to generate the piece of JPQL for the node.
-     * 
-     * @return corresponding piece of JPQL query or {@literal empty String} if operator not supported.
+     * Method to generate query for the node.
      */
     @Override
-    public String toQueryElement() {
-        String query = "";
-        if (node.getData().equals("!")) {
-            query += "NOT " + node.getChild().getHandler().toQueryElement();
-        }
-        node.setJpql(query);
+    public void toQueryElement() {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        Subquery<Capability> subquery = this.jpaContext.getParentQuery().subquery(Capability.class);
+        Root<Capability> subRoot = subquery.from(Capability.class);
         
-        return query;
+        subquery.select(subRoot).where(
+            builder.and(
+                builder.equal(subRoot.get("namespace"), namespace),
+                builder.not(this.node.getProperty(JpaContext.class).getGeneratedQuery().getRestriction())
+            )
+        );
+        
+        // store resultant query in node
+        this.jpaContext.setGeneratedQuery(subquery);
+        this.node.setProperty(JpaContext.class, jpaContext);
     }
     
     /**
@@ -36,10 +47,22 @@ public class JPQLClientUnaryNode implements ILdapHandler {
      * 
      * @param node The unaryNode created
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void onUnaryNodeCreation(INodeContext<String> nodeContext) {
         this.node = nodeContext.getProperty(UnaryNode.class);
         this.node.setHandler(this);
+        
+        // check if node is root
+        if (nodeContext.getProperty(Boolean.class)) {
+            // to remove warning, create a wrapping class without generic type
+            this.jpaContext.setParentQuery(nodeContext.getProperty(CriteriaQuery.class));
+        } else {
+            // to remove warning, create a wrapping class without generic type
+            this.jpaContext.setParentQuery(nodeContext.getProperty(Subquery.class));
+        }
+        
+        this.namespace = nodeContext.getProperty(String.class);
     }
 
     @Override
@@ -50,10 +73,6 @@ public class JPQLClientUnaryNode implements ILdapHandler {
     @Override
     public void onNaryNodeCreation(INodeContext<String> nodeContext) {
      // This is an UnaryNode, nothing to do on NaryNode events.
-    }
-    
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
     }
     
     public void setEntityManager(EntityManager entityManager) {
