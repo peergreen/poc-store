@@ -1,11 +1,11 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
+import javax.persistence.EntityManager;
+
 import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
-import com.peergreen.store.ldap.parser.node.BinaryNode;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 import com.peergreen.store.ldap.parser.node.NaryNode;
-import com.peergreen.store.ldap.parser.node.UnaryNode;
 
 
 /**
@@ -14,14 +14,10 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  *
  */
 public class JPQLClientNaryNode implements ILdapHandler {
+    private EntityManager entityManager;
+    private String namespace;
     private NaryNode node;
-    private String alias;
-    private String mapAlias;
-    
-    public JPQLClientNaryNode(String alias, String mapAlias) {
-        this.alias = alias;
-        this.mapAlias = mapAlias;
-    }
+
     /**
      * Method to generate the piece of JPQL for the node.
      * 
@@ -43,7 +39,7 @@ public class JPQLClientNaryNode implements ILdapHandler {
                 } else {
                     query += " " + req;
                 }
-            } else if ((i % 2) == 1) {
+            } else if ((i % 2) != 0) {
                 // handle operators
                 String op = "";
                 if (node.getData().equals("&")) {
@@ -86,5 +82,13 @@ public class JPQLClientNaryNode implements ILdapHandler {
     public void onNaryNodeCreation(INodeContext<String> nodeContext) {
         this.node = nodeContext.getProperty(NaryNode.class);
         this.node.setHandler(this);
+    }
+    
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+    
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 }

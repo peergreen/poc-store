@@ -59,16 +59,11 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     @OSGiResource
     private ILdapParser ldapParser;
-
     private JPQLClientBinaryNode jpqlClientBinaryNode;
-
+    private JPQLClientNaryNode jpqlClientNaryNode;
+    private JPQLClientUnaryNode jpqlClientUnaryNode;
     private ISessionPetal petalSession;
-
     private static Logger theLogger = Logger.getLogger(DefaultSessionPetal.class.getName());
-
-    private final String alias = "cap";
-
-    private final String mapAlias = "m";
 
     public EntityManager getEntityManager() {
         return entityManager;
@@ -81,11 +76,17 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     @PostConstruct
     public void initHandlers() {
-        ldapParser.register(new JPQLClientUnaryNode(alias, mapAlias));
-        jpqlClientBinaryNode = new JPQLClientBinaryNode(alias, mapAlias);
+        jpqlClientBinaryNode = new JPQLClientBinaryNode();
         jpqlClientBinaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientBinaryNode);
-        ldapParser.register(new JPQLClientNaryNode(alias, mapAlias));
+        
+        jpqlClientNaryNode = new JPQLClientNaryNode();
+        jpqlClientNaryNode.setEntityManager(entityManager);
+        ldapParser.register(jpqlClientNaryNode);
+        
+        jpqlClientUnaryNode = new JPQLClientUnaryNode();
+        jpqlClientUnaryNode.setEntityManager(entityManager);
+        ldapParser.register(jpqlClientUnaryNode);
     }
 
     /**

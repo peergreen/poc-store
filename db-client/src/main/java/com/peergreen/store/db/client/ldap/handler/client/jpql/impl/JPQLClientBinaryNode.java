@@ -13,14 +13,7 @@ import com.peergreen.store.ldap.parser.node.BinaryNode;
 public class JPQLClientBinaryNode implements ILdapHandler {
     private EntityManager entityManager;
     private String namespace;
-    private String alias;
-    private String mapAlias;
     private BinaryNode node;
-    
-    public JPQLClientBinaryNode(String alias, String mapAlias) {
-        this.alias = alias;
-        this.mapAlias = mapAlias;
-    }
     
     /**
      * Method to generate the piece of JPQL for the node.
@@ -30,25 +23,17 @@ public class JPQLClientBinaryNode implements ILdapHandler {
     @Override
     public String toQueryElement() {
         String query = "";
-        
-        // TODO: Criteria style
-//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Capability> criteria = builder.createQuery(Capability.class);
-//        Root<Capability> capabilityRoot = criteria.from(Capability.class);
-//        criteria.select(capabilityRoot);
-//        MapJoin<Capability, String, String> propertiesRoot = capabilityRoot.joinMap("properties");
-//
-//        criteria.where(builder.equal(propertiesRoot.key(), node.getLeftOperand()));
-//
-//        System.out.println(entityManager.createQuery(criteria).getResultList());        
-        
         // TODO: JPQL style
 //        String innerRequest = "SELECT c FROM Capability c WHERE c.namespace=\'" + namespace +
 //                "\' AND KEY(" + mapAlias + ")=\'" + node.getLeftOperand() + "\'";
 //      query += "((" + innerRequest + ")" + node.getData() + node.getRightOperand() + ")";
 
-        query += alias + "." + node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
-        node.setJpql(query);
+//        query += alias + "." + node.getLeftOperand().getData() + node.getData() + "\'" + node.getRightOperand().getData() + "\'";
+//        node.setJpql(query);
+        
+        // TODO: Criteria style
+//        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+//        Subquery<Capability> subquery = mainQuery.subquery(Capability.class);
         
         return query;
     }

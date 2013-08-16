@@ -1,5 +1,7 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
+import javax.persistence.EntityManager;
+
 import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.store.ldap.parser.node.UnaryNode;
@@ -9,14 +11,9 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  * JPQL Client to handle UnaryNode and generate a piece of JPQL query.
  */
 public class JPQLClientUnaryNode implements ILdapHandler {
+    private EntityManager entityManager;
+    private String namespace;
     private UnaryNode node;
-    private String alias;
-    private String mapAlias;
-    
-    public JPQLClientUnaryNode(String alias, String mapAlias) {
-        this.alias = alias;
-        this.mapAlias = mapAlias;
-    }
     
     /**
      * Method to generate the piece of JPQL for the node.
@@ -53,5 +50,13 @@ public class JPQLClientUnaryNode implements ILdapHandler {
     @Override
     public void onNaryNodeCreation(INodeContext<String> nodeContext) {
      // This is an UnaryNode, nothing to do on NaryNode events.
+    }
+    
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+    
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 }

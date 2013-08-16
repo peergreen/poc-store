@@ -17,11 +17,9 @@ public class DefaultLdapParserTestCase {
     @BeforeMethod
     public void setUp() {
         parser = new DefaultLdapParser();
-        String alias = "cap";
-        String mapAlias = "m";
-        JPQLClientUnaryNode unaryHandler = new JPQLClientUnaryNode(alias, mapAlias);
-        JPQLClientBinaryNode binaryHandler = new JPQLClientBinaryNode(alias, mapAlias);
-        JPQLClientNaryNode naryHandler = new JPQLClientNaryNode(alias, mapAlias);
+        JPQLClientUnaryNode unaryHandler = new JPQLClientUnaryNode();
+        JPQLClientBinaryNode binaryHandler = new JPQLClientBinaryNode();
+        JPQLClientNaryNode naryHandler = new JPQLClientNaryNode();
         parser.register(unaryHandler);
         parser.register(binaryHandler);
         parser.register(naryHandler);
