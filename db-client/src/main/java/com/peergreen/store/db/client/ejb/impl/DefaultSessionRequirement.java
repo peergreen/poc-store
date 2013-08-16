@@ -59,6 +59,8 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     @OSGiResource
     private ILdapParser ldapParser;
+    private CriteriaBuilder builder;
+    private CriteriaQuery<Capability> mainQuery;
     private JPQLClientBinaryNode jpqlClientBinaryNode;
     private JPQLClientNaryNode jpqlClientNaryNode;
     private JPQLClientUnaryNode jpqlClientUnaryNode;
@@ -76,6 +78,11 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     @PostConstruct
     public void initHandlers() {
+        builder = entityManager.getCriteriaBuilder();
+        mainQuery = builder.createQuery(Capability.class);
+        // set property in ldap parser to keep trace of main query
+        ldapParser.setProperty(CriteriaQuery.class, mainQuery);
+        
         jpqlClientBinaryNode = new JPQLClientBinaryNode();
         jpqlClientBinaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientBinaryNode);
@@ -251,11 +258,10 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement updateNamespace(Requirement requirement, String namespace)throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        if(r!=null){
+        if(r != null){
             r.setNamespace(namespace);
             return entityManager.merge(r);
-        }
-        else{
+        } else {
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
@@ -276,7 +282,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         if (r != null) {
             r.setFilter(filter);
             return entityManager.merge(r);
-        } else{
+        } else {
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
@@ -308,8 +314,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         }
 
         if (root != null) {
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Capability> mainQuery = builder.createQuery(Capability.class);
+
             
             Metamodel m = entityManager.getMetamodel();
             EntityType<Capability> capMetaModel = m.entity(Capability.class);
