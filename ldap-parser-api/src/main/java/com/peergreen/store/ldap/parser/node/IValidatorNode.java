@@ -76,4 +76,20 @@ public interface IValidatorNode<T> extends Node<T> {
      * @param generated query to set
      */
     void setJpql(String jpql);
+    
+    /**
+     * Method to set (or replace) a property.
+     * 
+     * @param propClass property class
+     * @param property  property
+     */
+    <Prop> void setProperty(Class<Prop> propClass, Prop property);
+    
+    /**
+     * Method to retrieve a property.
+     * 
+     * @param propClass property class
+     * @return property
+     */
+    <Prop> Prop getProperty(Class<Prop> propClass);
 }

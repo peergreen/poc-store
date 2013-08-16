@@ -2,6 +2,7 @@ package com.peergreen.store.ldap.parser.node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
 import com.peergreen.tree.node.SimpleNode;
@@ -13,7 +14,8 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     private List<IValidatorNode<String>> childrenValidator;
     private ILdapHandler handler;
     private String jpql;
-    
+    private Map<Class<?>, Object> properties;
+
     public ValidatorNodeHelper(String data) {
         super(data);
         parentValidator = null;
@@ -21,7 +23,7 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
         handler = null;
         jpql = "";
     }
-    
+
     /**
      * Method to retrieve parent node, using IValidatorNode<T> format.
      * 
@@ -42,7 +44,7 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
         super.setParent(parentNode);
         this.parentValidator = parentNode;
     }
-    
+
     /**
      * Method to get children nodes, using IValidatorNode<T> format.
      * 
@@ -52,7 +54,7 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     public List<IValidatorNode<String>> getChildrenValidatorNode() {
         return childrenValidator;
     }
-    
+
     /**
      * Method to retrieve associated handler.
      * 
@@ -72,7 +74,7 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     public void setHandler(ILdapHandler handler) {
         this.handler = handler;
     }
-    
+
     /**
      * Method to get generated JPQL query for this node.
      * 
@@ -91,5 +93,30 @@ public abstract class ValidatorNodeHelper extends SimpleNode<String> implements 
     @Override
     public void setJpql(String jpql) {
         this.jpql = jpql;
+    }
+
+    /**
+     * Method to set (or replace) a property.
+     * 
+     * @param propClass property class
+     * @param property  property
+     */
+    @Override
+    public <Prop> void setProperty(Class<Prop> propClass, Prop property) {
+        if (property == null) {
+            return;
+        }
+        this.properties.put(propClass, property);
+    }
+
+    /**
+     * Method to retrieve a property.
+     * 
+     * @param propClass property class
+     * @return property
+     */
+    @Override
+    public <Prop> Prop getProperty(Class<Prop> propClass) {
+        return propClass.cast(this.properties.get(propClass));
     }
 }
