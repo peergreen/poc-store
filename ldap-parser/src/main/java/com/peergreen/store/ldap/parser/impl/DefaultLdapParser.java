@@ -37,6 +37,8 @@ public class DefaultLdapParser implements ILdapParser {
     private DefaultNodeContext<String> nodeContext;
     private Set<ILdapHandler> handlers;
     private Map<Class<?>, Object> properties;
+    private IValidatorNode<String> root = null;
+    private IValidatorNode<String> parentNode = null;
 
     /**
      * Default constructor.
@@ -56,7 +58,7 @@ public class DefaultLdapParser implements ILdapParser {
     public void register(ILdapHandler handler) {
         handlers.add(handler);
     }
-    
+
     /**
      * Method to remove a handler from the parser.
      * 
@@ -79,8 +81,6 @@ public class DefaultLdapParser implements ILdapParser {
         ArrayList<String> tokens = getTokens(filter);
 
         int i = 0;
-        IValidatorNode<String> root = null;
-        IValidatorNode<String> parentNode = null;
 
         // check if there is as many opening parenthesis as closing parenthesis
         int openBr = filter.length() - filter.replace("(", "").length();
@@ -229,25 +229,36 @@ public class DefaultLdapParser implements ILdapParser {
      */
     protected IValidatorNode<String> createOperatorNode (String op) {
         IValidatorNode<String> opNode = null;
+        
+        if (parentNode == null) {
+            // set Boolean key to false (root node)
+            nodeContext.setProperty(Boolean.class, new Boolean(true));
+        } else {
+            // set Boolean key to false (not root node)
+            nodeContext.setProperty(Boolean.class, new Boolean(false));
+        }
+        
         if (UnaryOperators.isUnaryOperator(op)) {
             UnaryNode node = new UnaryNode(op);
             nodeContext.setNode(node);
             nodeContext.setProperty(UnaryNode.class, node);
-            
+
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
                 handler.onUnaryNodeCreation(nodeContext);
             }
+
             opNode = node;
         } else if (NaryOperators.isNaryOperator(op)) {
             NaryNode node = new NaryNode(op);
             nodeContext.setNode(node);
             nodeContext.setProperty(NaryNode.class, node);
-            
+
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
                 handler.onNaryNodeCreation(nodeContext);
             }
+
             opNode = node;
         }
 
@@ -286,21 +297,29 @@ public class DefaultLdapParser implements ILdapParser {
             right.setParentValidatorNode(node);
             node.setRightOperand(right);
             node.addChild(right);
-            
+
             nodeContext.setNode(node);
             nodeContext.setProperty(BinaryNode.class, node);
-            
+
+            if (parentNode == null) {
+                // set Boolean key to false (root node)
+                nodeContext.setProperty(Boolean.class, new Boolean(true));
+            } else {
+                // set Boolean key to false (not root node)
+                nodeContext.setProperty(Boolean.class, new Boolean(false));
+            }
+
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
                 handler.onBinaryNodeCreation(nodeContext);
             }
-            
+
             return node;
         } else {
             throw new InvalidLdapFormatException("Comparison operator must be applied on two operands.");
         }
     }
-    
+
     /**
      * Method to add a new property to the Map.
      * 
