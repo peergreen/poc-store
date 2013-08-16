@@ -16,11 +16,21 @@ public class DefaultNodeContext<T> implements INodeContext<T> {
         this.properties = new HashMap<>();
     }
 
+    /**
+     * Method to retrieve associated node.
+     * 
+     * @return associated node
+     */
     @Override
     public IValidatorNode<T> getNode() {
         return this.node;
     }
     
+    /**
+     * Method to set associated node.
+     * 
+     * @param node associated node to set
+     */
     public void setNode(IValidatorNode<T> node) {
         this.node = node;
     }
