@@ -10,7 +10,7 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
  * @author Guillaume Dupraz Canard
  */
 public interface ILdapParser {
-    
+
     /**
      * Method to register handlers for JPQL generation.
      * 
@@ -27,5 +27,9 @@ public interface ILdapParser {
      * @throws InvalidLdapFormatException
      */
     IValidatorNode<String> parse(String filter) throws InvalidLdapFormatException;
+
+    <Prop> void setProperty(Class<Prop> propClass, Prop property);
+
+    <Prop> Prop getProperty(Class<Prop> propClass);
 
 }

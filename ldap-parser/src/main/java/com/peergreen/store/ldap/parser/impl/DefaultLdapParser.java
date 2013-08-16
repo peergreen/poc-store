@@ -2,6 +2,7 @@ package com.peergreen.store.ldap.parser.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.felix.ipojo.annotations.Component;
@@ -35,6 +36,7 @@ public class DefaultLdapParser implements ILdapParser {
 
     private DefaultNodeContext<String> nodeContext;
     private Set<ILdapHandler> handlers;
+    private Map<Class<?>, Object> properties;
 
     /**
      * Default constructor.
@@ -296,5 +298,30 @@ public class DefaultLdapParser implements ILdapParser {
         } else {
             throw new InvalidLdapFormatException("Comparison operator must be applied on two operands.");
         }
+    }
+    
+    /**
+     * Method to add a new property to the Map.
+     * 
+     * @param propClass property class
+     * @param prop property
+     */
+    @Override
+    public <Prop> void setProperty(Class<Prop> propClass, Prop property) {
+        if (property == null) {
+            return;
+        }
+        this.properties.put(propClass, property);    
+    }
+
+    /**
+     * Method to retrieve a property from the Map.
+     * 
+     * @param propClass property class
+     * @return property corresponding property, {@literal null} otherwise
+     */
+    @Override
+    public <Prop> Prop getProperty(Class<Prop> propClass) {
+        return propClass.cast(this.properties.get(propClass));
     }
 }
