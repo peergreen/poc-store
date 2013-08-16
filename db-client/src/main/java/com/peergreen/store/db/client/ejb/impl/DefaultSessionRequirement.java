@@ -17,17 +17,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
@@ -293,7 +287,6 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @param namespace request namespace
      * @param requirement requirement containing all constaints to resolve
      * @return collection of Capability that meets the given requirement
-     * @throws NoEntityFoundException
      * @see DefaultLdapParser
      */
     @Override
@@ -301,8 +294,8 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
 
-        // set JPQLClientBinaryNode namespace attribute
-        jpqlClientBinaryNode.setNamespace(r.getNamespace());
+        // set namespace as LDAP parser property
+        ldapParser.setProperty(String.class, r.getNamespace());
 
         String filter = r.getFilter();
 
@@ -314,29 +307,8 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         }
 
         if (root != null) {
-
-            
-            Metamodel m = entityManager.getMetamodel();
-            EntityType<Capability> capMetaModel = m.entity(Capability.class);
-
-            Root<Capability> cap = mainQuery.from(Capability.class);
-            Join<Capability, Property> prop = cap.join(capMetaModel.getSet("properties", Property.class));
-            
-            Subquery<Capability> subquery = mainQuery.subquery(Capability.class);
-            Root<Capability> subRoot = subquery.from(Capability.class);
-//            Join<Capability, Property> subProp = subquery.correlate(prop);
-            subquery.select(subRoot).where(builder.equal(subRoot.get("namespace"), "provider"));
-            
-            mainQuery.select(cap).where(
-                builder.and(
-                    builder.equal(prop.get("name"), "bundle"),
-                    builder.equal(prop.get("value"), "true"),
-                    builder.not(cap.in(subquery))
-                )
-            );
-            
+            // query has been generated during tree generation, just ask for execution
             Collection<Capability> caps = entityManager.createQuery(mainQuery).getResultList();
-
             return caps;
         } else {
             // TODO: exception if parsed tree is null?

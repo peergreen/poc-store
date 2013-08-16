@@ -100,8 +100,7 @@ public interface ISessionRequirement {
      * @param namespace request namespace
      * @param requirement requirement containing all constaints to resolve
      * @return collection of Capability that meets the given requirement
-     * @throws NoEntityFoundException
      * @see DefaultLdapParser
      */
-    Collection<Capability> findCapabilities(Requirement requirement) throws NoEntityFoundException;
+    Collection<Capability> findCapabilities(Requirement requirement);
 }
