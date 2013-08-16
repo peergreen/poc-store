@@ -13,7 +13,8 @@ public interface INodeContext<T> {
     <Prop> void setProperty(Class<Prop> propClass, Prop property);
     
     /**
-     * Method to retrieve a property from the Map.
+     * Method to retrieve a property from the Map.<br />
+     * If no element corresponding, method also search in parent Map (LdapFilter).
      * 
      * @param propClass property class
      * @return property corresponding property, {@literal null} otherwise
