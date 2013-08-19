@@ -23,6 +23,10 @@ public class JPQLClientBinaryNode implements ILdapHandler {
     private String namespace;
     private BinaryNode node;
     
+    public JPQLClientBinaryNode() {
+        jpaContext = new JpaContext<>();
+    }
+    
     /**
      * Method to generate query for the node.
      */

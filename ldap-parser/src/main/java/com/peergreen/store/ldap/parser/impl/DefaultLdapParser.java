@@ -1,6 +1,7 @@
 package com.peergreen.store.ldap.parser.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,7 @@ public class DefaultLdapParser implements ILdapParser {
         nodeContext.setParser(this);
         nodeContext.setProperty(DefaultLdapParser.class, this);
         handlers = new HashSet<>();
+        properties = new HashMap<>();
     }
 
     /**
