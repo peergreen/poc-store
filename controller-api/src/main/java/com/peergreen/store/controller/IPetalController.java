@@ -234,4 +234,18 @@ public interface IPetalController {
      */
     Petal setCategory(String vendorName, String artifactId, String version, Category category)throws NoEntityFoundException;
 
+    /**
+     * Method to get all the petals which has the requirement given 
+     * @param name the requirement's name
+     * @throws NoEntityFoundException 
+     */
+    Collection<Petal> getPetalsForRequirement(String name) throws NoEntityFoundException;
+    
+    /**
+     * Method to get all the petals which provide the capability given 
+     * @param name the capability's name
+     * @throws NoEntityFoundException 
+     */
+    Collection<Petal> getPetalsForCapability(String name, String version) throws NoEntityFoundException;
+   
 }

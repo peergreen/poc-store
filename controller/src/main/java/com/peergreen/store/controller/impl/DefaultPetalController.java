@@ -484,6 +484,38 @@ public class DefaultPetalController implements IPetalController {
         }
     }
 
+
+    /**
+     * Method to get all the petals which has the requirement given
+     * @param name the requirement's name
+     * @throws NoEntityFoundException
+     */
+    @Override
+    public Collection<Petal> getPetalsForRequirement(String name) throws NoEntityFoundException {
+        try {
+            return  requirementSession.collectPetals(name);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+    }
+
+    /**
+     * Method to get all the petals which provide the capability given
+     * @param name the capability's name
+     * @param version the capabilty's version
+     * @throws NoEntityFoundException
+     */
+    @Override
+    public Collection<Petal> getPetalsForCapability(String name, String version) throws NoEntityFoundException {
+        try {
+            return  capabilitySession.collectPetals(name, version);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+    }
+
     @Bind
     public void bindCapabilitySession(ISessionCapability capabilitySession) {
         this.capabilitySession = capabilitySession;
