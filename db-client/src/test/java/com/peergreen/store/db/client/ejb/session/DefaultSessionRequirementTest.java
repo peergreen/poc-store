@@ -1,4 +1,4 @@
-package com.peergreen.store.db.client;
+package com.peergreen.store.db.client.ejb.session;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
