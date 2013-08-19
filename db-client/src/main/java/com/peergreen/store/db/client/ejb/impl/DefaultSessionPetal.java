@@ -150,7 +150,7 @@ public class DefaultSessionPetal implements ISessionPetal {
         Category c = sessionCategory.findCategory(category.getCategoryName());
         if (c == null) {
             throw new NoEntityFoundException("The Category of petals " + category.getCategoryName() +  "doesn't exist in database.");}
-      
+
         Group group = sessionGroup.findGroup("Administrator");
         // group 'Administrator' must exists
         if (group == null) {
@@ -246,13 +246,16 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Collection<Capability> collectCapabilities(Petal petal)throws NoEntityFoundException {
         // retrieve attached petal
+        Set<Capability> caps = new HashSet<>(); 
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-        if(p!=null)
-            return p.getCapabilities();
-        else
+        if(p!=null){
+            caps.addAll(p.getCapabilities());
+            return caps;
+        }else{
             throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
                     " in version " + petal.getVersion() + " does not exist in database.");
-    }
+        }
+    } 
 
     /**
      * Method to collect the requirements of a petal
@@ -265,12 +268,15 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Collection<Requirement> collectRequirements(Petal petal) throws NoEntityFoundException{
         // retrieve attached petal
+        Set<Requirement> reqs = new HashSet<>(); 
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-        if(p!=null)
-            return p.getRequirements();
-        else
+        if(p!=null){
+            reqs.addAll(p.getRequirements());
+            return reqs;
+        }else{
             throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
                     " in version " + petal.getVersion() + " does not exist in database.");
+        }
     }
 
     /**
@@ -305,7 +311,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                     sessionCapability.removePetal(cap, p);
                 } catch (NoEntityFoundException e) {
                     theLogger.log(Level.SEVERE,e.getMessage());
-                    return null;
+                    return null; 
                 }
             }
 
@@ -332,15 +338,15 @@ public class DefaultSessionPetal implements ISessionPetal {
                 }
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
-                return null;
+                return null; 
             }
 
             entityManager.remove(p);
 
-            return p;
+            return p; 
         }
         else{
-            return p;
+            return p; 
         }
     }
 
@@ -408,7 +414,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionGroup.addPetal(g, p);
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
-                return null;
+                return null; 
             }
 
             return entityManager.merge(p);
@@ -554,7 +560,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionCapability.removePetal(c, p);
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
-                return null ;
+                return null ; 
             }
             return  entityManager.merge(petal);
         }
@@ -618,7 +624,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionRequirement.removePetal(r, p);
             }catch(NoEntityFoundException e){
                 theLogger.log(Level.SEVERE, e.getMessage());
-                return null;
+                return null; 
             }
 
             return entityManager.merge(p);} 
