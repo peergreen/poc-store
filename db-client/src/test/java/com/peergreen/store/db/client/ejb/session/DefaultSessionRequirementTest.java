@@ -1,13 +1,16 @@
 package com.peergreen.store.db.client.ejb.session;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
@@ -45,6 +48,8 @@ public class DefaultSessionRequirementTest {
     @Mock
     private Set<Petal> petals;
     @Mock
+    private Iterator<Petal> iterator;
+    @Mock
     private Query query;
     @Mock
     private ISessionPetal sessionPetal;
@@ -70,6 +75,7 @@ public class DefaultSessionRequirementTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(mockrequirement.getRequirementName()).thenReturn("name");
         when(sessionPetal.findPetal(any(Vendor.class), anyString(), anyString())).thenReturn(petal);
+        when(petals.iterator()).thenReturn(iterator);
 
     }
 
@@ -99,24 +105,53 @@ public class DefaultSessionRequirementTest {
     }
 
     @Test
-    public void shouldDeleteRequirement() {
+    public void shouldDeleteRequirement() throws NoEntityFoundException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);   
+        when(mockrequirement.getPetals()).thenReturn(petals);
+        when(iterator.hasNext()).thenReturn(true,false);
         //When
-        sessionRequirement.deleteRequirement(requirementName);
+        Requirement result = sessionRequirement.deleteRequirement(requirementName);
         //Then 
+        verify(sessionPetal).removeRequirement((Petal) anyObject(), requirementArgument.capture());
+        Assert.assertEquals(mockrequirement, requirementArgument.getValue());
+
         verify(entityManager).remove(requirementArgument.capture());
         Assert.assertSame(mockrequirement,requirementArgument.getValue());
-    }
+        Assert.assertSame(mockrequirement,result);
 
+    }
+    
     @Test
-    public void shouldThrowExceptionWhenDeleteCauseEntityNotExisting(){
+    public void shouldDeleteRequirementBis() throws NoEntityFoundException {
         //Given
         when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);   
+        when(mockrequirement.getPetals()).thenReturn(petals);
+        when(iterator.hasNext()).thenReturn(true,false);
+        //Throwing an exception to verify the catch 
+        when(sessionPetal.removeRequirement((Petal) anyObject(), any(Requirement.class))).thenThrow(new NoEntityFoundException());
+        //When
+        Requirement result = sessionRequirement.deleteRequirement(requirementName);
+        //Then 
+        verify(sessionPetal).removeRequirement((Petal) anyObject(), requirementArgument.capture());
+        Assert.assertEquals(mockrequirement, requirementArgument.getValue());
+
+        Assert.assertSame(null,result);
+
+    }
+    
+
+    @Test
+    public void shouldReturnNullWhenDeleteCauseEntityNotExisting(){
+        //Given
         when(sessionRequirement.findRequirement(anyString())).thenReturn(null);   
         //When
-        sessionRequirement.deleteRequirement(requirementName);
+        Requirement result =  sessionRequirement.deleteRequirement(requirementName);
+        //Then
+        Assert.assertSame(null,result);
+
     }
 
     @Test
@@ -131,6 +166,22 @@ public class DefaultSessionRequirementTest {
         verify(query).setParameter(anyString(), idArgument.capture());
         Assert.assertEquals(requirementName, idArgument.getValue());
         verify(query).getSingleResult();
+    }
+    
+    @Test
+    public void shouldFindRequirementBis() {
+        //Given
+        when(entityManager.createNamedQuery(queryString2)).thenReturn(query);
+        //Throwing an exception to verify the catch 
+        when(query.getSingleResult()).thenThrow(new NoResultException());
+        //When
+      Requirement result =  sessionRequirement.findRequirement(requirementName);
+        //Then
+        verify(entityManager).createNamedQuery(idArgument.capture());
+        Assert.assertEquals(queryString2, idArgument.getValue());
+        verify(query).setParameter(anyString(), idArgument.capture());
+        Assert.assertEquals(requirementName, idArgument.getValue());
+        Assert.assertSame(null, result);
     }
 
     @Test
@@ -166,6 +217,17 @@ public class DefaultSessionRequirementTest {
         Assert.assertSame(petal,petalArgument.getValue());
         verify(entityManager).merge(mockrequirement);
     }
+    
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenAddPetalTorequirement() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        when(mockrequirement.getPetals()).thenReturn(petals);
+        //When
+        sessionRequirement.addPetal(mockrequirement,petal);
+
+        //Then we throw a new NoEntityFoundException
+    }
 
     @Test
     public void shouldRemovePetalFromRequirement() throws NoEntityFoundException{
@@ -179,7 +241,17 @@ public class DefaultSessionRequirementTest {
         verify(petals).remove(petalArgument.capture());
         Assert.assertSame(petal, petalArgument.getValue());
         verify(entityManager).merge(mockrequirement);
-
+    }
+    
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenRemovePetalFromRequirement() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        when(mockrequirement.getPetals()).thenReturn(petals);
+        //When
+        sessionRequirement.removePetal(mockrequirement, petal);
+        
+        //Then we throw a new NoEntityFoundException
 
     }
 
@@ -205,6 +277,16 @@ public class DefaultSessionRequirementTest {
         Assert.assertEquals(namespace, idArgument.getValue());
         verify(entityManager).merge(mockrequirement);
     }
+    
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenUpdateNamespace() throws NoEntityFoundException{
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        //when
+        sessionRequirement.updateNamespace(mockrequirement, namespace);
+        //Then throw new NoEntityFoundException 
+    }
+
 
     @Test
     public void shouldUpdateFilter() throws NoEntityFoundException {
@@ -218,4 +300,14 @@ public class DefaultSessionRequirementTest {
         verify(entityManager).merge(mockrequirement);
     }
 
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionWhenUpdateFilter() throws NoEntityFoundException {
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        //when
+        sessionRequirement.updateFilter(mockrequirement, filter);
+        //Then throw new NoEntityFoundException 
+
+    }
+    
 }

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
@@ -103,6 +104,24 @@ public class DefaultSessionLinkTest {
     }
 
     @Test
+    public void shouldFindLink2() {
+
+        when(query.getSingleResult()).thenThrow(new NoResultException());
+
+        //when
+       Link result = sessionLink.findLink(url);
+
+        //Then
+        verify(entityManager).createNamedQuery(value.capture());
+        Assert.assertEquals(queryString2, value.getValue());
+        verify(query).setParameter(anyString(), value.capture());
+        Assert.assertEquals(url, value.getValue());
+        verify(query).getSingleResult();
+        Assert.assertSame(null, result);
+
+    }
+
+    @Test
     public void shouldCollectLinks() {
         //when
         sessionLink.collectLinks();
@@ -126,7 +145,7 @@ public class DefaultSessionLinkTest {
         Assert.assertEquals(newDescription, value.getValue());
         verify(entityManager).merge(mocklink);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionCauseUpdatingLinkInexistent() throws NoEntityFoundException {
         //Given: The link doesn't exist in the database

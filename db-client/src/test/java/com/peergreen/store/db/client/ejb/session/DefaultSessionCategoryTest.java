@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.mockito.ArgumentCaptor;
@@ -104,6 +105,21 @@ public class DefaultSessionCategoryTest {
         verify(query).setParameter(anyString(), name.capture());
         Assert.assertEquals(categoryName, name.getValue());
         verify(query).getSingleResult();
+    }
+    
+    @Test
+    public void shouldFindCategory2() {
+        when(query.getSingleResult()).thenThrow(new NoResultException());
+        //When
+       Category result = sessionCategory.findCategory(categoryName);
+        //Then
+        verify(entityManager).createNamedQuery(name.capture());
+        Assert.assertEquals(queryString2, name.getValue());
+        verify(query).setParameter(anyString(), name.capture());
+        Assert.assertEquals(categoryName, name.getValue());
+        verify(query).getSingleResult();
+        Assert.assertSame(null, result);
+
     }
 
     @Test

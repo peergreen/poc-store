@@ -102,15 +102,29 @@ public class DefaultSessionVendorTest {
         when(mockvendor.getPetals()).thenReturn(petals);
         when(itP.hasNext()).thenReturn(true,true,false);
         //When
-        vendorSession.deleteVendor(vendorName);
+        Vendor result = vendorSession.deleteVendor(vendorName);
         //Then
-        
+
         verify(entityManager).find(eq(Vendor.class), id.capture());
         Assert.assertEquals(vendorName, id.getValue());
         verify(mockvendor).getPetals();
         verify(sessionPetal, times(2)).deletePetal((Petal) any());
         verify(entityManager).remove(vendorArgument.capture());
         Assert.assertSame(mockvendor, vendorArgument.getValue());
+        Assert.assertSame(mockvendor, result);
+    }
+
+    @Test
+    public void shouldDeleteVendorNotExisting() {
+        //Given
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
+        when(mockvendor.getPetals()).thenReturn(petals);
+        when(itP.hasNext()).thenReturn(true,true,false);
+        //When
+        Vendor result = vendorSession.deleteVendor(vendorName);
+        //Then
+
+        Assert.assertEquals(null, result);
     }
 
     @Test
@@ -163,13 +177,20 @@ public class DefaultSessionVendorTest {
         //When
         vendorSession.addPetal(mockvendor, petal);
         //Then
-//        verify(mockvendor).getPetals();
-//        verify(petals).add(petalArgument.capture());
-//        Assert.assertSame(petal,petalArgument.getValue());
-//        verify(mockvendor).setPetals(petals);
-//        verify(entityManager).merge(mockvendor);
+        verify(mockvendor).getPetals();
+        verify(petals).add(petalArgument.capture());
+        Assert.assertSame(petal,petalArgument.getValue());
+        verify(entityManager).merge(mockvendor);
     }
 
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseVendorWhenAddingPetal() throws NoEntityFoundException {
+        //Given
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
+        //When
+        vendorSession.addPetal(mockvendor, petal);
+        //Then throws new NoEntityFoundException
+    }
     @Test
     public void shouldRemovePetal() throws NoEntityFoundException {
         //Given
@@ -185,6 +206,15 @@ public class DefaultSessionVendorTest {
         Assert.assertEquals(mockvendor, vendorArgument.getValue());
     }
 
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void shouldThrowExceptionCauseVendorWhenRemovingPetal() throws NoEntityFoundException {
+        //Given
+        when(entityManager.find(eq(Vendor.class), anyString())).thenReturn(null);
+        //When
+        vendorSession.removePetal(mockvendor, petal);
+        //Then throws new NoEntityFoundException
+    }
+    
     @Test 
     public void shouldCollectVendors() {
         //given
