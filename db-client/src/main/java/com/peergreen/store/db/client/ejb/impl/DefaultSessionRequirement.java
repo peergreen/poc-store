@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
@@ -308,6 +309,8 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
         if (root != null) {
             // query has been generated during tree generation, just ask for execution
+            Root<Capability> rootFrom = mainQuery.from(Capability.class);
+            mainQuery.select(rootFrom);
             Collection<Capability> caps = entityManager.createQuery(mainQuery).getResultList();
             return caps;
         } else {
