@@ -80,4 +80,10 @@ public interface IGroupController {
      */
     Collection<Petal> collectPetals(String name) throws NoEntityFoundException;
 
+    Group giveAccessToPetal(String groupName, String vendorName, String artifactId, String version)
+            throws NoEntityFoundException;
+
+    Group removeAccessToPetal(String groupName, String vendorName, String artifactId, String version)
+            throws NoEntityFoundException;
+
 }

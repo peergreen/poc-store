@@ -13,8 +13,11 @@ import com.peergreen.store.controller.IGroupController;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
+import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
+import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -37,6 +40,8 @@ public class DefaultGroupController implements IGroupController {
 
     private ISessionGroup groupSession;
     private ISessionUser userSession;
+    private ISessionPetal petalSession;
+    private ISessionVendor vendorSession;
     private static Logger theLogger = Logger.getLogger(DefaultGroupController.class.getName());
     
     /**
@@ -146,6 +151,34 @@ public class DefaultGroupController implements IGroupController {
         }
     }
 
+    @Override
+    public Group giveAccessToPetal(String groupName, String vendorName, String artifactId, String version) throws NoEntityFoundException {
+        Group group = groupSession.findGroup(groupName);
+        Vendor vendor = vendorSession.findVendor(vendorName);
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        try {
+            groupSession.addPetal(group, petal);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+        return null;
+    }
+
+    @Override
+    public Group removeAccessToPetal(String groupName, String vendorName, String artifactId, String version) throws NoEntityFoundException {
+        Group group = groupSession.findGroup(groupName);
+        Vendor vendor = vendorSession.findVendor(vendorName);
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        try {
+            groupSession.removePetal(group, petal);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+        return null;
+    }
+
     @Bind
     public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;
@@ -154,6 +187,16 @@ public class DefaultGroupController implements IGroupController {
     @Bind
     public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
+    }
+    
+    @Bind
+    public void bindVendorSession(ISessionVendor vendorSession) {
+        this.vendorSession = vendorSession;;
+    }
+    
+    @Bind
+    public void bindPetalSession(ISessionPetal petalSession) {
+        this.petalSession = petalSession;;
     }
 
 }
