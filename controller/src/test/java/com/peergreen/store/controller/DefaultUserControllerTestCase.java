@@ -1,6 +1,5 @@
 package com.peergreen.store.controller;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,7 +52,6 @@ public class DefaultUserControllerTestCase {
 
     @Test
     public void removeUser() {
-        doNothing().when(userSession).removeUserbyPseudo(PSEUDO);
         userController.removeUser(PSEUDO);
         verify(userSession).removeUserbyPseudo(PSEUDO);
     }
