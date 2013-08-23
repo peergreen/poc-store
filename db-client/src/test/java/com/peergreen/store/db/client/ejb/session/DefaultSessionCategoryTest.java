@@ -5,6 +5,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -45,6 +46,8 @@ public class DefaultSessionCategoryTest {
     private Query query;
     @Mock
     private ISessionPetal sessionPetal;
+    @Mock
+    private Iterator<Petal> it; 
 
     ArgumentCaptor<Category> category;
     ArgumentCaptor<String> name;
@@ -68,6 +71,7 @@ public class DefaultSessionCategoryTest {
         when(sessionPetal.findPetal(any(Vendor.class), anyString(), anyString())).thenReturn(petal);
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(mockcategory.getPetals()).thenReturn(petals);
+        when(petals.iterator()).thenReturn(it);
 
 
     }
@@ -108,7 +112,7 @@ public class DefaultSessionCategoryTest {
     }
     
     @Test
-    public void shouldFindCategory2() {
+    public void shouldRetunNullCauseCategoryNonExistent() {
         when(query.getSingleResult()).thenThrow(new NoResultException());
         //When
        Category result = sessionCategory.findCategory(categoryName);
@@ -123,14 +127,41 @@ public class DefaultSessionCategoryTest {
     }
 
     @Test
-    public void shouldDeleteCategory() {
+    public void shouldDeleteCategory() throws NoEntityFoundException {
         //Given : The category exists in the database 
         when(query.getSingleResult()).thenReturn(mockcategory);
+        when(it.hasNext()).thenReturn(true,false);
+        when(it.next()).thenReturn(petal);
         //When
         sessionCategory.deleteCategory(categoryName);
         //Then
+        verify(sessionPetal).addCategory(any(Petal.class),any(Category.class) );
         verify(entityManager).remove(category.capture());
         Assert.assertSame(mockcategory,category.getValue() );
+        
+    }
+    
+    @Test
+    public void testDeleteCategory() throws NoEntityFoundException {
+        //Given : The category exists in the database 
+        when(query.getSingleResult()).thenReturn(mockcategory);
+        when(it.hasNext()).thenReturn(true,false);
+        when(sessionPetal.addCategory(any(Petal.class),any(Category.class)))
+        .thenThrow(new NoEntityFoundException());
+        //When
+       Category result = sessionCategory.deleteCategory(categoryName);
+        //Then
+        Assert.assertNull(result);
+    }
+    
+    @Test
+    public void shouldreturnNullCauseCategoryInsexistent() throws NoEntityFoundException {
+        //Given : The category doesn't exist in the database 
+        when(query.getSingleResult()).thenReturn(null);
+        //When
+       Category result = sessionCategory.deleteCategory(categoryName);
+        //Then
+        Assert.assertNull(result);
     }
 
     @Test

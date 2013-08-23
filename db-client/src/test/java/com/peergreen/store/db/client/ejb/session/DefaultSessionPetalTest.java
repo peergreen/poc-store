@@ -541,12 +541,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal() {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
-        //when
-        sessionPetal.deletePetal(mockpetal);
-        //then
-        verify(entityManager).remove(petalArgumentCaptor.capture());
-        Assert.assertSame(mockpetal,petalArgumentCaptor.getValue());
+        
 
     }
 

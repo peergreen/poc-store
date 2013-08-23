@@ -90,6 +90,16 @@ public class DefaultSessionLinkTest {
         verify(entityManager).remove(mocklink);
     }
 
+    @Test
+    public void shouldReturnNullWhenDeleteLinkInexistent() {
+        //Given
+        when(query.getSingleResult()).thenReturn(null);
+        //when
+        Link result = sessionLink.deleteLink(url);
+        //Then
+        Assert.assertNull(result);
+    }
+
 
     @Test
     public void shouldFindLink() {

@@ -257,7 +257,7 @@ public class DefaultSessionGroupTest {
 
     }
 
-    @Test(expectedExceptions = NoEntityFoundException.class)
+   @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionCauseAddUserToGroupInexistent() throws NoEntityFoundException{
         //Given
         when(query.getSingleResult()).thenReturn(null);
