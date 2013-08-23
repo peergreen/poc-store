@@ -28,8 +28,9 @@ public interface ISessionCapability {
      * 
      * @param capabilityName the capability's name
      * @param version the version of the capability to delete
+     * @return 
      */
-    void deleteCapability (String capabilityName, String version);
+    Capability deleteCapability (String capabilityName, String version);
 
     /**
      * Method to find a capability in the database

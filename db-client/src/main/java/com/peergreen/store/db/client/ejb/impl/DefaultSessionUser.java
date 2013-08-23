@@ -104,38 +104,30 @@ public class DefaultSessionUser implements ISessionUser {
      * @param pseudo pseudo of the user to remove from the database
      */
     @Override
-    public void removeUserbyPseudo(String pseudo) {
+    public User removeUserbyPseudo(String pseudo) {
         // retrieve attached user
         User user = entityManager.find(User.class, pseudo);
-        try {
-            //Collect all the groups to which the user belongs
-            Collection<Group> groups = user.getGroupSet();
-            Iterator<Group> it = groups.iterator();
-            
-            //Remove the user from each group
-            while(it.hasNext()) {
-                Group g = it.next();
-                groupSession.removeUser(g, user);
+        if(user!=null){
+            try {
+                //Collect all the groups to which the user belongs
+                Collection<Group> groups = user.getGroupSet();
+                Iterator<Group> it = groups.iterator();
+
+                //Remove the user from each group
+                while(it.hasNext()) {
+                    Group g = it.next();
+                    groupSession.removeUser(g, user);
+                }
+                //Then remove the user from the database 
+                entityManager.remove(user);
+                return user;
+
+            } catch (NoEntityFoundException e) {
+                theLogger .log(Level.SEVERE,e.getMessage());  
+                return null; 
             }
-            //Then remove the user from the database 
-            entityManager.remove(user);
-
-        } catch (NoEntityFoundException e) {
-            theLogger .log(Level.SEVERE,e.getMessage());
-        }
-
-    }
-
-    /**
-     * Method to remove a user.
-     * 
-     * @param myUser user to remove from the database
-     */
-    @Override
-    public void removeUser(User myUser) {
-        User u = findUserByPseudo(myUser.getPseudo());
-        if (u != null) {
-            entityManager.remove(u);
+        }else{
+            return user;
         }
     }
 

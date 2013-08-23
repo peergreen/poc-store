@@ -61,8 +61,9 @@ public interface ISessionGroup {
      *  doesn't exist in the database.
      * 
      * @param groupName the name of the group to delete
+     * @return 
      */
-    void deleteGroup(String groupName);
+    Group deleteGroup(String groupName);
 
     /**
      * Method to add a user to a group.

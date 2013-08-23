@@ -54,9 +54,6 @@ public class DefaultSessionGroup implements ISessionGroup {
     private static Logger theLogger =
             Logger.getLogger(DefaultSessionGroup.class.getName());
 
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
 
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
@@ -128,7 +125,7 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @param groupName the name of the group to delete
      */
     @Override
-    public void deleteGroup(String groupName) {
+    public Group deleteGroup(String groupName) {
         // retrieve attached group 
         Group group = findGroup(groupName);
         if(group != null){
@@ -140,7 +137,10 @@ public class DefaultSessionGroup implements ISessionGroup {
                 //Remove access to each petal for the group
                 while(it.hasNext()) {
                     Petal p = it.next();
+                    
                     sessionPetal.removeAccesToGroup(p, group);
+                    // petalSession.removeGroup(p, group);
+                    // petals.remove(p);
                 }
 
                 //Collect all users of the group
@@ -155,10 +155,14 @@ public class DefaultSessionGroup implements ISessionGroup {
 
                 //Then remove the group from the database 
                 entityManager.remove(group);
+                return group ; 
 
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null ; 
             }
+        }else{
+            return group; 
         }
     }
 
@@ -183,6 +187,7 @@ public class DefaultSessionGroup implements ISessionGroup {
                 sessionUser.addGroup(u, g);
             }catch(NoEntityFoundException e){
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null; 
             }
             return entityManager.merge(g);
         }
@@ -210,7 +215,8 @@ public class DefaultSessionGroup implements ISessionGroup {
             try{
                 sessionUser.removeGroup(u, g);
             }catch(NoEntityFoundException e){
-                theLogger.log(Level.SEVERE, e.getMessage());               
+                theLogger.log(Level.SEVERE, e.getMessage());        
+                return null; 
             }
 
             return entityManager.merge(g);
@@ -276,12 +282,16 @@ public class DefaultSessionGroup implements ISessionGroup {
         if(g!=null){
             // retrieve attached petal
             Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-
             g.getPetals().remove(p);
+            try {
+                sessionPetal.removeAccesToGroup(p, g);
+            } catch (NoEntityFoundException e) {
+                theLogger.log(Level.SEVERE, e.getMessage());
+            }
             return entityManager.merge(group);
         }
         else{
-            throw new NoEntityFoundException("You have to create the administrator first at all.");
+            throw new NoEntityFoundException("The group " + group.getGroupname() + " doesn't exist in the database");
 
         }
     }

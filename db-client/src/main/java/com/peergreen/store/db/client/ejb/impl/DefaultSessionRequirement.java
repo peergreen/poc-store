@@ -75,23 +75,23 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
     public ILdapParser getParser() {
         ILdapParser ldapParser = parserFactory.newLdapParser();
-        
+
         builder = entityManager.getCriteriaBuilder();
         mainQuery = builder.createQuery(Capability.class);
         // set property in ldap parser to keep trace of main query
         ldapParser.setProperty(CriteriaQuery.class, mainQuery);
-        
+
         JPQLClientBinaryNode jpqlClientBinaryNode = new JPQLClientBinaryNode();
         jpqlClientBinaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientBinaryNode);
-        
+
         JPQLClientNaryNode jpqlClientNaryNode = new JPQLClientNaryNode();
         jpqlClientNaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientNaryNode);
-        
+
         JPQLClientUnaryNode jpqlClientUnaryNode = new JPQLClientUnaryNode();
         ldapParser.register(jpqlClientUnaryNode);
-        
+
         return ldapParser;
     }
 
@@ -124,10 +124,10 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @param requirementName the requirement's name
      */
     @Override
-    public void deleteRequirement(String requirementName) {
+    public Requirement deleteRequirement(String requirementName) {
         // retrieve attached requirement
         Requirement req = findRequirement(requirementName);
-        if (req != null) {
+        if(req != null){
             try {
                 //Collect all the petals which have this requirement
                 Collection<Petal> petals = req.getPetals();
@@ -140,10 +140,14 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 }
                 //Then remove the requirement from the database 
                 entityManager.remove(req);
-
+                return req;
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE,e.getMessage());
+                return null; 
             }
+        }
+        else{
+            return req;
         }
     }
 
@@ -196,13 +200,14 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement addPetal(Requirement requirement, Petal petal) throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        if (r != null){
+        if(r!=null){
             // retrieve attached petal
             Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
             r.getPetals().add(p);
             return entityManager.merge(r);
-        } else {
+        }
+        else{
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
@@ -256,10 +261,11 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement updateNamespace(Requirement requirement, String namespace)throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        if(r != null){
+        if(r!=null){
             r.setNamespace(namespace);
             return entityManager.merge(r);
-        } else {
+        }
+        else{
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
@@ -276,12 +282,13 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement updateFilter(Requirement requirement, String filter) throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        
-        if (r != null) {
+        if(r!=null){
             r.setFilter(filter);
             return entityManager.merge(r);
-        } else {
+        }
+        else{
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+
         }
     }
 
@@ -322,7 +329,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
 
             Root<Capability> cap = mainQuery.from(Capability.class);
             prop = cap.join(capMetaModel.getSet("properties", Property.class));
-            
+
             // set property in ldap parser to keep trace of join
             ldapParser.setProperty(Join.class, prop);
 

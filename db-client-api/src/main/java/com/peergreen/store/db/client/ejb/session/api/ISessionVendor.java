@@ -39,7 +39,7 @@ public interface ISessionVendor {
      * 
      * @param vendorName name of the vendor to delete
      */
-    void deleteVendor(String vendorName);
+    Vendor deleteVendor(String vendorName);
 
     /**
      * Method to find the vendor with the name 'vendorName'

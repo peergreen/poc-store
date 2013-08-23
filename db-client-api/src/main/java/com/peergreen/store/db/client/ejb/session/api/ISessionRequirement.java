@@ -28,7 +28,7 @@ public interface ISessionRequirement {
      * 
      * @param requirementName the requirement's name
      */
-    void deleteRequirement (String requirementName );
+    Requirement deleteRequirement (String requirementName );
 
     /**
      * Method to find a requirement in the database

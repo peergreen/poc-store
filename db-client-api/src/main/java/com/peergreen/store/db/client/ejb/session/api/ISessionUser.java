@@ -43,14 +43,7 @@ public interface ISessionUser {
      * 
      * @param pseudo pseudo of the user to remove from the database
      */
-    void removeUserbyPseudo(String pseudo);
-
-    /**
-     * Method to remove a user
-     * 
-     * @param myUser The user to remove from the database
-     */
-    void removeUser(User myUser);
+    User removeUserbyPseudo(String pseudo);
 
     /**
      * Method to modify a user's password  
@@ -61,7 +54,7 @@ public interface ISessionUser {
      * @return The oldUser modify with the new information
      * @throws NoEntityFoundException
      */
-    User updatePassword( User oldUser, String password) throws NoEntityFoundException;
+    User updatePassword(User oldUser, String password) throws NoEntityFoundException;
 
     /**
      * Method to modify a user's mail 
@@ -72,7 +65,7 @@ public interface ISessionUser {
      * @return The oldUser modify with the new information
      * @throws NoEntityFoundException
      */
-    User updateMail( User oldUser, String email) throws NoEntityFoundException;
+    User updateMail(User oldUser, String email) throws NoEntityFoundException;
 
     /**
      * Method to add a group to the list of groups to which a user belongs 

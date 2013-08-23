@@ -67,7 +67,7 @@ public class DefaultSessionVendor implements ISessionVendor {
      * @param vendorName name of the vendor to delete
      */
     @Override
-    public void deleteVendor(String vendorName) {
+    public Vendor deleteVendor(String vendorName) {
         Vendor vendor = entityManager.find(Vendor.class, vendorName);
         if(vendor!=null){
             //Collect all the petals provided by the vendor 
@@ -78,10 +78,14 @@ public class DefaultSessionVendor implements ISessionVendor {
                 Petal p = it.next();
                 petalSession.deletePetal(p);
             }
-
             //Then remove the vendor from the database
             entityManager.remove(vendor);
+            return vendor; 
         }
+        else{
+            return null; 
+        }
+            
     }
 
 

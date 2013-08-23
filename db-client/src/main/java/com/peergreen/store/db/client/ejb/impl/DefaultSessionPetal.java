@@ -279,12 +279,12 @@ public class DefaultSessionPetal implements ISessionPetal {
      * @param petal The petal to delete
      */
     @Override
-    public void deletePetal(Petal petal) {
+    public Petal deletePetal(Petal petal) {
         // retrieve attached petal
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-
         Vendor v = sessionVendor.findVendor(petal.getVendor().getVendorName());
         Category c = sessionCategory.findCategory(petal.getCategory().getCategoryName());
+
         if (p != null) {
             try {
                 //Make that the vendor does not provide the petal anymore
@@ -294,16 +294,18 @@ public class DefaultSessionPetal implements ISessionPetal {
 
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE,e.getMessage());
-            }
+                return null;             }
 
             Set<Capability> capabilities = p.getCapabilities();
             Iterator<Capability> it = capabilities .iterator();
             while(it.hasNext()) {
                 Capability cap = it.next();
                 try {
+                    it.remove();
                     sessionCapability.removePetal(cap, p);
                 } catch (NoEntityFoundException e) {
-                   e.getMessage();
+                    theLogger.log(Level.SEVERE,e.getMessage());
+                    return null;
                 }
             }
 
@@ -312,11 +314,11 @@ public class DefaultSessionPetal implements ISessionPetal {
             while(itreq.hasNext()) {
                 Requirement req = itreq.next();
                 try {
+                    itreq.remove();
                     sessionRequirement.removePetal(req, petal);
                 } catch (NoEntityFoundException e) {
-                   e.getMessage();
-                }
-
+                    theLogger.log(Level.SEVERE,e.getMessage());
+                    return null;                 }
             }
 
             Collection<Group> groups;
@@ -325,13 +327,20 @@ public class DefaultSessionPetal implements ISessionPetal {
                 Iterator<Group> itgrp = groups.iterator();
                 while (itgrp.hasNext()) {
                     Group group = itgrp.next();
-                    removeAccesToGroup(petal, group);
+                    itgrp.remove();
+                    sessionGroup.removePetal(group,p);
                 }
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null;
             }
 
             entityManager.remove(p);
+
+            return p;
+        }
+        else{
+            return p;
         }
     }
 
@@ -393,13 +402,13 @@ public class DefaultSessionPetal implements ISessionPetal {
         if(p!=null){
             // retrieve attached group
             Group g = sessionGroup.findGroup(group.getGroupname());
-
             p.getGroups().add(g);
 
             try {
                 sessionGroup.addPetal(g, p);
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null;
             }
 
             return entityManager.merge(p);
@@ -425,14 +434,7 @@ public class DefaultSessionPetal implements ISessionPetal {
         if(p!= null){
             // retrieve attached category
             Group g = sessionGroup.findGroup(group.getGroupname());
-
             p.getGroups().remove(g);
-            try {
-                sessionGroup.removePetal(g, p);
-            } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-            }
-
             return entityManager.merge(p);
         }
         else{
@@ -464,6 +466,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionCategory.addPetal(c, p);
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return p;
             }
 
             return entityManager.merge(p);
@@ -517,6 +520,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionCapability.addPetal(c, p);
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null;
             }
 
             return entityManager.merge(p);
@@ -545,14 +549,14 @@ public class DefaultSessionPetal implements ISessionPetal {
             Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion());
 
             p.getCapabilities().remove(c);
-            entityManager.merge(petal);
 
             try {
                 sessionCapability.removePetal(c, p);
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null ;
             }
-            return petal;
+            return  entityManager.merge(petal);
         }
         else{
             throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
@@ -582,6 +586,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionRequirement.addPetal(r, p);
             }catch(NoEntityFoundException e){
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null;
             }
             return entityManager.merge(petal);
         }
@@ -613,6 +618,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionRequirement.removePetal(r, p);
             }catch(NoEntityFoundException e){
                 theLogger.log(Level.SEVERE, e.getMessage());
+                return null;
             }
 
             return entityManager.merge(p);} 

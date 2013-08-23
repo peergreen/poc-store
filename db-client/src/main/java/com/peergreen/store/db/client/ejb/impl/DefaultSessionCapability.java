@@ -120,7 +120,7 @@ public class DefaultSessionCapability implements ISessionCapability{
      * @param version capability version 
      */
     @Override
-    public void deleteCapability(String capabilityName, String version) {
+    public Capability deleteCapability(String capabilityName, String version) {
         // retrieve attached capability 
         Capability cap = findCapability(capabilityName,version);
         if(cap!=null){
@@ -136,10 +136,13 @@ public class DefaultSessionCapability implements ISessionCapability{
                 }
                 //Then remove the capability from the database
                 entityManager.remove(cap);
-
+                return cap; 
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE,e.getMessage());
+                return null; 
             }
+        }else{
+            return cap; 
         }
     }
 
@@ -348,7 +351,7 @@ public class DefaultSessionCapability implements ISessionCapability{
             // We can delete this capability if no petal provides this capability any more.
             if (petals.isEmpty()) {
                 entityManager.remove(c);
-                c = null;
+                return null;
             } else {
                 c = entityManager.merge(c);
             }

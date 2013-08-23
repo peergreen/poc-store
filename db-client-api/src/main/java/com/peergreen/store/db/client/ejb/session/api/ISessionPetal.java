@@ -103,8 +103,9 @@ public interface ISessionPetal {
      * Method to delete an instance of petal
      * 
      * @param petal The petal to delete
+     * @return 
      */
-    void deletePetal(Petal petal); 
+    Petal deletePetal(Petal petal); 
 
     /**
      * Method to give an access to a petal from a group
