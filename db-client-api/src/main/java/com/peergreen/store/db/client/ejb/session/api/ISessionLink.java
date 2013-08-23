@@ -34,8 +34,9 @@ public interface ISessionLink {
      * Method to delete an instance of link.<br />
      * 
      * @param linkUrl url of the link to delete
+     * @return 
      */
-    void deleteLink(String linkUrl);
+    Link deleteLink(String linkUrl);
 
     /**
      * Method to find a link with thanks to its URL.

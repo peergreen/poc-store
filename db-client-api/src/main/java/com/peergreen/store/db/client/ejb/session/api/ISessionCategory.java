@@ -24,8 +24,9 @@ public interface ISessionCategory {
      * Method to delete the category with the name categoryName
      * 
      * @param categoryName the name of the category to delete
+     * @return 
      */
-    void deleteCategory(String categoryName);
+    Category deleteCategory(String categoryName);
 
     /**
      * Method to find the category with the name categoryName
