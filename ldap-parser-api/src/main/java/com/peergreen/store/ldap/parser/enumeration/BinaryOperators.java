@@ -1,10 +1,10 @@
 package com.peergreen.store.ldap.parser.enumeration;
 
 public enum BinaryOperators {
-    EQUAL("="),
     APPROX("~="),
     LESSER_THAN_EQUAL("<="),
-    GREATER_THAN_EQUAL(">=");
+    GREATER_THAN_EQUAL(">="),
+    EQUAL("=");
 
     String s;
 
