@@ -127,14 +127,22 @@ public class DefaultLdapParser implements ILdapParser {
                 }
             } else if (s.equals(")")) {
                 // go back a level
-                if (tokens.get(i-1).equals(")")) {
+                if (tokens.get(i-1).equals(")") && parentNode != null) {
                     parentNode.validate();
                     parentNode = parentNode.getParentValidatorNode();
+                } else if (tokens.get(i-1).equals(")") && parentNode == null) {
+                    // notify handlers that tree is fully created
+                    for (ILdapHandler handler : handlers) {
+                        DefaultNodeContext<IWritableValidatorNode> nodeContext = new DefaultNodeContext<>();
+                        nodeContext.setParser(this);
+                        nodeContext.setNode(parentNode);
+                        handler.afterCreatingAllChildren(nodeContext);
+                    }
                 }
             }
+            
             i++;
         }
-
         return root;
     }
 
