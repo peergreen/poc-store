@@ -40,7 +40,8 @@ public interface ISessionCapability {
     Capability findCapability (String capabilityName, String version);
 
     /**
-     * Method to change a capability existing namespace
+     * Method to change a capability existing namespace.
+     * 
      * @param capability the capability to modify 
      * @param namespace the new namespace of the capability
      * @return The capability with the change updated
@@ -55,20 +56,56 @@ public interface ISessionCapability {
      * @return The capability with the change updated
      * @throws NoEntityFoundException 
      */
-    Capability updateProperties (Capability capability, Set<Property> properties)throws NoEntityFoundException;
+    Capability updateProperties (Capability capability, Set<Property> properties) throws NoEntityFoundException;
+    
+    /**
+     * Method to collect all properties associated with a capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * 
+     * @param capabilityName capability name
+     * @param version capability version
+     * @return associated properties
+     * @throws NoEntityFoundException
+     */
+    Collection<Property> collectProperties(String capabilityName, String version) throws NoEntityFoundException;
+    
+    /**
+     * Method to add a property to the list of properties associated with this capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * 
+     * @param capabilityName capability name
+     * @param version capability version
+     * @param property property to associate
+     * @return updated capability
+     * @throws NoEntityFoundException
+     */
+    Capability addProperty(String capabilityName, String version, Property property) throws NoEntityFoundException;
+    
+    /**
+     * Method to remove a property from the list of properties associated with this capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * 
+     * @param capabilityName capability name
+     * @param version capability version
+     * @param property property to associate
+     * @return updated capability
+     * @throws NoEntityFoundException
+     */
+    Capability removeProperty(String capabilityName, String version, Property property) throws NoEntityFoundException;
 
     /**
-     * Method to collect the petals which provides the specified capability.
+     * Method to collect the petals which provides the specified capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
      * 
-     * @param name the capability's name
-     * @param version the version of the capability to delete
-     * @return A collection of all the petals which give this capability
+     * @param capabilityName capability name
+     * @param version capability version
+     * @return collection of all petals providing this capability
      * @throws NoEntityFoundException 
      */
     Collection<Petal> collectPetals(String capabilityName, String version) throws NoEntityFoundException;
 
     /**
-     * Method to add a petal to the list of petals which give the capability
+     * Method to add a petal to the list of petals which provide the capability.
      * 
      * @param capability the capability that is given by the petal
      * @param petal the petal to add 

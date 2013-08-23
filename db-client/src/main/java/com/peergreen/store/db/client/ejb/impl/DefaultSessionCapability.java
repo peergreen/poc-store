@@ -89,14 +89,16 @@ public class DefaultSessionCapability implements ISessionCapability{
             } else {
                 props = new HashSet<>();
             }
+
+            // add properties
             props.add(propertySession.createProperty("capabilityName", capabilityName));
             props.add(propertySession.createProperty("version", version));
             props.add(propertySession.createProperty("namespace", namespace));
-
-            Capability capability = new Capability(capabilityName, version, namespace, properties);
+            
+            Capability capability = new Capability(capabilityName, version, namespace, props);
             entityManager.persist(capability); 
 
-            Iterator<Property> it = properties.iterator();
+            Iterator<Property> it = props.iterator();
             while(it.hasNext()) {
                 Property p = it.next();
                 try {
@@ -105,6 +107,7 @@ public class DefaultSessionCapability implements ISessionCapability{
                     e.printStackTrace();
                 }
             }
+            entityManager.merge(capability); 
             
             return capability;
         }
@@ -163,103 +166,6 @@ public class DefaultSessionCapability implements ISessionCapability{
     }
 
     /**
-     * Method to collect the petals which provides a specific capability.<br />
-     * Throws {@literal NoEntityFoundException} if capability doesn't exist.
-     * 
-     * @param name capability name
-     * @param version capability version 
-     * @return collection of all petals providing this specific capability
-     */
-    @Override
-    public Collection<Petal> collectPetals(String capabilityName, String version) throws NoEntityFoundException {
-        Capability capability = findCapability(capabilityName,version);
-        if (capability != null) {
-            return capability.getPetals();
-        } else {
-            throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
-        }
-    }
-
-    /**
-     * Method to add a petal to the list of petals which give the capability.
-     * 
-     * @param capability capability provided by the petal
-     * @param petal petal to add 
-     * @return modified Capability instance (updated list of providers)
-     * @throws NoEntityFoundException 
-     */
-    @Override
-    public Capability addPetal(Capability capability, Petal petal) throws NoEntityFoundException{
-        // retrieve attached capability entity
-        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-
-        if(c!=null){
-            // retrieve attached petal entity
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());       
-
-            Set<Petal> petals = c.getPetals();
-            petals.add(p);
-            c.setPetals(petals);
-
-            return entityManager.merge(c); 
-        }
-        else{
-            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
-        }
-    }
-
-    /**
-     * Method to remove a petal from the petals list providing a capability.
-     * 
-     * @param capability capability provided by the petal.
-     * @param petal petal to remove
-     * @return modified Capability instance (updated list of providers),
-     *  or {@literal null} if no more petals provide this capability
-     * @throws NoEntityFoundException 
-     */
-    @Override
-    public Capability removePetal(Capability capability, Petal petal)throws NoEntityFoundException {
-        // retrieve attached capability entity
-        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        if(c!=null){
-            // retrieve attached petal entity
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
-
-            Set<Petal> petals = c.getPetals();
-            petals.remove(p);
-
-            // We can delete this capability if no petal provides this capability any more.
-            if (petals.isEmpty()) {
-                entityManager.remove(c);
-                c = null;
-            } else {
-                c = entityManager.merge(c);
-            }
-
-            return c;
-        }
-        else{
-            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
-        }
-    }
-
-    /**
-     * Method to collect all capabilities present in database.
-     * 
-     * @return collection of all capabilities which are stored in the database
-     */
-    @Override
-    public Collection<Capability> collectCapabilities() {
-        Query capQuery = entityManager.createNamedQuery("Capability.findAll");
-        @SuppressWarnings("unchecked")
-        List<Capability> capList = capQuery.getResultList();
-        Set<Capability> capSet = new HashSet<Capability>();
-        capSet.addAll(capList);
-
-        return capSet;
-    }
-
-    /**
      * Method to change capability namespace.
      * 
      * @param capability capability to modify 
@@ -298,5 +204,174 @@ public class DefaultSessionCapability implements ISessionCapability{
         } else {
             throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
         }
+    }
+    
+    /**
+     * Method to collect all properties associated with a capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * 
+     * @param capabilityName capability name
+     * @param version capability version
+     * @return associated properties
+     * @throws NoEntityFoundException
+     */
+    public Collection<Property> collectProperties(String capabilityName, String version) throws NoEntityFoundException {
+        Capability capability = findCapability(capabilityName, version);
+        if (capability != null) {
+            return capability.getProperties();
+        } else {
+            throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
+        }
+    }
+    
+    /**
+     * Method to add a property to the list of properties associated with this capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * 
+     * @param capabilityName capability name
+     * @param version capability version
+     * @param property property to associate
+     * @return updated capability
+     * @throws NoEntityFoundException
+     */
+    public Capability addProperty(String capabilityName, String version, Property property) throws NoEntityFoundException {
+        // retrieve attached capability entity
+        Capability c = findCapability(capabilityName, version);
+
+        if (c != null) {
+            // retrieve attached petal entity
+            Property p = propertySession.find(property.getId());
+            p.setCapability(c);
+            
+            Set<Property> properties = c.getProperties();
+            properties.add(p);
+            c.setProperties(properties);
+
+            return entityManager.merge(c); 
+        } else {
+            throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
+        }
+    }
+    
+    /**
+     * Method to remove a property from the list of properties associated with this capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * 
+     * @param capabilityName capability name
+     * @param version capability version
+     * @param property property to associate
+     * @return updated capability
+     * @throws NoEntityFoundException
+     */
+    public Capability removeProperty(String capabilityName, String version, Property property) throws NoEntityFoundException {
+        // retrieve attached capability entity
+        Capability c = findCapability(capabilityName, version);
+        if (c != null){
+            // retrieve attached petal entity
+            Property p = propertySession.find(property.getId());  
+
+            Set<Property> properties = c.getProperties();
+            properties.remove(p);
+            
+            return entityManager.merge(c);
+        } else {
+            throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
+        }
+    }
+
+    
+    /**
+     * Method to collect the petals which provides a specific capability.<br />
+     * Throws {@literal NoEntityFoundException} if capability doesn't exist.
+     * 
+     * @param name capability name
+     * @param version capability version 
+     * @return collection of all petals providing this specific capability
+     */
+    @Override
+    public Collection<Petal> collectPetals(String capabilityName, String version) throws NoEntityFoundException {
+        Capability capability = findCapability(capabilityName,version);
+        if (capability != null) {
+            return capability.getPetals();
+        } else {
+            throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
+        }
+    }
+
+    /**
+     * Method to add a petal to the list of petals which give the capability.
+     * 
+     * @param capability capability provided by the petal
+     * @param petal petal to add 
+     * @return modified Capability instance (updated list of providers)
+     * @throws NoEntityFoundException 
+     */
+    @Override
+    public Capability addPetal(Capability capability, Petal petal) throws NoEntityFoundException{
+        // retrieve attached capability entity
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+
+        if (c != null) {
+            // retrieve attached petal entity
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());       
+
+            Set<Petal> petals = c.getPetals();
+            petals.add(p);
+            c.setPetals(petals);
+
+            return entityManager.merge(c); 
+        } else {
+            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
+        }
+    }
+
+    /**
+     * Method to remove a petal from the petals list providing a capability.
+     * 
+     * @param capability capability provided by the petal.
+     * @param petal petal to remove
+     * @return modified Capability instance (updated list of providers),
+     *  or {@literal null} if no more petals provide this capability
+     * @throws NoEntityFoundException 
+     */
+    @Override
+    public Capability removePetal(Capability capability, Petal petal)throws NoEntityFoundException {
+        // retrieve attached capability entity
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        if (c != null) {
+            // retrieve attached petal entity
+            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
+
+            Set<Petal> petals = c.getPetals();
+            petals.remove(p);
+
+            // We can delete this capability if no petal provides this capability any more.
+            if (petals.isEmpty()) {
+                entityManager.remove(c);
+                c = null;
+            } else {
+                c = entityManager.merge(c);
+            }
+
+            return c;
+        } else {
+            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
+        }
+    }
+
+    /**
+     * Method to collect all capabilities present in database.
+     * 
+     * @return collection of all capabilities which are stored in the database
+     */
+    @Override
+    public Collection<Capability> collectCapabilities() {
+        Query capQuery = entityManager.createNamedQuery("Capability.findAll");
+        @SuppressWarnings("unchecked")
+        List<Capability> capList = capQuery.getResultList();
+        Set<Capability> capSet = new HashSet<Capability>();
+        capSet.addAll(capList);
+
+        return capSet;
     }
 }

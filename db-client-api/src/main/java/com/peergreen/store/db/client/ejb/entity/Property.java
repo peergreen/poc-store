@@ -12,34 +12,39 @@ public class Property {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    
+
     String name;
+
     String value;
-    
+
     @OneToOne
     Capability capability;
-    
+
+    public Property() {
+
+    }
+
     public Property(String name, String value) {
         this.name = name;
         this.value = value;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getValue() {
         return value;
     }
-    
+
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     public long getId() {
         return id;
     }
@@ -51,5 +56,5 @@ public class Property {
     public void setCapability(Capability capability) {
         this.capability = capability;
     }
-    
+
 }
