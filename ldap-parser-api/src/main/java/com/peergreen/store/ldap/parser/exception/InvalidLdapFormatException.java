@@ -1,6 +1,6 @@
 package com.peergreen.store.ldap.parser.exception;
 
-public class InvalidLdapFormatException extends Exception {
+public class InvalidLdapFormatException extends RuntimeException {
 
     /**
      * Generated UID
