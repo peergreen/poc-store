@@ -6,10 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.felix.ipojo.annotations.Component;
-import org.apache.felix.ipojo.annotations.Instantiate;
-import org.apache.felix.ipojo.annotations.Provides;
-
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.enumeration.BinaryOperators;
 import com.peergreen.store.ldap.parser.enumeration.ComparisonOperators;
@@ -18,11 +14,15 @@ import com.peergreen.store.ldap.parser.enumeration.Operators;
 import com.peergreen.store.ldap.parser.enumeration.UnaryOperators;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
-import com.peergreen.store.ldap.parser.node.BinaryNode;
+import com.peergreen.store.ldap.parser.impl.node.BinaryNode;
+import com.peergreen.store.ldap.parser.impl.node.IWritableBinaryNode;
+import com.peergreen.store.ldap.parser.impl.node.IWritableNaryNode;
+import com.peergreen.store.ldap.parser.impl.node.IWritableUnaryNode;
+import com.peergreen.store.ldap.parser.impl.node.IWritableValidatorNode;
+import com.peergreen.store.ldap.parser.impl.node.NaryNode;
+import com.peergreen.store.ldap.parser.impl.node.OperandNode;
+import com.peergreen.store.ldap.parser.impl.node.UnaryNode;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
-import com.peergreen.store.ldap.parser.node.NaryNode;
-import com.peergreen.store.ldap.parser.node.OperandNode;
-import com.peergreen.store.ldap.parser.node.UnaryNode;
 
 
 /**
@@ -30,24 +30,16 @@ import com.peergreen.store.ldap.parser.node.UnaryNode;
  * 
  * @author Guillaume Dupraz Canard
  */
-@Component
-@Instantiate
-@Provides
 public class DefaultLdapParser implements ILdapParser {
-
-    private DefaultNodeContext<String> nodeContext;
     private Set<ILdapHandler> handlers;
     private Map<Class<?>, Object> properties;
     private IValidatorNode<String> root = null;
-    private IValidatorNode<String> parentNode = null;
+    private IWritableValidatorNode parentNode = null;
 
     /**
      * Default constructor.
      */
     public DefaultLdapParser() {
-        nodeContext = new DefaultNodeContext<>();
-        nodeContext.setParser(this);
-        nodeContext.setProperty(DefaultLdapParser.class, this);
         handlers = new HashSet<>();
         properties = new HashMap<>();
     }
@@ -97,7 +89,7 @@ public class DefaultLdapParser implements ILdapParser {
 
             if (s.equals("(")) {
                 i++;
-                IValidatorNode<String> parsedNode = null;
+                IWritableValidatorNode parsedNode = null;
 
                 if (Operators.isOperator(tokens.get(i)) && !ComparisonOperators.isComparisonOperator(tokens.get(i))) {
                     // parse an operator
@@ -292,7 +284,7 @@ public class DefaultLdapParser implements ILdapParser {
      * @return created node
      * @throws InvalidLdapFormatException 
      */
-    protected IValidatorNode<String> createBinaryNode(String filter) throws InvalidLdapFormatException {
+    protected IWritableValidatorNode createBinaryNode(String filter) throws InvalidLdapFormatException {
         // create a comparison operator node and operand nodes
         String operator = "";
         String[] operands = null;
