@@ -26,7 +26,11 @@ public class JpaContext<T> {
         negated = !negated;
         Collection<? extends IValidatorNode<String>> children = nodeContext.getNode().getChildrenValidatorNode();
         for (IValidatorNode<String> c : children) {
-            c.getProperty(JpaContext.class).negate();
+        	@SuppressWarnings("unchecked")
+			JpaContext<Capability> jpaContext = c.getProperty(JpaContext.class);
+        	if (jpaContext != null) {
+        		jpaContext.negate();
+        	}
         }
     }
     
