@@ -35,6 +35,14 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  */
 public interface IPetalController {
 
+    // TODO add:
+    /*
+     * collectProperties
+     * createProperty
+     * addProperty
+     * removeProperty
+     */
+    
     /**
      * Method to retrieve metadata related to a petal.
      * 
