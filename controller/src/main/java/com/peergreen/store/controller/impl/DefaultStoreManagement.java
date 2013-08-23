@@ -83,11 +83,12 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to remove a link between a remote store and the current one.
      * 
-     * @param linkId link's id
+     * @param linkUrl link's url
+     * @return Link instance deleted or {@link null} if the link can't be deleted
      */
     @Override
-    public void removeLink(String linkUrl) {
-        linkSession.deleteLink(linkUrl);
+    public Link removeLink(String linkUrl) {
+       return linkSession.deleteLink(linkUrl);
     }
 
     /**
@@ -121,10 +122,11 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to remove a category from the database.
      * 
-     * @param ame of the category to remove
+     * @param name of the category to remove
+     * @return Category instance deleted or {@link null} if the Category can't be deleted
      */
-    public void removeCategory(String name) {
-        categorySession.deleteCategory(name);
+    public Category removeCategory(String name) {
+       return  categorySession.deleteCategory(name);
     }
 
     /**

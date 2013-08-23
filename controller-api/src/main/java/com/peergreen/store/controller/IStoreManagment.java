@@ -44,8 +44,9 @@ public interface IStoreManagment {
      * Method to remove a link between a remote store and the current one.
      * 
      * @param linkId link's url
+     * @return Link instance deleted or {@link null} if the link can't be deleted
      */
-    void removeLink(String linkUrl);
+    Link removeLink(String linkUrl);
 
     /**
      * Method to collect all existing links in database.
@@ -67,8 +68,9 @@ public interface IStoreManagment {
      * Method to remove a category from the database.
      * 
      * @param ame of the category to remove
+     * @return Category instance deleted or {@link null} if the category can't be deleted
      */
-    void removeCategory(String name);
+    Category removeCategory(String name);
 
     /**
      * Method to collect all existing categories in database.
