@@ -43,7 +43,7 @@ public class DefaultGroupController implements IGroupController {
     private ISessionPetal petalSession;
     private ISessionVendor vendorSession;
     private static Logger theLogger = Logger.getLogger(DefaultGroupController.class.getName());
-    
+
     /**
      * Method to add a new group in database.
      * 
@@ -53,26 +53,24 @@ public class DefaultGroupController implements IGroupController {
      * @throws EntityAlreadyExistsException 
      */
     @Override
-    public Group createGroup(String groupName) throws  EntityAlreadyExistsException, NoEntityFoundException{
+    public Group createGroup(String groupName) throws  EntityAlreadyExistsException{
         try {
             return groupSession.addGroup(groupName);
         } catch (EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
-        } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
-            throw new NoEntityFoundException(e);
-        }
+        } 
     }
 
     /**
      * Method to remove a group from the database.
      * 
      * @param groupName group's name
+     * @return Group instance deleted or null if the group can't be deleted
      */
     @Override
-    public void deleteGroup(String groupName) {
-        groupSession.deleteGroup(groupName);
+    public Group deleteGroup(String groupName) {
+        return groupSession.deleteGroup(groupName);
     }
 
     /**
@@ -151,32 +149,36 @@ public class DefaultGroupController implements IGroupController {
         }
     }
 
+    /**
+     * 
+     */
     @Override
     public Group giveAccessToPetal(String groupName, String vendorName, String artifactId, String version) throws NoEntityFoundException {
         Group group = groupSession.findGroup(groupName);
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         try {
-            groupSession.addPetal(group, petal);
+            return groupSession.addPetal(group, petal);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
-        }
-        return null;
+        }  
     }
 
+    /**
+     * 
+     */
     @Override
     public Group removeAccessToPetal(String groupName, String vendorName, String artifactId, String version) throws NoEntityFoundException {
         Group group = groupSession.findGroup(groupName);
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         try {
-            groupSession.removePetal(group, petal);
+            return groupSession.removePetal(group, petal);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
-            throw new NoEntityFoundException(e);
+            throw new NoEntityFoundException();
         }
-        return null;
     }
 
     @Bind
@@ -188,12 +190,12 @@ public class DefaultGroupController implements IGroupController {
     public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
     }
-    
+
     @Bind
     public void bindVendorSession(ISessionVendor vendorSession) {
         this.vendorSession = vendorSession;;
     }
-    
+
     @Bind
     public void bindPetalSession(ISessionPetal petalSession) {
         this.petalSession = petalSession;;

@@ -26,20 +26,20 @@ public interface IGroupController {
 
     /**
      * Method to add a new group in database.
-     * 
+     * Throws {@link EntityAlreadyExistsException} when the group already exist.
      * @param groupName group's name
      * @return created group instance
-     * @throws NoEntityFoundException 
      * @throws EntityAlreadyExistsException 
      */
-    Group createGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException;
+    Group createGroup(String groupName) throws EntityAlreadyExistsException;
 
     /**
      * Method to remove a group from the database.
      * 
      * @param groupName group's name
+     * @return Group instance deleted or null if the group can't be deleted
      */
-    void deleteGroup(String groupName);
+    Group deleteGroup(String groupName);
 
     /**
      * Method to collect all the group's users.
