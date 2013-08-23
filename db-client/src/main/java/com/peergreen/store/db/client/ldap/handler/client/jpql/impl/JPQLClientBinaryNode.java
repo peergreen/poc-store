@@ -136,15 +136,15 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
                     )
                 );
             } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
-                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                Expression<String> rightOperand = subPropLeft.get("value");
                 subqueryRight.select(subRootRight).where(
                     builder.like(
                         rightOperand,
-                        node.getRightOperand().getData()
+                        node.getRightOperand().getData().replace('*', '%')
                     )
                 );
             } else if (node.getData().equals(BinaryOperators.GREATER_THAN_EQUAL.getBinaryOperator())) {
-                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                Expression<String> rightOperand = subPropLeft.get("value");
                 subqueryRight.select(subRootRight).where(
                     builder.lessThan(
                         rightOperand,
@@ -152,7 +152,7 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
                     )
                 );
             } else if (node.getData().equals(BinaryOperators.LESSER_THAN_EQUAL.getBinaryOperator())) {
-                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                Expression<String> rightOperand = subPropLeft.get("value");
                 subqueryRight.select(subRootRight).where(
                     builder.greaterThan(
                         rightOperand,
@@ -169,15 +169,15 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
                     )
                 );
             } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
-                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                Expression<String> rightOperand = subPropRight.get("value");
                 subqueryRight.select(subRootRight).where(
                     builder.like(
                         rightOperand,
-                        node.getRightOperand().getData()
+                        node.getRightOperand().getData().replace('*', '%')
                     )
                 );
             } else if (node.getData().equals(BinaryOperators.GREATER_THAN_EQUAL.getBinaryOperator())) {
-                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                Expression<String> rightOperand = subPropRight.get("value");
                 subqueryRight.select(subRootRight).where(
                     builder.greaterThanOrEqualTo(
                         rightOperand,
@@ -185,7 +185,7 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
                     )
                 );
             } else if (node.getData().equals(BinaryOperators.LESSER_THAN_EQUAL.getBinaryOperator())) {
-                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                Expression<String> rightOperand = subPropRight.get("value");
                 subqueryRight.select(subRootRight).where(
                     builder.lessThanOrEqualTo(
                         rightOperand,
