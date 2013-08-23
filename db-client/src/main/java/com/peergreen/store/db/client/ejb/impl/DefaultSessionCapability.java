@@ -66,18 +66,20 @@ public class DefaultSessionCapability implements ISessionCapability{
 
     /**
      * Method to add a new capability in the database.
+     * Throws {@literal EntityAlreadyExistsException} if capability already exists.
      * 
      * @param capabilityName the capability name
      * @param version capability version
      * @param namespace capability namespace
      * @param properties capability properties
+     * 
      * @return created Capability instance
-     * @throws EntityAlreadyExistsException
      */
     @Override
     public Capability addCapability(String capabilityName, String version, String namespace,
             Set<Property> properties) throws EntityAlreadyExistsException {
 
+        //Check if the capability to add already exists
         Capability temp = findCapability(capabilityName, version);
         if (temp != null) {
             throw new EntityAlreadyExistsException("Capability " + capabilityName +
@@ -114,10 +116,14 @@ public class DefaultSessionCapability implements ISessionCapability{
     }
 
     /**
-     * Method to delete a capability in the database.
+     * Method to delete a capability in the database. <br />
+     * If the capability to delete doesn't exist, we return {@literal null}.<br />
      * 
      * @param capabilityName capability name
      * @param version capability version 
+     * 
+     * @return Capability instance deleted or 
+     * <em>null</em> if capability can't be deleted
      */
     @Override
     public Capability deleteCapability(String capabilityName, String version) {
@@ -125,11 +131,11 @@ public class DefaultSessionCapability implements ISessionCapability{
         Capability cap = findCapability(capabilityName,version);
         if(cap!=null){
             try {
-                //Collect all the petals which provided the capability which will be delete
+                //Retrieve petals which provided the capability to delete
                 Collection<Petal> petals = cap.getPetals();
                 Iterator<Petal> it = petals.iterator();
 
-                //Remove the capability from each petal 
+                //Remove the capability from each petal's capability 
                 while(it.hasNext()) {
                     Petal p = it.next();
                     petalSession.removeCapability(p, cap);
@@ -155,17 +161,18 @@ public class DefaultSessionCapability implements ISessionCapability{
      */
     @Override
     public Capability findCapability(String capabilityName, String version) {
+     //The query to retrieve the capability we are looking for 
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
         q.setParameter("version", version);
 
-        Capability capabilityResult;
         try { 
-            capabilityResult = (Capability)q.getSingleResult();
+            //return the only result for the query 
+            return (Capability)q.getSingleResult();
         } catch (NoResultException e) {
-            capabilityResult = null ; 
+            //The query has no result 
+            return null ; 
         }
-        return capabilityResult;
     }
 
     /**
@@ -302,12 +309,13 @@ public class DefaultSessionCapability implements ISessionCapability{
     }
 
     /**
-     * Method to add a petal to the list of petals which give the capability.
+     * Method to add a petal to the list of petals which provide the capability.
      * 
      * @param capability capability provided by the petal
      * @param petal petal to add 
      * @return modified Capability instance (updated list of providers)
-     * @throws NoEntityFoundException 
+     * 
+     * @throws NoEntityFoundException if the capability doesn't exist
      */
     @Override
     public Capability addPetal(Capability capability, Petal petal) throws NoEntityFoundException{
