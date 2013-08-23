@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,12 +16,16 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
@@ -31,7 +34,9 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientBinaryNode;
 import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientNaryNode;
 import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JPQLClientUnaryNode;
+import com.peergreen.store.db.client.ldap.handler.client.jpql.impl.JpaContext;
 import com.peergreen.store.ldap.parser.ILdapParser;
+import com.peergreen.store.ldap.parser.ILdapParserFactory;
 import com.peergreen.store.ldap.parser.exception.InvalidLdapFormatException;
 import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
@@ -51,14 +56,11 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
 @Stateless
 public class DefaultSessionRequirement implements ISessionRequirement {
     private EntityManager entityManager;
-
     @OSGiResource
-    private ILdapParser ldapParser;
+    private ILdapParserFactory parserFactory;
     private CriteriaBuilder builder;
     private CriteriaQuery<Capability> mainQuery;
-    private JPQLClientBinaryNode jpqlClientBinaryNode;
-    private JPQLClientNaryNode jpqlClientNaryNode;
-    private JPQLClientUnaryNode jpqlClientUnaryNode;
+    private Join<Capability, Property> prop;
     private ISessionPetal petalSession;
     private static Logger theLogger = Logger.getLogger(DefaultSessionPetal.class.getName());
 
@@ -71,24 +73,26 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         this.entityManager = entityManager;
     }
 
-    @PostConstruct
-    public void initHandlers() {
+    public ILdapParser getParser() {
+        ILdapParser ldapParser = parserFactory.newLdapParser();
+        
         builder = entityManager.getCriteriaBuilder();
         mainQuery = builder.createQuery(Capability.class);
         // set property in ldap parser to keep trace of main query
         ldapParser.setProperty(CriteriaQuery.class, mainQuery);
         
-        jpqlClientBinaryNode = new JPQLClientBinaryNode();
+        JPQLClientBinaryNode jpqlClientBinaryNode = new JPQLClientBinaryNode();
         jpqlClientBinaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientBinaryNode);
         
-        jpqlClientNaryNode = new JPQLClientNaryNode();
+        JPQLClientNaryNode jpqlClientNaryNode = new JPQLClientNaryNode();
         jpqlClientNaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientNaryNode);
         
-        jpqlClientUnaryNode = new JPQLClientUnaryNode();
-        jpqlClientUnaryNode.setEntityManager(entityManager);
+        JPQLClientUnaryNode jpqlClientUnaryNode = new JPQLClientUnaryNode();
         ldapParser.register(jpqlClientUnaryNode);
+        
+        return ldapParser;
     }
 
     /**
@@ -123,7 +127,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public void deleteRequirement(String requirementName) {
         // retrieve attached requirement
         Requirement req = findRequirement(requirementName);
-        if(req != null){
+        if (req != null) {
             try {
                 //Collect all the petals which have this requirement
                 Collection<Petal> petals = req.getPetals();
@@ -192,14 +196,13 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement addPetal(Requirement requirement, Petal petal) throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
-        if(r!=null){
+        if (r != null){
             // retrieve attached petal
             Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
 
             r.getPetals().add(p);
             return entityManager.merge(r);
-        }
-        else{
+        } else {
             throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
@@ -290,11 +293,14 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @return collection of Capability that meets the given requirement
      * @see DefaultLdapParser
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Collection<Capability> findCapabilities(Requirement requirement) {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
 
+        ILdapParser ldapParser = getParser();
+        
         // set namespace as LDAP parser property
         ldapParser.setProperty(String.class, r.getNamespace());
 
@@ -308,9 +314,26 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         }
 
         if (root != null) {
-            // query has been generated during tree generation, just ask for execution
-            Root<Capability> rootFrom = mainQuery.from(Capability.class);
-            mainQuery.select(rootFrom);
+            builder = entityManager.getCriteriaBuilder();
+            mainQuery = builder.createQuery(Capability.class);
+
+            Metamodel m = entityManager.getMetamodel();
+            EntityType<Capability> capMetaModel = m.entity(Capability.class);
+
+            Root<Capability> cap = mainQuery.from(Capability.class);
+            prop = cap.join(capMetaModel.getSet("properties", Property.class));
+            
+            // set property in ldap parser to keep trace of join
+            ldapParser.setProperty(Join.class, prop);
+
+            mainQuery.select(cap).where(
+                builder.and(
+                    // retrieve generated query, build from tree
+                    cap.in(root.getProperty(JpaContext.class).getGeneratedQuery()),
+                    builder.equal(cap.get("namespace"), r.getNamespace())
+                )
+            );
+            
             Collection<Capability> caps = entityManager.createQuery(mainQuery).getResultList();
             return caps;
         } else {
