@@ -37,15 +37,13 @@ public interface ISessionGroup {
      * <p>
      * Throws {@link EntityAlreadyExistsException}
      *  when an entity with same id already exists in the database.<br />
-     * Throws {@link NoEntityFoundException} if user Administrator doesn't already exist.
      * </p>
      * 
      * @param groupName group name to create
      * @return group created
      * @throws EntityAlreadyExistsException
-     * @throws NoEntityFoundException
      */
-    Group addGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException;
+    Group addGroup(String groupName) throws EntityAlreadyExistsException;
 
     /**
      * Method to find a group in the database.

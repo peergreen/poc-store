@@ -72,22 +72,19 @@ public class DefaultSessionGroup implements ISessionGroup {
     /**
      * <p>
      * Method to add a new group in the database.<br />
-     * List of allowed petals is empty when creating the group
-     *  but one user is automatically added to users list: Administrator.
+     * List of allowed petals and users is empty when creating the group
      * </p>
      * <p>
      * Throws {@link EntityAlreadyExistsException}
      *  when an entity with same id already exists in the database.<br />
-     * Throws {@link NoEntityFoundException} if user Administrator doesn't already exist.
      * </p>
      * 
      * @param groupName group name to create
      * @return group created
      * @throws EntityAlreadyExistsException
-     * @throws NoEntityFoundException
      */
     @Override
-    public Group addGroup(String groupName) throws EntityAlreadyExistsException, NoEntityFoundException {
+    public Group addGroup(String groupName) throws EntityAlreadyExistsException {
         Group group = findGroup(groupName) ;
 
         if (group != null) {
