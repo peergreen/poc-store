@@ -2,8 +2,11 @@ package com.peergreen.store.db.client.ejb.impl;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -39,6 +42,8 @@ public class DefaultSessionCategory implements ISessionCategory {
     private EntityManager entityManager;
 
     private ISessionPetal petalSession;
+    
+    private static Logger theLogger = Logger.getLogger(DefaultSessionCapability.class.getName());
 
     @PersistenceContext 
     public void setEntityManager(EntityManager entityManager) {
@@ -72,24 +77,47 @@ public class DefaultSessionCategory implements ISessionCategory {
     }
 
     /**
-     * Method to delete a specified category.
+     * Method to delete a specified category.<br />
+     * If the category to delete doesn't exist, we return {@literal null}.<br />
      * 
      * @param categoryName name of the category to delete
+     * @return Category instance deleted or
+     * <em>null</em> if category can't be deleted
      */
     @Override
-    public void deleteCategory(String categoryName) {
+    public Category deleteCategory(String categoryName) {
         Category temp = findCategory(categoryName);
         if (temp != null) {
-            // TODO Remove petals associated ??? 
+            //Remove all petals from this category 
+            Collection<Petal> petals = temp.getPetals();
+            Iterator<Petal> it = petals.iterator();
+            while(it.hasNext()){
+                Petal p = it.next();
+                try {
+                    //Then each petal belongs to no specific category
+                    //TODO create a default category ??? 
+                    petalSession.addCategory(p, new Category());
+                } catch (NoEntityFoundException e) {
+                    theLogger.log(Level.SEVERE,e.getMessage());
+                    return null; 
+                }
+            }
+            //Then remove the category from the database
             entityManager.remove(temp);
+            return temp;
+        }
+        else{
+            return temp; 
         }
     }
 
     /**
      * Method to find a specified category.<br />
+     * If the category to find doesn't exist, we return {@literal null}.<br />
      * 
      * @param categoryName name of the category to find
-     * @return category with the name categoryName
+     * @return category with the name categoryName or
+     * <em>null</em> if category doesn't exist
      */
     @Override
     public Category findCategory(String categoryName){
@@ -115,7 +143,6 @@ public class DefaultSessionCategory implements ISessionCategory {
     @Override
     public Collection<Petal> collectPetals(String categoryName) throws NoEntityFoundException {
         Category category = findCategory(categoryName);
-
         if (category != null) {
             return category.getPetals();
         } else{
@@ -171,9 +198,9 @@ public class DefaultSessionCategory implements ISessionCategory {
     }
 
     /**
-     * Method to collect all categories present in database
+     * Method to collect all categories in the database
      * 
-     * @return collection of categories present in database
+     * @return collection of categories in the database
      */
     @Override
     public Collection<Category> collectCategories() {
