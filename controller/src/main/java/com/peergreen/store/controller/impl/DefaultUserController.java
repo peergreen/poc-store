@@ -39,13 +39,9 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 @Provides
 public class DefaultUserController implements IUserController {
 
-    private ISessionGroup groupSession;
     private ISessionUser userSession;
     private static Logger theLogger = Logger.getLogger(DefaultUserController.class.getName());
 
-    public DefaultUserController(@Requires ISessionUser userSession) {
-        this.userSession = userSession;
-    }
 
     /**
      * Method to retrieve user's information.
@@ -54,19 +50,21 @@ public class DefaultUserController implements IUserController {
      * <em>null</em> if user doesn't exist.
      */
     @Override
-    public Map<String, String> getUserMetadata(String pseudo) throws NoEntityFoundException {
+    public Map<String, String> getUserMetadata(String pseudo) {
         User user = userSession.findUserByPseudo(pseudo);
-        if(user != null){
-        Map<String, String> metadata = new HashMap<String, String>();
-        metadata.put("pseudo", user.getPseudo());
-        metadata.put("password", user.getPassword());
-        metadata.put("email", user.getEmail());
 
-        return metadata;}
-        else{
-            throw new NoEntityFoundException("User with pseudo " + pseudo + " doesn't exist in database.");
+        if (user!=null){
+            Map<String, String> metadata = new HashMap<String, String>();
+            metadata.put("pseudo", user.getPseudo());
+            metadata.put("password", user.getPassword());
+            metadata.put("email", user.getEmail());
+            return metadata;
+        }else{
+            return null;
         }
     }
+
+
 
     /**
      * Method to retrieve a user instance from its pseudo.
@@ -94,12 +92,12 @@ public class DefaultUserController implements IUserController {
 
         try {
             user = userSession.addUser(pseudo, password, email);
+            return user;
         } catch(EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
         }
-        
-        return user;
+
     }
 
     /**
@@ -164,37 +162,16 @@ public class DefaultUserController implements IUserController {
      */
     @Override
     public Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException {
-        Collection<Group> groups = null;
-        Collection<Petal> petals = null;
-
         try {
-            groups = userSession.collectGroups(pseudo);
-            Iterator<Group> it = groups.iterator();
-            // retrieve all petals for each group
-            while (it.hasNext()) {
-                Group g = it.next();
-                Collection<Petal> p = groupSession.collectPetals(g.getGroupname());
-                if (petals != null) {
-                    petals.addAll(p);
-                } else {
-                    petals = p;
-                }
-            }
+            return userSession.collectPetals(pseudo);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
         }
-
-        return petals;
     }
 
     @Bind
-    private void bindGroupSession(ISessionGroup groupSession) {
-        this.groupSession = groupSession;
-    }
-    
-    @Bind
-    private void bindUserSession(ISessionUser userSession) {
+    public void bindUserSession(ISessionUser userSession) {
         this.userSession = userSession;
     }
 }
