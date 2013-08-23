@@ -7,8 +7,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -202,7 +203,7 @@ public class DefaultPetalControllerTestCase {
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
 
         //when
-        List<Capability> capabilities = petalController.collectCapabilities(vendorName, artifactId, version);
+        Collection<Capability> capabilities = petalController.collectCapabilities(vendorName, artifactId, version);
 
         Assert.assertTrue(capabilities.size() == 0);
     }
@@ -300,7 +301,7 @@ public class DefaultPetalControllerTestCase {
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
 
         //when
-        List<Requirement> requirements = petalController.collectRequirements(vendorName, artifactId, version);
+        Collection<Requirement> requirements = petalController.collectRequirements(vendorName, artifactId, version);
 
         Assert.assertTrue(requirements.size() == 0);
     }

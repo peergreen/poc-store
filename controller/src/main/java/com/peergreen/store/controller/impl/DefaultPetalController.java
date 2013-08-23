@@ -3,7 +3,6 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -76,7 +75,7 @@ public class DefaultPetalController implements IPetalController {
     Map<Resource, Wiring> wirings;
     Collection<Resource> mandatoryResources;
     private static Logger theLogger = Logger.getLogger(DefaultPetalController.class.getName());
-    
+
     /**
      * Method to retrieve metadata related to a petal.
      * 
@@ -140,10 +139,10 @@ public class DefaultPetalController implements IPetalController {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /*
     public Collection<PetalId> getTransitiveRequirements(
             Vendor vendor,
@@ -309,11 +308,11 @@ public class DefaultPetalController implements IPetalController {
      * @throws NoEntityFoundException 
      */
     @Override
-    public List<Capability> collectCapabilities(String vendorName, String artifactId, String version) throws NoEntityFoundException {
+    public Collection<Capability> collectCapabilities(String vendorName, String artifactId, String version) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         try {
-            return (List<Capability>) petalSession.collectCapabilities(petal);
+            return  petalSession.collectCapabilities(petal);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
@@ -386,11 +385,11 @@ public class DefaultPetalController implements IPetalController {
      * @throws NoEntityFoundException 
      */
     @Override
-    public List<Requirement> collectRequirements(String vendorName, String artifactId, String version) throws NoEntityFoundException {
+    public Collection<Requirement> collectRequirements(String vendorName, String artifactId, String version) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         try {
-            return (List<Requirement>) petalSession.collectRequirements(petal);
+            return petalSession.collectRequirements(petal);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
@@ -486,9 +485,9 @@ public class DefaultPetalController implements IPetalController {
 
 
     /**
-     * Method to get all the petals which has the requirement given
+     * Method to get all the petals which has the requirement given 
      * @param name the requirement's name
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException 
      */
     @Override
     public Collection<Petal> getPetalsForRequirement(String name) throws NoEntityFoundException {
@@ -501,10 +500,10 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
-     * Method to get all the petals which provide the capability given
+     * Method to get all the petals which provide the capability given 
      * @param name the capability's name
-     * @param version the capabilty's version
-     * @throws NoEntityFoundException
+     * @param version the capabilty's version 
+     * @throws NoEntityFoundException 
      */
     @Override
     public Collection<Petal> getPetalsForCapability(String name, String version) throws NoEntityFoundException {
@@ -545,4 +544,5 @@ public class DefaultPetalController implements IPetalController {
     public void bindPetalPersistence(IPetalsPersistence petalPersistence) {
         this.petalPersistence = petalPersistence;
     }
+
 }
