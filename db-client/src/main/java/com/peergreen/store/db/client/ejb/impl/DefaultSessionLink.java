@@ -61,20 +61,27 @@ public class DefaultSessionLink implements ISessionLink {
 
     /**
      * Method to delete an instance of link.<br />
+     * If the link to delete doesn't exist, we return {@literal null}.<br />
      * 
      * @param linkUrl url of the link to delete
+     * @return Link instance delete, or {@link null} if no instance found
      */
     @Override
-    public void deleteLink(String linkUrl) {
-        Link temp = findLink(linkUrl);
-        if (temp != null) {
-            entityManager.remove(temp);
+    public Link deleteLink(String linkUrl) {
+        Link link = findLink(linkUrl);
+        if (link != null) {
+             entityManager.remove(link);
+             return link;
+        }
+        else{
+            return link;
         }
     }
 
     /**
      * Method to find a link with thanks to its URL.
-     *  
+     * If the link to find doesn't exist, we return {@literal null}.<br />
+     * 
      * @param linkUrl url of the link to find
      * @return Link instance found, or {@link null} if no instance found
      */
@@ -110,6 +117,7 @@ public class DefaultSessionLink implements ISessionLink {
 
     /**
      * Method to modify the description of a Link
+     * Throws {@link NoEntityFoundException} if the link to update doesn't exist.
      * 
      * @param link the link to modify
      * @param newDescription the new link description
