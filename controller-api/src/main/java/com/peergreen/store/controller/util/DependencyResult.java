@@ -1,5 +1,7 @@
 package com.peergreen.store.controller.util;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,6 +11,13 @@ import com.peergreen.store.db.client.ejb.entity.Requirement;
 public class DependencyResult {
     private Map<Requirement, Set<Petal>> resolvedRequirements;
     private Set<Requirement> unresolvedRequirements;
+
+    
+    public DependencyResult() {
+        super();
+        this.resolvedRequirements = new HashMap<Requirement, Set<Petal>>();
+        this.unresolvedRequirements = new HashSet<>();
+    }
 
     public Map<Requirement, Set<Petal>> addResolvedDependency(Requirement requirement, Set<Petal> providers) {
         resolvedRequirements.put(requirement, providers);
