@@ -1,42 +1,34 @@
 package com.peergreen.store.ldap.parser.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.peergreen.store.ldap.parser.ILdapParser;
 import com.peergreen.store.ldap.parser.INodeContext;
-import com.peergreen.store.ldap.parser.node.IValidatorNode;
+import com.peergreen.store.ldap.parser.impl.node.IWritableValidatorNode;
 
 
-public class DefaultNodeContext<T> implements INodeContext<T> {
-
-    private IValidatorNode<T> node;
-    private Map<Class<?>, Object> properties;
+public class DefaultNodeContext<T extends IWritableValidatorNode> implements INodeContext<T> {
+    private T node;
     private ILdapParser parser;
-
-    public DefaultNodeContext() {
-        this.properties = new HashMap<>();
-    }
+    
 
     /**
-     * Method to retrieve associated node.
+     * Method to retrieve a property from the Map.<br />
+     * If no element corresponding, method also search in parent Map (LdapFilter).
      * 
-     * @return associated node
+     * @param propClass property class
+     * @return property corresponding property, {@literal null} otherwise
      */
     @Override
-    public IValidatorNode<T> getNode() {
-        return this.node;
+    public <Prop> Prop getProperty(Class<Prop> propClass) {
+        Prop elem = propClass.cast(node.getProperty(propClass));
+        
+        // if no corresponding element, search in parent properties Map
+        if (elem == null) {
+            elem = propClass.cast(parser.getProperty(propClass));
+        }
+        
+        return elem;
     }
-
-    /**
-     * Method to set associated node.
-     * 
-     * @param node associated node to set
-     */
-    public void setNode(IValidatorNode<T> node) {
-        this.node = node;
-    }
-
+    
     /**
      * Method to add a new property to the Map.
      * 
@@ -48,26 +40,35 @@ public class DefaultNodeContext<T> implements INodeContext<T> {
         if (property == null) {
             return;
         }
-        this.properties.put(propClass, property);    
+        node.setProperty(propClass, property);
+    }
+    
+    /**
+     * Method to retrieve associated node.
+     * 
+     * @return associated node
+     */
+    @Override
+    public T getNode() {
+        return this.node;
     }
 
     /**
-     * Method to retrieve a property from the Map.<br />
-     * If no element corresponding, method also search in parent Map (LdapFilter).
+     * Method to set associated node.
      * 
-     * @param propClass property class
-     * @return property corresponding property, {@literal null} otherwise
+     * @param node associated node to set
      */
-    @Override
-    public <Prop> Prop getProperty(Class<Prop> propClass) {
-        Prop elem = propClass.cast(this.properties.get(propClass));
-        
-        // if no corresponding element, search in parent properties Map
-        if (elem == null) {
-            elem = propClass.cast(parser.getProperty(propClass));
-        }
-        
-        return elem;
+    public void setNode(T node) {
+        this.node = node;
+    }
+    
+    /**
+     * Method to retrieve associated parser.
+     * 
+     * @return associated parser
+     */
+    public ILdapParser getParser() {
+        return this.parser;
     }
     
     /**
