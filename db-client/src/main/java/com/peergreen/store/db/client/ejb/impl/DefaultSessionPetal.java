@@ -227,12 +227,15 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Collection<Group> collectGroups(Petal petal) throws NoEntityFoundException {
         // retrieve attached petal
+        Set<Group> groups = new HashSet<>();
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
-        if( p!=null)
-            return p.getGroups();
-        else
+        if( p!=null){
+            groups.addAll(p.getGroups());
+            return groups;
+        } else {
             throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
                     " in version " + petal.getVersion() + " does not exist in database.");
+        }
     }
 
     /**
@@ -280,9 +283,13 @@ public class DefaultSessionPetal implements ISessionPetal {
     }
 
     /**
-     * Method to delete an instance of petal
-     * 
+     * Method to delete an instance of petal from the database
+     * and all information related to it. 
+     * If the petal to delete doesn't exist, we return {@literal null}.<br />
      * @param petal The petal to delete
+     * 
+     * @return Petal instance deleted or 
+     * <em>null</em> if petaldoesn't exist    
      */
     @Override
     public Petal deletePetal(Petal petal) {
@@ -335,14 +342,14 @@ public class DefaultSessionPetal implements ISessionPetal {
                     Group group = itgrp.next();
                     itgrp.remove();
                     sessionGroup.removePetal(group,p);
-                }
-            } catch (NoEntityFoundException e) {
+                } 
+            }
+            catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
                 return null; 
             }
 
             entityManager.remove(p);
-
             return p; 
         }
         else{
@@ -352,10 +359,10 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to update the description of petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal that which the description will change
      * @param newDescription the new description of the petal
-     * @throws NoEntityFoundException
+     * @return Petal instance updated 
      */
     @Override
     public Petal updateDescription(Petal petal, String newDescription) throws NoEntityFoundException{
@@ -372,10 +379,11 @@ public class DefaultSessionPetal implements ISessionPetal {
     }
     /**
      * Method to update the origin of petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal that which the origin will change
      * @param newOrigin the new origin of the petal
      * @throws NoEntityFoundException
+     * @return Petal instance updated 
      */
     @Override
     public Petal updateOrigin(Petal petal, Origin newOrigin) throws NoEntityFoundException{
@@ -394,7 +402,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to give an access to a petal from a group
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal which is to be set up access
      * @param group The group you want to give an access to the petal
      * 
@@ -426,7 +434,7 @@ public class DefaultSessionPetal implements ISessionPetal {
     }
     /**
      * Method to remove an access to a petal from a group
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal which is to be set up access
      * @param group The group you want to remove access to the petal
      * 
@@ -451,7 +459,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to add a category for the petal 
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal An instance of petal
      * @param category A category to set for the petal
      * 
@@ -485,7 +493,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to get a category of a petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal An instance of petal
      * 
      * @return the category of the petal given in parameter
@@ -506,7 +514,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to add a new capability for a petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal to which add a new capability
      * @param capability The capability to add for the petal
      * 
@@ -516,7 +524,7 @@ public class DefaultSessionPetal implements ISessionPetal {
     @Override
     public Petal addCapability(Petal petal, Capability capability)throws NoEntityFoundException {
         // retrieve attached petal
-        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion()); 
         if(p!=null){
             // retrieve attached capability
             Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion());
@@ -539,7 +547,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      *  Method to remove a capability of a petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal to which remove a capability
      * @param capability The capability to remove
      * 
@@ -572,7 +580,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to add a new requirement for a petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal to which add a new requirement
      * @param requirement The requirement to add for the petal
      * 
@@ -604,7 +612,7 @@ public class DefaultSessionPetal implements ISessionPetal {
 
     /**
      * Method to remove a requirement of a petal
-     * 
+     * Throws {@link NoEntityFoundException} when the petal doesn't exist.
      * @param petal The petal to which remove a requirement
      * @param requirement The requirement to remove
      * 
