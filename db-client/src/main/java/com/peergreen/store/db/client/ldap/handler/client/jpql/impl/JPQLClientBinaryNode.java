@@ -1,84 +1,53 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
+
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
+import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.enumeration.BinaryOperators;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
-import com.peergreen.store.ldap.parser.node.BinaryNode;
+import com.peergreen.store.ldap.parser.node.IBinaryNode;
+import com.peergreen.store.ldap.parser.node.INaryNode;
+import com.peergreen.store.ldap.parser.node.IUnaryNode;
+import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
 
 /**
  *JPQL Client for handle BinaryNode and generate a piece of JPQL query 
  */
-public class JPQLClientBinaryNode implements ILdapHandler {
+public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
+    private static Log logger = LogFactory.getLog(JPQLClientBinaryNode.class);
     private EntityManager entityManager;
-    private JpaContext<Capability> jpaContext;
-    private String namespace;
-    private BinaryNode node;
-    
-    public JPQLClientBinaryNode() {
-        jpaContext = new JpaContext<>();
-    }
-    
+
     /**
-     * Method to generate query for the node.
+     * Method called when all node children have been created.<br />
+     * In this implementation, generate CriteriaQuery corresponding to the node content.
+     * 
+     * @param nodeContext node context
      */
     @Override
-    public void toQueryElement() {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
-        Root<Capability> subRoot = subquery.from(Capability.class);
-        
-        if (node.getData().equals(BinaryOperators.EQUAL.getBinaryOperator())) {
-            subquery.select(subRoot).where(
-                builder.and(
-                    builder.equal(subRoot.get("namespace"), namespace),
-                    builder.equal(subRoot.get(node.getLeftOperand().getData()), node.getRightOperand().getData())
-                )
-            );
-        } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
-            Expression<String> leftOperand = subRoot.get(node.getLeftOperand().getData());
-            subquery.select(subRoot).where(
-                builder.and(
-                    builder.equal(subRoot.get("namespace"), namespace),
-                    builder.like(leftOperand, node.getRightOperand().getData())
-                )
-            );
-        } else if (node.getData().equals(BinaryOperators.GREATER_THAN_EQUAL.getBinaryOperator())) {
-            Expression<String> leftOperand = subRoot.get(node.getLeftOperand().getData());
-            subquery.select(subRoot).where(
-                builder.and(
-                    builder.equal(subRoot.get("namespace"), namespace),
-                    builder.greaterThanOrEqualTo(leftOperand, node.getRightOperand().getData())
-                )
-            );
-        } else if (node.getData().equals(BinaryOperators.LESSER_THAN_EQUAL.getBinaryOperator())) {
-            Expression<String> leftOperand = subRoot.get(node.getLeftOperand().getData());
-            subquery.select(subRoot).where(
-                builder.and(
-                    builder.equal(subRoot.get("namespace"), namespace),
-                    builder.lessThanOrEqualTo(leftOperand, node.getRightOperand().getData())
-                )
-            );
-        }
-        
-        // store resultant query in node
-        this.jpaContext.setGeneratedQuery(subquery);
-        this.node.setProperty(JpaContext.class, jpaContext);
+    public void afterCreatingAllChildren(INodeContext<? extends IValidatorNode<String>> nodeContext) {
+
     }
 
     @Override
-    public void onUnaryNodeCreation(INodeContext<String> nodeContext) {
+    public void onUnaryNodeCreation(INodeContext<? extends IUnaryNode> nodeContext) {
         // This is a BinaryNode, nothing to do on UnaryNode events.
     }
-    
+
     /**
      * Register this handler on a binaryNode 
      * 
@@ -86,28 +55,155 @@ public class JPQLClientBinaryNode implements ILdapHandler {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void onBinaryNodeCreation(INodeContext<String> nodeContext) {
-        this.node = nodeContext.getProperty(BinaryNode.class);
-        this.node.setHandler(this);
-        
-        // check if node is root
-        if (nodeContext.getProperty(Boolean.class)) {
-            // to remove warning, create a wrapping class without generic type
-            this.jpaContext.setParentQuery(nodeContext.getProperty(CriteriaQuery.class));
-        } else {
-            // to remove warning, create a wrapping class without generic type
-            this.jpaContext.setParentQuery(nodeContext.getProperty(Subquery.class));
-        }
-        
-        this.namespace = nodeContext.getProperty(String.class);
+    public void onBinaryNodeCreation(INodeContext<? extends IBinaryNode> nodeContext) {
+        nodeContext.setProperty(IBinaryNode.class, nodeContext.getNode());
+
+        // build node JPAContext
+        JpaContext<Capability> jpaContext = new JpaContext<>();
+        jpaContext.setHandler(this);
+        jpaContext.setNodeContext(nodeContext);
+        nodeContext.setProperty(JpaContext.class, jpaContext);
     }
 
     @Override
-    public void onNaryNodeCreation(INodeContext<String> nodeContext) {
+    public void onNaryNodeCreation(INodeContext<? extends INaryNode> nodeContext) {
         // This is a BinaryNode, nothing to do on NaryNode events.
     }
 
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @Override
+    public Subquery<Capability> getQuery(INodeContext<? extends IValidatorNode<String>> nodeContext, boolean negated) {
+        IBinaryNode node = nodeContext.getProperty(IBinaryNode.class);
+        
+        @SuppressWarnings("unchecked")
+        JpaContext<Capability> jpaContext = nodeContext.getProperty(JpaContext.class);
+
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        
+        // create result subquery
+        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
+        jpaContext.setSubquery(subquery);
+        Root<Capability> root = subquery.from(Capability.class);
+        
+        // create subqueries for left and right
+        Subquery<Capability> subqueryLeft = jpaContext.getParentQuery().subquery(Capability.class);
+        Root<Capability> subRootLeft = subqueryLeft.from(Capability.class);
+        Subquery<Capability> subqueryRight = jpaContext.getParentQuery().subquery(Capability.class);
+        Root<Capability> subRootRight = subqueryRight.from(Capability.class);
+        
+        @SuppressWarnings("unchecked")
+        Join<Capability, Property> prop = jpaContext.getNodeContext().getProperty(Join.class);
+        Join<Capability, Property> subPropLeft = subqueryLeft.correlate(prop);
+        Join<Capability, Property> subPropRight = subqueryRight.correlate(prop);
+
+        // test if column exists in database
+        CriteriaQuery<Capability> testQuery = builder.createQuery(Capability.class);
+        Metamodel m = entityManager.getMetamodel();
+        EntityType<Capability> capMetaModel = m.entity(Capability.class);
+        Root<Capability> cap = testQuery.from(Capability.class);
+        Join<Capability, Property> p = cap.join(capMetaModel.getSet("properties", Property.class));
+        
+        boolean exists = true;
+        try {
+            testQuery.select(cap).where(builder.equal(p.get("name"), node.getLeftOperand().getData()));
+        } catch (IllegalArgumentException e) {
+            exists = false;
+            logger.debug("Non existent propertie name.", e);
+        }
+        
+        // if column doesn't exist, 
+        if (!exists) {
+            // TODO: return subquery which does not match with any entry
+            subqueryLeft.select(subRootLeft).where(builder.not(cap.in(subqueryLeft)));
+            return subqueryLeft;
+        }
+
+        subqueryLeft.select(subRootLeft).where(
+            builder.equal(
+                subPropLeft.get("name"),
+                node.getLeftOperand().getData()
+            )
+        );
+        
+        // else if column exists, create more complete query
+        if (nodeContext.getProperty(JpaContext.class).isNegated()) {
+            if (node.getData().equals(BinaryOperators.EQUAL.getBinaryOperator())) {
+                subqueryRight.select(subRootRight).where(
+                    builder.notEqual(
+                        subPropRight.get("value"),
+                        node.getRightOperand().getData()
+                    )
+                );
+            } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
+                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                subqueryRight.select(subRootRight).where(
+                    builder.like(
+                        rightOperand,
+                        node.getRightOperand().getData()
+                    )
+                );
+            } else if (node.getData().equals(BinaryOperators.GREATER_THAN_EQUAL.getBinaryOperator())) {
+                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                subqueryRight.select(subRootRight).where(
+                    builder.lessThan(
+                        rightOperand,
+                        node.getRightOperand().getData()
+                    )
+                );
+            } else if (node.getData().equals(BinaryOperators.LESSER_THAN_EQUAL.getBinaryOperator())) {
+                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                subqueryRight.select(subRootRight).where(
+                    builder.greaterThan(
+                        rightOperand,
+                        node.getRightOperand().getData()
+                    )
+                );
+            }
+        } else {
+            if (node.getData().equals(BinaryOperators.EQUAL.getBinaryOperator())) {
+                subqueryRight.select(subRootRight).where(
+                    builder.equal(
+                        subPropRight.get("value"),
+                        node.getRightOperand().getData()
+                    )
+                );
+            } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
+                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                subqueryRight.select(subRootRight).where(
+                    builder.like(
+                        rightOperand,
+                        node.getRightOperand().getData()
+                    )
+                );
+            } else if (node.getData().equals(BinaryOperators.GREATER_THAN_EQUAL.getBinaryOperator())) {
+                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                subqueryRight.select(subRootRight).where(
+                    builder.greaterThanOrEqualTo(
+                        rightOperand,
+                        node.getRightOperand().getData()
+                    )
+                );
+            } else if (node.getData().equals(BinaryOperators.LESSER_THAN_EQUAL.getBinaryOperator())) {
+                Expression<String> rightOperand = subRootRight.get(node.getRightOperand().getData());
+                subqueryRight.select(subRootRight).where(
+                    builder.lessThanOrEqualTo(
+                        rightOperand,
+                        node.getRightOperand().getData()
+                    )
+                );
+            }
+        }
+        
+        
+        // assemble left and right queries to form result query
+        return subquery.select(root).where(
+            builder.and(
+                subqueryLeft.getRestriction(),
+                subqueryRight.getRestriction()
+            )
+        );
     }
 }

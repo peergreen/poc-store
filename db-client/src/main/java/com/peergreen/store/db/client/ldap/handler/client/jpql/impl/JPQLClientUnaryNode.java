@@ -1,45 +1,31 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.ldap.parser.INodeContext;
 import com.peergreen.store.ldap.parser.handler.ILdapHandler;
-import com.peergreen.store.ldap.parser.node.UnaryNode;
+import com.peergreen.store.ldap.parser.node.IBinaryNode;
+import com.peergreen.store.ldap.parser.node.INaryNode;
+import com.peergreen.store.ldap.parser.node.IUnaryNode;
+import com.peergreen.store.ldap.parser.node.IValidatorNode;
 
 
 /**
  * JPQL Client to handle UnaryNode and generate a piece of JPQL query.
  */
-public class JPQLClientUnaryNode implements ILdapHandler {
-    private EntityManager entityManager;
-    private JpaContext<Capability> jpaContext;
-    private String namespace;
-    private UnaryNode node;
-    
+public class JPQLClientUnaryNode implements ILdapHandler, IQueryGenerator {
+
     /**
-     * Method to generate query for the node.
+     * Method called when all node children have been created.<br />
+     * In this implementation, generate CriteriaQuery corresponding to the node content.
+     * 
+     * @param nodeContext node context
      */
     @Override
-    public void toQueryElement() {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        Subquery<Capability> subquery = this.jpaContext.getParentQuery().subquery(Capability.class);
-        Root<Capability> subRoot = subquery.from(Capability.class);
-        
-        subquery.select(subRoot).where(
-            builder.and(
-                builder.equal(subRoot.get("namespace"), namespace),
-                builder.not(this.node.getProperty(JpaContext.class).getGeneratedQuery().getRestriction())
-            )
-        );
-        
-        // store resultant query in node
-        this.jpaContext.setGeneratedQuery(subquery);
-        this.node.setProperty(JpaContext.class, jpaContext);
+    public void afterCreatingAllChildren(INodeContext<? extends IValidatorNode<String>> nodeContext) {
+
     }
     
     /**
@@ -49,33 +35,42 @@ public class JPQLClientUnaryNode implements ILdapHandler {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void onUnaryNodeCreation(INodeContext<String> nodeContext) {
-        this.node = nodeContext.getProperty(UnaryNode.class);
-        this.node.setHandler(this);
-        
-        // check if node is root
-        if (nodeContext.getProperty(Boolean.class)) {
-            // to remove warning, create a wrapping class without generic type
-            this.jpaContext.setParentQuery(nodeContext.getProperty(CriteriaQuery.class));
-        } else {
-            // to remove warning, create a wrapping class without generic type
-            this.jpaContext.setParentQuery(nodeContext.getProperty(Subquery.class));
-        }
-        
-        this.namespace = nodeContext.getProperty(String.class);
+    public void onUnaryNodeCreation(INodeContext<? extends IUnaryNode> nodeContext) {
+        nodeContext.setProperty(IUnaryNode.class, nodeContext.getNode());
+
+        // build node JPAContext
+        JpaContext<Capability> jpaContext = new JpaContext<>();
+        jpaContext.setHandler(this);
+        jpaContext.setNodeContext(nodeContext);
+        nodeContext.setProperty(JpaContext.class, jpaContext);
     }
 
     @Override
-    public void onBinaryNodeCreation(INodeContext<String> nodeContext) {
+    public void onBinaryNodeCreation(INodeContext<? extends IBinaryNode> nodeContext) {
         // This is an UnaryNode, nothing to do on BinaryNode events.
     }
 
     @Override
-    public void onNaryNodeCreation(INodeContext<String> nodeContext) {
-     // This is an UnaryNode, nothing to do on NaryNode events.
+    public void onNaryNodeCreation(INodeContext<? extends INaryNode> nodeContext) {
+        // This is an UnaryNode, nothing to do on NaryNode events.
     }
-    
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+
+    @Override
+    public Subquery<Capability> getQuery(INodeContext<? extends IValidatorNode<String>> nodeContext, boolean negated) {
+        IUnaryNode node = nodeContext.getProperty(IUnaryNode.class);
+        
+        @SuppressWarnings("unchecked")
+        JpaContext<Capability> childJpaContext = node.getChild().getProperty(JpaContext.class);
+        childJpaContext.negate();
+        
+        @SuppressWarnings("unchecked")
+        JpaContext<Capability> jpaContext = node.getProperty(JpaContext.class);
+
+        // use node contained in nodeContext
+        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
+        jpaContext.setSubquery(subquery);
+        Root<Capability> subRoot = subquery.from(Capability.class);
+
+        return subquery.select(subRoot).where(childJpaContext.getGeneratedQuery().getRestriction());
     }
 }
