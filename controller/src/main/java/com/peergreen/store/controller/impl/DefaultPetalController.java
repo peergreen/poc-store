@@ -3,6 +3,7 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -22,12 +23,14 @@ import com.peergreen.store.controller.util.DependencyRequest;
 import com.peergreen.store.controller.util.DependencyResult;
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
+import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
+import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
@@ -65,6 +68,8 @@ public class DefaultPetalController implements IPetalController {
     private ISessionRequirement requirementSession;
     @Requires
     private ISessionVendor vendorSession;
+    @Requires
+    private ISessionGroup groupSession;
     /** reference to the aether client for petal persistence */
     @Requires
     private IPetalsPersistence petalPersistence;
@@ -89,21 +94,23 @@ public class DefaultPetalController implements IPetalController {
     public Map<String, Object> getPetalMetadata(String vendorName, String artifactId, String version) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        HashMap<String, Object> metadata = new HashMap<String, Object>();
-        metadata.put("vendor", vendor);
-        metadata.put("artifactId", artifactId);
-        metadata.put("version", version);
-        metadata.put("description", petal.getDescription());
+
         try {
+            HashMap<String, Object> metadata = new HashMap<String, Object>();
+            metadata.put("vendor", vendor);
+            metadata.put("artifactId", artifactId);
+            metadata.put("version", version);
+            metadata.put("description", petal.getDescription());
             metadata.put("category", petalSession.getCategory(petal));
             metadata.put("requirements", petalSession.collectRequirements(petal));
             metadata.put("capabilities", petalSession.collectCapabilities(petal));
+            return metadata;
+
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
         }
 
-        return metadata;
     }
 
     /**
@@ -125,7 +132,7 @@ public class DefaultPetalController implements IPetalController {
         for (Requirement req : requirements) {
             // retrieve capabilities which meet the requirements in a same namespace
             Collection<Capability> capabilities = requirementSession.findCapabilities(req);
-            
+
             // retrieve petals providing the capability
             for (Capability capability : capabilities) {
                 Set<Petal> petals = capability.getPetals();
@@ -261,7 +268,7 @@ public class DefaultPetalController implements IPetalController {
      * @param version petal's version
      */
     @Override
-    public void removePetal(String vendorName, String artifactId, String version) {
+    public Petal removePetal(String vendorName, String artifactId, String version) {
         /* 
          * Can't remove petal from Maven repository.
          * So remove all group's permission on it
@@ -270,7 +277,21 @@ public class DefaultPetalController implements IPetalController {
          */
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        petalSession.deletePetal(petal);
+        Collection<Group> groups;
+        try {
+            groups = petalSession.collectGroups(petal);
+            Iterator<Group> itgrp = groups.iterator();
+            while (itgrp.hasNext()) {
+                Group group = itgrp.next();
+                if(!group.getGroupname().equalsIgnoreCase("Administrator")){
+                    groupSession.removePetal(group, petal);
+                }
+            } 
+            return petal;
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            return null; 
+        }
     }
 
     /**
@@ -285,17 +306,12 @@ public class DefaultPetalController implements IPetalController {
     @Override
     public Capability createCapability(String capabilityName, String version,
             String namespace, Set<Property> properties) throws EntityAlreadyExistsException {
-
-        Capability capability = null;
-
         try {
-            capability = capabilitySession.addCapability(capabilityName, version, namespace, properties);
+            return capabilitySession.addCapability(capabilityName, version, namespace, properties);
         } catch (EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
         }
-
-        return capability;
     }
 
     /**
@@ -326,14 +342,15 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param capability capability to add to the provided capabilites list of the petal
-     * @return updated petal
+     * @param name the name of the capability to add to the provided capabilities list of the petal
+     * @param version the version of the capability to add to the provided capabilities list of the petal     * @return updated petal
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal addCapability(String vendorName, String artifactId, String version, Capability capability) throws NoEntityFoundException {
+    public Petal addCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        Capability capability = capabilitySession.findCapability(name, capabilityVersion);
         try {
             return petalSession.addCapability(petal, capability);
         } catch (NoEntityFoundException e) {
@@ -348,14 +365,15 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param capability capability to remove from the provided capabilites  list of the petal
-     * @return updated petal
+     * @param name the name of capability to remove from the provided capabilities  list of the petal
+     * @param version the version of capability to remove from the provided capabilities  list of the petal     * @return updated petal
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal removeCapability(String vendorName, String artifactId, String version, Capability capability) throws NoEntityFoundException {
+    public Petal removeCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        Capability capability = capabilitySession.findCapability(name, capabilityVersion);
         try {
             return petalSession.removeCapability(petal, capability);
         } catch (NoEntityFoundException e) {
@@ -373,7 +391,12 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public Requirement createRequirement(String requirementName, String namespace, String filter) throws EntityAlreadyExistsException {
-        return requirementSession.addRequirement(requirementName, namespace, filter);
+        try {
+            return requirementSession.addRequirement(requirementName, namespace, filter);
+        } catch (EntityAlreadyExistsException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new EntityAlreadyExistsException(e);
+        }
     }
 
     /**
@@ -402,14 +425,15 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param requirement requirement to add to the petal's requirements list
+     * @param requirementName the name of the requirement to add to the petal's requirements list
      * @return updated petal
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal addRequirement(String vendorName, String artifactId, String version, Requirement requirement) throws NoEntityFoundException {
+    public Petal addRequirement(String vendorName, String artifactId, String version, String requirementName) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        Requirement requirement = requirementSession.findRequirement(requirementName);
         try {
             return petalSession.addRequirement(petal, requirement);
         } catch (NoEntityFoundException e) {
@@ -424,14 +448,15 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param requirement requirement to remove from the petal's requirements
+     * @param requirementName the name of  requirement to remove from the petal's requirements
      * @return updated petal
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal removeRequirement(String vendorName, String artifactId, String version, Requirement requirement) throws NoEntityFoundException {
+    public Petal removeRequirement(String vendorName, String artifactId, String version, String requirementName) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        Requirement requirement = requirementSession.findRequirement(requirementName);
         try {
             return petalSession.removeRequirement(petal, requirement);
         } catch (NoEntityFoundException e) {
@@ -467,14 +492,15 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param category petal's category
+     * @param categoryName the name of petal's category
      * @return updated category
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal setCategory(String vendorName, String artifactId, String version, Category category) throws NoEntityFoundException {
+    public Petal setCategory(String vendorName, String artifactId, String version, String categoryName) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        Category category = categorySession.findCategory(categoryName);
         try {
             return petalSession.addCategory(petal, category);
         } catch (NoEntityFoundException e) {
@@ -543,6 +569,11 @@ public class DefaultPetalController implements IPetalController {
     @Bind
     public void bindPetalPersistence(IPetalsPersistence petalPersistence) {
         this.petalPersistence = petalPersistence;
+    }
+    
+    @Bind
+    public void bindGroupSession(ISessionGroup groupSession) {
+        this.groupSession = groupSession;
     }
 
 }

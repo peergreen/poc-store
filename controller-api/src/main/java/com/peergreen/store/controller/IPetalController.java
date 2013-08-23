@@ -118,8 +118,9 @@ public interface IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
+     * @return The petal removed 
      */
-    void removePetal(String vendorName, String artifactId, String version);
+    Petal removePetal(String vendorName, String artifactId, String version);
 
     /**
      * Method to add a new Capability to the database.
@@ -150,11 +151,12 @@ public interface IPetalController {
      * @param vendorName the petal of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param capability capability to add to the provided capabilities list of the petal
+     * @param name the name of the capability to add to the provided capabilities list of the petal
+     * @param version the version of the capability to add to the provided capabilities list of the petal
      * @return updated petal
      * @throws NoEntityFoundException 
      */
-    Petal addCapability(String vendorName, String artifactId, String version, Capability capability) throws NoEntityFoundException;
+    Petal addCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion) throws NoEntityFoundException;
 
     /**
      * Method to remove a capability from a petal's provided capabilities list.
@@ -162,11 +164,12 @@ public interface IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param capability capability to remove from the provided capabilities  list of the petal
+     * @param name the name of capability to remove from the provided capabilities  list of the petal
+     * @param version the version of capability to remove from the provided capabilities  list of the petal
      * @return updated petal
      * @throws NoEntityFoundException 
      */
-    Petal removeCapability(String vendorName, String artifactId, String version, Capability capability) throws NoEntityFoundException;
+    Petal removeCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion) throws NoEntityFoundException;
 
     /**
      * Method to add a new Requirement to the database.
@@ -193,11 +196,11 @@ public interface IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param requirement requirement to add to the petal's requirements list
+     * @param requirementName the name of requirement to add to the petal's requirements list
      * @return updated petal
      * @throws NoEntityFoundException 
      */
-    Petal addRequirement(String vendorName, String artifactId, String version, Requirement requirement) throws NoEntityFoundException;
+    Petal addRequirement(String vendorName, String artifactId, String version, String requirementName) throws NoEntityFoundException;
 
     /**
      * Method to remove a requirement from a petal's requirements list.
@@ -205,11 +208,11 @@ public interface IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param requirement requirement to remove from the petal's requirements
+     * @param requirementName the name of requirement to remove from the petal's requirements
      * @return updated petal
      * @throws NoEntityFoundException 
      */
-    Petal removeRequirement(String vendorName, String artifactId, String version, Requirement requirement) throws NoEntityFoundException;
+    Petal removeRequirement(String vendorName, String artifactId, String version, String requirementName) throws NoEntityFoundException;
 
     /**
      * Method to retrieve a petal's category.
@@ -228,11 +231,11 @@ public interface IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
-     * @param category petal's category
+     * @param categoryName the name of petal's category
      * @return updated category
      * @throws NoEntityFoundException 
      */
-    Petal setCategory(String vendorName, String artifactId, String version, Category category)throws NoEntityFoundException;
+    Petal setCategory(String vendorName, String artifactId, String version, String categoryName)throws NoEntityFoundException;
 
     /**
      * Method to get all the petals which has the requirement given 
@@ -240,12 +243,12 @@ public interface IPetalController {
      * @throws NoEntityFoundException 
      */
     Collection<Petal> getPetalsForRequirement(String name) throws NoEntityFoundException;
-    
+
     /**
      * Method to get all the petals which provide the capability given 
      * @param name the capability's name
      * @throws NoEntityFoundException 
      */
     Collection<Petal> getPetalsForCapability(String name, String version) throws NoEntityFoundException;
-   
+
 }
