@@ -54,8 +54,9 @@ public interface IUserController {
      * Method to remove a user from the database.
      * 
      * @param pseudo user's pseudo
+     * @return User instance deleted or {@link null} if the user can't be deleted
      */
-    void removeUser(String pseudo);
+    User removeUser(String pseudo);
 
     /**
      * Method to modify a user account.
