@@ -2,7 +2,6 @@ package com.peergreen.store.controller.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,13 +10,11 @@ import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
-import org.apache.felix.ipojo.annotations.Requires;
 
 import com.peergreen.store.controller.IUserController;
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
-import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
@@ -106,8 +103,8 @@ public class DefaultUserController implements IUserController {
      * @param pseudo user's pseudo
      */
     @Override
-    public void removeUser(String pseudo) {
-        userSession.removeUserbyPseudo(pseudo);
+    public User removeUser(String pseudo) {
+        return userSession.removeUserbyPseudo(pseudo);
     }
 
     /**
@@ -163,7 +160,7 @@ public class DefaultUserController implements IUserController {
     @Override
     public Collection<Petal> collectPetals(String pseudo) throws NoEntityFoundException {
         try {
-            return userSession.collectPetals(pseudo);
+            return userSession.collectPetals(pseudo);   
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
