@@ -229,21 +229,22 @@ public class DefaultLdapParser implements ILdapParser {
      * @param op operator to use for node creation
      * @return created node
      */
-    protected IValidatorNode<String> createOperatorNode (String op) {
-        IValidatorNode<String> opNode = null;
-        
-        if (parentNode == null) {
-            // set Boolean key to false (root node)
-            nodeContext.setProperty(Boolean.class, new Boolean(true));
-        } else {
-            // set Boolean key to false (not root node)
-            nodeContext.setProperty(Boolean.class, new Boolean(false));
-        }
-        
+    protected IWritableValidatorNode createOperatorNode (String op) {
+        IWritableValidatorNode opNode = null;
+
         if (UnaryOperators.isUnaryOperator(op)) {
+            DefaultNodeContext<IWritableUnaryNode> nodeContext = new DefaultNodeContext<IWritableUnaryNode>();
+            nodeContext.setParser(this);
             UnaryNode node = new UnaryNode(op);
             nodeContext.setNode(node);
-            nodeContext.setProperty(UnaryNode.class, node);
+
+            if (parentNode == null) {
+                // set Boolean key to false (root node)
+                nodeContext.setProperty(Boolean.class, Boolean.TRUE);
+            } else {
+                // set Boolean key to false (not root node)
+                nodeContext.setProperty(Boolean.class, Boolean.FALSE);
+            }
 
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
@@ -252,9 +253,18 @@ public class DefaultLdapParser implements ILdapParser {
 
             opNode = node;
         } else if (NaryOperators.isNaryOperator(op)) {
+            DefaultNodeContext<IWritableNaryNode> nodeContext = new DefaultNodeContext<IWritableNaryNode>();
+            nodeContext.setParser(this);
             NaryNode node = new NaryNode(op);
             nodeContext.setNode(node);
-            nodeContext.setProperty(NaryNode.class, node);
+
+            if (parentNode == null) {
+                // set Boolean key to false (root node)
+                nodeContext.setProperty(Boolean.class, Boolean.TRUE);
+            } else {
+                // set Boolean key to false (not root node)
+                nodeContext.setProperty(Boolean.class, Boolean.FALSE);
+            }
 
             // notify registered handlers
             for (ILdapHandler handler : handlers) {
@@ -294,21 +304,22 @@ public class DefaultLdapParser implements ILdapParser {
             OperandNode left = new OperandNode(operands[0].trim());
             left.setParentValidatorNode(node);
             node.setLeftOperand(left);
-            node.addChild(left);
             OperandNode right = new OperandNode(operands[1].trim());
             right.setParentValidatorNode(node);
             node.setRightOperand(right);
-            node.addChild(right);
 
+            node.validate();
+            
+            DefaultNodeContext<IWritableBinaryNode> nodeContext = new DefaultNodeContext<IWritableBinaryNode>();
+            nodeContext.setParser(this);
             nodeContext.setNode(node);
-            nodeContext.setProperty(BinaryNode.class, node);
 
             if (parentNode == null) {
                 // set Boolean key to false (root node)
-                nodeContext.setProperty(Boolean.class, new Boolean(true));
+                nodeContext.setProperty(Boolean.class, Boolean.TRUE);
             } else {
                 // set Boolean key to false (not root node)
-                nodeContext.setProperty(Boolean.class, new Boolean(false));
+                nodeContext.setProperty(Boolean.class, Boolean.FALSE);
             }
 
             // notify registered handlers
