@@ -73,6 +73,16 @@ public class DefaultStoreManagementTestCase {
         storeManagement.addLink(url, description);
         verify(linkSession).addLink(url, description);
     }
+    
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void testAddLinkAlreadyExistent() throws EntityAlreadyExistsException {
+        String url = "https://store.peergreen.com";
+        String description = "Peergreen central store";
+
+        when(linkSession.addLink(url, description)).thenThrow(new EntityAlreadyExistsException());
+        storeManagement.addLink(url, description);
+        verify(linkSession).addLink(url, description);
+    }
 
     @Test
     void testRemoveLink() {
@@ -141,6 +151,48 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
+    
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void testSubmitPetalAlreadyExistent() throws EntityAlreadyExistsException, NoEntityFoundException {
+        String vendorName = "Peergreen";
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+        File binary = new File("/home/toto/petal.jar");
+        Category category = new Category();
+        HashSet<Requirement> requirements = new HashSet<>();
+        HashSet<Capability> capabilities = new HashSet<>();
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+        when(petalSession.addPetal(vendor, artifactId, version, "",
+                category, capabilities, requirements, Origin.STAGING))
+                .thenThrow(new EntityAlreadyExistsException());
+
+        storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
+        verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
+        verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
+    }
+    
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void testSubmitPetalWithAttributeInexistent() throws EntityAlreadyExistsException, NoEntityFoundException {
+        String vendorName = "Peergreen";
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+        File binary = new File("/home/toto/petal.jar");
+        Category category = new Category();
+        HashSet<Requirement> requirements = new HashSet<>();
+        HashSet<Capability> capabilities = new HashSet<>();
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+        when(petalSession.addPetal(vendor, artifactId, version, "",
+                category, capabilities, requirements, Origin.STAGING))
+                .thenThrow(new NoEntityFoundException());
+
+        storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
+        verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
+        verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
+    }
 
     @Test
     public void testValidatePetal() throws NoEntityFoundException {
@@ -164,6 +216,30 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);
     }
+    
+    @Test(expectedExceptions = NoEntityFoundException.class)
+    public void testValidatePetalInexistent() throws NoEntityFoundException {
+        String vendorName = "Peergreen";
+        Vendor vendor = new Vendor();
+        vendor.setVendorName(vendorName);
+        String artifactId = "Tomcat HTTP service";
+        String version = "7.0.39";
+        Petal petal = new Petal();
+        File binary = new File("/home/toto/petal.jar");
+
+        // mock => always return right vendor
+        //      => always return the same binary
+        //      => always return the same petal
+        when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
+        when(petalsPersistence.getPetalFromStaging(vendor, artifactId, version)).thenReturn(binary);
+        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
+        when(petalSession.updateOrigin(petal, Origin.LOCAL)).thenThrow(new NoEntityFoundException());
+
+        storeManagement.validatePetal(vendorName, artifactId, version);
+        verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
+        verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
+        verify(petalSession).updateOrigin(petal, Origin.LOCAL);
+    }
 
     @Test
     public void shouldAddcategory() throws EntityAlreadyExistsException {
@@ -171,6 +247,18 @@ public class DefaultStoreManagementTestCase {
 
         storeManagement.createCategory(name);
 
+        verify(categorySession).addCategory(stringCaptor.capture());
+        Assert.assertEquals(name, stringCaptor.getValue());
+    }
+    
+    @Test(expectedExceptions = EntityAlreadyExistsException.class)
+    public void testAddCategoryAlreadyExistent() throws EntityAlreadyExistsException {
+        String name = "Persistence";
+        when(categorySession.addCategory(name)).thenThrow(new EntityAlreadyExistsException());
+
+        storeManagement.createCategory(name);
+
+        
         verify(categorySession).addCategory(stringCaptor.capture());
         Assert.assertEquals(name, stringCaptor.getValue());
     }
