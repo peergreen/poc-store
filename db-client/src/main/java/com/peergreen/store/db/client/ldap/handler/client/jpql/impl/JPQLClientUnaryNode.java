@@ -33,7 +33,6 @@ public class JPQLClientUnaryNode implements ILdapHandler, IQueryGenerator {
      * 
      * @param node The unaryNode created
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void onUnaryNodeCreation(INodeContext<? extends IUnaryNode> nodeContext) {
         nodeContext.setProperty(IUnaryNode.class, nodeContext.getNode());

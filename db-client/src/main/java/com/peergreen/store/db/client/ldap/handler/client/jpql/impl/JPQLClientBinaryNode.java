@@ -1,7 +1,6 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -53,7 +52,6 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
      * 
      * @param node The BinaryNode created
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void onBinaryNodeCreation(INodeContext<? extends IBinaryNode> nodeContext) {
         nodeContext.setProperty(IBinaryNode.class, nodeContext.getNode());
