@@ -138,7 +138,7 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
             } else if (node.getData().equals(BinaryOperators.APPROX.getBinaryOperator())) {
                 Expression<String> rightOperand = subPropLeft.get("value");
                 subqueryRight.select(subRootRight).where(
-                    builder.like(
+                    builder.notLike(
                         rightOperand,
                         node.getRightOperand().getData().replace('*', '%')
                     )
