@@ -70,8 +70,8 @@ public class DefaultSessionLink implements ISessionLink {
     public Link deleteLink(String linkUrl) {
         Link link = findLink(linkUrl);
         if (link != null) {
-             entityManager.remove(link);
-             return link;
+            entityManager.remove(link);
+            return link;
         }
         else{
             return link;

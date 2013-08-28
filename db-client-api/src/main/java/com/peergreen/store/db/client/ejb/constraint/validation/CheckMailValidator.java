@@ -7,7 +7,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
-public class CheckMailValidator implements ConstraintValidator<CheckEmail, String>{
+public class CheckMailValidator implements ConstraintValidator<CheckEmail, String> {
 
     @Override
     public void initialize(CheckEmail arg0) {

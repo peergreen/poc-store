@@ -16,11 +16,11 @@ public class PetalId implements Serializable {
 	private String artifactId;
 	private String version; 
 
-	public PetalId(){
+	public PetalId() {
 		
 	}
 	
-	public PetalId(Vendor vendor, String artifactId,String version){
+	public PetalId(Vendor vendor, String artifactId,String version) {
 		this.vendor = vendor;
 		this.artifactId = artifactId;
 		this.version = version;

@@ -2,7 +2,7 @@ package com.peergreen.store.db.client.ejb.key.primary;
 
 import java.io.Serializable;
 
-public class LinkId implements Serializable{
+public class LinkId implements Serializable {
 
     /**
      * 
@@ -12,11 +12,11 @@ public class LinkId implements Serializable{
     private int linkId;
     private String url;
 
-    public LinkId(){
+    public LinkId() {
 
     }
 
-    public LinkId(int linkid, String linkUrl){
+    public LinkId(int linkid, String linkUrl) {
         this.linkId = linkid;
         this.url = linkUrl;
     }
@@ -56,7 +56,7 @@ public class LinkId implements Serializable{
         LinkId lId = (LinkId)obj;
         if((obj instanceof LinkId)
                 &&(this.getId() == lId.getId())
-                &&(this.getUrl().equalsIgnoreCase(lId.getUrl()))){
+                &&(this.getUrl().equalsIgnoreCase(lId.getUrl()))) {
             b = true;
             
         }

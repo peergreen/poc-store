@@ -2,7 +2,7 @@ package com.peergreen.store.db.client.ejb.key.primary;
 
 import java.io.Serializable;
 
-public class CapabilityId implements Serializable{
+public class CapabilityId implements Serializable {
 
     /**
      * 
@@ -15,11 +15,11 @@ public class CapabilityId implements Serializable{
     
     private String version;
     
-    public CapabilityId(){
+    public CapabilityId() {
         
     }
     
-    public CapabilityId(String name, int id, String version){
+    public CapabilityId(String name, int id, String version) {
         
         this.capabilityName = name;
         this.capabilityId = id;

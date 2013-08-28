@@ -2,7 +2,7 @@ package com.peergreen.store.db.client.ejb.key.primary;
 
 import java.io.Serializable;
 
-public class CategoryId implements Serializable{
+public class CategoryId implements Serializable {
 
     /**
      * 
