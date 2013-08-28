@@ -26,6 +26,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  *      <li>Retrieve all users</li>
  *      <li>Retrieve all groups</li>
  *      <li>Petal submission and validation</li>
+ *      <li>Get a petal from local, staging or remote store</li>
  * </ul>
  */
 public interface IStoreManagment {
@@ -154,5 +155,16 @@ public interface IStoreManagment {
      * @throws NoEntityFoundException 
      */
     Petal validatePetal(String vendorName, String artifactId, String version) throws NoEntityFoundException;
+
+    /**
+     * Method to get a petal (binary) from the local store.<br />
+     * Return null if no petal found on the repository.
+     * 
+     * @param vendorName vendor name
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return binary of the petal
+     */
+    File getPetalFromLocal(String vendorName, String artifactId, String version);
     
 }
