@@ -15,12 +15,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.peergreen.store</groupId>
-      <artifactId>db-client-api</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-api</artifactId>
       <version>${aetherVersion}</version>

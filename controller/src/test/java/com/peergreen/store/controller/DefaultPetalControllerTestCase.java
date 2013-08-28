@@ -259,12 +259,12 @@ public class DefaultPetalControllerTestCase {
         File binary = new File("/home/toto/petal.jar");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         // verify getPetal is called when petalPersistence.getPetal is used
-        when(petalPersistence.getPetal(vendor, artifactId, version)).thenReturn(binary);
+        when(petalPersistence.getPetal(vendorName, artifactId, version)).thenReturn(binary);
 
         // verify persistence.getPetal is called
         petalController.getPetal(vendorName, artifactId, version);
 
-        verify(petalPersistence).getPetalFromLocal(vendor, artifactId, version);
+        verify(petalPersistence).getPetalFromLocal(vendorName, artifactId, version);
     }
 
 
@@ -290,7 +290,7 @@ public class DefaultPetalControllerTestCase {
                 new HashSet<Capability>(),
                 Origin.LOCAL,
                 petal);
-        verify(petalPersistence).addToLocal(vendor, artifactId, version, petal);
+        verify(petalPersistence).addToLocal(vendorName, artifactId, version, petal);
     }
 
     @Test(expectedExceptions = NoEntityFoundException.class)
@@ -331,7 +331,7 @@ public class DefaultPetalControllerTestCase {
                 capabilities,
                 Origin.LOCAL,
                 petal);
-        verify(petalPersistence).addToLocal(vendor, artifactId, version, petal);
+        verify(petalPersistence).addToLocal(vendorName, artifactId, version, petal);
     }
 
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
@@ -372,7 +372,7 @@ public class DefaultPetalControllerTestCase {
                 capabilities,
                 Origin.LOCAL,
                 petal);
-        verify(petalPersistence).addToLocal(vendor, artifactId, version, petal);
+        verify(petalPersistence).addToLocal(vendorName, artifactId, version, petal);
     }
 
     @Test

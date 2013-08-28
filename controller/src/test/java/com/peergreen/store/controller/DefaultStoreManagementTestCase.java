@@ -148,7 +148,7 @@ public class DefaultStoreManagementTestCase {
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
         storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
-        verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
+        verify(petalsPersistence).addToStaging(vendorName, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
     
@@ -169,7 +169,7 @@ public class DefaultStoreManagementTestCase {
                 .thenThrow(new EntityAlreadyExistsException());
 
         storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
-        verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
+        verify(petalsPersistence).addToStaging(vendorName, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
     
@@ -190,7 +190,7 @@ public class DefaultStoreManagementTestCase {
                 .thenThrow(new NoEntityFoundException());
 
         storeManagement.submitPetal(vendorName, artifactId, version, "", category, requirements, capabilities, binary);
-        verify(petalsPersistence).addToStaging(vendor, artifactId, version, binary);
+        verify(petalsPersistence).addToStaging(vendorName, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
 
@@ -208,12 +208,12 @@ public class DefaultStoreManagementTestCase {
         //      => always return the same binary
         //      => always return the same petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
-        when(petalsPersistence.getPetalFromStaging(vendor, artifactId, version)).thenReturn(binary);
+        when(petalsPersistence.getPetalFromStaging(vendorName, artifactId, version)).thenReturn(binary);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
 
         storeManagement.validatePetal(vendorName, artifactId, version);
-        verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
-        verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
+        verify(petalsPersistence).getPetalFromStaging(vendorName, artifactId, version);
+        verify(petalsPersistence).addToLocal(vendorName, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);
     }
     
@@ -231,13 +231,13 @@ public class DefaultStoreManagementTestCase {
         //      => always return the same binary
         //      => always return the same petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
-        when(petalsPersistence.getPetalFromStaging(vendor, artifactId, version)).thenReturn(binary);
+        when(petalsPersistence.getPetalFromStaging(vendorName, artifactId, version)).thenReturn(binary);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.updateOrigin(petal, Origin.LOCAL)).thenThrow(new NoEntityFoundException());
 
         storeManagement.validatePetal(vendorName, artifactId, version);
-        verify(petalsPersistence).getPetalFromStaging(vendor, artifactId, version);
-        verify(petalsPersistence).addToLocal(vendor, artifactId, version, binary);
+        verify(petalsPersistence).getPetalFromStaging(vendorName, artifactId, version);
+        verify(petalsPersistence).addToLocal(vendorName, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);
     }
 

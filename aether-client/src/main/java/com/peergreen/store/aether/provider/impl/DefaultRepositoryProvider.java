@@ -15,7 +15,6 @@ import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 
 import com.peergreen.store.aether.provider.IRepositoryProvider;
-import com.peergreen.store.db.client.ejb.entity.Vendor;
 
 /**
  * Class defining methods for repository provider.
@@ -47,14 +46,14 @@ public abstract class DefaultRepositoryProvider<T> implements IRepositoryProvide
     /**
      * Method to add a petal to the repository.
      * 
-     * @param vendor petal's vendor
+     * @param vendor petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param binary petal's binary
      */
     @Override
-    public void addPetal(Vendor vendor, String artifactId, String version, File binary) {
-        Artifact jarArtifact = new DefaultArtifact(vendor.getVendorName(), artifactId, null, "jar", version);
+    public void addPetal(String vendor, String artifactId, String version, File binary) {
+        Artifact jarArtifact = new DefaultArtifact(vendor, artifactId, null, "jar", version);
         jarArtifact = jarArtifact.setFile(binary);
 //        Artifact pomArtifact = new SubArtifact( jarArtifact, "", "pom" );
 //        pomArtifact = pomArtifact.setFile( new File( "pom.xml" ) );

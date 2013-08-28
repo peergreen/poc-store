@@ -224,8 +224,7 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public File getPetal(String vendorName, String artifactId, String version) {
-        Vendor vendor = vendorSession.findVendor(vendorName);
-        return petalPersistence.getPetalFromLocal(vendor, artifactId, version);
+        return petalPersistence.getPetalFromLocal(vendorName, artifactId, version);
     }
 
     /**
@@ -248,7 +247,7 @@ public class DefaultPetalController implements IPetalController {
     public Petal addPetal(String vendorName, String artifactId, String version, String description, Category category,
             Set<Requirement> requirements, Set<Capability> capabilities,Origin origin, File petalBinary) throws NoEntityFoundException, EntityAlreadyExistsException {
         Vendor vendor = vendorSession.findVendor(vendorName);
-        petalPersistence.addToLocal(vendor, artifactId, version, petalBinary);
+        petalPersistence.addToLocal(vendorName, artifactId, version, petalBinary);
         try {
             return petalSession.addPetal(vendor, artifactId, version, description, category, capabilities, requirements,origin);
         } catch (NoEntityFoundException e) {
