@@ -22,7 +22,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  *      <li>Add, remove and retrieve links to remote stores</li>
  *      <li>Add, remove and retrieve categories</li>
  *      <li>Retrieve available petals for a specific user,
- *          from local store or from staging store</li>
+ *          from local store, from staging store or from remote stores</li>
  *      <li>Retrieve all users</li>
  *      <li>Retrieve all groups</li>
  *      <li>Petal submission and validation</li>
@@ -146,6 +146,7 @@ public interface IStoreManagment {
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
+     * 
      * @param vendorName the name of the petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -153,5 +154,5 @@ public interface IStoreManagment {
      * @throws NoEntityFoundException 
      */
     Petal validatePetal(String vendorName, String artifactId, String version) throws NoEntityFoundException;
-
+    
 }
