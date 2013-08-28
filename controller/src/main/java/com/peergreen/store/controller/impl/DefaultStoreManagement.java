@@ -78,11 +78,11 @@ public class DefaultStoreManagement implements IStoreManagment {
         Link link = null;
         try {
             link = linkSession.addLink(url, description);
+            return link;
         } catch(EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
         }
-        return link;
     }
 
     /**
@@ -285,6 +285,16 @@ public class DefaultStoreManagement implements IStoreManagment {
         return petalsPersistence.getPetalFromLocal(vendorName, artifactId, version);
     }
 
+    @Override
+    public Capability getCapability(String name, String version){
+        return capabilitySession.findCapability(name, version);
+    }
+
+    @Override
+    public Requirement getRequirement(String name) {
+        return requirementSession.findRequirement(name);
+    }
+
     @Bind
     public void bindPetalsPersistence(IPetalsPersistence petalsPersistence) {
         this.petalsPersistence = petalsPersistence;
@@ -299,12 +309,12 @@ public class DefaultStoreManagement implements IStoreManagment {
     public void bindCapabilitySession(ISessionCapability capabilitySession) {
         this.capabilitySession = capabilitySession;
     }
-    
+
     @Bind
     public void bindRequirementSession(ISessionRequirement requirementSession) {
         this.requirementSession = requirementSession;
     }
-    
+
     @Bind
     public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;
@@ -330,14 +340,5 @@ public class DefaultStoreManagement implements IStoreManagment {
         this.vendorSession = vendorSession;
     }
 
-    @Override
-    public Capability getCapability(String name, String version){
-        return capabilitySession.findCapability(name, version);
-    }
-
-    @Override
-    public Requirement getRequirement(String name) {
-        return requirementSession.findRequirement(name);
-    }
 
 }
