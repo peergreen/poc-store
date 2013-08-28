@@ -131,7 +131,7 @@ public interface IStoreManagment {
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
-     * @param category petal's category
+     * @param categoryName petal's category name
      * @param requirements petal's requirements
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
@@ -140,7 +140,7 @@ public interface IStoreManagment {
      * @throws EntityAlreadyExistsException
      */
     Petal submitPetal(String vendorName, String artifactId,
-            String version, String description, Category category,
+            String version, String description, String categoryName,
             Set<Requirement> requirements, Set<Capability> capabilities,
             File petalBinary) throws EntityAlreadyExistsException, NoEntityFoundException;
 
@@ -156,6 +156,7 @@ public interface IStoreManagment {
      */
     Petal validatePetal(String vendorName, String artifactId, String version) throws NoEntityFoundException;
 
+
     /**
      * Method to get a petal (binary) from the local store.<br />
      * Return null if no petal found on the repository.
@@ -166,5 +167,10 @@ public interface IStoreManagment {
      * @return binary of the petal
      */
     File getPetalFromLocal(String vendorName, String artifactId, String version);
+
+    Capability getCapability(String name, String version);
+    
+    Requirement getRequirement(String name);
+
     
 }
