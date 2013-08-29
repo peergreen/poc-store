@@ -49,7 +49,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     public DefaultPetalsPersistence() {
         remoteProviders = new CopyOnWriteArraySet<>();
     }
-    
+
     @Validate
     private void validate() {
         try {
@@ -71,7 +71,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         Dictionary<String, String> dict = new Hashtable<String, String>();
         dict.put("name", name);
         dict.put("path", url);
-        
+
         // push configuration to Configuration Admin to generate iPOJO instance
         try {
             config.update(dict);
@@ -91,7 +91,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();
         while (!found && it.hasNext()) {
             IRepositoryProvider<RemoteRepository> current = it.next();
-            
+
             // if corresponding instance found, remove it
             if (found = current.getPath().equals(url)) {
                 remoteProviders.remove(current);
@@ -119,7 +119,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         if (petal == null) {
             petal = getPetalFromRemote(vendor, artifactId, version);
         }
-        
+
         // if still not found, try to retrieve from staging repository
         if (petal == null) {
             petal = getPetalFromStaging(vendor, artifactId, version);
@@ -231,7 +231,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
         remoteProviders.remove(provider);
     }
 
-    
+
     // getter / setter
     public IRepositoryProvider<LocalRepository> getLocalProvider() {
         return localProvider;
@@ -252,7 +252,7 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     public CopyOnWriteArraySet<IRepositoryProvider<RemoteRepository>> getRemoteProviders() {
         return remoteProviders;
     }
-    
+
     public void setRemoteProviders(CopyOnWriteArraySet<IRepositoryProvider<RemoteRepository>> providers) {
         this.remoteProviders = providers;
     }
