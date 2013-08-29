@@ -27,6 +27,7 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Project modules -->
     <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>controller-api</artifactId>
@@ -46,6 +47,7 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Tests -->
     <dependency>
       <groupId>com.peergreen.store</groupId>
       <artifactId>db-client</artifactId>
