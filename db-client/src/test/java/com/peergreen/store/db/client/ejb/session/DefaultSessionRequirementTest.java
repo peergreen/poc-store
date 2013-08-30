@@ -131,7 +131,7 @@ public class DefaultSessionRequirementTest {
         when(mockrequirement.getPetals()).thenReturn(petals);
         when(iterator.hasNext()).thenReturn(true,false);
         //Throwing an exception to verify the catch 
-        when(sessionPetal.removeRequirement((Petal) anyObject(), any(Requirement.class))).thenThrow(new NoEntityFoundException());
+        when(sessionPetal.removeRequirement((Petal) anyObject(), any(Requirement.class))).thenThrow(new NoEntityFoundException("Entity does not exist."));
         //When
         Requirement result = sessionRequirement.deleteRequirement(requirementName);
         //Then 
