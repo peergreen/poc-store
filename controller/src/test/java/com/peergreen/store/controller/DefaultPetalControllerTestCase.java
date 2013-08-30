@@ -528,9 +528,8 @@ public class DefaultPetalControllerTestCase {
         // capability attributes
         String name = "JPA";
         String versionCap = "2.0";
-        Capability capability = new Capability();
-        capability.setName(name);
-        capability.setVersion(versionCap);
+        Set<Property> props = new HashSet<>();
+        Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
         Petal petal = new Petal();
         String vendorName = "Peergreen";
@@ -552,9 +551,8 @@ public class DefaultPetalControllerTestCase {
         // capability attributes
         String name = "JPA";
         String versionCap = "2.0";
-        Capability capability = new Capability();
-        capability.setName(name);
-        capability.setVersion(versionCap);
+        Set<Property> props = new HashSet<>();
+        Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
         Petal petal = new Petal();
         String vendorName = "Peergreen";
@@ -578,9 +576,8 @@ public class DefaultPetalControllerTestCase {
         Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
-        Capability capability = new Capability();
-        capability.setName(name);
-        capability.setVersion(versionCap);
+        Set<Property> props = new HashSet<>();
+        Capability capability = new Capability(name, versionCap, "provider", props);
 
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
@@ -602,9 +599,8 @@ public class DefaultPetalControllerTestCase {
         Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
-        Capability capability = new Capability();
-        capability.setName(name);
-        capability.setVersion(versionCap);
+        Set<Property> props = new HashSet<>();
+        Capability capability = new Capability(name, versionCap, "provider", props);
 
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor();

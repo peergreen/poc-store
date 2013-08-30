@@ -24,22 +24,25 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
  */
 @NamedQueries({
     @NamedQuery (
-        name = "Capability.findAll",
-        query = "select cap from Capability cap"
-    ),
-    @NamedQuery (
-        name = "CapabilityByName",
-        query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
-    ),
-    @NamedQuery (
-        name = "Requirement.findCapabilities",
-        query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
-    )
+            name = "Capability.findAll",
+            query = "select cap from Capability cap"
+            ),
+            @NamedQuery (
+                    name = "CapabilityByName",
+                    query = "select cap from Capability cap where cap.capabilityName = :name and cap.version = :version"
+                    ),
+                    @NamedQuery (
+                            name = "Requirement.findCapabilities",
+                            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
+                            )
 })
 @Entity
 @IdClass(CapabilityId.class)
 public class Capability{
 
+    // TODO: add namespace to primary key
+    
+    private Integer hashCode = null;
 
     @Id
     @Column(name = "name")
@@ -58,11 +61,11 @@ public class Capability{
     @Column(name="namespace", nullable=false)
     private String namespace;
 
-//    @ElementCollection
-//    @CollectionTable( name="Properties")
-//    @MapKeyColumn (name="propertiesName")
-//    @Column(name="properties",nullable=false)
-//    private Map<String, String> properties;
+    //    @ElementCollection
+    //    @CollectionTable( name="Properties")
+    //    @MapKeyColumn (name="propertiesName")
+    //    @Column(name="properties",nullable=false)
+    //    private Map<String, String> properties;
 
     @OneToMany(mappedBy="capability", cascade = {CascadeType.ALL})
     @Column(name="properties", nullable=false)
@@ -98,15 +101,6 @@ public class Capability{
     }
 
     /**
-     * Method to set the name of the capability instance
-     * 
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.capabilityName = name;
-    }
-
-    /**
      * Method to get Id of a capability
      * @return the capability's id
      */
@@ -120,15 +114,6 @@ public class Capability{
      */
     public String getVersion() {
         return version;
-    }
-
-    /**
-     * Method to set the version of a capability
-     * 
-     * @param version A version to set for an instance of capability
-     */
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     /**
@@ -184,6 +169,28 @@ public class Capability{
      */
     public void setPetals(Set<Petal> petals) {
         this.petals = petals;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Capability)) {
+            return false;
+        }
+
+        Capability cap = (Capability) obj;
+
+        return ((cap.getCapabilityId() == this.capabilityId) &&
+                (cap.capabilityName.equals(this.capabilityName)) &&
+                (cap.version.equals(this.version)));
+    }
+
+    @Override
+    public int hashCode() {
+        if (hashCode == null) {
+            hashCode = ("" + capabilityId + capabilityName + version + namespace).hashCode();
+        }
+
+        return hashCode;
     }
 
 }
