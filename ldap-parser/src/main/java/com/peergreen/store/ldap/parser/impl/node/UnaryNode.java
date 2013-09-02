@@ -40,7 +40,7 @@ public class UnaryNode extends ValidatorNodeHelper implements IWritableUnaryNode
     @Override
     public void addChildValidatorNode(IValidatorNode<String> child) throws InvalidLdapFormatException {
         if (this.child == null) {
-            super.addChild(child);
+            super.addChildValidatorNode(child);
             this.child = child;
         } else {
             throw new InvalidLdapFormatException("UnaryNode cannot have several children.");
