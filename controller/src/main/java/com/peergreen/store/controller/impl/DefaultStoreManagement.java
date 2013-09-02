@@ -128,6 +128,17 @@ public class DefaultStoreManagement implements IStoreManagment {
     }
 
     /**
+     * Method to retrieve a category thanks to its name.
+     * 
+     * @param name category name
+     * @return specified category,
+     * or {@literal null} if no corresponding category
+     */
+    public Category getCategory(String name) {
+        return categorySession.findCategory(name);
+    }
+    
+    /**
      * Method to remove a category from the database.
      * 
      * @param name of the category to remove

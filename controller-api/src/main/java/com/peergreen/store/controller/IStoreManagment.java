@@ -68,6 +68,15 @@ public interface IStoreManagment {
     Category createCategory(String name) throws EntityAlreadyExistsException;
 
     /**
+     * Method to retrieve a category thanks to its name.
+     * 
+     * @param name category name
+     * @return specified category,
+     * or {@literal null} if no corresponding category
+     */
+    public Category getCategory(String name);
+    
+    /**
      * Method to remove a category from the database.
      * 
      * @param ame of the category to remove
