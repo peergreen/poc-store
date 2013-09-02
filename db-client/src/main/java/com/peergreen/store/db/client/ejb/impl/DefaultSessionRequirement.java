@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -17,11 +15,10 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -55,6 +52,7 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
  */
 @Stateless
 public class DefaultSessionRequirement implements ISessionRequirement {
+    private static Log logger = LogFactory.getLog(JPQLClientBinaryNode.class);
     private EntityManager entityManager;
     @OSGiResource
     private ILdapParserFactory parserFactory;
@@ -62,7 +60,6 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     private CriteriaQuery<Capability> mainQuery;
     private Join<Capability, Property> prop;
     private ISessionPetal petalSession;
-    private static Logger theLogger = Logger.getLogger(DefaultSessionPetal.class.getName());
 
     public EntityManager getEntityManager() {
         return entityManager;
@@ -86,7 +83,6 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         ldapParser.register(jpqlClientBinaryNode);
 
         JPQLClientNaryNode jpqlClientNaryNode = new JPQLClientNaryNode();
-        jpqlClientNaryNode.setEntityManager(entityManager);
         ldapParser.register(jpqlClientNaryNode);
 
         JPQLClientUnaryNode jpqlClientUnaryNode = new JPQLClientUnaryNode();
@@ -106,11 +102,15 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @throws EntityAlreadyExistsException
      */
     @Override
-    public Requirement addRequirement(String requirementName, String namespace, String filter) throws EntityAlreadyExistsException {
+    public Requirement addRequirement(String requirementName,
+            String namespace,
+            String filter) throws EntityAlreadyExistsException {
+
         Requirement requirement = findRequirement(requirementName);
 
         if (requirement != null) {
-            throw new EntityAlreadyExistsException("The requirement " + requirementName + " already exists in database.");
+            throw new EntityAlreadyExistsException("The requirement " +
+                    requirementName + " already exists in database.");
         } else {
             requirement = new Requirement(requirementName,namespace,filter);
             entityManager.persist(requirement);
@@ -127,7 +127,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
     public Requirement deleteRequirement(String requirementName) {
         // retrieve attached requirement
         Requirement req = findRequirement(requirementName);
-        if(req != null){
+        if (req != null) {
             try {
                 //Collect all the petals which have this requirement
                 Collection<Petal> petals = req.getPetals();
@@ -142,11 +142,10 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 entityManager.remove(req);
                 return req;
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE,e.getMessage());
+                logger.error(e.getMessage(), e);
                 return null; 
             }
-        }
-        else{
+        } else {
             return req;
         }
     }
@@ -258,7 +257,10 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @throws NoEntityFoundException
      */
     @Override
-    public Requirement updateNamespace(Requirement requirement, String namespace)throws NoEntityFoundException {
+    public Requirement updateNamespace(
+            Requirement requirement,
+            String namespace) throws NoEntityFoundException {
+
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
         if(r!=null){
@@ -266,7 +268,9 @@ public class DefaultSessionRequirement implements ISessionRequirement {
             return entityManager.merge(r);
         }
         else{
-            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+            throw new NoEntityFoundException("Requirement " +
+                    requirement.getRequirementName() +
+                    " doesn't exist in database.");
         }
     }
 
@@ -279,7 +283,9 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @throws NoEntityFoundException
      */
     @Override
-    public Requirement updateFilter(Requirement requirement, String filter) throws NoEntityFoundException {
+    public Requirement updateFilter(Requirement requirement, String filter)
+            throws NoEntityFoundException {
+
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
         if(r!=null){
@@ -287,13 +293,16 @@ public class DefaultSessionRequirement implements ISessionRequirement {
             return entityManager.merge(r);
         }
         else{
-            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+            throw new NoEntityFoundException("Requirement " +
+                    requirement.getRequirementName() +
+                    " doesn't exist in database.");
 
         }
     }
 
     /**
-     * Method to find matching between LDAP expression (Requirement filter) and Capabilities.
+     * Method to find matching between LDAP expression
+     *  (Requirement filter) and Capabilities.
      * 
      * @param namespace request namespace
      * @param requirement requirement containing all constaints to resolve
@@ -307,7 +316,7 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         Requirement r = findRequirement(requirement.getRequirementName());
 
         ILdapParser ldapParser = getParser();
-        
+
         // set namespace as LDAP parser property
         ldapParser.setProperty(String.class, r.getNamespace());
 
@@ -317,32 +326,11 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         try {
             root = ldapParser.parse(filter);
         } catch (InvalidLdapFormatException e) {
-            theLogger.log(Level.SEVERE,e.getMessage());
+            logger.error(e.getMessage(), e);
         }
 
         if (root != null) {
-            builder = entityManager.getCriteriaBuilder();
-            mainQuery = builder.createQuery(Capability.class);
-
-            Metamodel m = entityManager.getMetamodel();
-            EntityType<Capability> capMetaModel = m.entity(Capability.class);
-
-            Root<Capability> cap = mainQuery.from(Capability.class);
-            prop = cap.join(capMetaModel.getSet("properties", Property.class));
-
-            // set property in ldap parser to keep trace of join
-            ldapParser.setProperty(Join.class, prop);
-
-            mainQuery.select(cap).where(
-                builder.and(
-                    // retrieve generated query, build from tree
-                    cap.in(root.getProperty(JpaContext.class).getGeneratedQuery()),
-                    builder.equal(cap.get("namespace"), r.getNamespace())
-                )
-            );
-            
-            Collection<Capability> caps = entityManager.createQuery(mainQuery).getResultList();
-            return caps;
+            return root.getProperty(JpaContext.class).getGeneratedQuery();
         } else {
             // TODO: exception if parsed tree is null?
         }

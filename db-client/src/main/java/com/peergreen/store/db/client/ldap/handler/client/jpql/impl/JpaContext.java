@@ -53,7 +53,7 @@ public class JpaContext<T> {
         this.subquery = subquery;
     }
     
-    public Subquery<Capability> getGeneratedQuery() {
+    public Collection<Capability> getGeneratedQuery() {
         return handler.getQuery(nodeContext, negated);
     }
     
@@ -61,7 +61,7 @@ public class JpaContext<T> {
         return negated;
     }
 
-    public void setNegated(boolean negated) {
+    public void isNegated(boolean negated) {
         this.negated = negated;
     }
 

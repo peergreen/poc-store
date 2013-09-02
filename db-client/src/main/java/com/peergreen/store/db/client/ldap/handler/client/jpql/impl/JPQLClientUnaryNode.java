@@ -1,5 +1,7 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
+import java.util.Collection;
+
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -55,7 +57,7 @@ public class JPQLClientUnaryNode implements ILdapHandler, IQueryGenerator {
     }
 
     @Override
-    public Subquery<Capability> getQuery(INodeContext<? extends IValidatorNode<String>> nodeContext, boolean negated) {
+    public Collection<Capability> getQuery(INodeContext<? extends IValidatorNode<String>> nodeContext, boolean negated) {
         IUnaryNode node = nodeContext.getProperty(IUnaryNode.class);
         
         @SuppressWarnings("unchecked")
@@ -66,10 +68,12 @@ public class JPQLClientUnaryNode implements ILdapHandler, IQueryGenerator {
         JpaContext<Capability> jpaContext = node.getProperty(JpaContext.class);
 
         // use node contained in nodeContext
-        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
-        jpaContext.setSubquery(subquery);
-        Root<Capability> subRoot = subquery.from(Capability.class);
+//        Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
+//        jpaContext.setSubquery(subquery);
+//        Root<Capability> subRoot = subquery.from(Capability.class);
 
-        return subquery.select(subRoot).where(childJpaContext.getGeneratedQuery().getRestriction());
+//        return subquery.select(subRoot).where(childJpaContext.getGeneratedQuery().getRestriction());
+
+        return childJpaContext.getGeneratedQuery();
     }
 }

@@ -1,13 +1,8 @@
 package com.peergreen.store.db.client.ldap.handler.client.jpql.impl;
 
 import java.util.Collection;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.ldap.parser.INodeContext;
@@ -25,7 +20,6 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
  *
  */
 public class JPQLClientNaryNode implements ILdapHandler, IQueryGenerator {
-    private EntityManager entityManager;
 
     /**
      * Method called when all node children have been created.<br />
@@ -35,7 +29,7 @@ public class JPQLClientNaryNode implements ILdapHandler, IQueryGenerator {
      */
     @Override
     public void afterCreatingAllChildren(INodeContext<? extends IValidatorNode<String>> nodeContext) {
-        
+
     }
 
     @Override
@@ -64,66 +58,123 @@ public class JPQLClientNaryNode implements ILdapHandler, IQueryGenerator {
         nodeContext.setProperty(JpaContext.class, jpaContext);
     }
 
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
-    public Subquery<Capability> getQuery(INodeContext<? extends IValidatorNode<String>> nodeContext, boolean negated) {
+    public Collection<Capability> getQuery(INodeContext<? extends IValidatorNode<String>> nodeContext, boolean negated) {
         INaryNode node = nodeContext.getProperty(INaryNode.class);
 
-        @SuppressWarnings("unchecked")
         JpaContext<Capability> jpaContext = nodeContext.getProperty(JpaContext.class);
-        
+
+        /*
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         Subquery<Capability> subquery = jpaContext.getParentQuery().subquery(Capability.class);
         jpaContext.setSubquery(subquery);
-        Root<Capability> subRoot = subquery.from(Capability.class);
+        Root<Capability> suqueryRoot = subquery.from(Capability.class);
+        @SuppressWarnings("unchecked")
+        Join<Capability, Property> subqueryJoin = subquery.correlate(jpaContext.getNodeContext().getProperty(Join.class));
 
         // generate a var args containing all children subqueries
         Collection<? extends IValidatorNode<String>> children = node.getChildrenValidatorNode();
         Predicate[] predicates = new Predicate[children.size()];
-        
+
         @SuppressWarnings("rawtypes")
         Subquery[] subqueries = new Subquery[children.size()];
-        
+
         int i = 0;
         for (IValidatorNode<String> n : children) {
             predicates[i] = n.getProperty(JpaContext.class).getGeneratedQuery().getRestriction();
-            
+
             Predicate p = n.getProperty(JpaContext.class).getGeneratedQuery().getRestriction();
             Subquery<Capability> sub = jpaContext.getParentQuery().subquery(Capability.class);
             Root<Capability> sRoot = sub.from(Capability.class);
             sub.select(sRoot).where(p);
-            
+
             subqueries[i] = sub;
+            predicates[i] = sub.getRestriction();
             i++;
         }
-        
+
         if (jpaContext.isNegated()) {
             // create conjunction using right operator
             if (node.getData().equals(NaryOperators.AND.getNaryOperator())) {
-                subquery.select(subRoot).where(
+                subquery.select(suqueryRoot).where(
                     builder.or(predicates)
                 );
             } else if (node.getData().equals(NaryOperators.OR.getNaryOperator())) {
-                subquery.select(subRoot).where(
+                subquery.select(suqueryRoot).where(
                     builder.and(predicates)
                 );
             }
         } else {
             // create conjunction using right operator
             if (node.getData().equals(NaryOperators.AND.getNaryOperator())) {
-                subquery.select(subRoot).where(
-                    subRoot.in(subqueries)
+                subquery.select(suqueryRoot).where(
+                    subqueryJoin.in(builder.and(predicates))
                 );
             } else if (node.getData().equals(NaryOperators.OR.getNaryOperator())) {
-                subquery.select(subRoot).where(
+                subquery.select(suqueryRoot).where(
                     builder.or(predicates)
                 );
             }
         }
+         */
+
+        IValidatorNode<String> currentNode = jpaContext.getNodeContext().getNode();
+
+        Set<Collection<Capability>>  childrenQueryResults = new HashSet<>();
+        for (IValidatorNode<String> c : currentNode.getChildrenValidatorNode()) {
+            childrenQueryResults.add(c.getProperty(JpaContext.class).getGeneratedQuery());
+        }
         
-        return subquery;
+        Set<Capability> all = new HashSet<>();
+        for (Collection<Capability> coll : childrenQueryResults) {
+            all.addAll(coll);
+        }
+
+        Set<Capability> res = new HashSet<>();
+        if (jpaContext.isNegated()) {
+            if (currentNode.getData().equals(NaryOperators.AND.getNaryOperator())) {
+                // OR
+                res.addAll(all);
+            } else if (node.getData().equals(NaryOperators.OR.getNaryOperator())) {
+                // AND
+                for (Capability c : all) {
+                    boolean allContains = true;
+                    for (Collection<Capability> coll : childrenQueryResults) {
+                        if (!coll.contains(c)) {
+                            allContains = false;
+                            break;
+                        }
+                    }
+
+                    if (allContains) {
+                        res.add(c);
+                    }
+                }
+            }
+        } else {
+            if (currentNode.getData().equals(NaryOperators.AND.getNaryOperator())) {
+                // AND
+                for (Capability c : all) {
+                    boolean allContains = true;
+                    for (Collection<Capability> coll : childrenQueryResults) {
+                        if (!coll.contains(c)) {
+                            allContains = false;
+                            break;
+                        }
+                    }
+
+                    if (allContains) {
+                        res.add(c);
+                    }
+                }
+            } else if (node.getData().equals(NaryOperators.OR.getNaryOperator())) {
+                // OR
+                res.addAll(all);
+            }
+        }
+
+        return res;
+        //        return subquery;
     }
 }
