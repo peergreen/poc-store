@@ -88,22 +88,26 @@ public class DefaultPetalController implements IPetalController {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
 
-        try {
-            HashMap<String, Object> metadata = new HashMap<String, Object>();
-            metadata.put("vendor", vendor);
-            metadata.put("artifactId", artifactId);
-            metadata.put("version", version);
-            metadata.put("description", petal.getDescription());
-            metadata.put("category", petalSession.getCategory(petal));
-            metadata.put("requirements", petalSession.collectRequirements(petal));
-            metadata.put("capabilities", petalSession.collectCapabilities(petal));
-            return metadata;
-
-        } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
-            throw new NoEntityFoundException(e);
+        HashMap<String, Object> metadata = new HashMap<String, Object>();
+        
+        if (petal != null) {
+            try {
+                metadata.put("vendor", vendor);
+                metadata.put("artifactId", artifactId);
+                metadata.put("version", version);
+                metadata.put("description", petal.getDescription());
+                metadata.put("category", petalSession.getCategory(petal));
+                metadata.put("requirements",
+                        petalSession.collectRequirements(petal));
+                metadata.put("capabilities",
+                        petalSession.collectCapabilities(petal));
+            } catch (NoEntityFoundException e) {
+                theLogger.log(Level.SEVERE, e.getMessage());
+                throw new NoEntityFoundException(e);
+            }
         }
-
+        
+        return metadata;
     }
 
     /**
