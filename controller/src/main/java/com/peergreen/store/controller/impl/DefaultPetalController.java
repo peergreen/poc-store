@@ -539,6 +539,23 @@ public class DefaultPetalController implements IPetalController {
             throw new NoEntityFoundException(e);
         }
     }
+    
+    /**
+     * Method to modify description of a petal.
+     * @param vendorName name of the vendor which provide the petal))
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return updated petal
+     * @throws NoEntityFoundException 
+     */
+    public Petal updateDescription(String vendorName, String artifactId,
+            String version, String newDesc) throws NoEntityFoundException {
+        Vendor vendor = vendorSession.findVendor(vendorName);
+        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+        petalSession.updateDescription(petal, newDesc);
+        
+        return null; 
+    }
 
     @Bind
     public void bindCapabilitySession(ISessionCapability capabilitySession) {

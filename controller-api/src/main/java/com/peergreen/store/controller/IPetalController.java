@@ -250,5 +250,17 @@ public interface IPetalController {
      * @throws NoEntityFoundException 
      */
     Collection<Petal> getPetalsForCapability(String name, String version) throws NoEntityFoundException;
+    
+    /**
+     * Method to modify description of a petal.
+     * @param vendorName name of the vendor which provide the petal))
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @param description the new description 
+     * @return updated petal
+     * @throws NoEntityFoundException 
+     */
+    Petal updateDescription(String vendorName, String artifactId,
+            String version, String description) throws NoEntityFoundException; 
 
 }
