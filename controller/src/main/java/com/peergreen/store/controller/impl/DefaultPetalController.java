@@ -215,6 +215,38 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
+     * Method to retrieve a vendor thanks to its name.
+     * 
+     * @param name vendor name
+     * @return specified vendor, or {@literal null}
+     * if there is no corresponding vendor
+     */
+    @Override
+    public Vendor getVendor(String name) {
+        return vendorSession.findVendor(name);
+    }
+
+    /**
+     * Method to update the description of a vendor.<br />
+     * Throws {@link NoEntityFoundException} if the vendor does not exists.
+     * 
+     * @param name vendor name
+     * @param description new description for the vendor 
+     * @return updated vendor
+     * @throws NoEntityFoundException
+     */
+    @Override
+    public Vendor updateVendor(String name, String description) 
+            throws NoEntityFoundException {
+        try {
+            return vendorSession.updateVendor(name, description);
+        } catch (NoEntityFoundException e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            throw new NoEntityFoundException(e);
+        }
+    }
+
+    /**
      * Method to retrieve a petal from the local store.
      * 
      * @param vendorName the name of the petal's vendor
@@ -336,6 +368,19 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
+     * Method to retrieve a capability.
+     * 
+     * @param name capability name
+     * @param version capability version
+     * @return found capability or {@literal null}
+     * if there is no corresponding capability
+     */
+    @Override
+    public Capability getCapability(String name, String version){
+        return capabilitySession.findCapability(name, version);
+    }
+
+    /**
      * Method to add a capability to a petal's provided capabilities list.
      * 
      * @param vendorName the name of the petal's vendor
@@ -416,6 +461,18 @@ public class DefaultPetalController implements IPetalController {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
         }
+    }
+
+    /**
+     * Method to retrieve a requirement.
+     * 
+     * @param name requirement name
+     * @return found requirement or {@literal null}
+     * if there is no corresponding requirement
+     */
+    @Override
+    public Requirement getRequirement(String name) {
+        return requirementSession.findRequirement(name);
     }
 
     /**
@@ -539,7 +596,7 @@ public class DefaultPetalController implements IPetalController {
             throw new NoEntityFoundException(e);
         }
     }
-    
+
     /**
      * Method to modify description of a petal.
      * @param vendorName name of the vendor which provide the petal))
@@ -553,7 +610,7 @@ public class DefaultPetalController implements IPetalController {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         petalSession.updateDescription(petal, newDesc);
-        
+
         return null; 
     }
 
@@ -586,7 +643,7 @@ public class DefaultPetalController implements IPetalController {
     public void bindPetalPersistence(IPetalsPersistence petalPersistence) {
         this.petalPersistence = petalPersistence;
     }
-    
+
     @Bind
     public void bindGroupSession(ISessionGroup groupSession) {
         this.groupSession = groupSession;

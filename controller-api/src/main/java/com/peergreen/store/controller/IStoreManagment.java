@@ -11,7 +11,6 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
-import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -40,13 +39,15 @@ public interface IStoreManagment {
      * @return created link instance
      * @throws EntityAlreadyExistsException 
      */
-    Link addLink(String url, String description) throws EntityAlreadyExistsException;
+    Link addLink(String url, String description) 
+            throws EntityAlreadyExistsException;
 
     /**
      * Method to remove a link between a remote store and the current one.
      * 
      * @param linkId link's url
-     * @return Link instance deleted or {@link null} if the link can't be deleted
+     * @return Link instance deleted or
+     * {@link null} if the link can't be deleted
      */
     Link removeLink(String linkUrl);
 
@@ -70,7 +71,8 @@ public interface IStoreManagment {
      * Method to remove a category from the database.
      * 
      * @param ame of the category to remove
-     * @return Category instance deleted or {@link null} if the category can't be deleted
+     * @return Category instance deleted or
+     * {@link null} if the category can't be deleted
      */
     Category removeCategory(String name);
 
@@ -143,7 +145,8 @@ public interface IStoreManagment {
     Petal submitPetal(String vendorName, String artifactId,
             String version, String description, String categoryName,
             Set<Requirement> requirements, Set<Capability> capabilities,
-            File petalBinary) throws EntityAlreadyExistsException, NoEntityFoundException;
+            File petalBinary)
+                    throws EntityAlreadyExistsException, NoEntityFoundException;
 
     /**
      * Method to validate a petal's submission thanks to its information.<br />
@@ -155,8 +158,19 @@ public interface IStoreManagment {
      * @return corresponding petal on database
      * @throws NoEntityFoundException 
      */
-    Petal validatePetal(String vendorName, String artifactId, String version) throws NoEntityFoundException;
+    Petal validatePetal(String vendorName, String artifactId, String version)
+            throws NoEntityFoundException;
 
+    /**
+     * Method to retrieve all the petals provided by a vendor.<br />
+     * Throws {@link NoEntityFoundException} if the vendor does not exists.
+     * 
+     * @param name vendor name 
+     * @return collection of petals provided by the vendor
+     * @throws NoEntityFoundException
+     */
+    Collection<Petal> collectPetalsByVendor(String name)
+            throws NoEntityFoundException;
 
     /**
      * Method to get a petal (binary) from the local store.<br />
@@ -167,37 +181,37 @@ public interface IStoreManagment {
      * @param version petal's version
      * @return binary of the petal
      */
-    File getPetalFromLocal(String vendorName, String artifactId, String version);
-
-    Capability getCapability(String name, String version);
-
-    Requirement getRequirement(String name);
-
-    /**
-     * Method to get an instance of a vendor using his name 
-     * @param name the name of the vendor to retrieve 
-     * @return the specified vendor
-     */
-    Vendor getVendor(String name);
+    File getPetalFromLocal(
+            String vendorName,
+            String artifactId,
+            String version);
 
     /**
-     * Method to update the description of a vendor
-     * @param name the name of the vendor 
-     * @param description the new description of the vendor 
-     * @return The vendor updated if it exists , 
-     * else throws {@link NoEntityFoundException}
-     * @throws NoEntityFoundException
+     * Method to get a petal (binary) from the staging store.<br />
+     * Return null if no petal found on the repository.
+     * 
+     * @param vendorName vendor name
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return binary of the petal
      */
-    Vendor updateVendor(String name, String description) 
-            throws NoEntityFoundException;
+    File getPetalFromStaging(
+            String vendorName,
+            String artifactId,
+            String version);
 
     /**
-     * Method to retrieve all the petals provided by a vendor
-     * @param name The name of the vendor 
-     * @return A collection of petals provided by the vendor, 
-     * or throws {@link NoEntityFoundException} if the vendor doesn't exist
-     * @throws NoEntityFoundException
+     * Method to get a petal (binary) from the remote store(s).<br />
+     * Return null if no petal found on the repository.
+     * 
+     * @param vendorName vendor name
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return binary of the petal
      */
-    Collection<Petal> collectPetalsByVendor(String name)
-            throws NoEntityFoundException; 
+    File getPetalFromRemote(
+            String vendorName,
+            String artifactId,
+            String version);
+
 }
