@@ -58,20 +58,13 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
 @Provides
 public class DefaultPetalController implements IPetalController {
 
-    @Requires
     private ISessionCapability capabilitySession;
-    @Requires
     private ISessionCategory categorySession;
-    @Requires
     private ISessionPetal petalSession;
-    @Requires
     private ISessionRequirement requirementSession;
-    @Requires
     private ISessionVendor vendorSession;
-    @Requires
     private ISessionGroup groupSession;
     /** reference to the aether client for petal persistence */
-    @Requires
     private IPetalsPersistence petalPersistence;
     /** resolver to get all petal"s transitive dependencies */
     //    private ResolveContext resolver;
@@ -564,7 +557,6 @@ public class DefaultPetalController implements IPetalController {
             throw new NoEntityFoundException(e);
         }
     }
-
 
     /**
      * Method to get all the petals which has the requirement given 
