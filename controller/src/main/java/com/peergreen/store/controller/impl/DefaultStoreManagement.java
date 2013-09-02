@@ -3,6 +3,7 @@ package com.peergreen.store.controller.impl;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -294,7 +295,48 @@ public class DefaultStoreManagement implements IStoreManagment {
     public Requirement getRequirement(String name) {
         return requirementSession.findRequirement(name);
     }
+    
+    /**
+     * Method to get an instance of a vendor using his name 
+     * @param name the name of the vendor to retrieve 
+     * @return the specified vendor
+     */
+    @Override
+    public Vendor getVendor(String name) {
+        return vendorSession.findVendor(name);
+    }
+    
+    @Override
+    public Vendor updateVendor(String name, String description) 
+            throws NoEntityFoundException {
+        try {
+            return vendorSession.updateVendor(name, description);
+        } catch (NoEntityFoundException e) {
+            // TODO Auto-generated catch block
+            throw new NoEntityFoundException(e);
+        }
+    }
 
+    /**
+     * Method to retrieve all the petals provided by a vendor
+     * @param name The name of the vendor 
+     * @return A collection of petals provided by the vendor, 
+     * or throws {@link NoEntityFoundException} if the vendor doesn't exist
+     * @throws NoEntityFoundException
+     */
+    @Override
+    public Collection<Petal> collectPetalsByVendor(String name) 
+            throws NoEntityFoundException {
+        Collection<Petal> result = new HashSet<>();
+        Vendor v = vendorSession.findVendor(name);
+        if(v == null) {
+            throw new NoEntityFoundException();
+        }
+        else{
+            result.addAll(v.getPetals());
+            return result;
+        }
+    }
     @Bind
     public void bindPetalsPersistence(IPetalsPersistence petalsPersistence) {
         this.petalsPersistence = petalsPersistence;

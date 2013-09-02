@@ -189,6 +189,28 @@ public class DefaultSessionVendor implements ISessionVendor {
         return vendorSet;   
     }
 
+    /**
+     * Method to change description of a vendor.
+     * @param name the name of the vendor
+     * @param description the new description of the vendor
+     * @return The vendor instance updated 
+     * @throws NoEntityFoundException 
+     */
+    @Override
+    public Vendor updateVendor(String name, String description)
+            throws NoEntityFoundException {
+        
+        Vendor vendor = findVendor(name);
+        if(vendor != null) {
+            vendor.setVendorDescription(description);
+            return entityManager.merge(vendor);
+        }
+        else{
+            throw new NoEntityFoundException("Vendor " + name
+                    + " doesn't exist in database.");
+        }
+    }
+    
     @EJB
     public void setPetalSession(ISessionPetal petalSession) {
         this.petalSession = petalSession;

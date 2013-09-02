@@ -86,4 +86,14 @@ public interface ISessionVendor {
      * @return collection of all existing vendors in database
      */
     Collection<Vendor> collectVendors();
+
+    /**
+     * Method to change description of a vendor.
+     * @param name the name of the vendor
+     * @param description the new description of the vendor
+     * @return The vendor instance updated
+     * @throws NoEntityFoundException 
+     */
+    Vendor updateVendor(String name, String description) 
+            throws NoEntityFoundException;
 }

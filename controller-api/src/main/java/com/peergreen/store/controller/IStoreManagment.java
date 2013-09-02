@@ -11,6 +11,7 @@ import com.peergreen.store.db.client.ejb.entity.Link;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
+import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -169,8 +170,34 @@ public interface IStoreManagment {
     File getPetalFromLocal(String vendorName, String artifactId, String version);
 
     Capability getCapability(String name, String version);
-    
+
     Requirement getRequirement(String name);
 
-    
+    /**
+     * Method to get an instance of a vendor using his name 
+     * @param name the name of the vendor to retrieve 
+     * @return the specified vendor
+     */
+    Vendor getVendor(String name);
+
+    /**
+     * Method to update the description of a vendor
+     * @param name the name of the vendor 
+     * @param description the new description of the vendor 
+     * @return The vendor updated if it exists , 
+     * else throws {@link NoEntityFoundException}
+     * @throws NoEntityFoundException
+     */
+    Vendor updateVendor(String name, String description) 
+            throws NoEntityFoundException;
+
+    /**
+     * Method to retrieve all the petals provided by a vendor
+     * @param name The name of the vendor 
+     * @return A collection of petals provided by the vendor, 
+     * or throws {@link NoEntityFoundException} if the vendor doesn't exist
+     * @throws NoEntityFoundException
+     */
+    Collection<Petal> collectPetalsByVendor(String name)
+            throws NoEntityFoundException; 
 }
