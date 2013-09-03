@@ -30,9 +30,9 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
             @NamedQuery (
                     name = "CapabilityByName",
                     query = "select cap from Capability cap where " +
-				"cap.capabilityName = :name " +
-				"and cap.version = :version" +
-				"and cap.namespace = :namespace"
+                            "cap.capabilityName = :name " +
+                            "and cap.version = :version" +
+                            "and cap.namespace = :namespace"
                     ),
                     @NamedQuery (
                             name = "Requirement.findCapabilities",
@@ -42,8 +42,6 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
 @Entity
 @IdClass(CapabilityId.class)
 public class Capability{
-
-    // TODO: add namespace to primary key
 
     private Integer hashCode = null;
 
