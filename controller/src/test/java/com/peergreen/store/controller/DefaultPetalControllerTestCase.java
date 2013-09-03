@@ -125,7 +125,7 @@ public class DefaultPetalControllerTestCase {
 
     @Test
     public void testGetTransitiveDependencies() throws NoEntityFoundException{
-        
+
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Vendor vendor = mock(Vendor.class);
@@ -133,13 +133,13 @@ public class DefaultPetalControllerTestCase {
         when(request.getVendor()).thenReturn(vendor);
         when(request.getArtifactId()).thenReturn(artifactId);
         when(request.getVersion()).thenReturn(version); 
-        
+
         Requirement req1 = mock(Requirement.class);
         Requirement req2 = mock(Requirement.class);
         Set<Requirement> requirements = new HashSet<>();
         requirements.add(req1);
         requirements.add(req2);
-        
+
         Capability cap1 = mock(Capability.class);
         Capability cap2 = mock(Capability.class);
         Set<Capability> capabilities = new HashSet<>();
@@ -147,7 +147,7 @@ public class DefaultPetalControllerTestCase {
         capabilities.add(cap2);  
         Set<Capability> capabilities2 = new HashSet<>();
 
-        
+
         Petal petal = mock(Petal.class);
         Petal petal1 = mock(Petal.class);
         Petal petal2 = mock(Petal.class);
@@ -158,25 +158,25 @@ public class DefaultPetalControllerTestCase {
 
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petal.getRequirements()).thenReturn(requirements);
-        
+
         when(requirementSession.findCapabilities(req1)).thenReturn(capabilities);
         when(requirementSession.findCapabilities(req2)).thenReturn(capabilities2);
-        
+
         when(cap1.getPetals()).thenReturn(petals);
         when(cap2.getPetals()).thenReturn(petalsEmpty);
 
         //When 
-       DependencyResult result = petalController.getTransitiveDependencies(request);
-       //Then 
+        DependencyResult result = petalController.getTransitiveDependencies(request);
+        //Then 
         verify(requirementSession,times(2)).findCapabilities(any(Requirement.class));
         Assert.assertSame(petals, result.getResolvedRequirements().get(req1));
-        
-      //  Assert.assertTrue(result.getUnresolvedRequirements().contains(req2));
+
+        //  Assert.assertTrue(result.getUnresolvedRequirements().contains(req2));
         Assert.assertTrue(result.getUnresolvedRequirements().contains(req1));
 
     }
-    
-    
+
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenGetPetalMetadata() throws NoEntityFoundException{
 
@@ -413,7 +413,7 @@ public class DefaultPetalControllerTestCase {
 
     @Test
     public void shouldReturnNullWhenRemovePetal() throws  NoEntityFoundException{
-     // manage petal part
+        // manage petal part
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor();
         vendor.setVendorName(vendorName);
@@ -441,23 +441,23 @@ public class DefaultPetalControllerTestCase {
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.collectGroups(petal)).thenReturn(groups);
         when(groupSession.removePetal(group2, petal)).thenThrow(new NoEntityFoundException());
-        
+
         // verify petalSession.removeAccesToGroup is called
         // as many times there are allowed groups - 1 (admin group)
         Petal result = petalController.removePetal(vendorName, artifactId, version);
-        
+
         //Then
         Assert.assertNull(result);
     }
-    
-    
+
+
     @Test
     public void testCreateCapability() throws EntityAlreadyExistsException {
         String capabilityName = "my capability";
         String namespace = "service";
         String version = "1.0";
         Set<Property> properties = new HashSet<>();
-        
+
         // verify capabilitySession.addCapability(...) is called
         petalController.createCapability(capabilityName,version, namespace, properties);
         verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
@@ -475,7 +475,7 @@ public class DefaultPetalControllerTestCase {
         petalController.createCapability(capabilityName,version, namespace, properties);
         verify(capabilitySession).addCapability(capabilityName, version, namespace, properties);
 
- 
+
     }
 
     @Test
@@ -528,6 +528,7 @@ public class DefaultPetalControllerTestCase {
         // capability attributes
         String name = "JPA";
         String versionCap = "2.0";
+        String namespace = "Provider";
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
@@ -540,9 +541,9 @@ public class DefaultPetalControllerTestCase {
         // mock => return the specified petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
-        when(capabilitySession.findCapability(name, versionCap)).thenReturn(capability);
+        when(capabilitySession.findCapability(name, versionCap, namespace)).thenReturn(capability);
         // verify capabilitySession.addCapability(...) is called
-        petalController.addCapability(vendorName, artifactId, version, name, versionCap);
+        petalController.addCapability(vendorName, artifactId, version, name, versionCap, namespace);
         verify(petalSession).addCapability(petal, capability);
     }
 
@@ -551,6 +552,7 @@ public class DefaultPetalControllerTestCase {
         // capability attributes
         String name = "JPA";
         String versionCap = "2.0";
+        String namespace = "Provider";
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
@@ -563,11 +565,11 @@ public class DefaultPetalControllerTestCase {
         // mock => return the specified petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
-        when(capabilitySession.findCapability(name, versionCap)).thenReturn(capability);
+        when(capabilitySession.findCapability(name, versionCap, namespace)).thenReturn(capability);
 
         when(petalSession.addCapability(petal, capability)).thenThrow(new NoEntityFoundException());
         // verify capabilitySession.addCapability(...) is called
-        petalController.addCapability(vendorName, artifactId, version, name, versionCap);
+        petalController.addCapability(vendorName, artifactId, version, name, versionCap, namespace);
         verify(petalSession).addCapability(petal, capability);
     }
 
@@ -576,6 +578,7 @@ public class DefaultPetalControllerTestCase {
         Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
+        String namespace = "Provider";
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
 
@@ -588,9 +591,9 @@ public class DefaultPetalControllerTestCase {
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
-        when(capabilitySession.findCapability(name, versionCap)).thenReturn(capability);
+        when(capabilitySession.findCapability(name, versionCap, namespace)).thenReturn(capability);
         // verify petalSession.remove
-        petalController.removeCapability(vendorName, artifactId, version,name, versionCap);
+        petalController.removeCapability(vendorName, artifactId, version,name, versionCap, namespace);
         verify(petalSession).removeCapability(petal, capability);
     }
 
@@ -599,6 +602,7 @@ public class DefaultPetalControllerTestCase {
         Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
+        String namespace = "Provider";
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
 
@@ -611,10 +615,10 @@ public class DefaultPetalControllerTestCase {
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
-        when(capabilitySession.findCapability(name, versionCap)).thenReturn(capability);
+        when(capabilitySession.findCapability(name, versionCap, namespace)).thenReturn(capability);
         when(petalSession.removeCapability(petal, capability)).thenThrow(new NoEntityFoundException());
         // verify petalSession.remove
-        petalController.removeCapability(vendorName, artifactId, version,name, versionCap);
+        petalController.removeCapability(vendorName, artifactId, version, name, versionCap, namespace);
         verify(petalSession).removeCapability(petal, capability);
 
     }
@@ -791,7 +795,7 @@ public class DefaultPetalControllerTestCase {
         petalController.getCategory(vendorName, artifactId, version);
         verify(petalSession).getCategory(petal);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenGetCategoryForPetalInexistent() throws NoEntityFoundException {
         Vendor vendor = new Vendor();
@@ -862,40 +866,40 @@ public class DefaultPetalControllerTestCase {
         petalController.createVendor(vendorName, vendorDescription);
         verify(vendorSession).addVendor(vendorName, vendorDescription);
     }
-    
+
     @Test
     public void testCollectPetalsByCapability() throws NoEntityFoundException{
         String name = "JPA";
         String version ="2.1.0";
-        
+        String namespace = "Provider";
         Petal p1 = mock(Petal.class);
         Set<Petal> list = new HashSet<>();
         list.add(p1);
-        when(capabilitySession.collectPetals(name, version)).thenReturn(list);
+        when(capabilitySession.collectPetals(name, version, namespace)).thenReturn(list);
         //when
-        Collection<Petal> result = petalController.getPetalsForCapability(name, version);
+        Collection<Petal> result = petalController.getPetalsForCapability(name, version, namespace);
         //Then
-        verify(capabilitySession).collectPetals(name, version);
+        verify(capabilitySession).collectPetals(name, version, namespace);
         Assert.assertEquals(list, result);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectPetalsByCapabilityInexistent() throws NoEntityFoundException{
         String name = "JPA";
         String version ="2.1.0";
-        
-      
-        when(capabilitySession.collectPetals(name, version)).thenThrow(new NoEntityFoundException());
+        String namespace = "Provider";
+
+        when(capabilitySession.collectPetals(name, version, namespace)).thenThrow(new NoEntityFoundException());
         //when
-        petalController.getPetalsForCapability(name, version);
+        petalController.getPetalsForCapability(name, version, namespace);
         //Then
-        verify(capabilitySession).collectPetals(name, version);
+        verify(capabilitySession).collectPetals(name, version, namespace);
     }
-    
+
     @Test
     public void testCollectPetalsByRequirements() throws NoEntityFoundException{
         String name = "JPA";
-        
+
         Petal p1 = mock(Petal.class);
         Set<Petal> list = new HashSet<>();
         list.add(p1);
@@ -906,11 +910,11 @@ public class DefaultPetalControllerTestCase {
         verify(requirementSession).collectPetals(name);
         Assert.assertEquals(list, result);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectPetalsByRequirementInexistent() throws NoEntityFoundException{
         String name = "JPA";
-              
+
         when(requirementSession.collectPetals(name)).thenThrow(new NoEntityFoundException());
         //when
         petalController.getPetalsForRequirement(name);

@@ -134,11 +134,11 @@ public class DefaultSessionPetalTest {
         when(mockpetal.getCategory()).thenReturn(category);
         when(mockpetal.getGroups()).thenReturn(groups);
         when(category.getCategoryName()).thenReturn("Bundle");
-        
+
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
 
 
-        when(sessionCapability.findCapability(anyString(), anyString())).thenReturn(mockcapability);
+        when(sessionCapability.findCapability(anyString(), anyString(), anyString())).thenReturn(mockcapability);
         when(capabilities.iterator()).thenReturn(itC);
 
         when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);
@@ -192,7 +192,7 @@ public class DefaultSessionPetalTest {
         //Given : A petal with 1 requirement and 1 capability 
         when(query.getSingleResult()).thenReturn(null);
         when(sessionGroup.findGroup("Administrator")).thenReturn(mockgroup);
-        when(sessionCapability.findCapability(anyString(), anyString())).thenReturn(null);
+        when(sessionCapability.findCapability(anyString(), anyString(), anyString())).thenReturn(null);
 
 
         when(itC.hasNext()).thenReturn(true,false);
@@ -427,7 +427,7 @@ public class DefaultSessionPetalTest {
         verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
         Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
         verify(query).getSingleResult();
-        
+
     }
 
     @Test
@@ -541,7 +541,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal() {
-        
+
 
     }
 

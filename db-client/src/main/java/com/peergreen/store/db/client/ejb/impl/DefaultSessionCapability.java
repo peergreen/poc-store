@@ -48,17 +48,17 @@ public class DefaultSessionCapability implements ISessionCapability{
     private ISessionProperty propertySession;
 
     private static Logger theLogger = Logger.getLogger(DefaultSessionCapability.class.getName());
-    
+
     @PersistenceContext
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    
+
     @EJB
     public void setSessionPetal(ISessionPetal sessionPetal) {
         this.petalSession = sessionPetal;
     }
-    
+
     @EJB
     public void setSessionProperty(ISessionProperty propertySession) {
         this.propertySession = propertySession;
@@ -80,7 +80,7 @@ public class DefaultSessionCapability implements ISessionCapability{
             Set<Property> properties) throws EntityAlreadyExistsException {
 
         //Check if the capability to add already exists
-        Capability temp = findCapability(capabilityName, version);
+        Capability temp = findCapability(capabilityName, version, namespace);
         if (temp != null) {
             throw new EntityAlreadyExistsException("Capability " + capabilityName +
                     " in version " + version + " already exists on database.");
@@ -96,7 +96,7 @@ public class DefaultSessionCapability implements ISessionCapability{
             props.add(propertySession.createProperty("capabilityName", capabilityName));
             props.add(propertySession.createProperty("version", version));
             props.add(propertySession.createProperty("namespace", namespace));
-            
+
             Capability capability = new Capability(capabilityName, version, namespace, props);
             entityManager.persist(capability); 
 
@@ -110,7 +110,7 @@ public class DefaultSessionCapability implements ISessionCapability{
                 }
             }
             entityManager.merge(capability); 
-            
+
             return capability;
         }
     }
@@ -126,9 +126,9 @@ public class DefaultSessionCapability implements ISessionCapability{
      * <em>null</em> if capability can't be deleted
      */
     @Override
-    public Capability deleteCapability(String capabilityName, String version) {
+    public Capability deleteCapability(String capabilityName, String version, String namespace) {
         // retrieve attached capability 
-        Capability cap = findCapability(capabilityName,version);
+        Capability cap = findCapability(capabilityName, version, namespace);
         if(cap!=null){
             try {
                 //Retrieve petals which provided the capability to delete
@@ -161,7 +161,7 @@ public class DefaultSessionCapability implements ISessionCapability{
      */
     @Override
     public Capability findCapability(String capabilityName, String version, String namespace) {
-     //The query to retrieve the capability we are looking for 
+        //The query to retrieve the capability we are looking for 
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
         q.setParameter("version", version);
@@ -189,7 +189,7 @@ public class DefaultSessionCapability implements ISessionCapability{
     @Override
     public Capability updateProperties(Capability capability, Set<Property> properties) throws NoEntityFoundException {
         // retrieve attached capability entity
-        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
         if(c != null){
             c.setProperties(properties);
             return entityManager.merge(c);
@@ -197,44 +197,46 @@ public class DefaultSessionCapability implements ISessionCapability{
             throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
         }
     }
-    
+
     /**
      * Method to collect all properties associated with a capability.<br />
      * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
      * 
      * @param capabilityName capability name
      * @param version capability version
+     * @param namespace capability namespace
      * @return associated properties
      * @throws NoEntityFoundException
      */
-    public Collection<Property> collectProperties(String capabilityName, String version) throws NoEntityFoundException {
-        Capability capability = findCapability(capabilityName, version);
+    public Collection<Property> collectProperties(String capabilityName, String version, String namespace) throws NoEntityFoundException {
+        Capability capability = findCapability(capabilityName, version, namespace);
         if (capability != null) {
             return capability.getProperties();
         } else {
             throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
         }
     }
-    
+
     /**
      * Method to add a property to the list of properties associated with this capability.<br />
      * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
      * 
      * @param capabilityName capability name
      * @param version capability version
+     * @param namespace capability namespace
      * @param property property to associate
      * @return updated capability
      * @throws NoEntityFoundException
      */
-    public Capability addProperty(String capabilityName, String version, Property property) throws NoEntityFoundException {
+    public Capability addProperty(String capabilityName, String version, String namespace, Property property) throws NoEntityFoundException {
         // retrieve attached capability entity
-        Capability c = findCapability(capabilityName, version);
+        Capability c = findCapability(capabilityName, version, namespace);
 
         if (c != null) {
             // retrieve attached petal entity
             Property p = propertySession.find(property.getId());
             p.setCapability(c);
-            
+
             Set<Property> properties = c.getProperties();
             properties.add(p);
             c.setProperties(properties);
@@ -244,45 +246,47 @@ public class DefaultSessionCapability implements ISessionCapability{
             throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
         }
     }
-    
+
     /**
      * Method to remove a property from the list of properties associated with this capability.<br />
      * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
      * 
      * @param capabilityName capability name
      * @param version capability version
+     * @param namespace capability namespace
      * @param property property to associate
      * @return updated capability
      * @throws NoEntityFoundException
      */
-    public Capability removeProperty(String capabilityName, String version, Property property) throws NoEntityFoundException {
+    public Capability removeProperty(String capabilityName, String version, String namespace, Property property) throws NoEntityFoundException {
         // retrieve attached capability entity
-        Capability c = findCapability(capabilityName, version);
+        Capability c = findCapability(capabilityName, version, namespace);
         if (c != null){
             // retrieve attached petal entity
             Property p = propertySession.find(property.getId());  
 
             Set<Property> properties = c.getProperties();
             properties.remove(p);
-            
+
             return entityManager.merge(c);
         } else {
             throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
         }
     }
 
-    
+
     /**
      * Method to collect the petals which provides a specific capability.<br />
      * Throws {@literal NoEntityFoundException} if capability doesn't exist.
      * 
      * @param name capability name
      * @param version capability version 
+     * @param namespace capability namespace
      * @return collection of all petals providing this specific capability
      */
     @Override
-    public Collection<Petal> collectPetals(String capabilityName, String version) throws NoEntityFoundException {
-        Capability capability = findCapability(capabilityName,version);
+    public Collection<Petal> collectPetals(String capabilityName, String version, String namespace) throws NoEntityFoundException {
+        Capability capability = findCapability(capabilityName, version, namespace);
         if (capability != null) {
             return capability.getPetals();
         } else {
@@ -302,7 +306,7 @@ public class DefaultSessionCapability implements ISessionCapability{
     @Override
     public Capability addPetal(Capability capability, Petal petal) throws NoEntityFoundException{
         // retrieve attached capability entity
-        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
 
         if (c != null) {
             // retrieve attached petal entity
@@ -330,7 +334,7 @@ public class DefaultSessionCapability implements ISessionCapability{
     @Override
     public Capability removePetal(Capability capability, Petal petal)throws NoEntityFoundException {
         // retrieve attached capability entity
-        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
+        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
         if (c != null) {
             // retrieve attached petal entity
             Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  

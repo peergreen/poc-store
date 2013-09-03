@@ -106,7 +106,7 @@ public class DefaultSessionCapabilityTest {
     }
 
 
-//    @Test
+    //    @Test
     /**
      * Test to check that adding a capability     
      */
@@ -145,7 +145,7 @@ public class DefaultSessionCapabilityTest {
         queryString = "CapabilityByName";
         when(query.getSingleResult()).thenReturn(mockcapability);
         //When 
-        sessionCapability.findCapability("capabilityName",version);
+        sessionCapability.findCapability("capabilityName",version,namespace);
         //Then 
         verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
         Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
@@ -166,7 +166,7 @@ public class DefaultSessionCapabilityTest {
         when(itP.hasNext()).thenReturn(true,true,false);
 
         //When  
-        sessionCapability.deleteCapability(capabilityName,version);
+        sessionCapability.deleteCapability(capabilityName,version,namespace);
 
         //Then 
         verify(mockcapability).getPetals();
@@ -277,7 +277,7 @@ public class DefaultSessionCapabilityTest {
         //Given 
         when(query.getSingleResult()).thenReturn(mockcapability);
         //When
-        sessionCapability.collectPetals(capabilityName,version);
+        sessionCapability.collectPetals(capabilityName,version,namespace);
         //Then
         verify(mockcapability).getPetals();
     }
@@ -288,7 +288,7 @@ public class DefaultSessionCapabilityTest {
         //Given : The capability given in parameter doesn't exist in the database 
         when(query.getSingleResult()).thenReturn(null);
         //When
-        sessionCapability.collectPetals(capabilityName,version);
+        sessionCapability.collectPetals(capabilityName,version,namespace);
         //Then throw a new EntityNotFoundException
     }
 
@@ -298,7 +298,7 @@ public class DefaultSessionCapabilityTest {
         when(entityManager.createNamedQuery(anyString())).thenReturn(query);
         when(query.getSingleResult()).thenReturn(null);
         //When
-        sessionCapability.collectPetals(capabilityName,version);
+        sessionCapability.collectPetals(capabilityName,version,namespace);
     }
 
     @Test
@@ -316,32 +316,7 @@ public class DefaultSessionCapabilityTest {
         verify(query).getResultList();
     }
 
-    @Test
-    public void shouldUpdateNamespace() throws NoEntityFoundException {
 
-        //Given
-        when(query.getSingleResult()).thenReturn(mockcapability);
-        //when
-
-        sessionCapability.updateNamespace(mockcapability, "namespace");
-
-        //then
-        verify(mockcapability).setNamespace(value.capture());
-        Assert.assertEquals("namespace", value.getValue());
-        verify(entityManager).merge(mockcapability);
-    }
-
-    @Test(expectedExceptions = NoEntityFoundException.class)
-    public void shouldThrowExceptionWhenUpdateNamespaceOfCapabilityInexistent() throws NoEntityFoundException{
-        //Given : The capability given as parameter doesn't exist in the database 
-        when(query.getSingleResult()).thenReturn(null);
-        //when
-
-        sessionCapability.updateNamespace(mockcapability, namespace);
-
-        //Then throw a new EntityNotFoundException
-    }
-    
     @Test
     public void shouldUpdateProperties() throws NoEntityFoundException {
         //Given

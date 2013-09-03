@@ -174,7 +174,7 @@ public class DefaultSessionPetal implements ISessionPetal {
                 while(it.hasNext()) {
                     Capability cap = it.next();
 
-                    Capability loopC = sessionCapability.findCapability(cap.getCapabilityName(), cap.getVersion());
+                    Capability loopC = sessionCapability.findCapability(cap.getCapabilityName(), cap.getVersion(), cap.getNamespace());
                     if (loopC != null) {
                         sessionCapability.addPetal(loopC, petal);
                     } else {
@@ -536,7 +536,7 @@ public class DefaultSessionPetal implements ISessionPetal {
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion()); 
         if(p!=null){
             // retrieve attached capability
-            Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion());
+            Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
 
             p.getCapabilities().add(c);
             try {
@@ -569,7 +569,7 @@ public class DefaultSessionPetal implements ISessionPetal {
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
         if(p!=null){
             // retrieve attached capability
-            Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion());
+            Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
 
             p.getCapabilities().remove(c);
 

@@ -32,7 +32,7 @@ public class DefaultSessionProperty implements ISessionProperty {
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-    
+
     /**
      * Method to create a Property in database.
      * 
@@ -44,7 +44,7 @@ public class DefaultSessionProperty implements ISessionProperty {
     public Property createProperty(String name, String value) {
         Property prop = new Property(name, value);
         entityManager.persist(prop);
-        
+
         return prop;
     }
 
@@ -92,9 +92,9 @@ public class DefaultSessionProperty implements ISessionProperty {
     @Override
     public Property setCapability(long id, Capability capability) throws NoEntityFoundException {
         Property prop = find(id);
-        
+
         if (prop != null) {
-            Capability cap = capabilitySession.findCapability(capability.getCapabilityName(), capability.getVersion());
+            Capability cap = capabilitySession.findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
             if (capability != null) {
                 prop.setCapability(cap);
             } else {
@@ -103,7 +103,7 @@ public class DefaultSessionProperty implements ISessionProperty {
         } else {
             throw new NoEntityFoundException("No existing Property with id " + id + ".");
         }
-        
+
         return prop;
     }
 

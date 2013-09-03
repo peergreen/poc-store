@@ -189,10 +189,11 @@ public interface IPetalController {
      * 
      * @param name capability name
      * @param version capability version
+     * @param namespace capability namespace
      * @return found capability or {@literal null}
      * if there is no corresponding capability
      */
-    Capability getCapability(String name, String version);
+    Capability getCapability(String name, String version, String namespace);
 
     /**
      * Method to add a capability to a petal's provided capabilities list.
@@ -204,6 +205,8 @@ public interface IPetalController {
      * to the provided capabilities list of the petal
      * @param version the version of the capability to add
      * to the provided capabilities list of the petal
+     * @param namespace the namespace of the capability to add
+     * to the provided capabilities list of the petal
      * @return updated petal
      * @throws NoEntityFoundException 
      */
@@ -212,7 +215,8 @@ public interface IPetalController {
             String artifactId,
             String version,
             String name,
-            String capabilityVersion) throws NoEntityFoundException;
+            String capabilityVersion,
+            String namespace) throws NoEntityFoundException;
 
     /**
      * Method to remove a capability from a petal's provided capabilities list.
@@ -224,6 +228,8 @@ public interface IPetalController {
      * from the provided capabilities list of the petal
      * @param version the version of capability to remove
      * from the provided capabilities list of the petal
+     * @param namespace the namespace of capability to remove
+     * from the provided capabilities list of the petal
      * @return updated petal
      * @throws NoEntityFoundException 
      */
@@ -232,7 +238,8 @@ public interface IPetalController {
             String artifactId,
             String version,
             String name,
-            String capabilityVersion) throws NoEntityFoundException;
+            String capabilityVersion,
+            String namespace) throws NoEntityFoundException;
 
     /**
      * Method to add a new Requirement to the database.
@@ -343,9 +350,10 @@ public interface IPetalController {
     /**
      * Method to get all the petals which provide the capability given 
      * @param name the capability's name
+     * @param namespace the capability's namespace
      * @throws NoEntityFoundException 
      */
-    Collection<Petal> getPetalsForCapability(String name, String version) 
+    Collection<Petal> getPetalsForCapability(String name, String version, String namespace) 
             throws NoEntityFoundException;
 
     /**
@@ -361,6 +369,7 @@ public interface IPetalController {
             String vendorName,
             String artifactId,
             String version,
-            String description) throws NoEntityFoundException; 
+            String description) throws NoEntityFoundException;
+
 
 }

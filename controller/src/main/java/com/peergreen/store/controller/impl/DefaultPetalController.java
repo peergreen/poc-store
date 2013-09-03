@@ -13,7 +13,6 @@ import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
-import org.apache.felix.ipojo.annotations.Requires;
 import org.osgi.resource.Resource;
 import org.osgi.resource.Wiring;
 
@@ -89,7 +88,7 @@ public class DefaultPetalController implements IPetalController {
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
 
         HashMap<String, Object> metadata = new HashMap<String, Object>();
-        
+
         if (petal != null) {
             try {
                 metadata.put("vendor", vendor);
@@ -106,7 +105,7 @@ public class DefaultPetalController implements IPetalController {
                 throw new NoEntityFoundException(e);
             }
         }
-        
+
         return metadata;
     }
 
@@ -369,12 +368,13 @@ public class DefaultPetalController implements IPetalController {
      * 
      * @param name capability name
      * @param version capability version
+     * @param namespace capability namespace
      * @return found capability or {@literal null}
      * if there is no corresponding capability
      */
     @Override
-    public Capability getCapability(String name, String version){
-        return capabilitySession.findCapability(name, version);
+    public Capability getCapability(String name, String version, String namespace){
+        return capabilitySession.findCapability(name, version, namespace);
     }
 
     /**
@@ -384,14 +384,17 @@ public class DefaultPetalController implements IPetalController {
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param name the name of the capability to add to the provided capabilities list of the petal
-     * @param version the version of the capability to add to the provided capabilities list of the petal     * @return updated petal
+     * @param version the version of the capability to add to the provided capabilities list of the petal  
+     * @param namespace the namespace of the capability to add
+     * to the provided capabilities list of the petal
+     * @return updated petal
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal addCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion) throws NoEntityFoundException {
+    public Petal addCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion, String namespace) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        Capability capability = capabilitySession.findCapability(name, capabilityVersion);
+        Capability capability = capabilitySession.findCapability(name, capabilityVersion, namespace);
         try {
             return petalSession.addCapability(petal, capability);
         } catch (NoEntityFoundException e) {
@@ -407,14 +410,17 @@ public class DefaultPetalController implements IPetalController {
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param name the name of capability to remove from the provided capabilities  list of the petal
-     * @param version the version of capability to remove from the provided capabilities  list of the petal     * @return updated petal
+     * @param version the version of capability to remove from the provided capabilities  list of the petal 
+     * @param namespace the namespace of capability to remove
+     * from the provided capabilities list of the petal
+     * @return updated petal
      * @throws NoEntityFoundException 
      */
     @Override
-    public Petal removeCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion) throws NoEntityFoundException {
+    public Petal removeCapability(String vendorName, String artifactId, String version, String name, String capabilityVersion, String namespace) throws NoEntityFoundException {
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        Capability capability = capabilitySession.findCapability(name, capabilityVersion);
+        Capability capability = capabilitySession.findCapability(name, capabilityVersion, namespace);
         try {
             return petalSession.removeCapability(petal, capability);
         } catch (NoEntityFoundException e) {
@@ -581,12 +587,13 @@ public class DefaultPetalController implements IPetalController {
      * Method to get all the petals which provide the capability given 
      * @param name the capability's name
      * @param version the capabilty's version 
+     * @param namespace the capability's namespace
      * @throws NoEntityFoundException 
      */
     @Override
-    public Collection<Petal> getPetalsForCapability(String name, String version) throws NoEntityFoundException {
+    public Collection<Petal> getPetalsForCapability(String name, String version, String namespace) throws NoEntityFoundException {
         try {
-            return  capabilitySession.collectPetals(name, version);
+            return  capabilitySession.collectPetals(name, version, namespace);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
