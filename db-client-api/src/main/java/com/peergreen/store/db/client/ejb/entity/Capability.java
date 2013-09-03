@@ -31,7 +31,7 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
                     name = "CapabilityByName",
                     query = "select cap from Capability cap where " +
                             "cap.capabilityName = :name " +
-                            "and cap.version = :version" +
+                            "and cap.version = :version " +
                             "and cap.namespace = :namespace"
                     ),
                     @NamedQuery (
