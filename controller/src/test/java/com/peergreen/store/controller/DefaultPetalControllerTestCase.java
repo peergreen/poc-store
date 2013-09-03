@@ -264,7 +264,7 @@ public class DefaultPetalControllerTestCase {
         // verify persistence.getPetal is called
         petalController.getPetal(vendorName, artifactId, version);
 
-        verify(petalPersistence).getPetalFromLocal(vendorName, artifactId, version);
+        verify(petalSession).findPetal(vendor, artifactId, version);
     }
 
 

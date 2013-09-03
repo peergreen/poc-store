@@ -107,14 +107,14 @@ public interface IPetalController {
             throws NoEntityFoundException;
 
     /**
-     * Method to retrieve a petal from the local store.
+     * Method to retrieve a petal.
      * 
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal or <em>null</em> if not available
      */
-    File getPetal(String vendorName, String artifactId, String version);
+    Petal getPetal(String vendorName, String artifactId, String version);
 
     /**
      * Method to directly add a petal to the store.<br />
