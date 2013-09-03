@@ -136,4 +136,25 @@ public class DefaultSessionLink implements ISessionLink {
         }  
     }
 
+    /**
+     * Method to find a link with thanks to its id.
+     * 
+     * @param id link's id
+     * @return Link instance found, or {@link null} if no instance found
+     */
+    @Override
+    public Link findLinkById(int id) {
+        Query q = entityManager.createNamedQuery("LinkById");
+        q.setParameter("id", id);
+
+        Link result;
+        try {
+            result = (Link)q.getSingleResult();
+        } catch (NoResultException e) {
+            result = null;
+        }
+
+        return result;
+    }
+
 }

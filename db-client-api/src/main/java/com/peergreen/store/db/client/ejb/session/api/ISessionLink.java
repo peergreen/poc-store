@@ -45,6 +45,14 @@ public interface ISessionLink {
      * @return Link instance found, or {@link null} if no instance found
      */
     Link findLink(String linkUrl);
+    
+    /**
+     * Method to find a link with thanks to its id.
+     * 
+     * @param id link's id
+     * @return Link instance found, or {@link null} if no instance found
+     */
+    Link findLinkById(int id);
 
     /**
      * Method to collect all existing links in database.

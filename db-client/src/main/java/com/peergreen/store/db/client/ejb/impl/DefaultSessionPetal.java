@@ -720,4 +720,26 @@ public class DefaultSessionPetal implements ISessionPetal {
         return petalSet;
     }
 
+    /**
+     * Method to find a petal using his id.
+     * 
+     * @param id petal's id
+     * @return The petal corresponding to the id given in parameter 
+     * or <code>null</code>if it doesn't exist
+     */
+    @Override
+    public Petal findPetalById(int id) {
+        //The query to retrieve petal we are looking for
+        Query q = entityManager.createNamedQuery("Petal.findById");
+        q.setParameter("pid", id);
+
+        try {
+            return (Petal) q.getSingleResult();
+        }  catch (NoResultException e) {
+            //The query has no result
+            return null ;
+        }
+
+    }
+
 }

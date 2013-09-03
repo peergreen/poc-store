@@ -20,7 +20,10 @@ import com.peergreen.store.db.client.ejb.key.primary.LinkId;
             query = "select l from Link l"),
             @NamedQuery(
                     name = "LinkByUrl",
-                    query = "select l from Link l where l.url = :url")
+                    query = "select l from Link l where l.url = :url"),
+                    @NamedQuery(
+                            name = "LinkById",
+                            query = "select l from Link l where l.linkId = :id")
 })
 @Entity
 @IdClass(LinkId.class)

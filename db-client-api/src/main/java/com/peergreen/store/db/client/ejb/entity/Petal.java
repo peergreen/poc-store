@@ -27,7 +27,11 @@ import com.peergreen.store.db.client.enumeration.Origin;
                             "p.vendor = :vendor and " +
                             "p.artifactId = :artifactId " +
                             "and p.version = :version"
-                    )
+                    ),
+                    @NamedQuery (
+                            name = "Petal.findById",
+                            query = "select p from Petal p where p.pid =: pid"
+                            )
 })
 @Entity
 @IdClass(PetalId.class)

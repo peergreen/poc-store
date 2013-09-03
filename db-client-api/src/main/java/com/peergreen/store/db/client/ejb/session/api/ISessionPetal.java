@@ -50,6 +50,16 @@ public interface ISessionPetal {
      * @return The petal with the attributes given in parameters
      */
     Petal findPetal(Vendor vendor, String artifactId,String version);
+    
+    /**
+     * Method to find a petal using his id.
+     * 
+     * @param id petal's id
+     * @return The petal corresponding to the id given in parameter 
+     * or <code>null</code>if it doesn't exist
+     */
+    Petal findPetalById(int id);
+
 
     /**
      * Method to collect the groups that have access to a petal 
