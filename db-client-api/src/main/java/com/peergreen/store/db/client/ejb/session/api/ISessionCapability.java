@@ -40,15 +40,6 @@ public interface ISessionCapability {
      */
     Capability findCapability (String capabilityName, String version);
 
-    /**
-     * Method to change a capability existing namespace.
-     * 
-     * @param capability the capability to modify 
-     * @param namespace the new namespace of the capability
-     * @return The capability with the change updated
-     * @throws NoEntityFoundException 
-     */
-    Capability updateNamespace (Capability capability, String namespace)throws NoEntityFoundException;
 
     /**
      * Method to change a capability existing properties

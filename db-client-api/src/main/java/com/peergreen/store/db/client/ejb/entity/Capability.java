@@ -129,14 +129,6 @@ public class Capability{
         return namespace;
     }
 
-    /**
-     * Method to set the id of the capability instance
-     * 
-     * @param namespace the namespace to set
-     */
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
 
     /**
      * Method for retrieve the properties of the capability instance

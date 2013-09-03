@@ -176,26 +176,7 @@ public class DefaultSessionCapability implements ISessionCapability{
         }
     }
 
-    /**
-     * Method to change capability namespace.
-     * 
-     * @param capability capability to modify 
-     * @param namespace new namespace 
-     * @return modified Capability instance
-     * @throws NoEntityFoundException 
-     */
-    @Override
-    public Capability updateNamespace(Capability capability, String namespace)throws NoEntityFoundException {
-        // retrieve attached capability entity
-        Capability c = findCapability(capability.getCapabilityName(), capability.getVersion());
-        if(c != null){
-            c.setNamespace(namespace);
-            return entityManager.merge(c);
-        }
-        else{
-            throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in version " + capability.getVersion() + " is not present on database.");
-        }
-    }
+
 
     /**
      * Method to change capability properties.
