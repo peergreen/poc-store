@@ -160,11 +160,12 @@ public class DefaultSessionCapability implements ISessionCapability{
      * @return retrieved Capability instance or {@literal null} if no matching instance found
      */
     @Override
-    public Capability findCapability(String capabilityName, String version) {
+    public Capability findCapability(String capabilityName, String version, String namespace) {
      //The query to retrieve the capability we are looking for 
         Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
         q.setParameter("version", version);
+        q.setParameter("namespace", namespace);
 
         try { 
             //return the only result for the query 
