@@ -65,21 +65,21 @@ public class DefaultStoreManagement implements IStoreManagment {
 
     /**
      * Method to a link between a remote store and the current one.
-     * 
+     *
      * @param url path to the remote store
      * @param description link's description
-     * @param created link instance
+     * @return created link instance
      * @throws EntityAlreadyExistsException
      */
     @Override
-    public Link addLink(String url, String description)
+    public final Link addLink(String url, String description)
             throws EntityAlreadyExistsException {
 
         Link link = null;
         try {
             link = linkSession.addLink(url, description);
             return link;
-        } catch(EntityAlreadyExistsException e) {
+        } catch (EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
         }
@@ -87,34 +87,34 @@ public class DefaultStoreManagement implements IStoreManagment {
 
     /**
      * Method to remove a link between a remote store and the current one.
-     * 
+     *
      * @param linkUrl link's url
      * @return Link instance deleted or
      * {@link null} if the link can't be deleted
      */
     @Override
-    public Link removeLink(String linkUrl) {
+    public final Link removeLink(String linkUrl) {
         return linkSession.deleteLink(linkUrl);
     }
 
     /**
      * Method to collect all existing links in database.
-     * 
+     *
      * @return list of all existing links in database
      */
     @Override
-    public Collection<Link> collectLinks() {
+    public final Collection<Link> collectLinks() {
         return linkSession.collectLinks();
     }
 
     /**
      * Method to add a new category to the database.
-     * 
+     *
      * @param name of the category
      * @return created Category instance
      * @throws EntityAlreadyExistsException
      */
-    public Category createCategory(String name)
+    public final Category createCategory(String name)
             throws EntityAlreadyExistsException {
 
         Category category = null;
@@ -129,39 +129,42 @@ public class DefaultStoreManagement implements IStoreManagment {
 
     /**
      * Method to retrieve a category thanks to its name.
-     * 
+     *
      * @param name category name
      * @return specified category,
      * or {@literal null} if no corresponding category
      */
-    public Category getCategory(String name) {
+    @Override
+    public final Category getCategory(String name) {
         return categorySession.findCategory(name);
     }
-    
+
     /**
      * Method to remove a category from the database.
-     * 
+     *
      * @param name of the category to remove
      * @return Category instance deleted or
-     * {@link null} if the Category can't be deleted
+     * {@literal null} if the Category can't be deleted
      */
-    public Category removeCategory(String name) {
+    @Override
+    public final Category removeCategory(String name) {
         return  categorySession.deleteCategory(name);
     }
 
     /**
      * Method to collect all existing categories in database.
-     * 
+     *
      * @return list of all existing categories in database
      */
-    public Collection<Category> collectCategories() {
+    @Override
+    public final Collection<Category> collectCategories() {
         return categorySession.collectCategories();
     }
 
     /**
      * Method to collect available petals.<br />
      * Browse all links and staging.
-     * 
+     *
      * @return list of available petals
      */
     @Override
@@ -171,59 +174,59 @@ public class DefaultStoreManagement implements IStoreManagment {
 
     /**
      * Method to collect petals in the local repository.
-     * 
+     *
      * @return list of available petals in local repository
      */
     @Override
-    public Collection<Petal> collectPetalsFromLocal() {
+    public final Collection<Petal> collectPetalsFromLocal() {
         return petalSession.collectPetalsFromLocal();
     }
 
     /**
      * Method to collect petals in the staging repository.
-     * 
+     *
      * @return list of available petals in staging repository
      */
     @Override
-    public Collection<Petal> collectPetalsFromStaging() {
+    public final Collection<Petal> collectPetalsFromStaging() {
         return petalSession.collectPetalsFromStaging();
     }
 
     /**
      * Method to collect petals in all associated remote repositories.
-     * 
+     *
      * @return list of available petals in associated remote repositories
      */
     @Override
-    public Collection<Petal> collectPetalsFromRemote() {
+    public final Collection<Petal> collectPetalsFromRemote() {
         return petalSession.collectPetalsFromRemote();
     }
 
     /**
      * Method to collect all existing users on database.
-     * 
+     *
      * @return list of all database's users
      */
     @Override
-    public Collection<User> collectUsers() {
+    public final Collection<User> collectUsers() {
         return userSession.collectUsers();
     }
 
     /**
      * Method to collect all existing groups on database.
-     * 
+     *
      * @return list of all database's groups
      */
     @Override
-    public Collection<Group> collectGroups() {
+    public final Collection<Group> collectGroups() {
         return groupSession.collectGroups();
     }
 
     /**
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
-     * 
-     * @param vendorName the name of the petal's vendor 
+     *
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @param description petal's description
@@ -232,10 +235,10 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
      * @return corresponding petal on database
-     * @throws EntityAlreadyExistsException, NoEntityFoundException 
+     * @throws EntityAlreadyExistsException, NoEntityFoundException
      */
     @Override
-    public Petal submitPetal(
+    public final Petal submitPetal(
             String vendorName,
             String artifactId,
             String version,
@@ -257,7 +260,7 @@ public class DefaultStoreManagement implements IStoreManagment {
                     category, capabilities, requirements, Origin.STAGING);
             return petalSession.findPetal(vendor, artifactId, version);
 
-        } catch(EntityAlreadyExistsException e) {
+        } catch (EntityAlreadyExistsException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new EntityAlreadyExistsException(e);
         } catch (NoEntityFoundException e) {
@@ -270,15 +273,15 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
-     * 
-     * @param vendorName the name of the petal's vendor 
+     *
+     * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return corresponding petal on database
-     * @throws NoEntityFoundException 
+     * @throws NoEntityFoundException
      */
     @Override
-    public Petal validatePetal(
+    public final Petal validatePetal(
             String vendorName,
             String artifactId,
             String version) throws NoEntityFoundException {
@@ -304,20 +307,19 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to retrieve all the petals provided by a vendor.<br />
      * Throws {@link NoEntityFoundException} if the vendor does not exists.
-     * 
-     * @param name vendor name 
+     *
+     * @param name vendor name
      * @return collection of petals provided by the vendor
      * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Petal> collectPetalsByVendor(String name) 
+    public final Collection<Petal> collectPetalsByVendor(String name)
             throws NoEntityFoundException {
         Collection<Petal> result = new HashSet<>();
         Vendor v = vendorSession.findVendor(name);
-        if(v == null) {
+        if (v == null) {
             throw new NoEntityFoundException();
-        }
-        else{
+        } else {
             result.addAll(v.getPetals());
             return result;
         }
@@ -326,14 +328,14 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to get a petal (binary) from the local store.<br />
      * Return null if no petal found on the repository.
-     * 
+     *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return binary of the petal
      */
     @Override
-    public File getPetalFromLocal(String vendorName, String artifactId,
+    public final File getPetalFromLocal(String vendorName, String artifactId,
             String version) {
         return petalsPersistence.getPetalFromLocal(
                 vendorName, artifactId, version);
@@ -342,13 +344,14 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to get a petal (binary) from the staging store.<br />
      * Return null if no petal found on the repository.
-     * 
+     *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return binary of the petal
      */
-    public File getPetalFromStaging(
+    @Override
+    public final File getPetalFromStaging(
             String vendorName,
             String artifactId,
             String version) {
@@ -360,13 +363,14 @@ public class DefaultStoreManagement implements IStoreManagment {
     /**
      * Method to get a petal (binary) from the remote store(s).<br />
      * Return null if no petal found on the repository.
-     * 
+     *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return binary of the petal
      */
-    public File getPetalFromRemote(
+    @Override
+    public final File getPetalFromRemote(
             String vendorName,
             String artifactId,
             String version) {
@@ -376,38 +380,38 @@ public class DefaultStoreManagement implements IStoreManagment {
     }
 
     @Bind
-    public void bindPetalsPersistence(IPetalsPersistence petalsPersistence) {
-        this.petalsPersistence = petalsPersistence;
+    public final void bindPetalsPersistence(IPetalsPersistence persistence) {
+        this.petalsPersistence = persistence;
     }
 
     @Bind
-    public void bindCategorySession(ISessionCategory categorySession) {
-        this.categorySession = categorySession;
+    public final void bindCategorySession(ISessionCategory session) {
+        this.categorySession = session;
     }
 
     @Bind
-    public void bindGroupSession(ISessionGroup groupSession) {
-        this.groupSession = groupSession;
+    public final void bindGroupSession(ISessionGroup session) {
+        this.groupSession = session;
     }
 
     @Bind
-    public void bindLinkSession(ISessionLink linkSession) {
-        this.linkSession = linkSession;
+    public final void bindLinkSession(ISessionLink session) {
+        this.linkSession = session;
     }
 
     @Bind
-    public void bindPetalSession(ISessionPetal petalSession) {
-        this.petalSession = petalSession;
+    public final void bindPetalSession(ISessionPetal session) {
+        this.petalSession = session;
     }
 
     @Bind
-    public void bindUserSession(ISessionUser userSession) {
-        this.userSession = userSession;
+    public final void bindUserSession(ISessionUser session) {
+        this.userSession = session;
     }
 
     @Bind
-    public void bindVendorSession(ISessionVendor vendorSession) {
-        this.vendorSession = vendorSession;
+    public final void bindVendorSession(ISessionVendor session) {
+        this.vendorSession = session;
     }
 
 }

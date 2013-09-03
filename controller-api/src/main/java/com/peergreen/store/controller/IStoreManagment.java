@@ -74,7 +74,7 @@ public interface IStoreManagment {
      * @return specified category,
      * or {@literal null} if no corresponding category
      */
-    public Category getCategory(String name);
+    Category getCategory(String name);
     
     /**
      * Method to remove a category from the database.
