@@ -15,15 +15,18 @@ public class CapabilityId implements Serializable {
     
     private String version;
     
+    private String namespace;
+    
     public CapabilityId() {
         
     }
     
-    public CapabilityId(String name, int id, String version) {
+    public CapabilityId(String name, int id, String version, String namespace) {
         
         this.capabilityName = name;
         this.capabilityId = id;
         this.version = version; 
+        this.setNamespace(namespace);
     }
 
     /**
@@ -66,6 +69,20 @@ public class CapabilityId implements Serializable {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /**
+     * @return the namespace
+     */
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * @param namespace the namespace to set
+     */
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     

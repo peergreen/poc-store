@@ -58,6 +58,7 @@ public class Capability{
     @Column(name="version")
     private String version;
 
+    @Id
     @Column(name="namespace", nullable=false)
     private String namespace;
 
