@@ -162,7 +162,7 @@ public class DefaultSessionCapability implements ISessionCapability{
     @Override
     public Capability findCapability(String capabilityName, String version, String namespace) {
         //The query to retrieve the capability we are looking for 
-        Query q = entityManager.createNamedQuery("Capability.find");
+        Query q = entityManager.createNamedQuery("CapabilityByName");
         q.setParameter("name", capabilityName);
         q.setParameter("version", version);
         q.setParameter("namespace", namespace);
