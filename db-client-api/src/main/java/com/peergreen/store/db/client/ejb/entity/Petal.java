@@ -17,7 +17,14 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @NamedQueries({
     @NamedQuery(
             name = "Petal.findAll", 
-            query = "select p from Petal p")
+            query = "select p from Petal p"),
+            @NamedQuery (
+                    name = "Petal.find",
+                    query = "select p from Petal p where " +
+                            "p.vendor = :vendor and " +
+                            "p.artifactId = :artifactId " +
+                            "and p.version = :version"
+                    )
 })
 @Entity
 @IdClass(PetalId.class)

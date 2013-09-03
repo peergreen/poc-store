@@ -212,8 +212,18 @@ public class DefaultSessionPetal implements ISessionPetal {
      */
     @Override
     public Petal findPetal(Vendor vendor, String artifactId, String version) {
-        PetalId petalId = new PetalId(vendor, artifactId, version);
-        return entityManager.find(Petal.class, petalId);
+        //The query to retrieve petal we are looking for
+        Query q = entityManager.createNamedQuery("Petal.find");
+        q.setParameter("vendor", vendor);
+        q.setParameter("artifactId", artifactId);
+        q.setParameter("version", version);
+
+        try {
+        return (Petal) q.getSingleResult();
+        }  catch (NoResultException e) {
+            //The query has no result
+            return null ;
+        }
     }
 
     /**

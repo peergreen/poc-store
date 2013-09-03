@@ -3,7 +3,6 @@ package com.peergreen.store.db.client.ejb.session;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,7 +29,6 @@ import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.entity.User;
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 import com.peergreen.store.db.client.ejb.impl.DefaultSessionPetal;
-import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCapability;
 import com.peergreen.store.db.client.ejb.session.api.ISessionCategory;
 import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
@@ -46,7 +44,6 @@ public class DefaultSessionPetalTest {
 
     private ArgumentCaptor<String> stringArgumentCaptor;
     private ArgumentCaptor<Petal> petalArgumentCaptor;
-    private ArgumentCaptor<PetalId> idArgumentCaptor;
     private ArgumentCaptor<Origin> originArgumentCaptor;
     private ArgumentCaptor<Group> groupArgumentCaptor;
     private ArgumentCaptor<Category> catArgumentCaptor;
@@ -117,7 +114,6 @@ public class DefaultSessionPetalTest {
 
         petalArgumentCaptor  = ArgumentCaptor.forClass(Petal.class);
         stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        idArgumentCaptor = ArgumentCaptor.forClass(PetalId.class);
         originArgumentCaptor = ArgumentCaptor.forClass(Origin.class);
         groupArgumentCaptor = ArgumentCaptor.forClass(Group.class);
         catArgumentCaptor = ArgumentCaptor.forClass(Category.class);
@@ -138,6 +134,9 @@ public class DefaultSessionPetalTest {
         when(mockpetal.getCategory()).thenReturn(category);
         when(mockpetal.getGroups()).thenReturn(groups);
         when(category.getCategoryName()).thenReturn("Bundle");
+        
+        when(entityManager.createNamedQuery(anyString())).thenReturn(query);
+
 
         when(sessionCapability.findCapability(anyString(), anyString())).thenReturn(mockcapability);
         when(capabilities.iterator()).thenReturn(itC);
@@ -155,7 +154,7 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldAddPetal() throws NoEntityFoundException, EntityAlreadyExistsException, InstantiationException, IllegalAccessException {
         //Given : A petal with 1 requirement and 1 capability 
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionGroup.findGroup("Administrator")).thenReturn(mockgroup);
 
 
@@ -191,7 +190,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldAddPetal2() throws NoEntityFoundException, EntityAlreadyExistsException, InstantiationException, IllegalAccessException {
         //Given : A petal with 1 requirement and 1 capability 
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionGroup.findGroup("Administrator")).thenReturn(mockgroup);
         when(sessionCapability.findCapability(anyString(), anyString())).thenReturn(null);
 
@@ -228,7 +227,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldAddPetal3() throws NoEntityFoundException, EntityAlreadyExistsException, InstantiationException, IllegalAccessException {
         //Given : A petal with 1 requirement and 1 capability 
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionGroup.findGroup("Administrator")).thenReturn(mockgroup);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(null);
 
@@ -265,7 +264,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowsExceptionCauseVendorInexsitent() throws NoEntityFoundException {
         //Given : A petal with 1 requirement and 1 capability 
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionVendor.findVendor(anyString())).thenReturn(null);
 
         //when
@@ -281,7 +280,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowsExceptionCauseCategoryInexsitent() throws NoEntityFoundException {
         //Given : A petal with 1 requirement and 1 capability 
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionCategory.findCategory(anyString())).thenReturn(null);
 
         //when
@@ -297,7 +296,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void shouldThrowsExceptionCausePetalAlreadyExists() throws NoEntityFoundException, EntityAlreadyExistsException{
         //Given : A petal with 1 requirement and 1 capability 
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
 
         //when
@@ -308,7 +307,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenAddCauseGroupAdministratorDoesNotExist() throws NoEntityFoundException, EntityAlreadyExistsException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(sessionGroup.findGroup("Administrator")).thenReturn(null);
 
         //when
@@ -318,7 +317,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal2() {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         Petal result =  sessionPetal.deletePetal(mockpetal);
         //then
@@ -328,7 +327,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal3() {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         try {
             when(sessionVendor.removePetal(any(Vendor.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
         } catch (NoEntityFoundException e) {
@@ -344,7 +343,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal4() {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(itC.hasNext()).thenReturn(true,false);
 
         //when
@@ -356,7 +355,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal4Bis() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(itC.hasNext()).thenReturn(true,false);
         when(sessionCapability.removePetal((Capability) anyObject(), any(Petal.class))).thenThrow(new NoEntityFoundException());
 
@@ -369,7 +368,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal5() {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(itR.hasNext()).thenReturn(true,false);
 
         //when
@@ -382,7 +381,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldDeletePetal5Bis() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(itR.hasNext()).thenReturn(true,false);
         when(sessionRequirement.removePetal((Requirement) anyObject(), any(Petal.class))).thenThrow(new NoEntityFoundException());
 
@@ -395,7 +394,7 @@ public class DefaultSessionPetalTest {
 
     @Test 
     public void shouldDeletePetal6() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(itG.hasNext()).thenReturn(true,false);
         //when
         Petal result =  sessionPetal.deletePetal(mockpetal);
@@ -407,7 +406,7 @@ public class DefaultSessionPetalTest {
 
     @Test 
     public void shouldDeletePetal6BIs() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(itG.hasNext()).thenReturn(true,false);
         when(sessionGroup.removePetal((Group) anyObject(), any(Petal.class))).thenThrow(new NoEntityFoundException());
         //when
@@ -420,19 +419,20 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldFindPetal() {
         //Given
-        when(vendor.getVendorName()).thenReturn("PG");
+        queryString = "Petal.find";
+        when(query.getSingleResult()).thenReturn(mockpetal);
         //when
         sessionPetal.findPetal(vendor, artifactId, version);
         //then
-        verify(entityManager).find(eq(Petal.class), idArgumentCaptor.capture());
-        Assert.assertEquals(vendor, idArgumentCaptor.getValue().getVendor());
-        Assert.assertEquals(artifactId, idArgumentCaptor.getValue().getArtifactId());
-        Assert.assertEquals(version, idArgumentCaptor.getValue().getVersion());
+        verify(entityManager).createNamedQuery(stringArgumentCaptor.capture());
+        Assert.assertEquals(queryString, stringArgumentCaptor.getValue());
+        verify(query).getSingleResult();
+        
     }
 
     @Test
     public void shouldCollectGroupWhichCanAccessToIt() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         //when
         sessionPetal.collectGroups(mockpetal);
@@ -442,7 +442,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectGroupWhichCanAccessToIt() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
 
         //when
         sessionPetal.collectGroups(mockpetal);
@@ -451,7 +451,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldCollectCapabilitiesProvided() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         //when
         sessionPetal.collectCapabilities(mockpetal);
@@ -461,7 +461,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectCapabilitiesProvided() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
 
         //when
         sessionPetal.collectCapabilities(mockpetal);
@@ -470,7 +470,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldCollectRequirementsNeeded() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         //when
         sessionPetal.collectRequirements(mockpetal);
         //then
@@ -479,7 +479,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectRequirementsNeeded() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.collectRequirements(mockpetal);
 
@@ -487,7 +487,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldModifyDescription() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         //Given
         String newDescription = " A new description"; 
@@ -502,7 +502,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenModifyDescription() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
 
         //Given
         String newDescription = " A new description"; 
@@ -514,7 +514,7 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldModifyOrigin() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         Origin newOrigin = Origin.LOCAL; 
         //when
@@ -529,7 +529,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenModifyOrigin() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
 
         Origin newOrigin = Origin.LOCAL; 
         //when
@@ -548,7 +548,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldGiveAccessToPetalForGroup() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(mockpetal.getGroups()).thenReturn(groups);
         //when
         sessionPetal.giveAccesToGroup(mockpetal, mockgroup);
@@ -562,7 +562,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldGiveAccessToPetalForGroupBis() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(mockpetal.getGroups()).thenReturn(groups);
         when(sessionGroup.addPetal(any(Group.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
         //when
@@ -576,14 +576,14 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenGiveAccessToPetalForGroup() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.giveAccesToGroup(mockpetal, mockgroup);
     }
 
     @Test
     public void shouldRemoveAccessToPetalForGroup() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         when(mockpetal.getGroups()).thenReturn(groups);
         //when
@@ -598,14 +598,14 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenRemoveAccessToPetalForGroup() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.removeAccesToGroup(mockpetal, mockgroup);
     }
 
     @Test
     public void shouldAddCategory() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         //when
         sessionPetal.addCategory(mockpetal, category);
         //then
@@ -616,7 +616,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldAddCategoryBis() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(sessionCategory.addPetal(any(Category.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
         //when
         Petal result =  sessionPetal.addCategory(mockpetal, category);
@@ -629,7 +629,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenAddCategory() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.addCategory(mockpetal, category);
 
@@ -637,7 +637,7 @@ public class DefaultSessionPetalTest {
 
     @Test
     public void shouldGetCategory() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         //when
         sessionPetal.getCategory(mockpetal);
 
@@ -647,7 +647,7 @@ public class DefaultSessionPetalTest {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenGetCategory() throws NoEntityFoundException {
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.getCategory(mockpetal);
     }
@@ -655,7 +655,7 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldAddCapability() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         //when
         sessionPetal.addCapability(mockpetal, mockcapability);
         //then 
@@ -668,7 +668,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenAddCapability() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.addCapability(mockpetal, mockcapability);
 
@@ -677,7 +677,7 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldAddCapabilityBis() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(sessionCapability.addPetal(any((Capability.class)), any(Petal.class))).thenThrow(new NoEntityFoundException());
 
         //when
@@ -693,7 +693,7 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldRemoveCapability() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(mockpetal.getCapabilities()).thenReturn(capabilities);
         //when
         sessionPetal.removeCapability(mockpetal, mockcapability);
@@ -708,7 +708,7 @@ public class DefaultSessionPetalTest {
     @Test
     public void shouldRemoveCapabilityBis() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(mockpetal.getCapabilities()).thenReturn(capabilities);
         when(sessionCapability.removePetal(any((Capability.class)), any(Petal.class))).thenThrow(new NoEntityFoundException());
 
@@ -726,7 +726,7 @@ public class DefaultSessionPetalTest {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenRemoveCapability() throws NoEntityFoundException {
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         when(mockpetal.getCapabilities()).thenReturn(capabilities);
         //when
         sessionPetal.removeCapability(mockpetal, mockcapability);
@@ -737,7 +737,7 @@ public class DefaultSessionPetalTest {
     public void shouldAddRequirement() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         //when
         sessionPetal.addRequirement(mockpetal, mockrequirement);
 
@@ -752,7 +752,7 @@ public class DefaultSessionPetalTest {
     public void shouldAddRequirementBis() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
         when(sessionRequirement.addPetal(any((Requirement.class)), any(Petal.class))).thenThrow(new NoEntityFoundException());
 
         //when
@@ -770,7 +770,7 @@ public class DefaultSessionPetalTest {
     public void shouldThrowExceptionWhenAddRequirement() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
         //when
         sessionPetal.addRequirement(mockpetal, mockrequirement);
     }
@@ -779,7 +779,7 @@ public class DefaultSessionPetalTest {
     public void shouldThrowExceptionWhenRemoveRequirement() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(null);
+        when(query.getSingleResult()).thenReturn(null);
 
         //when
         sessionPetal.removeRequirement(mockpetal, mockrequirement);
@@ -790,7 +790,7 @@ public class DefaultSessionPetalTest {
     public void shouldRemoveRequirement() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         when(mockpetal.getRequirements()).thenReturn(requirements);
         //when
@@ -808,7 +808,7 @@ public class DefaultSessionPetalTest {
     public void shouldRemoveRequirementBis() throws NoEntityFoundException {
 
         //Given
-        when(entityManager.find(eq(Petal.class), anyObject())).thenReturn(mockpetal);
+        when(query.getSingleResult()).thenReturn(mockpetal);
 
         when(mockpetal.getRequirements()).thenReturn(requirements);
         when(sessionRequirement.findRequirement(anyString())).thenReturn(mockrequirement);
