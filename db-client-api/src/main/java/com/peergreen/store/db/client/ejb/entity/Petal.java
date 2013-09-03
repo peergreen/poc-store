@@ -4,12 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 
 import com.peergreen.store.db.client.ejb.key.primary.PetalId;
 import com.peergreen.store.db.client.enumeration.Origin;
@@ -37,6 +40,10 @@ public class Petal {
     private String artifactId;
     @Id
     private String version;
+    @Id
+    @SequenceGenerator(name="idPetalSeq", initialValue=1, allocationSize=50)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idPetalSeq")
+    private int pid;
 
     @ManyToOne
     private Category category;
@@ -99,6 +106,13 @@ public class Petal {
      */
     public String getVersion() {
         return this.version;
+    }
+
+    /**
+     * @return the pid
+     */
+    public int getPid() {
+        return pid;
     }
 
     /**
