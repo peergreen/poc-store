@@ -35,9 +35,9 @@ public class Group {
     private Set<Petal> petals ;
 
     public Group() {
-        
+
     }
-    
+
     public Group(String groupname) {
         super();
         this.groupname = groupname;
@@ -102,6 +102,16 @@ public class Group {
      */
     public void setPetals(Set<Petal> petals) {
         this.petals = petals;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return groupname;
     }
 
 }

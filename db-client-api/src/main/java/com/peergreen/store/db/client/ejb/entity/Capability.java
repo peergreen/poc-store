@@ -41,7 +41,7 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
 public class Capability{
 
     // TODO: add namespace to primary key
-    
+
     private Integer hashCode = null;
 
     @Id
@@ -191,6 +191,18 @@ public class Capability{
         }
 
         return hashCode;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        String s = capabilityId + "-" + capabilityName + ":" +
+                version + ":" + namespace;
+        return s;
     }
 
 }

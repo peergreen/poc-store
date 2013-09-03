@@ -29,16 +29,16 @@ public class Link {
     @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
     private int linkId;
-    
+
     @Id
     private String url; 
 
     private String description;
 
     public Link() {
-        
+
     }
-    
+
     public Link(String url, String description) {
         super();
         this.url = url;
@@ -88,6 +88,16 @@ public class Link {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return linkId + "-" + url + ":" + description;
     }
 
 }

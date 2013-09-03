@@ -13,8 +13,8 @@ import javax.persistence.OneToMany;
 
 @NamedQueries({
     @NamedQuery(
-    name = "Vendor.findAll",
-    query = "select v from Vendor v")
+            name = "Vendor.findAll",
+            query = "select v from Vendor v")
 })
 @Entity
 public class Vendor {
@@ -29,9 +29,9 @@ public class Vendor {
     private Set<Petal> petals;
 
     public Vendor() {
-        
+
     }
-    
+
     public Vendor(String vendorName, String vendorDescription) {
         super();
         this.vendorName = vendorName;
@@ -93,6 +93,15 @@ public class Vendor {
     public void setPetals(Set<Petal> petals) {
         this.petals = petals;
     }
-   
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return vendorName + "-" + vendorDescription;
+    }
 
 }

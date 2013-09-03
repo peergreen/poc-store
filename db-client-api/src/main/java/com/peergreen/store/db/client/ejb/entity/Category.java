@@ -46,7 +46,7 @@ public class Category{
 
 
     public Category() {
-        
+
     }
 
     public Category(String categoryName) {
@@ -101,5 +101,16 @@ public class Category{
     public void setPetals(Set<Petal> petals) {
         this.petals = petals;
     }
-    
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        String s = categoryId + "-" + categoryName;
+        return s;
+    }
+
 }

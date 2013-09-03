@@ -22,7 +22,7 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @Entity
 @IdClass(PetalId.class)
 public class Petal {
-    
+
     @ManyToOne
     @Id
     private Vendor vendor;
@@ -47,13 +47,13 @@ public class Petal {
 
     private Origin origin;
 
-    
+
     public Petal() {
-        
+
     }
-    
+
     public Petal(Vendor vendor, String artifactId, String version, Category category, String description,
-             Set<Requirement> requirements, Set<Capability> capabilities, Origin origin) {
+            Set<Requirement> requirements, Set<Capability> capabilities, Origin origin) {
         super();
         this.vendor = vendor;
         this.artifactId = artifactId;
@@ -227,6 +227,16 @@ public class Petal {
      */
     public void setOrigin(Origin origin) {
         this.origin = origin;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return artifactId + ":" + description + ":" + version;
     }
 
 }

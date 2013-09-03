@@ -24,9 +24,9 @@ import com.peergreen.store.db.client.ejb.key.primary.RequirementId;
     @NamedQuery(
             name = "Requirement.findAll",
             query = "select r from Requirement r"),
-    @NamedQuery(
-            name = "RequirementByName",
-            query = "select r from Requirement r where r.requirementName = :name"),        
+            @NamedQuery(
+                    name = "RequirementByName",
+                    query = "select r from Requirement r where r.requirementName = :name"),        
 })
 @Entity
 @IdClass(RequirementId.class)
@@ -41,21 +41,21 @@ public class Requirement {
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
     @Column(name="id")
     private int requirementId;
-    
+
     private String namespace;
 
     private String filter;
 
     @ManyToMany(mappedBy="requirements")
     private Set<Petal> petals;
-    
+
     /**
      * Default constructor
      */
     public Requirement() {
-        
+
     }
-    
+
     /**
      * Constructor with initializations.
      * 
@@ -152,4 +152,17 @@ public class Requirement {
     public void setPetals(Set<Petal> petals) {
         this.petals = petals;
     }
+
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        String s = requirementId + "-" + requirementName +
+                ":" + filter + ":" + namespace;
+        return s;
+    }
+
 }

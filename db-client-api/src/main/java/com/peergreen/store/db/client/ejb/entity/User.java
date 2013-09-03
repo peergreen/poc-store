@@ -120,5 +120,14 @@ public class User {
         this.groupSet = groupSet;
     }
 
+    /**
+     * Returns a string representation of the object.
+     * 
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return pseudo + "-" + email;
+    }
 
 }
