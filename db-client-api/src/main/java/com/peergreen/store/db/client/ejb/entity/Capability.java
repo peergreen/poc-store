@@ -20,7 +20,7 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
 
 
 /**
- * Entity Bean representing in the database the capability of a petal
+ * Entity Bean representing in the database the capability of a petal.
  */
 @NamedQueries({
     @NamedQuery (
@@ -36,11 +36,13 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
                     ),
                     @NamedQuery (
                             name = "Requirement.findCapabilities",
-                            query = "SELECT cap FROM Capability cap WHERE cap.namespace = :namespace"
+                            query = "SELECT cap FROM Capability cap" +
+                                    " WHERE cap.namespace = :namespace"
                             )
 })
 @Entity
 @IdClass(CapabilityId.class)
+@SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability{
 
     private Integer hashCode = null;
@@ -173,7 +175,8 @@ public class Capability{
     @Override
     public int hashCode() {
         if (hashCode == null) {
-            hashCode = ("" + capabilityId + capabilityName + version + namespace).hashCode();
+            hashCode = ("" + capabilityId + capabilityName + 
+                    version + namespace).hashCode();
         }
 
         return hashCode;

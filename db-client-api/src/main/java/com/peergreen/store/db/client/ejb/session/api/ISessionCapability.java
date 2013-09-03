@@ -18,20 +18,27 @@ public interface ISessionCapability {
      * @param version capability version
      * @param namespace capability namespace
      * @param properties capability properties
-     * @return created Capability instance
+     * @return created Capability instance or
+     * throws {@link EntityAlreadyExistsException} if the capability 
+     * already exists in database.
      * @throws EntityAlreadyExistsException
      */
-    Capability addCapability(String capabilityName, String version, String namespace, Set<Property> properties) throws EntityAlreadyExistsException;
+    Capability addCapability(String capabilityName, 
+            String version, 
+            String namespace, 
+            Set<Property> properties) throws EntityAlreadyExistsException;
 
     /**
-     * Method to delete a capability in the database
+     * Method to delete a capability in the database.
      * 
      * @param capabilityName the capability's name
      * @param version the version of the capability to delete
      * @param namespace the namespace of the capability to delete
-     * @return 
+     * @return Capability instance deleted or <code>null</code> if 
+     * the capability doesn't exist
      */
-    Capability deleteCapability (String capabilityName, String version, String namespace);
+    Capability deleteCapability (String capabilityName, 
+            String version, String namespace);
 
     /**
      * Method to find a capability in the database
@@ -39,9 +46,11 @@ public interface ISessionCapability {
      * @param capabilityName the capability's name
      * @param version the capability's version
      * @param namespace the capability's namespace
-     * @return the capability with the name 'capabilityName'
+     * @return Capability instance we are looking for or <code>null</code> if
+     * the capability doesn't exist
      */
-    Capability findCapability(String capabilityName, String version, String namespace);
+    Capability findCapability(String capabilityName, 
+            String version, String namespace);
 
 
     /**
@@ -51,11 +60,13 @@ public interface ISessionCapability {
      * @return The capability with the change updated
      * @throws NoEntityFoundException 
      */
-    Capability updateProperties (Capability capability, Set<Property> properties) throws NoEntityFoundException;
+    Capability updateProperties (Capability capability, 
+            Set<Property> properties) throws NoEntityFoundException;
 
     /**
      * Method to collect all properties associated with a capability.<br />
-     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * Throws {@link NoEntityFoundException} if the capability 
+     * cannot be found in database.
      * 
      * @param capabilityName capability name
      * @param version capability version
@@ -63,11 +74,14 @@ public interface ISessionCapability {
      * @return associated properties
      * @throws NoEntityFoundException
      */
-    Collection<Property> collectProperties(String capabilityName, String version, String namespace) throws NoEntityFoundException;
+    Collection<Property> collectProperties(String capabilityName, 
+            String version, String namespace) throws NoEntityFoundException;
 
     /**
-     * Method to add a property to the list of properties associated with this capability.<br />
-     * Throws {@link NoEntityFoundException} if the capability cannot be found in database.
+     * Method to add a property to the list of properties associated 
+     * with this capability.<br />
+     * Throws {@link NoEntityFoundException} if the capability 
+     * cannot be found in database.
      * 
      * @param capabilityName capability name
      * @param version capability version
