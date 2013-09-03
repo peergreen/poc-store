@@ -50,24 +50,16 @@ public class Capability{
     private String capabilityName;
 
     @Id
-    @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCapabilitySeq")
+    @GeneratedValue(strategy=GenerationType.SEQUENCE,
+    generator="idCapabilitySeq")
     @Column(name = "id")
     private int capabilityId;
 
     @Id 
-    @Column(name="version")
     private String version;
 
     @Id
-    @Column(name="namespace", nullable=false)
     private String namespace;
-
-    //    @ElementCollection
-    //    @CollectionTable( name="Properties")
-    //    @MapKeyColumn (name="propertiesName")
-    //    @Column(name="properties",nullable=false)
-    //    private Map<String, String> properties;
 
     @OneToMany(mappedBy="capability", cascade = {CascadeType.ALL})
     @Column(name="properties", nullable=false)
