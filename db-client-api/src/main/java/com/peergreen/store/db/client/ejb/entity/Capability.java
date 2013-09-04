@@ -42,7 +42,6 @@ import com.peergreen.store.db.client.ejb.key.primary.CapabilityId;
 })
 @Entity
 @IdClass(CapabilityId.class)
-@SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
 public class Capability{
 
     private Integer hashCode = null;
@@ -52,6 +51,7 @@ public class Capability{
     private String capabilityName;
 
     @Id
+    @SequenceGenerator(name="idCapabilitySeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE,
     generator="idCapabilitySeq")
     @Column(name = "id")

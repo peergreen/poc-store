@@ -30,7 +30,7 @@ import com.peergreen.store.db.client.enumeration.Origin;
                     ),
                     @NamedQuery (
                             name = "Petal.findById",
-                            query = "select p from Petal p where p.pid =: pid"
+                            query = "select p from Petal p where p.pid = :pid"
                             )
 })
 @Entity
