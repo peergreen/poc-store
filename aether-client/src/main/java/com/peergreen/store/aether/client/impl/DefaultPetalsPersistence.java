@@ -100,35 +100,6 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
     }
 
     /**
-     * Method to recover petal's binary from its information.<br />
-     * Browse all repositories.
-     * 
-     * @param vendor petal's vendor
-     * @param artifactId petal's artifactId
-     * @param version petal's version
-     * @return petal's binary
-     */
-    @Override
-    public File getPetal(String vendor, String artifactId, String version) {
-        File petal = null;
-
-        // search in local repository
-        petal = localProvider.retrievePetal(vendor, artifactId, version);
-
-        // if not found locally, try to retrieve from remote repositories
-        if (petal == null) {
-            petal = getPetalFromRemote(vendor, artifactId, version);
-        }
-
-        // if still not found, try to retrieve from staging repository
-        if (petal == null) {
-            petal = getPetalFromStaging(vendor, artifactId, version);
-        }
-
-        return petal;
-    }
-
-    /**
      * Method to add a petal to the local repository
      * 
      * @param vendor petal's vendor name
@@ -189,7 +160,12 @@ public class DefaultPetalsPersistence implements IPetalsPersistence {
      * @return corresponding petal's binary
      */
     @Override
-    public File getPetalFromRemote(String vendor, String artifactId, String version) {
+    public File getPetalFromRemote(
+            String vendor,
+            String artifactId,
+            String version,
+            String url) {
+        
         File petal = null;
 
         Iterator<IRepositoryProvider<RemoteRepository>> it = remoteProviders.iterator();

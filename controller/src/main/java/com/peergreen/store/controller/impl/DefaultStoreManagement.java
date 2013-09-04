@@ -4,6 +4,7 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,16 +85,16 @@ public class DefaultStoreManagement implements IStoreManagment {
             throw new EntityAlreadyExistsException(e);
         }
     }
-    
+
     /**
      * Method to retrieve a link using his id.
      * 
      * @param id link's id
      * @return corresponding link or <em>null</em> if not available
      */
-     public Link getLink(int id) {
-         return linkSession.findLinkById(id);
-     }
+    public Link getLink(int id) {
+        return linkSession.findLinkById(id);
+    }
 
     /**
      * Method to remove a link between a remote store and the current one.
@@ -372,20 +373,42 @@ public class DefaultStoreManagement implements IStoreManagment {
 
     /**
      * Method to get a petal (binary) from the remote store(s).<br />
-     * Return null if no petal found on the repository.
+     * Return null if no petal found on the repository.<br />
+     * Throws {@link NoEntityFoundException} when specified vendor
+     * does not exist in database.
      *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return binary of the petal
+     * @throws NoEntityFoundException
      */
     @Override
     public final File getPetalFromRemote(
             String vendorName,
             String artifactId,
-            String version) {
+            String version) throws NoEntityFoundException {
+
+        Vendor v = vendorSession.findVendor(vendorName);
+
+        if (v == null) {
+            return null;
+        }
 
         // TODO: need implementation
+        Collection<Link> links = collectLinks();
+        Iterator<Link> itLink = links.iterator();
+        boolean found = false;
+        while (!found && itLink.hasNext()) {
+            Link l = itLink.next();
+
+            petalsPersistence.getPetalFromRemote(
+                    vendorName,
+                    artifactId,
+                    version,
+                    l.getUrl());
+        }
+
         return null;
     }
 

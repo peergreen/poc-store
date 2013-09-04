@@ -32,7 +32,6 @@ public class DefaultLocalRepositoryProvider extends DefaultRepositoryProvider<Lo
      * Method to build up requirements to use Aether with local repository.
      */
     @Validate
-    @Override
     public void init() {
         validate();
         repository = new LocalRepository(path);

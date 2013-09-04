@@ -33,7 +33,7 @@ public interface IStoreManagment {
 
     /**
      * Method to add a link between a remote store and the current one.
-     * 
+     *
      * @param url path to the remote store
      * @param description link's description
      * @return created link instance
@@ -44,7 +44,7 @@ public interface IStoreManagment {
 
     /**
      * Method to retrieve a link using his id.
-     * 
+     *
      * @param id link's id
      * @return corresponding link or <em>null</em> if not available
      */
@@ -52,10 +52,10 @@ public interface IStoreManagment {
 
     /**
      * Method to remove a link between a remote store and the current one.
-     * 
+     *
      * @param linkId link's url
      * @return Link instance deleted or
-     * {@link null} if the link can't be deleted
+     * {@literal null} if the link can't be deleted
      */
     Link removeLink(String linkUrl);
 
@@ -77,25 +77,25 @@ public interface IStoreManagment {
 
     /**
      * Method to retrieve a category thanks to its name.
-     * 
+     *
      * @param name category name
      * @return specified category,
      * or {@literal null} if no corresponding category
      */
     Category getCategory(String name);
-    
+
     /**
      * Method to remove a category from the database.
-     * 
+     *
      * @param ame of the category to remove
      * @return Category instance deleted or
-     * {@link null} if the category can't be deleted
+     * {@literal null} if the category can't be deleted
      */
     Category removeCategory(String name);
 
     /**
      * Method to collect all existing categories in database.
-     * 
+     *
      * @return list of all existing categories in database
      */
     Collection<Category> collectCategories();
@@ -103,42 +103,42 @@ public interface IStoreManagment {
     /**
      * Method to collect available petals.<br />
      * Browse all links and staging.
-     * 
+     *
      * @return list of available petals
      */
     Collection<Petal> collectPetals();
 
     /**
      * Method to collect petals in the local repository.
-     * 
+     *
      * @return list of available petals in local repository
      */
     Collection<Petal> collectPetalsFromLocal();
 
     /**
      * Method to collect petals in the staging repository.
-     * 
+     *
      * @return list of available petals in staging repository
      */
     Collection<Petal> collectPetalsFromStaging();
 
     /**
      * Method to collect petals in all associated remote repositories.
-     * 
+     *
      * @return list of available petals in associated remote repositories
      */
     Collection<Petal> collectPetalsFromRemote();
 
     /**
      * Method to collect all existing users on database.
-     * 
+     *
      * @return list of all database's users
      */
     Collection<User> collectUsers();
 
     /**
      * Method to collect all existing groups on database.
-     * 
+     *
      * @return list of all database's groups
      */
     Collection<Group> collectGroups();
@@ -146,7 +146,7 @@ public interface IStoreManagment {
     /**
      * Method to submit a petal for an add in the store.<br />
      * Submitted petals needs to be validated to effectively added to the store.
-     * 
+     *
      * @param vendorName the name of the petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -168,7 +168,7 @@ public interface IStoreManagment {
     /**
      * Method to validate a petal's submission thanks to its information.<br />
      * This method make the petal persistent in the store.
-     * 
+     *
      * @param vendorName the name of the petal's vendor 
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -181,7 +181,7 @@ public interface IStoreManagment {
     /**
      * Method to retrieve all the petals provided by a vendor.<br />
      * Throws {@link NoEntityFoundException} if the vendor does not exists.
-     * 
+     *
      * @param name vendor name 
      * @return collection of petals provided by the vendor
      * @throws NoEntityFoundException
@@ -192,7 +192,7 @@ public interface IStoreManagment {
     /**
      * Method to get a petal (binary) from the local store.<br />
      * Return null if no petal found on the repository.
-     * 
+     *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -206,7 +206,7 @@ public interface IStoreManagment {
     /**
      * Method to get a petal (binary) from the staging store.<br />
      * Return null if no petal found on the repository.
-     * 
+     *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -219,16 +219,19 @@ public interface IStoreManagment {
 
     /**
      * Method to get a petal (binary) from the remote store(s).<br />
-     * Return null if no petal found on the repository.
-     * 
+     * Return null if no petal found on the repository.<br />
+     * Throws {@link NoEntityFoundException} when specified vendor
+     * does not exist in database.
+     *
      * @param vendorName vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
      * @return binary of the petal
+     * @throws NoEntityFoundException 
      */
     File getPetalFromRemote(
             String vendorName,
             String artifactId,
-            String version);
+            String version) throws NoEntityFoundException;
 
 }

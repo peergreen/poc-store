@@ -8,11 +8,6 @@ import java.io.File;
 public interface IRepositoryProvider<T> {
 
     /**
-     * Method to build up context.
-     */
-    void init();
-    
-    /**
      * Method to retrieve repository path.
      * 
      * @return path to the repository (remote or local)

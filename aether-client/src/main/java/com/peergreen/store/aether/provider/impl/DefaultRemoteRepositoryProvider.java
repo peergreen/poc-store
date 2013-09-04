@@ -6,13 +6,7 @@ import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Property;
 import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.ServiceProperty;
-import org.apache.felix.ipojo.annotations.Validate;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.aether.resolution.ArtifactRequest;
-import org.eclipse.aether.resolution.ArtifactResolutionException;
-import org.eclipse.aether.resolution.ArtifactResult;
 
 /**
  * Class defining methods for remote repository provider.
@@ -21,23 +15,13 @@ import org.eclipse.aether.resolution.ArtifactResult;
 @Provides
 public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<RemoteRepository> {
 
-    private RemoteRepository repository;
     // retrieved from Config Admin
     @ServiceProperty
     private String name;
     @Property
+    private String tmpPath;
     private String path;
-    
-    /**
-     * Method to build up requirements to use Aether with remote repository.
-     */
-    @Validate
-    @Override
-    public void init() {
-        validate();
-        repository = new RemoteRepository.Builder(name, "default", path).build();
-    }
-    
+
     /**
      * Method to retrieve a petal's binary from the repository.
      * 
@@ -47,38 +31,68 @@ public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<R
      * @return
      */
     @Override
-    public File retrievePetal(String vendor, String artifactId, String version) {
-        Artifact artifact = new DefaultArtifact(vendor+":"+artifactId+":"+version);
-        ArtifactRequest artifactRequest = new ArtifactRequest();
-        artifactRequest.addRepository(repository);
-        artifactRequest.setArtifact(artifact);
-        ArtifactResult artifactResult = null;
-        
-        // better to throw exception and manage it on call level
+    public File retrievePetal(
+            String vendor,
+            String artifactId,
+            String version) {
+
+        // TODO change to dynamic name
+        File tmpFile = new File(tmpPath + "/"
+                + vendor + ":" + artifactId + ":" + version + ".jar");
+
+        /*
+         * Need Jersey to work
+        Client client = ClientBuilder.newClient();
+
+        // entity getContent => there might be an InputStream
+        Response response = client.target(path + "/petal/local/" + vendor +
+                "/" + artifactId + "/" + version)
+                .request(MediaType.MULTIPART_FORM_DATA).get();
+
+        BufferedInputStream bis = new BufferedInputStream(
+                (InputStream)response.getEntity());
+
+        BufferedOutputStream bos = null;
         try {
-            artifactResult = getSystem().resolveArtifact(getSession(),artifactRequest);
-        } catch (ArtifactResolutionException e) {
+            bos = new BufferedOutputStream(new FileOutputStream(tmpFile));
+        } catch (FileNotFoundException e) {
+            // can't create file to store petal to tmp directory
+            e.printStackTrace();
+            return null;
+        }
+
+        int bytesRead = 0;
+        byte[] buffer = new byte[1024];
+
+        // Keep reading until there is no more content left.
+        // -1 (EOF) is returned when end of file is reached.
+        try {
+            while ((bytesRead = bis.read(buffer)) != -1) {
+                bos.write(buffer);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        artifact = artifactResult.getArtifact();
-        
-        return artifact.getFile();
-    }
+         */
 
-    public void setRepository(RemoteRepository repository) {
-        this.repository = repository;
+        return tmpFile;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getTmpPath() {
+        return tmpPath;
+    }
+
     public String getPath() {
         return path;
     }
-    
+
     public void setPath(String path) {
         this.path = path;
     }
-    
+
 }

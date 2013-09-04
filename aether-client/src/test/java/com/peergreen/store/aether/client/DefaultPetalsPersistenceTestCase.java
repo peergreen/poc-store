@@ -30,13 +30,11 @@ public class DefaultPetalsPersistenceTestCase {
         DefaultRemoteRepositoryProvider remoteRepoProvider1 = new DefaultRemoteRepositoryProvider();
         remoteRepoProvider1.setName("provider1");
         remoteRepoProvider1.setPath("toto");
-        remoteRepoProvider1.setRepository(null);
         petalsPersistence.getRemoteProviders().add(remoteRepoProvider1);
 
         DefaultRemoteRepositoryProvider remoteRepoProvider2 = new DefaultRemoteRepositoryProvider();
         remoteRepoProvider2.setName("provider2");
         remoteRepoProvider2.setPath("/home/toto");
-        remoteRepoProvider2.setRepository(null);
         petalsPersistence.getRemoteProviders().add(remoteRepoProvider2);
         
         // call method to test if the remove action is done effectively

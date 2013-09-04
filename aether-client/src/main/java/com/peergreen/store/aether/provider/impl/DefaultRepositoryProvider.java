@@ -27,11 +27,6 @@ public abstract class DefaultRepositoryProvider<T> implements IRepositoryProvide
     private DefaultRepositorySystemSession session;
     
     /**
-     * Method to build up context.
-     */
-    public abstract void init();
-    
-    /**
      * Build requirements to use Aether (system and session).
      */
     protected void validate() {

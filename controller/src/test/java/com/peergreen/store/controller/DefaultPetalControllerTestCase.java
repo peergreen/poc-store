@@ -265,8 +265,6 @@ public class DefaultPetalControllerTestCase {
 
         File binary = new File("/home/toto/petal.jar");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
-        // verify getPetal is called when petalPersistence.getPetal is used
-        when(petalPersistence.getPetal(vendorName, artifactId, version)).thenReturn(binary);
 
         // verify persistence.getPetal is called
         petalController.getPetal(vendorName, artifactId, version);

@@ -33,20 +33,10 @@ public interface IPetalsPersistence {
      * @param url remote repository url
      */
     public void removeRemoteRepository(String url);
-    
-    /**
-     * Method to recover petal's binary from its information
-     * 
-     * @param vendor petal's vendor name
-     * @param artifactId petal's artifact id
-     * @param version petal's version
-     * @return petal's binary
-     */
-    File getPetal(String vendor, String artifactId, String version);
 
     /**
-     * Method to add a petal to the local repository
-     * 
+     * Method to add a petal to the local repository.
+     *
      * @param vendor petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -59,8 +49,9 @@ public interface IPetalsPersistence {
             File petal);
 
     /**
-     * Method to retrieve a petal from the local repository
-     * 
+     * Method to retrieve a petal from the local repository.<br />
+     * Return {@literal null} if no corresponding petal found.
+     *
      * @param vendor petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -69,7 +60,7 @@ public interface IPetalsPersistence {
     File getPetalFromLocal(String vendor, String artifactId, String version);
 
     /**
-     * Method to add a petal to the staging repository
+     * Method to add a petal to the staging repository.<br />
      * 
      * @param vendor petal's vendor name
      * @param artifactId petal's artifactId
@@ -83,8 +74,9 @@ public interface IPetalsPersistence {
             File petal);
 
     /**
-     * Method to retrieve a petal from the staging repository
-     * 
+     * Method to retrieve a petal from the staging repository.<br />
+     * Return {@literal null} if no corresponding petal found.
+     *
      * @param vendor petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
@@ -93,12 +85,19 @@ public interface IPetalsPersistence {
     File getPetalFromStaging(String vendor, String artifactId, String version);
     
     /**
-     * Method to retrieve a petal from all remote repositories
-     * 
+     * Method to retrieve a petal from all remote repositories.<br />
+     * Return {@literal null} if no corresponding petal found.
+     *
      * @param vendor petal's vendor name
      * @param artifactId petal's artifactId
      * @param version petal's version
+     * @param url remote store url
      * @return corresponding petal's binary
      */
-    File getPetalFromRemote(String vendor, String artifactId, String version);
+    File getPetalFromRemote(
+            String vendor,
+            String artifactId,
+            String version,
+            String url);
+
 }
