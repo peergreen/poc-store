@@ -115,6 +115,14 @@ public interface IPetalController {
      * @return corresponding petal or <em>null</em> if not available
      */
     Petal getPetal(String vendorName, String artifactId, String version);
+    
+    /**
+     * Method to retrieve a petal using his id.
+     * 
+     * @param id petal's id
+     * @return corresponding petal or <em>null</em> if not available
+     */
+    Petal getPetal(int id);
 
     /**
      * Method to directly add a petal to the store.<br />

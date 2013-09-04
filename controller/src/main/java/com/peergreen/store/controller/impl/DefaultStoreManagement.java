@@ -84,6 +84,16 @@ public class DefaultStoreManagement implements IStoreManagment {
             throw new EntityAlreadyExistsException(e);
         }
     }
+    
+    /**
+     * Method to retrieve a link using his id.
+     * 
+     * @param id link's id
+     * @return corresponding link or <em>null</em> if not available
+     */
+     public Link getLink(int id) {
+         return linkSession.findLinkById(id);
+     }
 
     /**
      * Method to remove a link between a remote store and the current one.

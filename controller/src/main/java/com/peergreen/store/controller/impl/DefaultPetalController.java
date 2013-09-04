@@ -282,6 +282,18 @@ public class DefaultPetalController implements IPetalController {
 
         return null;
     }
+    
+    /**
+     * Method to retrieve a petal using his id.
+     * 
+     * @param id petal's id
+     * @return corresponding petal or <em>null</em> if not available
+     */
+    @Override
+    public Petal getPetal(int id) {
+        return petalSession.findPetalById(id);
+    }
+
 
     /**
      * Method to directly add a petal to the store.<br />

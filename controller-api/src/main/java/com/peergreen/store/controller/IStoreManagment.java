@@ -43,6 +43,14 @@ public interface IStoreManagment {
             throws EntityAlreadyExistsException;
 
     /**
+     * Method to retrieve a link using his id.
+     * 
+     * @param id link's id
+     * @return corresponding link or <em>null</em> if not available
+     */
+    Link getLink(int id);
+
+    /**
      * Method to remove a link between a remote store and the current one.
      * 
      * @param linkId link's url
