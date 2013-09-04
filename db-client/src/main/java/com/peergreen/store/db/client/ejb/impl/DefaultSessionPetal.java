@@ -55,7 +55,8 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  *      <li>Retrieve petal's origin {LOCAL, STAGING, REMOTE}</li>
  *      <li>Set petal's origin {LOCAL, STAGING, REMOTE}</li>
  *      <li>Collect all existing petals in the Local repository on database</li>
- *      <li>Collect all existing petals in the Staging repository on database</li>
+ *      <li>Collect all existing petals 
+ *      in the Staging repository on database</li>
  *      <li>Collect all existing petals in the Remote repository on database</li>
  * </ul>
  * 
