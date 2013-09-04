@@ -85,19 +85,27 @@ public class DefaultPetalController implements IPetalController {
      */
     @Override
     public final Map<String, Object> getPetalMetadata(
-            String vendorName, 
-            String artifactId, 
-            String version) throws NoEntityFoundException {
-        Vendor vendor = vendorSession.findVendor(vendorName);
-        Petal petal = petalSession.findPetal(vendor, artifactId, version);
+            String vendorName,
+            String artifactId,
+            String version)
+                    throws NoEntityFoundException {
+
+        Vendor v = vendorSession.findVendor(vendorName);
+
+        if (v == null) {
+            throw new NoEntityFoundException("Vendor with name "
+                    + vendorName + " does not exist in database.");
+        }
+
+        Petal petal = petalSession.findPetal(v, artifactId, version);
 
         HashMap<String, Object> metadata = new HashMap<String, Object>();
 
         if (petal != null) {
             try {
-                metadata.put("vendor", vendor);
-                metadata.put("artifactId", artifactId);
-                metadata.put("version", version);
+                metadata.put("vendor", petal.getVendor());
+                metadata.put("artifactId", petal.getArtifactId());
+                metadata.put("version", petal.getVersion());
                 metadata.put("description", petal.getDescription());
                 metadata.put("category", petalSession.getCategory(petal));
                 metadata.put("requirements",
@@ -282,18 +290,17 @@ public class DefaultPetalController implements IPetalController {
 
         return null;
     }
-    
+
     /**
-     * Method to retrieve a petal using his id.
-     * 
+     * Method to retrieve a petal from the local store.
+     *
      * @param id petal's id
-     * @return corresponding petal or <em>null</em> if not available
+     * @return corresponding petal or {@literal null} if not available
      */
     @Override
-    public Petal getPetal(int id) {
+    public final Petal getPetalById(int id) {
         return petalSession.findPetalById(id);
     }
-
 
     /**
      * Method to directly add a petal to the store.<br />
@@ -335,10 +342,14 @@ public class DefaultPetalController implements IPetalController {
 
         try {
             return petalSession.addPetal(
-                    vendor, artifactId,
-                    version, description,
-                    category, capabilities,
-                    requirements,origin);
+                    vendor,
+                    artifactId,
+                    version,
+                    description,
+                    category,
+                    capabilities,
+                    requirements,
+                    origin);
         } catch (NoEntityFoundException e) {
             theLogger.log(Level.SEVERE, e.getMessage());
             throw new NoEntityFoundException(e);
@@ -557,6 +568,7 @@ public class DefaultPetalController implements IPetalController {
      * @param vendorName the name of the petal's vendor
      * @param artifactId petal's artifactId
      * @param version petal's version
+     * @return collection containing all existing requirements
      * @throws NoEntityFoundException
      */
     @Override
@@ -707,7 +719,9 @@ public class DefaultPetalController implements IPetalController {
      * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Petal> getPetalsForRequirement(String name) throws NoEntityFoundException {
+    public final Collection<Petal> getPetalsForRequirement(String name)
+            throws NoEntityFoundException {
+
         try {
             return  requirementSession.collectPetals(name);
         } catch (NoEntityFoundException e) {
@@ -717,14 +731,19 @@ public class DefaultPetalController implements IPetalController {
     }
 
     /**
-     * Method to get all the petals which provide the capability given 
+     * Method to get all the petals which provide the capability given.
+     *
      * @param name the capability's name
-     * @param version the capabilty's version 
+     * @param version the capabilty's version
      * @param namespace the capability's namespace
-     * @throws NoEntityFoundException 
+     * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Petal> getPetalsForCapability(String name, String version, String namespace) throws NoEntityFoundException {
+    public final Collection<Petal> getPetalsForCapability(
+            String name,
+            String version,
+            String namespace) throws NoEntityFoundException {
+
         try {
             return  capabilitySession.collectPetals(name, version, namespace);
         } catch (NoEntityFoundException e) {

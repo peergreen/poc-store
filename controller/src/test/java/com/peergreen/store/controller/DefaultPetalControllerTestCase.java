@@ -78,18 +78,24 @@ public class DefaultPetalControllerTestCase {
     }
 
     @Test
-    public void shouldGetPetalMetadata() throws NoEntityFoundException{
+    public void shouldGetPetalMetadata() throws NoEntityFoundException {
 
         //Given
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
+        int id = 2;
 
         Vendor vendor = mock(Vendor.class);
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
         Petal petal = mock(Petal.class);
-        when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
+        when(petalSession.findPetal(vendor, artifactId, version))
+        .thenReturn(petal);
+        when(petal.getVendor()).thenReturn(vendor);
+        when(petal.getArtifactId()).thenReturn(artifactId);
+        when(petal.getVersion()).thenReturn(version);
+
 
         Category category = mock(Category.class);
 
@@ -103,17 +109,18 @@ public class DefaultPetalControllerTestCase {
         Capability cap2 = mock(Capability.class);
         Set<Capability> capabilities = new HashSet<>();
         capabilities.add(cap1);
-        capabilities.add(cap2);     
+        capabilities.add(cap2);
 
         when(petalSession.getCategory(petal)).thenReturn(category);
         when(petalSession.collectCapabilities(petal)).thenReturn(capabilities);
         when(petalSession.collectRequirements(petal)).thenReturn(requirements);
 
         //When
-        Map<String, Object> result = petalController.getPetalMetadata(vendorName, artifactId, version);
+        Map<String, Object> result = petalController
+                .getPetalMetadata(vendorName, artifactId, version);
 
-        //Then 
-        Assert.assertSame(result.get("vendor"), vendor);  
+        //Then
+        Assert.assertSame(result.get("vendor"), vendor);
         Assert.assertSame(result.get("artifactId"), artifactId);
         Assert.assertSame(result.get("version"), version);
         Assert.assertSame(result.get("description"), null);
@@ -124,7 +131,7 @@ public class DefaultPetalControllerTestCase {
     }
 
     @Test
-    public void testGetTransitiveDependencies() throws NoEntityFoundException{
+    public void testGetTransitiveDependencies() throws NoEntityFoundException {
 
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
@@ -132,7 +139,7 @@ public class DefaultPetalControllerTestCase {
         DependencyRequest request = mock(DependencyRequest.class);
         when(request.getVendor()).thenReturn(vendor);
         when(request.getArtifactId()).thenReturn(artifactId);
-        when(request.getVersion()).thenReturn(version); 
+        when(request.getVersion()).thenReturn(version);
 
         Requirement req1 = mock(Requirement.class);
         Requirement req2 = mock(Requirement.class);
