@@ -104,6 +104,9 @@ public class DefaultPetalController implements IPetalController {
                         petalSession.collectRequirements(petal));
                 metadata.put("capabilities",
                         petalSession.collectCapabilities(petal));
+                metadata.put("groups",
+                        petalSession.collectGroups(petal));
+                metadata.put("origin", petal.getOrigin());
             } catch (NoEntityFoundException e) {
                 theLogger.log(Level.SEVERE, e.getMessage());
                 throw new NoEntityFoundException(e);
