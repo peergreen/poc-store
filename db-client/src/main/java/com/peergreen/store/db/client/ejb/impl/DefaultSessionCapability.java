@@ -288,7 +288,9 @@ public class DefaultSessionCapability implements ISessionCapability{
     public Collection<Petal> collectPetals(String capabilityName, String version, String namespace) throws NoEntityFoundException {
         Capability capability = findCapability(capabilityName, version, namespace);
         if (capability != null) {
-            return capability.getPetals();
+            Set<Petal> petals = new HashSet<>();
+            petals.addAll(capability.getPetals());
+            return petals;
         } else {
             throw new NoEntityFoundException("Capability " + capabilityName + " in version " + version + " is not present on database.");
         }

@@ -130,7 +130,7 @@ public class DefaultPetalControllerTestCase {
 
     }
 
-//    @Test
+    @Test
     public void testGetTransitiveDependencies() throws NoEntityFoundException {
 
         String artifactId = "Tomcat HTTP service";
@@ -147,8 +147,9 @@ public class DefaultPetalControllerTestCase {
         requirements.add(req1);
         requirements.add(req2);
 
-        Capability cap1 = mock(Capability.class);
-        Capability cap2 = mock(Capability.class);
+        Set<Property> properties = new HashSet<>();
+        Capability cap1 = new Capability("JPA", "1.0", "provider", properties );
+        Capability cap2 = new Capability("Jersey", "3.0", "provider", properties );;
         Set<Capability> capabilities = new HashSet<>();
         capabilities.add(cap1);
         capabilities.add(cap2);  
@@ -158,29 +159,35 @@ public class DefaultPetalControllerTestCase {
         Petal petal = mock(Petal.class);
         Petal petal1 = mock(Petal.class);
         Petal petal2 = mock(Petal.class);
+        Petal petal3 = mock(Petal.class);
         Set<Petal> petals = new HashSet<>();
         petals.add(petal1);
         petals.add(petal2);
-        Set<Petal> petalsEmpty = new HashSet<>();
+        Set<Petal> petals2 = new HashSet<>();
+        petals2.add(petal3);
 
+        Set<Petal> resultPetals = new HashSet<>();
+        resultPetals.addAll(petals);
+        resultPetals.addAll(petals2);
+        
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
-        when(petal.getRequirements()).thenReturn(requirements);
+        when(petalSession.collectRequirements(petal)).thenReturn(requirements);
 
         when(requirementSession.findCapabilities(req1)).thenReturn(capabilities);
         when(requirementSession.findCapabilities(req2)).thenReturn(capabilities2);
 
-        when(cap1.getPetals()).thenReturn(petals);
-        when(cap2.getPetals()).thenReturn(petalsEmpty);
+        when(capabilitySession.collectPetals("JPA", "1.0", "provider")).thenReturn(petals);
+        when(capabilitySession.collectPetals("Jersey", "3.0", "provider")).thenReturn(petals2);
 
         //When 
         DependencyResult result = petalController.getTransitiveDependencies(request);
         //Then 
         verify(requirementSession,times(2)).findCapabilities(any(Requirement.class));
-        Assert.assertSame(petals, result.getResolvedRequirements().get(req1));
-
-        //  Assert.assertTrue(result.getUnresolvedRequirements().contains(req2));
-        Assert.assertTrue(result.getUnresolvedRequirements().contains(req1));
-
+        Assert.assertFalse(result.getResolvedRequirements().isEmpty());
+        Assert.assertFalse(result.getUnresolvedRequirements().isEmpty());
+        Assert.assertTrue(result.getResolvedRequirements().containsKey(req1));
+        Assert.assertTrue(result.getUnresolvedRequirements().contains(req2));
+        Assert.assertEquals(resultPetals, result.getResolvedRequirements().get(req1));
     }
 
 

@@ -144,8 +144,8 @@ public class DefaultPetalController implements IPetalController {
                 request.getArtifactId(),
                 request.getVersion());
 
-        Collection<Requirement> requirements = petal.getRequirements();
-
+        Collection<Requirement> requirements = petalSession.
+                collectRequirements(petal);
         for (Requirement req : requirements) {
             // retrieve capabilities which meet
             // the requirements in a same namespace
@@ -159,7 +159,10 @@ public class DefaultPetalController implements IPetalController {
                 Set<Petal> matchingPetals = new HashSet<>();
                 for (Capability capability : capabilities) {
                     // index petals providing the capability
-                    matchingPetals.addAll(capability.getPetals());
+                    matchingPetals.addAll(capabilitySession.
+                            collectPetals(capability.getCapabilityName(), 
+                                    capability.getVersion(), 
+                                    capability.getNamespace()));
                 }
                 result.addResolvedDependency(req, matchingPetals);
             }
