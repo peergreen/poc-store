@@ -105,7 +105,6 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
         Subquery<Capability> subqueryRight = query.subquery(Capability.class);
         Root<Capability> subRootRight = subqueryRight.from(Capability.class);
 
-        @SuppressWarnings("unchecked")
         Join<Capability, Property> subPropLeft = subqueryLeft.correlate(queryJoin);
         Join<Capability, Property> subPropRight = subqueryRight.correlate(queryJoin);
 
@@ -124,7 +123,6 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
 
         // if column doesn't exist, 
         if (!exists) {
-            // TODO: return subquery which does not match with any entry
             subqueryLeft.select(subRootLeft).where(builder.not(cap.in(subqueryLeft)));
             return new HashSet<>();
         }
@@ -205,13 +203,17 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
             }
         }
 
-       query.select(queryRoot).where(
+        String namespace = jpaContext.getNodeContext().getProperty(String.class);
+        System.out.println("namespace: " + namespace);
+
+        query.select(queryRoot).where(
                 builder.and(
+                        builder.equal(queryRoot.get("namespace"), namespace),
                         subqueryLeft.getRestriction(),
                         subqueryRight.getRestriction()
                         )
                 );
-       Set<Capability> caps = new HashSet<>(entityManager.createQuery(query).getResultList());
+        Set<Capability> caps = new HashSet<>(entityManager.createQuery(query).getResultList());
 
         // assemble left and right queries to form result query
         //        return subquery.select(root).where(
