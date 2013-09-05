@@ -95,15 +95,6 @@ public class Petal {
     }
 
     /**
-     * Method to set the petal's artifactId
-     * 
-     * @param artifactId The artifactId of the petal to set
-     */
-    public void setArtifactId(String artifactId) {
-        this.artifactId = artifactId;
-    }
-
-    /**
      * Method to retrieve the petal's version
      * 
      * @return the version of the petal
@@ -118,15 +109,6 @@ public class Petal {
     public int getPid() {
         return pid;
     }
-
-    /**
-     * Method to set the petal's version
-     * 
-     * @param version The version of the petal to set
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    } 
 
     /**
      * Method to retrieve the petal's description
@@ -225,15 +207,6 @@ public class Petal {
      */
     public Vendor getVendor() {
         return vendor;
-    }
-
-    /**
-     * Method to set the petal's vendor
-     * 
-     * @param vendor The vendor of the petal to set
-     */
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
     }
 
     /**

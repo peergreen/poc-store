@@ -50,15 +50,6 @@ public class Vendor {
     }
 
     /**
-     * Method to set a name for the vendor 
-     * 
-     * @param vendorName the name to set for the vendor
-     */
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
-
-    /**
      * Method to get the description's vendor
      * 
      * @return the vendorDescription

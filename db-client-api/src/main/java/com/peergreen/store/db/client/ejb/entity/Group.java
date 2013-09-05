@@ -57,15 +57,6 @@ public class Group {
     }
 
     /**
-     * Method to set the group's name
-     * 
-     * @param groupname the name to set
-     */
-    public void setGroupname(String groupname) {
-        this.groupname = groupname;
-    }
-
-    /**
      * Method to retrieve all the users that belongs to this group
      * 
      * @return Set of users of the group

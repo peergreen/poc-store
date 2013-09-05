@@ -65,7 +65,7 @@ public class Requirement {
      */
     public Requirement(String requirementName,String namespace, String filter) {
         super();
-        this.setRequirementName(requirementName);
+        this.requirementName = requirementName;
         this.setNamespace(namespace);
         this.setFilter(filter);
         Set<Petal> petals = new HashSet<Petal>();
@@ -88,15 +88,6 @@ public class Requirement {
      */
     public String getRequirementName() {
         return requirementName;
-    }
-
-    /**
-     * Method to set requirement name.
-     * 
-     * @param requirementName requirement name to set
-     */
-    public void setRequirementName(String requirementName) {
-        this.requirementName = requirementName;
     }
 
     /**

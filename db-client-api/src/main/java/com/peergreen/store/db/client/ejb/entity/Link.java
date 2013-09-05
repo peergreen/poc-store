@@ -67,15 +67,6 @@ public class Link {
     }
 
     /**
-     * Method to set the link's url 
-     * 
-     * @param url the url of link to set
-     */
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    /**
      * Method to retrieve the link's description 
      * 
      * @return the description of the link instance

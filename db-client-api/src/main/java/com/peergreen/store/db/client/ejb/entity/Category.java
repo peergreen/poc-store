@@ -74,15 +74,6 @@ public class Category{
     }
 
     /**
-     * Method to give the name of the category instance 
-     * 
-     * @param categoryname the category's name to set
-     */
-    public void setCategoryName(String categoryname) {
-        this.categoryName = categoryname;
-    }
-
-    /**
      * Method for retrieve all the petals that belongs to this category
      * 
      * @return Set containing petals that belongs to this category
