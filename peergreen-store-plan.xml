@@ -3,6 +3,12 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:m2="http://jonas.ow2.org/ns/deployment-plan/maven2/1.0">
 
   <deployment xsi:type="m2:maven2-deploymentType">
+    <m2:groupId>javax.ws.rs</m2:groupId>
+    <m2:artifactId>javax.ws.rs-api</m2:artifactId>
+    <m2:version>2.0</m2:version>
+  </deployment>
+
+  <deployment xsi:type="m2:maven2-deploymentType">
     <m2:groupId>com.peergreen.store</m2:groupId>
     <m2:artifactId>ldap-parser</m2:artifactId>
     <m2:version>1.0-SNAPSHOT</m2:version>
@@ -79,11 +85,23 @@
     <m2:artifactId>controller</m2:artifactId>
     <m2:version>1.0-SNAPSHOT</m2:version>
   </deployment>
-
+ 
   <deployment xsi:type="m2:maven2-deploymentType" start="false">
-    <m2:groupId>com.peergreen.store</m2:groupId>
+    <m2:groupId>com.peergreen</m2:groupId>
     <m2:artifactId>demo</m2:artifactId>
     <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+  
+  <deployment xsi:type="m2:maven2-deploymentType" start="false">
+	<m2:groupId>com.peergreen.api</m2:groupId>
+    <m2:artifactId>rest</m2:artifactId>
+    <m2:version>1.0-SNAPSHOT</m2:version>
+  </deployment>
+  
+  <deployment xsi:type="m2:maven2-deploymentType" start="false">
+    <m2:groupId>com.peergreen.demo</m2:groupId>
+    <m2:artifactId>shelbie-command</m2:artifactId>
+    <m2:version>1.0.0-SNAPSHOT</m2:version>
   </deployment>
 
 </deployment-plan>
