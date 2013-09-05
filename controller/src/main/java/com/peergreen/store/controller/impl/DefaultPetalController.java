@@ -3,6 +3,7 @@ package com.peergreen.store.controller.impl;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -151,17 +152,16 @@ public class DefaultPetalController implements IPetalController {
             Collection<Capability> capabilities =
                     requirementSession.findCapabilities(req);
 
-            // retrieve petals providing the capability
-            for (Capability capability : capabilities) {
-                Set<Petal> petals = capability.getPetals();
-
-                if (petals.isEmpty()) {
-                    // declare missing capability
-                    result.addUnresolvedRequirement(req);
-                } else {
+            if (capabilities.size() == 0) {
+                result.addUnresolvedRequirement(req);
+            } else {
+                // retrieve petals providing the capability
+                Set<Petal> matchingPetals = new HashSet<>();
+                for (Capability capability : capabilities) {
                     // index petals providing the capability
-                    result.addResolvedDependency(req, petals);
+                    matchingPetals.addAll(capability.getPetals());
                 }
+                result.addResolvedDependency(req, matchingPetals);
             }
         }
 
