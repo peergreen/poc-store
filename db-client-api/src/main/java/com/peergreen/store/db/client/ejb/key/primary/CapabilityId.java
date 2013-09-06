@@ -41,17 +41,17 @@ public class CapabilityId implements Serializable {
 
     /**
      * Default Constructor with parameters.
+     *
      * @param name name of the capability
      * @param id if of the capability
      * @param version version of the capability
      * @param namespace namespace of the capability
      */
     public CapabilityId(String name, int id, String version, String namespace) {
-
         this.capabilityName = name;
         this.capabilityId = id;
         this.version = version;
-        this.setNamespace(namespace);
+        this.namespace = namespace;
     }
 
     /**
@@ -62,13 +62,8 @@ public class CapabilityId implements Serializable {
     }
 
     /**
-     * @param capabilityName the capabilityName to set
-     */
-    public void setCapabilityName(String capabilityName) {
-        this.capabilityName = capabilityName;
-    }
-
-    /**
+     * Method to retrieve capability id.
+     *
      * @return the capabilityId
      */
     public int getCapabilityId() {
@@ -76,13 +71,8 @@ public class CapabilityId implements Serializable {
     }
 
     /**
-     * @param capabilityId the capabilityId to set
-     */
-    public void setCapabilityId(int capabilityId) {
-        this.capabilityId = capabilityId;
-    }
-
-    /**
+     * Method to retrieve capability version.
+     *
      * @return the version
      */
     public String getVersion() {
@@ -90,25 +80,12 @@ public class CapabilityId implements Serializable {
     }
 
     /**
-     * @param version the version to set
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    /**
+     * Method to retrieve capability namespace.
+     *
      * @return the namespace
      */
     public String getNamespace() {
         return namespace;
     }
-
-    /**
-     * @param namespace the namespace to set
-     */
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
-    }
-
 
 }
