@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -14,6 +12,9 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -46,8 +47,8 @@ public class DefaultSessionUser implements ISessionUser {
 
     private ISessionGroup groupSession;
 
-    private static Logger theLogger = Logger.getLogger(DefaultSessionUser.class.getName());
-
+    private static Log logger = LogFactory.
+            getLog(DefaultSessionUser.class);
     /**
      * Method to create a new instance of User and add it in the database.<br />
      * Others attributes are null when creating the user.
@@ -120,12 +121,10 @@ public class DefaultSessionUser implements ISessionUser {
                 }
                 //Then remove the user from the database 
                 entityManager.remove(user);
-                return user;
-
             } catch (NoEntityFoundException e) {
-                theLogger .log(Level.SEVERE,e.getMessage());  
-                return null; 
+                logger.warn(e.getMessage(), e) ;
             }
+            return user;
         }else{
             return user;
         }

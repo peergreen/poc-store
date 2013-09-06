@@ -179,10 +179,11 @@ public class DefaultSessionUserTest {
     @Test
     public void shouldRemoveUserByPseudoBis() throws NoEntityFoundException  {
         //Given
+        String message = "Group not found"; 
         when(entityManager.find(eq(User.class),anyString())).thenReturn(mockuser);
         when(itGroup.hasNext()).thenReturn(true,false);
         //Throwing an exception to verify the catch 
-        when(sessionGroup.removeUser((Group) anyObject(), any(User.class))).thenThrow(new NoEntityFoundException());
+        when(sessionGroup.removeUser((Group) anyObject(), any(User.class))).thenThrow(new NoEntityFoundException(message));
         //When
         User result = sessionUser.removeUserbyPseudo(pseudo);
         //Then
@@ -191,7 +192,7 @@ public class DefaultSessionUserTest {
         verify(sessionGroup).removeUser((Group) anyObject(), userArgument.capture());
         Assert.assertEquals(mockuser, userArgument.getValue());
 
-        Assert.assertSame(null, result);
+        Assert.assertSame(mockuser, result);
 
 
     }

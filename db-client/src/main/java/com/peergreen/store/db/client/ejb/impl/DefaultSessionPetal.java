@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -14,6 +12,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Category;
@@ -70,8 +71,8 @@ public class DefaultSessionPetal implements ISessionPetal {
     private ISessionRequirement sessionRequirement;
     private ISessionVendor sessionVendor;
 
-    private static Logger theLogger =
-            Logger.getLogger(DefaultSessionPetal.class.getName());
+    private static Log logger = LogFactory.
+            getLog(DefaultSessionPetal.class);
     private EntityManager entityManager;
 
     /**
@@ -316,8 +317,8 @@ public class DefaultSessionPetal implements ISessionPetal {
                 sessionCategory.removePetal(c, p);
 
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE,e.getMessage());
-                return null;             }
+                logger.warn(e.getMessage(), e);
+            }
 
             Set<Capability> capabilities = p.getCapabilities();
             Iterator<Capability> it = capabilities .iterator();
@@ -327,8 +328,8 @@ public class DefaultSessionPetal implements ISessionPetal {
                     it.remove();
                     sessionCapability.removePetal(cap, p);
                 } catch (NoEntityFoundException e) {
-                    theLogger.log(Level.SEVERE,e.getMessage());
-                    return null; 
+                    logger.warn(e.getMessage(), e);
+
                 }
             }
 
@@ -338,10 +339,10 @@ public class DefaultSessionPetal implements ISessionPetal {
                 Requirement req = itreq.next();
                 try {
                     itreq.remove();
-                    sessionRequirement.removePetal(req, petal);
+                    sessionRequirement.removePetal(req, p);
                 } catch (NoEntityFoundException e) {
-                    theLogger.log(Level.SEVERE,e.getMessage());
-                    return null;                 }
+                    logger.warn(e.getMessage(), e);
+                }
             }
 
             Collection<Group> groups;
@@ -355,8 +356,8 @@ public class DefaultSessionPetal implements ISessionPetal {
                 } 
             }
             catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null; 
+                logger.warn(e.getMessage(), e);
+
             }
 
             entityManager.remove(p);
@@ -482,15 +483,13 @@ public class DefaultSessionPetal implements ISessionPetal {
         Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
         if(p!=null){
             // retrieve attached category
-            Category c = sessionCategory.findCategory(category.getCategoryName());
-
-            p.setCategory(c);
-
+            Category c = sessionCategory.
+                    findCategory(category.getCategoryName());
             try {
                 sessionCategory.addPetal(c, p);
+                p.setCategory(c);
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return p;
+                logger.warn(e.getMessage(), e);
             }
 
             return entityManager.merge(p);
@@ -532,26 +531,30 @@ public class DefaultSessionPetal implements ISessionPetal {
      * @throws NoEntityFoundException
      */
     @Override
-    public Petal addCapability(Petal petal, Capability capability)throws NoEntityFoundException {
+    public Petal addCapability(Petal petal,
+            Capability capability)throws NoEntityFoundException {
         // retrieve attached petal
-        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion()); 
+        Petal p = findPetal(petal.getVendor(),
+                petal.getArtifactId(), petal.getVersion());
         if(p!=null){
             // retrieve attached capability
-            Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
-
-            p.getCapabilities().add(c);
+            Capability c = sessionCapability.
+                    findCapability(capability.getCapabilityName(),
+                            capability.getVersion(), capability.getNamespace());
             try {
                 sessionCapability.addPetal(c, p);
+                p.getCapabilities().add(c);
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null;
+                logger.warn(e.getMessage(), e);
             }
 
             return entityManager.merge(p);
         }
         else{
-            throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
-                    " in version " + petal.getVersion() + " does not exist in database.");
+            throw new NoEntityFoundException("Petal " + petal.getArtifactId()
+                    + " provided by " + petal.getVendor().getVendorName()
+                    + " in version " + petal.getVersion()
+                    + " does not exist in database.");
         }
     }
 
@@ -565,26 +568,31 @@ public class DefaultSessionPetal implements ISessionPetal {
      * @throws NoEntityFoundException
      */
     @Override
-    public Petal removeCapability(Petal petal, Capability capability)throws NoEntityFoundException {
+    public Petal removeCapability(Petal petal, Capability capability)
+            throws NoEntityFoundException {
         // retrieve attached petal
-        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(),
+                petal.getVersion());
         if(p!=null){
             // retrieve attached capability
-            Capability c = sessionCapability.findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
+            Capability c = sessionCapability.
+                    findCapability(capability.getCapabilityName(),
+                            capability.getVersion(), capability.getNamespace());
 
             p.getCapabilities().remove(c);
-
             try {
                 sessionCapability.removePetal(c, p);
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null ; 
+                logger.warn(e.getMessage(), e);
             }
             return  entityManager.merge(petal);
         }
         else{
-            throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
-                    " in version " + petal.getVersion() + " does not exist in database.");
+            throw new NoEntityFoundException("Petal "
+                    + petal.getArtifactId() + " provided by "
+                    + petal.getVendor().getVendorName()
+                    + " in version " + petal.getVersion()
+                    + " does not exist in database.");
         }
     }
 
@@ -598,25 +606,29 @@ public class DefaultSessionPetal implements ISessionPetal {
      * @throws NoEntityFoundException
      */
     @Override
-    public Petal addRequirement(Petal petal, Requirement requirement) throws NoEntityFoundException{
+    public Petal addRequirement(Petal petal,
+            Requirement requirement) throws NoEntityFoundException{
         // retrieve attached petal
-        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(),
+                petal.getArtifactId(), petal.getVersion());
         if(p!=null){
             // retrieve attached requirement
-            Requirement r = sessionRequirement.findRequirement(requirement.getRequirementName());
+            Requirement r = sessionRequirement.
+                    findRequirement(requirement.getRequirementName());
 
-            p.getRequirements().add(r);
             try{
                 sessionRequirement.addPetal(r, p);
+                p.getRequirements().add(r);
             }catch(NoEntityFoundException e){
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null;
+                logger.warn(e.getMessage(), e);
             }
             return entityManager.merge(petal);
         }
         else{
-            throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
-                    " in version " + petal.getVersion() + " does not exist in database.");
+            throw new NoEntityFoundException("Petal " + petal.getArtifactId()
+                    + " provided by " + petal.getVendor().getVendorName()
+                    + " in version " + petal.getVersion()
+                    + " does not exist in database.");
         }
     }
 
@@ -630,25 +642,29 @@ public class DefaultSessionPetal implements ISessionPetal {
      * @throws NoEntityFoundException
      */
     @Override
-    public Petal removeRequirement(Petal petal, Requirement requirement) throws NoEntityFoundException{
+    public Petal removeRequirement(Petal petal,
+            Requirement requirement) throws NoEntityFoundException{
         // retrieve attached petal
-        Petal p = findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+        Petal p = findPetal(petal.getVendor(),
+                petal.getArtifactId(), petal.getVersion());
         if(p!=null){
             // retrieve attached requirement
-            Requirement r = sessionRequirement.findRequirement(requirement.getRequirementName());
+            Requirement r = sessionRequirement.
+                    findRequirement(requirement.getRequirementName());
 
             p.getRequirements().remove(r);
             try{
                 sessionRequirement.removePetal(r, p);
             }catch(NoEntityFoundException e){
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null; 
+                logger.warn(e.getMessage(), e);
             }
 
             return entityManager.merge(p);} 
         else{
-            throw new NoEntityFoundException("Petal " + petal.getArtifactId() + " provided by " + petal.getVendor().getVendorName() +
-                    " in version " + petal.getVersion() + " does not exist in database.");
+            throw new NoEntityFoundException("Petal " + petal.getArtifactId()
+                    + " provided by " + petal.getVendor().getVendorName()
+                    + " in version " + petal.getVersion()
+                    + " does not exist in database.");
         }
     }
 

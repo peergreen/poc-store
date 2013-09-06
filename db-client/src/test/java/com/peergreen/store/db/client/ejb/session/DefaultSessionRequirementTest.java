@@ -138,7 +138,7 @@ public class DefaultSessionRequirementTest {
         verify(sessionPetal).removeRequirement((Petal) anyObject(), requirementArgument.capture());
         Assert.assertEquals(mockrequirement, requirementArgument.getValue());
 
-        Assert.assertSame(null,result);
+        Assert.assertSame(mockrequirement,result);
 
     }
     

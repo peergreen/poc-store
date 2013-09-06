@@ -52,13 +52,13 @@ import com.peergreen.store.ldap.parser.node.IValidatorNode;
  */
 @Stateless
 public class DefaultSessionRequirement implements ISessionRequirement {
-    private static Log logger = LogFactory.getLog(JPQLClientBinaryNode.class);
+    private static Log logger = LogFactory.
+            getLog(DefaultSessionRequirement.class);
     private EntityManager entityManager;
     @OSGiResource
     private ILdapParserFactory parserFactory;
     private CriteriaBuilder builder;
     private CriteriaQuery<Capability> mainQuery;
-    private Join<Capability, Property> prop;
     private ISessionPetal petalSession;
 
     public EntityManager getEntityManager() {
@@ -140,11 +140,10 @@ public class DefaultSessionRequirement implements ISessionRequirement {
                 }
                 //Then remove the requirement from the database 
                 entityManager.remove(req);
-                return req;
             } catch (NoEntityFoundException e) {
-                logger.error(e.getMessage(), e);
-                return null; 
+                logger.warn(e.getMessage(), e);
             }
+            return req;
         } else {
             return req;
         }
