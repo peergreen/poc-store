@@ -229,8 +229,8 @@ public class DefaultGroupController implements IGroupController {
      * @param session the ISessionGroup to set
      */
     @Bind
-    public final void bindGroupSession(ISessionGroup groupSession) {
-        this.groupSession = groupSession;
+    public final void bindGroupSession(ISessionGroup session) {
+        this.groupSession = session;
     }
 
     /**
@@ -239,8 +239,8 @@ public class DefaultGroupController implements IGroupController {
      * @param session the ISessionUser to set
      */
     @Bind
-    public final void bindUserSession(ISessionUser userSession) {
-        this.userSession = userSession;
+    public final void bindUserSession(ISessionUser session) {
+        this.userSession = session;
     }
 
     /**
@@ -249,8 +249,8 @@ public class DefaultGroupController implements IGroupController {
      * @param session the ISessionVendor to set
      */
     @Bind
-    public final void bindVendorSession(ISessionVendor vendorSession) {
-        this.vendorSession = vendorSession;
+    public final void bindVendorSession(ISessionVendor session) {
+        this.vendorSession = session;
     }
 
     /**
@@ -259,8 +259,8 @@ public class DefaultGroupController implements IGroupController {
      * @param session the ISessionPetal to set
      */
     @Bind
-    public final void bindPetalSession(ISessionPetal petalSession) {
-        this.petalSession = petalSession;
+    public final void bindPetalSession(ISessionPetal session) {
+        this.petalSession = session;
     }
 
 }
