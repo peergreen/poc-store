@@ -99,6 +99,16 @@ public interface IStoreManagment {
      * @return list of all existing categories in database
      */
     Collection<Category> collectCategories();
+    
+    /**
+     * Method to collect all petals associated to a specified category.
+     *
+     * @param name category name
+     * @return collection of associated petals
+     * @throws NoEntityFoundException 
+     */
+    Collection<Petal> getPetalsForCategory(String name)
+            throws NoEntityFoundException;
 
     /**
      * Method to collect available petals.<br />

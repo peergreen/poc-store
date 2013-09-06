@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.controller.IStoreManagment;
@@ -61,8 +61,8 @@ public class DefaultStoreManagement implements IStoreManagment {
     private ISessionPetal petalSession;
     private ISessionUser userSession;
     private ISessionVendor vendorSession;
-    private static Logger theLogger =
-            Logger.getLogger(DefaultStoreManagement.class.getName());
+    private static Log logger = LogFactory.getLog(DefaultStoreManagement.class);
+
 
     /**
      * Method to a link between a remote store and the current one.
@@ -81,18 +81,18 @@ public class DefaultStoreManagement implements IStoreManagment {
             link = linkSession.addLink(url, description);
             return link;
         } catch (EntityAlreadyExistsException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
+            logger.warn("Link with URL " + url + "already exists.", e);
             throw new EntityAlreadyExistsException(e);
         }
     }
 
     /**
      * Method to retrieve a link using his id.
-     * 
+     *
      * @param id link's id
-     * @return corresponding link or <em>null</em> if not available
+     * @return corresponding link or {@literal null} if not available
      */
-    public Link getLink(int id) {
+    public final Link getLink(int id) {
         return linkSession.findLinkById(id);
     }
 
@@ -131,8 +131,8 @@ public class DefaultStoreManagement implements IStoreManagment {
         Category category = null;
         try {
             category = categorySession.addCategory(name);
-        } catch(EntityAlreadyExistsException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
+        } catch (EntityAlreadyExistsException e) {
+            logger.warn("Category with name " + name + "already exists.", e);
             throw new EntityAlreadyExistsException(e);
         }
         return category;
@@ -173,13 +173,26 @@ public class DefaultStoreManagement implements IStoreManagment {
     }
 
     /**
+     * Method to collect all petals associated to a specified category.
+     *
+     * @param name category name
+     * @return collection of associated petals
+     * @throws NoEntityFoundException
+     */
+    public final Collection<Petal> getPetalsForCategory(String name)
+            throws NoEntityFoundException {
+
+        return categorySession.collectPetals(name);
+    }
+
+    /**
      * Method to collect available petals.<br />
      * Browse all links and staging.
      *
      * @return list of available petals
      */
     @Override
-    public Collection<Petal> collectPetals() {
+    public final Collection<Petal> collectPetals() {
         return petalSession.collectPetals();
     }
 
@@ -246,7 +259,8 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @param capabilities petal's exported capabilities
      * @param petalBinary petal's binary file
      * @return corresponding petal on database
-     * @throws EntityAlreadyExistsException, NoEntityFoundException
+     * @throws EntityAlreadyExistsException
+     * @throws NoEntityFoundException
      */
     @Override
     public final Petal submitPetal(
@@ -272,10 +286,13 @@ public class DefaultStoreManagement implements IStoreManagment {
             return petalSession.findPetal(vendor, artifactId, version);
 
         } catch (EntityAlreadyExistsException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
+            logger.warn("Petal " + artifactId + " in version "
+                    + version + " by "
+                    + vendorName + " already exists.", e.getMessage());
             throw new EntityAlreadyExistsException(e);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
+            logger.warn("Vendor with name "
+                    + vendorName + "cannot be found.", e);
             throw new NoEntityFoundException(e);
         }
 
@@ -308,7 +325,9 @@ public class DefaultStoreManagement implements IStoreManagment {
         try {
             petalSession.updateOrigin(petal, Origin.LOCAL);
         } catch (NoEntityFoundException e) {
-            theLogger.log(Level.SEVERE, e.getMessage());
+            logger.warn("Petal " + artifactId + " in version "
+                    + version + " by "
+                    + vendorName + " cannot be found.", e.getMessage());
             throw new NoEntityFoundException(e);
         }
 
@@ -329,7 +348,10 @@ public class DefaultStoreManagement implements IStoreManagment {
         Collection<Petal> result = new HashSet<>();
         Vendor v = vendorSession.findVendor(name);
         if (v == null) {
-            throw new NoEntityFoundException();
+            NoEntityFoundException e = new NoEntityFoundException(
+                    "Vendor with name " + name + "cannot be found.");
+            logger.warn("Vendor with name " + name + "cannot be found.", e);
+            throw e;
         } else {
             result.addAll(v.getPetals());
             return result;
@@ -346,10 +368,13 @@ public class DefaultStoreManagement implements IStoreManagment {
      * @return binary of the petal
      */
     @Override
-    public final File getPetalFromLocal(String vendorName, String artifactId,
+    public final File getPetalFromLocal(
+            String vendorName,
+            String artifactId,
             String version) {
-        return petalsPersistence.getPetalFromLocal(
-                vendorName, artifactId, version);
+
+        return petalsPersistence
+                .getPetalFromLocal(vendorName, artifactId, version);
     }
 
     /**
@@ -367,8 +392,8 @@ public class DefaultStoreManagement implements IStoreManagment {
             String artifactId,
             String version) {
 
-        // TODO: need implementation
-        return null;
+        return petalsPersistence
+                .getPetalFromStaging(vendorName, artifactId, version);
     }
 
     /**
@@ -395,21 +420,23 @@ public class DefaultStoreManagement implements IStoreManagment {
             return null;
         }
 
-        // TODO: need implementation
         Collection<Link> links = collectLinks();
         Iterator<Link> itLink = links.iterator();
         boolean found = false;
+        File f = null;
         while (!found && itLink.hasNext()) {
             Link l = itLink.next();
 
-            petalsPersistence.getPetalFromRemote(
+            f = petalsPersistence.getPetalFromRemote(
                     vendorName,
                     artifactId,
                     version,
                     l.getUrl());
+
+            found = (f != null);
         }
 
-        return null;
+        return f;
     }
 
     @Bind

@@ -144,7 +144,7 @@ public class DefaultSessionCategory implements ISessionCategory {
     public Collection<Petal> collectPetals(String categoryName) throws NoEntityFoundException {
         Category category = findCategory(categoryName);
         if (category != null) {
-            return category.getPetals();
+            return new HashSet<>(category.getPetals());
         } else{
             throw new NoEntityFoundException("Category " + categoryName + " does not exist in database.");
         }
