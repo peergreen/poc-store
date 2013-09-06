@@ -48,10 +48,12 @@ public class DefaultSessionLink implements ISessionLink {
      * @throws EntityAlreadyExistsException
      */
     @Override
-    public Link addLink(String url, String description) throws EntityAlreadyExistsException {
+    public Link addLink(String url, String description) 
+            throws EntityAlreadyExistsException {
         Link link = findLink(url);
         if (link != null) {
-            throw new EntityAlreadyExistsException("Link with URL: " + url + " already exists in database.");
+            throw new EntityAlreadyExistsException("Link with URL: "
+                    + url + " already exists in database.");
         } else {
             link = new Link(url, description);
             entityManager.persist(link);
@@ -117,7 +119,8 @@ public class DefaultSessionLink implements ISessionLink {
 
     /**
      * Method to modify the description of a Link
-     * Throws {@link NoEntityFoundException} if the link to update doesn't exist.
+     * Throws {@link NoEntityFoundException} if the link 
+     * update doesn't exist.
      * 
      * @param link the link to modify
      * @param newDescription the new link description
@@ -125,14 +128,16 @@ public class DefaultSessionLink implements ISessionLink {
      * @throws NoEntityFoundException
      */
     @Override
-    public Link updateDescription(Link link, String newDescription) throws NoEntityFoundException {
+    public Link updateDescription(Link link, String newDescription) 
+            throws NoEntityFoundException {
         // retrieve attached link
         Link l = findLink(link.getUrl());
         if (l != null){
             l.setDescription(newDescription);
             return entityManager.merge(l);
         } else {
-            throw new NoEntityFoundException("Link with url: " + link.getUrl() + " does not exist in database.");
+            throw new NoEntityFoundException("Link with url: " 
+                    + link.getUrl() + " does not exist in database.");
         }  
     }
 

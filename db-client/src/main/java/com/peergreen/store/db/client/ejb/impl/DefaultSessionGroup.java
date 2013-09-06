@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -63,11 +61,19 @@ public class DefaultSessionGroup implements ISessionGroup {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Set entity session which manage the entity Petal
+     * @param sessionPetal Instance of sessionPetal 
+     */
     @EJB
     public void setSessionPetal(ISessionPetal sessionPetal) {
         this.sessionPetal = sessionPetal;
     }
 
+    /**
+     * Set entity session which manage the entity User
+     * @param sessionUser Instance of sessionUser 
+     */
     @EJB
     public void setSessionUser(ISessionUser sessionUser) {
         this.sessionUser = sessionUser;
@@ -87,11 +93,13 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @throws EntityAlreadyExistsException
      */
     @Override
-    public Group addGroup(String groupName) throws EntityAlreadyExistsException {
+    public Group addGroup(String groupName) 
+            throws EntityAlreadyExistsException {
         Group group = findGroup(groupName) ;
 
         if (group != null) {
-            throw new EntityAlreadyExistsException("This group already exists on database.");
+            throw new EntityAlreadyExistsException("This group " +
+                    "already exists on database.");
         } else {
             group = new Group(groupName);
             entityManager.persist(group);
@@ -110,13 +118,11 @@ public class DefaultSessionGroup implements ISessionGroup {
     public Group findGroup(String groupName) {
         Query q = entityManager.createNamedQuery("GroupByName");
         q.setParameter("name", groupName);
-        Group result;
         try {
-            result = (Group)q.getSingleResult();
+            return (Group)q.getSingleResult();
         } catch (NoResultException e) {
-            result = null;
+            return null;
         }
-        return result;
     }
 
     /**
@@ -137,10 +143,7 @@ public class DefaultSessionGroup implements ISessionGroup {
                 //Remove access to each petal for the group
                 while(it.hasNext()) {
                     Petal p = it.next();
-                    
-                    sessionPetal.removeAccesToGroup(p, group);
-                    // petalSession.removeGroup(p, group);
-                    // petals.remove(p);
+                    sessionPetal.removeAccesToGroup(p, group);     
                 }
 
                 //Collect all users of the group
@@ -158,7 +161,7 @@ public class DefaultSessionGroup implements ISessionGroup {
             } catch (NoEntityFoundException e) {
                 logger.warn(e.getMessage(), e);
             }
-            return group ;
+            return group ; 
         }else{
             return group; 
         }
@@ -173,24 +176,24 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @throws NoEntityFoundException
      */
     @Override
-    public Group addUser(Group group, User myUser)throws NoEntityFoundException{
+    public Group addUser(Group group, User myUser)
+            throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
         if(g!=null){
             // retrieve attached user
             User u = sessionUser.findUserByPseudo(myUser.getPseudo());
-
-            g.getUsers().add(u);
             try{
                 sessionUser.addGroup(u, g);
+                g.getUsers().add(u);
             }catch(NoEntityFoundException e){
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null; 
+                throw new NoEntityFoundException(e);
             }
             return entityManager.merge(g);
         }
         else{
-            throw new NoEntityFoundException("You have to create the administrator first at all.");
+            throw new NoEntityFoundException("Group with name:" 
+                    + group.getGroupname() + "doesn't exist in database.");
         }
     }
 
@@ -203,7 +206,8 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @throws NoEntityFoundException
      */
     @Override
-    public Group removeUser(Group group, User user)throws NoEntityFoundException {
+    public Group removeUser(Group group, User user) 
+            throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
         if(g!=null){
@@ -217,7 +221,7 @@ public class DefaultSessionGroup implements ISessionGroup {
             }
             return entityManager.merge(g);
         }else{
-            throw new NoEntityFoundException("Group with name:"
+            throw new NoEntityFoundException("Group with name:" 
                     + group.getGroupname() + "doesn't exist in database.");
         }
     }
@@ -231,7 +235,8 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @exception NoEntityFoundException
      */
     @Override
-    public Collection<User> collectUsers(String groupName)throws NoEntityFoundException {
+    public Collection<User> collectUsers(String groupName) 
+            throws NoEntityFoundException {
         Group group = findGroup(groupName);
         if (group != null) {
             //Create new HashSet to avoid lazily exceptions
@@ -239,7 +244,8 @@ public class DefaultSessionGroup implements ISessionGroup {
             result.addAll(group.getUsers());
             return result;
         } else{
-            throw new NoEntityFoundException("Group with name:" + groupName + "doesn't exist in database.");
+            throw new NoEntityFoundException("Group with name:" 
+                    + groupName + "doesn't exist in database.");
         }
     }
 
@@ -251,22 +257,26 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @return modified Group instance (updated list of accessible petals)
      */
     @Override
-    public Group addPetal(Group group, Petal petal)throws NoEntityFoundException {
+    public Group addPetal(Group group, Petal petal) 
+            throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
         if(g!=null){
             // retrieve attached petal
-            Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            Petal p = sessionPetal.findPetal(petal.getVendor(),
+                    petal.getArtifactId(), petal.getVersion());
             g.getPetals().add(p);
             return entityManager.merge(group);
         }
         else{
-            throw new NoEntityFoundException("You have to create the administrator first at all.");
+            throw new NoEntityFoundException("You have to create" +
+                    " the administrator first at all.");
         }
     }
 
     /**
-     * Method to remove a Petal from the list of petals that are accessible for a group
+     * Method to remove a Petal from the list of petals
+     *  that are accessible for a group
      * 
      * @param group group to which remove the petal 
      * @param petal petal to make inaccessible for the Group
@@ -274,12 +284,14 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @exception NoEntityFoundException
      */
     @Override
-    public Group removePetal(Group group, Petal petal)throws NoEntityFoundException {
+    public Group removePetal(Group group, Petal petal) 
+            throws NoEntityFoundException {
         // retrieve attached group
         Group g = findGroup(group.getGroupname());
         if(g!=null){
             // retrieve attached petal
-            Petal p = sessionPetal.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            Petal p = sessionPetal.findPetal(petal.getVendor(),
+                    petal.getArtifactId(), petal.getVersion());
             g.getPetals().remove(p);
             try {
                 sessionPetal.removeAccesToGroup(p, g);
@@ -289,13 +301,15 @@ public class DefaultSessionGroup implements ISessionGroup {
             return entityManager.merge(group);
         }
         else{
-            throw new NoEntityFoundException("The group " + group.getGroupname() + " doesn't exist in the database");
+            throw new NoEntityFoundException("The group " +
+                    group.getGroupname() + " doesn't exist in the database");
 
         }
     }
 
     /**
-     * Method to collect petals which are accessible for a specified group.<br />
+     * Method to collect petals which are accessible
+     *  for a specified group.<br />
      * Throws {@link NoEntityFoundException} if the group doesn't exist.
      * 
      * @param groupName group name
@@ -303,7 +317,8 @@ public class DefaultSessionGroup implements ISessionGroup {
      * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Petal> collectPetals(String groupName)throws NoEntityFoundException {
+    public Collection<Petal> collectPetals(String groupName) 
+            throws NoEntityFoundException {
         Group group = findGroup(groupName);
         if (group != null) {
             //Create new HashSet to avoid lazily exception
@@ -311,7 +326,8 @@ public class DefaultSessionGroup implements ISessionGroup {
             result.addAll(group.getPetals());
             return result;
         } else {
-            throw new NoEntityFoundException("Group with " + groupName + " does not exist in database.");
+            throw new NoEntityFoundException("Group with "
+                    + groupName + " does not exist in database.");
         }
     }
 

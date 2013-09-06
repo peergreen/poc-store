@@ -43,7 +43,7 @@ public class DefaultSessionCategory implements ISessionCategory {
     private EntityManager entityManager;
 
     private ISessionPetal petalSession;
-    
+
     private static Log logger = LogFactory.getLog(DefaultSessionCategory.class);
 
     @PersistenceContext 
@@ -51,6 +51,10 @@ public class DefaultSessionCategory implements ISessionCategory {
         this.entityManager = entityManager;
     }
 
+    /**
+     * Set entity session which manage the entity Petal
+     * @param sessionPetal Instance of sessionPetal 
+     */
     @EJB
     public void setSessionPetal(ISessionPetal sessionPetal) {
         this.petalSession = sessionPetal;
@@ -71,7 +75,7 @@ public class DefaultSessionCategory implements ISessionCategory {
 
         if (temp != null ) {      
             throw new EntityAlreadyExistsException("Category with name "
-        + categoryName + " already exists in database.");
+                    + categoryName + " already exists in database.");
         } else {
             Category category = new Category(categoryName);  
             entityManager.persist(category);  
@@ -179,7 +183,7 @@ public class DefaultSessionCategory implements ISessionCategory {
 
         } else{
             throw new NoEntityFoundException("Category " + 
-        category.getCategoryName() + " does not exist in database.");
+                    category.getCategoryName() + " does not exist in database.");
         }
 
     }
@@ -207,7 +211,7 @@ public class DefaultSessionCategory implements ISessionCategory {
             return entityManager.merge(c);
         } else{
             throw new NoEntityFoundException("Category " + 
-        category.getCategoryName() + " does not exist in database.");
+                    category.getCategoryName() + " does not exist in database.");
         }
     }
 
