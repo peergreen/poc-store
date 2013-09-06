@@ -73,7 +73,7 @@ public class DefaultStoreManagementTestCase {
         storeManagement.addLink(url, description);
         verify(linkSession).addLink(url, description);
     }
-    
+
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void testAddLinkAlreadyExistent() throws EntityAlreadyExistsException {
         String url = "https://store.peergreen.com";
@@ -149,8 +149,8 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).addToStaging(vendorName, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
-    
-    
+
+
     public void testSubmitPetalAlreadyExistent() throws EntityAlreadyExistsException, NoEntityFoundException {
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor(vendorName, "");
@@ -169,7 +169,7 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).addToStaging(vendorName, artifactId, version, binary);
         verify(petalSession).addPetal(vendor, artifactId, version, "", category, capabilities, requirements, Origin.STAGING);
     }
-    
+
     public void testSubmitPetalWithAttributeInexistent() throws EntityAlreadyExistsException, NoEntityFoundException {
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor(vendorName, "");
@@ -210,7 +210,7 @@ public class DefaultStoreManagementTestCase {
         verify(petalsPersistence).addToLocal(vendorName, artifactId, version, binary);
         verify(petalSession).updateOrigin(petal, Origin.LOCAL);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void testValidatePetalInexistent() throws NoEntityFoundException {
         String vendorName = "Peergreen";
@@ -243,7 +243,7 @@ public class DefaultStoreManagementTestCase {
         verify(categorySession).addCategory(stringCaptor.capture());
         Assert.assertEquals(name, stringCaptor.getValue());
     }
-    
+
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
     public void testAddCategoryAlreadyExistent() throws EntityAlreadyExistsException {
         String name = "Persistence";
@@ -251,7 +251,7 @@ public class DefaultStoreManagementTestCase {
 
         storeManagement.createCategory(name);
 
-        
+
         verify(categorySession).addCategory(stringCaptor.capture());
         Assert.assertEquals(name, stringCaptor.getValue());
     }
@@ -262,9 +262,9 @@ public class DefaultStoreManagementTestCase {
 
         storeManagement.removeCategory(name);
         verify(categorySession).deleteCategory(name);
-        
-//        verify(categorySession).deleteCategory(stringCaptor.capture());
-//        Assert.assertEquals(name, stringCaptor.getValue());
+
+        //        verify(categorySession).deleteCategory(stringCaptor.capture());
+        //        Assert.assertEquals(name, stringCaptor.getValue());
     }
 
     @Test

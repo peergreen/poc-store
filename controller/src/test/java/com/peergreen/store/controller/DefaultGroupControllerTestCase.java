@@ -89,8 +89,8 @@ public class DefaultGroupControllerTestCase {
         groupController.collectUsers(groupName);
         verify(groupSession).collectUsers(groupName);
     }
-    
-  @Test(expectedExceptions = NoEntityFoundException.class)
+
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectUserForGroupNonExistent() throws NoEntityFoundException {
         String groupName = "myGroup";
 
@@ -134,10 +134,10 @@ public class DefaultGroupControllerTestCase {
         groupController.addUser(groupName, pseudo);
         verify(groupSession).addUser(groupBefore, user);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void testAddUserWhenGroupNonExistent() throws NoEntityFoundException {
-       
+
         //Given : user to add and group to which add new user 
         String pseudo = "toto";
         User user = new User();
@@ -146,12 +146,12 @@ public class DefaultGroupControllerTestCase {
         String groupName = "myGroup";
         // entity instance before user add
         Group groupBefore = new Group(groupName);
-       
+
         when(groupSession.findGroup(groupName)).thenReturn(groupBefore);
         when(userSession.findUserByPseudo(pseudo)).thenReturn(user);
         // mock facade => throw Exception when call addUser from groupSession 
         when(groupSession.addUser(groupBefore, user)).thenThrow(new NoEntityFoundException());
-           
+
         // When 
         groupController.addUser(groupName, pseudo);
         //Then 
@@ -167,7 +167,7 @@ public class DefaultGroupControllerTestCase {
         String groupName = "myGroup";
         // entity instance before user add
         Group groupBefore = new Group(groupName);
-     
+
 
         // mock facade => always find group called groupName
         when(groupSession.findGroup(groupName)).thenReturn(groupBefore);
@@ -180,7 +180,7 @@ public class DefaultGroupControllerTestCase {
         // verify groupSession.collectUsers(...) is called
         groupController.removeUser(groupName, pseudo);
     }
-    
+
 
     @Test
     public void testRemoveUser() throws NoEntityFoundException {
@@ -213,8 +213,8 @@ public class DefaultGroupControllerTestCase {
         groupController.removeUser(groupName, pseudo);
         verify(groupSession).removeUser(groupBefore, user);
     }
-    
-    
+
+
     @Test
     public void shouldGiveAccessToNewPetal() throws NoEntityFoundException{
         //Given 
@@ -222,13 +222,13 @@ public class DefaultGroupControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-        
+
         Group group= new Group(groupName);
         when(groupSession.findGroup(groupName)).thenReturn(group);
-        
+
         Vendor vendor = new Vendor(vendorName,"");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
-        
+
         Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         //When
@@ -244,14 +244,14 @@ public class DefaultGroupControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-                
+
         when(groupSession.addPetal(any(Group.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
         //When
         groupController.giveAccessToPetal(groupName, vendorName, artifactId, version);
 
     }
-    
-    
+
+
     @Test
     public void shouldRemoveAccessToPetal() throws NoEntityFoundException{
         //Given 
@@ -259,13 +259,13 @@ public class DefaultGroupControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-        
+
         Group group= new Group(groupName);
         when(groupSession.findGroup(groupName)).thenReturn(group);
-        
+
         Vendor vendor = new Vendor(vendorName, "");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
-        
+
         Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         //When
@@ -281,70 +281,70 @@ public class DefaultGroupControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-        
+
         Group group= new Group(groupName);
         when(groupSession.findGroup(groupName)).thenReturn(null);
-        
+
         Vendor vendor = new Vendor(vendorName, "");
         when(vendorSession.findVendor(vendorName)).thenReturn(null);
-        
+
         Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
-        
+
         when(groupSession.removePetal(any(Group.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
         //When
         groupController.removeAccessToPetal(groupName, vendorName, artifactId, version);
-       
+
     }
-    
+
     @Test
     public void shouldCollectAllPetalsAccessible() throws NoEntityFoundException{
-    
+
         //Given 
         String groupName = "myGroup";
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-        
+
         Vendor vendor = new Vendor(vendorName, "");
-        
+
         Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         Collection<Petal> petals = new HashSet<>();
         petals.add(petal);
         when(groupSession.collectPetals(groupName)).thenReturn(petals); 
-        
+
         //when
-       Collection<Petal> result =  groupController.collectPetals(groupName);
-       
-       //Then
-       Assert.assertEquals(petals, result);
-        
-        
+        Collection<Petal> result =  groupController.collectPetals(groupName);
+
+        //Then
+        Assert.assertEquals(petals, result);
+
+
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectAllPetalsFor() throws NoEntityFoundException{
-    
+
         //Given 
         String groupName = "myGroup";
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-       
+
         Vendor vendor = new Vendor(vendorName, "");
-        
+
         Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         Collection<Petal> petals = new HashSet<>();
         petals.add(petal);
         when(groupSession.collectPetals(groupName)).thenThrow(new NoEntityFoundException()); 
-        
+
         //when
-         groupController.collectPetals(groupName);
-       
-   
-        
-        
+        groupController.collectPetals(groupName);
+
+
+
+
     }
-    
-    
+
+
 }

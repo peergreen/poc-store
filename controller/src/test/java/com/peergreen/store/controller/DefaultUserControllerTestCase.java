@@ -134,7 +134,7 @@ public class DefaultUserControllerTestCase {
         userController.collectGroups(PSEUDO);
         verify(userSession).collectGroups(PSEUDO);
     }
-    
+
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void testCollectGroupsForUserInexistent() throws NoEntityFoundException{
 
@@ -160,18 +160,18 @@ public class DefaultUserControllerTestCase {
         verify(userSession).collectPetals(PSEUDO);
     }
 
-    
+
     @Test
     public void testUpdateUser() throws NoEntityFoundException {
         User u = mock(User.class);
-        
+
         String email = "mailupdated@pg.com";
         String password = "newpwd";
         when(userSession.findUserByPseudo(PSEUDO)).thenReturn(u);
         userController.updateUser(PSEUDO, password, email);
-        
+
         verify(userSession).updateMail(u, email); 
-        
+
     }
 
 

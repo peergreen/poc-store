@@ -168,7 +168,7 @@ public class DefaultPetalControllerTestCase {
         Set<Petal> resultPetals = new HashSet<>();
         resultPetals.addAll(petals);
         resultPetals.addAll(petals2);
-        
+
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(petalSession.collectRequirements(petal)).thenReturn(requirements);
 
@@ -388,7 +388,7 @@ public class DefaultPetalControllerTestCase {
         Group group2 = new Group("web devs");
 
         // initialize petal
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         Set<Group> groups = new HashSet<Group>();
         groups.add(group1);
@@ -419,7 +419,7 @@ public class DefaultPetalControllerTestCase {
         Group group2 = new Group("web devs");
 
         // initialize petal
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         Set<Group> groups = new HashSet<Group>();
         groups.add(group1);
@@ -475,7 +475,7 @@ public class DefaultPetalControllerTestCase {
         Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // create empty return list
         Collection<Capability> list = new ArrayList<>();
@@ -497,7 +497,7 @@ public class DefaultPetalControllerTestCase {
         Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
 
         // mock petalSession.collectCapabilites behavior
@@ -520,7 +520,7 @@ public class DefaultPetalControllerTestCase {
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
-                Petal petal = new Petal();
+        Petal petal = new Petal();
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
@@ -544,7 +544,7 @@ public class DefaultPetalControllerTestCase {
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
-                Petal petal = new Petal();
+        Petal petal = new Petal();
         String vendorName = "Peergreen";
         Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
@@ -563,7 +563,7 @@ public class DefaultPetalControllerTestCase {
 
     @Test
     public void testRemoveCapability() throws NoEntityFoundException {
-                Petal petal = new Petal();
+        Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
         String namespace = "Provider";
@@ -587,7 +587,7 @@ public class DefaultPetalControllerTestCase {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowNoEntityFoundExceptionForRemoveCapabilityFromPetalNonExistent() throws NoEntityFoundException {
-                Petal petal = new Petal();
+        Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
         String namespace = "Provider";
@@ -641,7 +641,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // create empty return list
         Collection<Requirement> list = new ArrayList<>();
@@ -663,7 +663,7 @@ public class DefaultPetalControllerTestCase {
         Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
 
         // mock petalSession.collectCapabilites behavior
@@ -682,7 +682,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -703,7 +703,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -726,7 +726,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -748,7 +748,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -771,7 +771,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // mock => always return targeted petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -789,7 +789,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // mock => always return targeted petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -807,7 +807,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Bundle";
         Category category = new Category(name);
 
@@ -827,7 +827,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Bundle";
         Category category = new Category(name);
 
