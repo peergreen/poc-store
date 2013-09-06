@@ -223,7 +223,30 @@ public class DefaultStoreManagement implements IStoreManagment {
      */
     @Override
     public final Collection<Petal> collectPetalsFromRemote() {
-        return petalSession.collectPetalsFromRemote();
+        Collection<Link> links = collectLinks();
+
+        Set<Petal> petals = new HashSet<>();
+        for (Link l : links) {
+
+            /*
+             * Need Jersey to work
+             *
+            Client client = ClientBuilder.newClient();
+
+            // Make a request to collect all local petals
+            // for each remote stores linked.
+            Response response = client.target(l.getUrl()
+                    + "/petals/local".request(MediaType.APPLICATION_JSON)
+                    .build();
+
+            // TODO: Parse JSON response
+            Collection<Petal> coll = ...
+            
+            petals.addAll(coll);
+            */
+        }
+
+        return petals;
     }
 
     /**

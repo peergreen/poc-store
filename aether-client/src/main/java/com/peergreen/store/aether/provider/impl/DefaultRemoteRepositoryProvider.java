@@ -8,12 +8,16 @@ import org.apache.felix.ipojo.annotations.Provides;
 import org.apache.felix.ipojo.annotations.ServiceProperty;
 import org.eclipse.aether.repository.RemoteRepository;
 
+import com.peergreen.store.aether.provider.IRemoteRepositoryProvider;
+
 /**
  * Class defining methods for remote repository provider.
  */
 @Component
 @Provides
-public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<RemoteRepository> {
+public class DefaultRemoteRepositoryProvider
+extends DefaultRepositoryProvider<RemoteRepository>
+implements IRemoteRepositoryProvider<RemoteRepository> {
 
     // retrieved from Config Admin
     @ServiceProperty
@@ -36,7 +40,6 @@ public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<R
             String artifactId,
             String version) {
 
-        // TODO change to dynamic name
         File tmpFile = new File(tmpPath + "/"
                 + vendor + ":" + artifactId + ":" + version + ".jar");
 
@@ -79,18 +82,47 @@ public class DefaultRemoteRepositoryProvider extends DefaultRepositoryProvider<R
         return tmpFile;
     }
 
+    /**
+     * Method to retrieve name associated with remote repository.
+     *
+     * @return remote repository name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Method to set name associated with the remote store.
+     *
+     * @param name name to set to the store
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Method to retrieve temporary path where petals are stored.
+     *
+     * @return temporary path where petals are stored
+     */
     public String getTmpPath() {
         return tmpPath;
     }
 
+    /**
+     * Method to retrieve repository path.
+     *
+     * @return path to the repository (remote or local)
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Method to set path of the remote store
+     *
+     * @param path path to set
+     */
     public void setPath(String path) {
         this.path = path;
     }

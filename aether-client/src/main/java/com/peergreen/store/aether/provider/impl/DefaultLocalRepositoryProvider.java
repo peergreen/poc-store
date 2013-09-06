@@ -14,12 +14,16 @@ import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.eclipse.aether.resolution.ArtifactResult;
 
+import com.peergreen.store.aether.provider.ILocalRepositoryProvider;
+
 /**
  * Class defining methods for local repository provider.
  */
 @Component
 @Provides
-public class DefaultLocalRepositoryProvider extends DefaultRepositoryProvider<LocalRepository> {
+public class DefaultLocalRepositoryProvider
+extends DefaultRepositoryProvider<LocalRepository>
+implements ILocalRepositoryProvider<LocalRepository> {
 
     private LocalRepository repository;
     // retrieved from Config Admin
@@ -64,10 +68,20 @@ public class DefaultLocalRepositoryProvider extends DefaultRepositoryProvider<Lo
         return artifact.getFile();
     }
     
+    /**
+     * Method to retrieve repository path.
+     * 
+     * @return path to the repository (remote or local)
+     */
     public String getPath() {
         return path;
     }
     
+    /**
+     * Method to check if local repository is a staging one.
+     *
+     * @return {@literal true} if store is staging, {@literal false} otherwise
+     */
     public boolean isStaging() {
         return staging;
     }

@@ -119,7 +119,7 @@ public class DefaultStoreManagementTestCase {
     @Test
     public void testCollectPetalsFromRemote() {
         storeManagement.collectPetalsFromRemote();
-        verify(petalSession).collectPetalsFromRemote();
+        // TODO: test REST API calls
     }
 
     @Test
