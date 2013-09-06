@@ -80,10 +80,38 @@ public interface IGroupController {
      */
     Collection<Petal> collectPetals(String name) throws NoEntityFoundException;
 
-    Group giveAccessToPetal(String groupName, String vendorName, String artifactId, String version)
+    /**
+     * Method to give access to a petal for the specified group.
+     *
+     * @param groupName group's name
+     * @param vendorName petal's vendor name
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return modified group
+     * @throws NoEntityFoundException
+     */
+    Group giveAccessToPetal(
+            String groupName,
+            String vendorName,
+            String artifactId,
+            String version)
             throws NoEntityFoundException;
 
-    Group removeAccessToPetal(String groupName, String vendorName, String artifactId, String version)
+    /**
+     * Method to remove access to a petal from the specified group.
+     *
+     * @param groupName group's name
+     * @param vendorName petal's vendor name
+     * @param artifactId petal's artifactId
+     * @param version petal's version
+     * @return modified group
+     * @throws NoEntityFoundException
+     */
+    Group removeAccessToPetal(
+            String groupName,
+            String vendorName,
+            String artifactId, 
+            String version)
             throws NoEntityFoundException;
 
 }

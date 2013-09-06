@@ -439,36 +439,71 @@ public class DefaultStoreManagement implements IStoreManagment {
         return f;
     }
 
+    /**
+     * Method to set IPetalsPersistence instance to use.
+     *
+     * @param persistence the IPetalsPersistence to set
+     */
     @Bind
     public final void bindPetalsPersistence(IPetalsPersistence persistence) {
         this.petalsPersistence = persistence;
     }
 
+    /**
+     * Method to set ISessionCategory instance to use.
+     *
+     * @param session the ISessionCategory to set
+     */
     @Bind
     public final void bindCategorySession(ISessionCategory session) {
         this.categorySession = session;
     }
 
+    /**
+     * Method to set ISessionGroup instance to use.
+     *
+     * @param session the ISessionGroup to set
+     */
     @Bind
     public final void bindGroupSession(ISessionGroup session) {
         this.groupSession = session;
     }
 
+    /**
+     * Method to set ISessionLink instance to use.
+     *
+     * @param session the ISessionLink to set
+     */
     @Bind
     public final void bindLinkSession(ISessionLink session) {
         this.linkSession = session;
     }
 
+    /**
+     * Method to set ISessionPetal instance to use.
+     *
+     * @param session the ISessionPetal to set
+     */
     @Bind
     public final void bindPetalSession(ISessionPetal session) {
         this.petalSession = session;
     }
 
+    /**
+     * Method to set ISessionUser instance to use.
+     *
+     * @param session the ISessionUser to set
+     */
     @Bind
     public final void bindUserSession(ISessionUser session) {
         this.userSession = session;
     }
 
+    /**
+     * Method to set ISessionVendor instance to use.
+     *
+     * @param session the ISessionVendor to set
+     */
     @Bind
     public final void bindVendorSession(ISessionVendor session) {
         this.vendorSession = session;

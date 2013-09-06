@@ -39,7 +39,7 @@ import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
- * Interface defining all petal related operations:
+ * Interface defining all petal related operations.
  * <ul>
  *      <li>Retrieve petal metadata or binary</li>
  *      <li>Resolve petal's dependencies</li>
@@ -51,7 +51,7 @@ import com.peergreen.store.db.client.exception.NoEntityFoundException;
  *      <li>Create, retrieve categories on database</li>
  *      <li>Create vendors on database</li>
  * </ul>
- * 
+ *
  */
 @Component
 @Instantiate
@@ -769,41 +769,76 @@ public class DefaultPetalController implements IPetalController {
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
         petalSession.updateDescription(petal, newDesc);
 
-        return null; 
+        return null;
     }
 
+    /**
+     * Method to set ISessionCapability instance to use.
+     *
+     * @param session the ISessionCapability to set
+     */
     @Bind
-    public void bindCapabilitySession(ISessionCapability session) {
+    public final void bindCapabilitySession(ISessionCapability session) {
         this.capabilitySession = session;
     }
 
+    /**
+     * Method to set ISessionCategory instance to use.
+     *
+     * @param session the ISessionCategory to set
+     */
     @Bind
-    public void bindCategorySession(ISessionCategory session) {
+    public final void bindCategorySession(ISessionCategory session) {
         this.categorySession = session;
     }
 
+    /**
+     * Method to set ISessionPetal instance to use.
+     *
+     * @param session the ISessionPetal to set
+     */
     @Bind
-    public void bindPetalSession(ISessionPetal session) {
+    public final void bindPetalSession(ISessionPetal session) {
         this.petalSession = session;
     }
 
+    /**
+     * Method to set ISessionRequirement instance to use.
+     *
+     * @param session the ISessionRequirement to set
+     */
     @Bind
-    public void bindRequirementSession(ISessionRequirement session) {
+    public final void bindRequirementSession(ISessionRequirement session) {
         this.requirementSession = session;
     }
 
+    /**
+     * Method to set ISessionVendor instance to use.
+     *
+     * @param session the ISessionVendor to set
+     */
     @Bind
-    public void bindVendorSession(ISessionVendor session) {
+    public final void bindVendorSession(ISessionVendor session) {
         this.vendorSession = session;
     }
 
+    /**
+     * Method to set IPetalsPersistence instance to use.
+     *
+     * @param session the IPetalsPersistence to set
+     */
     @Bind
-    public void bindPetalPersistence(IPetalsPersistence persistence) {
+    public final void bindPetalPersistence(IPetalsPersistence persistence) {
         this.petalPersistence = persistence;
     }
 
+    /**
+     * Method to set ISessionGroup instance to use.
+     *
+     * @param session the ISessionGroup to set
+     */
     @Bind
-    public void bindGroupSession(ISessionGroup session) {
+    public final void bindGroupSession(ISessionGroup session) {
         this.groupSession = session;
     }
 
