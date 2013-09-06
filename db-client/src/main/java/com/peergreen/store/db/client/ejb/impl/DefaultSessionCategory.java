@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -14,6 +12,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.db.client.ejb.entity.Category;
 import com.peergreen.store.db.client.ejb.entity.Petal;
@@ -43,7 +44,7 @@ public class DefaultSessionCategory implements ISessionCategory {
 
     private ISessionPetal petalSession;
     
-    private static Logger theLogger = Logger.getLogger(DefaultSessionCapability.class.getName());
+    private static Log logger = LogFactory.getLog(DefaultSessionCategory.class);
 
     @PersistenceContext 
     public void setEntityManager(EntityManager entityManager) {
@@ -64,11 +65,13 @@ public class DefaultSessionCategory implements ISessionCategory {
      * @throws EntityAlreadyExistsException
      */
     @Override
-    public Category addCategory(String categoryName) throws EntityAlreadyExistsException {
+    public Category addCategory(String categoryName)
+            throws EntityAlreadyExistsException {
         Category temp = findCategory(categoryName);
 
         if (temp != null ) {      
-            throw new EntityAlreadyExistsException("Category with name " + categoryName + " already exists in database.");
+            throw new EntityAlreadyExistsException("Category with name "
+        + categoryName + " already exists in database.");
         } else {
             Category category = new Category(categoryName);  
             entityManager.persist(category);  
@@ -98,8 +101,7 @@ public class DefaultSessionCategory implements ISessionCategory {
                     //TODO create a default category ??? 
                     petalSession.addCategory(p, new Category());
                 } catch (NoEntityFoundException e) {
-                    theLogger.log(Level.SEVERE,e.getMessage());
-                    return null; 
+                    logger.warn(e.getMessage(), e);
                 }
             }
             //Then remove the category from the database
@@ -133,25 +135,30 @@ public class DefaultSessionCategory implements ISessionCategory {
     }
 
     /**
-     * Method to collect all the petals which belongs to the specified category.<br />
-     * Throws {@link NoEntityFoundException} when Category doesn't exist in database.
+     * Method to collect all the petals which belongs 
+     * to the specified category.<br />
+     * Throws {@link NoEntityFoundException} when Category doesn't exist 
+     * in database.
      * 
      * @param categoryName name of the category whose petals are collected
      * @return collection of petals which belongs to this category
      * @throws NoEntityFoundException
      */
     @Override
-    public Collection<Petal> collectPetals(String categoryName) throws NoEntityFoundException {
+    public Collection<Petal> collectPetals(String categoryName) 
+            throws NoEntityFoundException {
         Category category = findCategory(categoryName);
         if (category != null) {
             return new HashSet<>(category.getPetals());
         } else{
-            throw new NoEntityFoundException("Category " + categoryName + " does not exist in database.");
+            throw new NoEntityFoundException("Category " + categoryName 
+                    + " does not exist in database.");
         }
     }
 
     /**
-     * Method to add a new petal to the list of petals associated to this category.
+     * Method to add a new petal to the list of petals
+     *  associated to this category.
      * 
      * @param category category to which add a petal
      * @param petal petal to add to the category
@@ -159,17 +166,20 @@ public class DefaultSessionCategory implements ISessionCategory {
      * @return modified Category instance (updated list of associated petals)
      */
     @Override
-    public Category addPetal(Category category, Petal petal)throws NoEntityFoundException {
+    public Category addPetal(Category category, Petal petal) 
+            throws NoEntityFoundException {
         // retrieve attached category entity
         Category c = findCategory(category.getCategoryName());
         if(c!=null){
             // retrieve attached petal entity
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());  
+            Petal p = petalSession.findPetal(petal.getVendor(), 
+                    petal.getArtifactId(), petal.getVersion());  
             c.getPetals().add(p);
             return entityManager.merge(c);
 
         } else{
-            throw new NoEntityFoundException("Category " + category.getCategoryName() + " does not exist in database.");
+            throw new NoEntityFoundException("Category " + 
+        category.getCategoryName() + " does not exist in database.");
         }
 
     }
@@ -179,21 +189,25 @@ public class DefaultSessionCategory implements ISessionCategory {
      * 
      * @param category category from which remove a petal
      * @param petal petal to remove from the category
-     * @return modified Category instance (updated list of associated Petal instances)
+     * @return modified Category instance (updated 
+     * of associated Petal instances)
      * @throws NoEntityFoundException
      */
     @Override
-    public Category removePetal(Category category, Petal petal)throws NoEntityFoundException {
+    public Category removePetal(Category category, Petal petal) 
+            throws NoEntityFoundException {
         // retrieve attached category
         Category c = findCategory(category.getCategoryName());
         if(c!=null){
             // retrieve attached petal entity
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            Petal p = petalSession.findPetal(petal.getVendor(), 
+                    petal.getArtifactId(), petal.getVersion());
 
             c.getPetals().remove(p);
             return entityManager.merge(c);
         } else{
-            throw new NoEntityFoundException("Category " + category.getCategoryName() + " does not exist in database.");
+            throw new NoEntityFoundException("Category " + 
+        category.getCategoryName() + " does not exist in database.");
         }
     }
 
