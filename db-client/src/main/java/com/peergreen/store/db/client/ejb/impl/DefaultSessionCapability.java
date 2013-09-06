@@ -236,7 +236,7 @@ public class DefaultSessionCapability implements ISessionCapability{
         Capability capability = findCapability(capabilityName, version, 
                 namespace);
         if (capability != null) {
-            return capability.getProperties();
+            return new HashSet<Property>(capability.getProperties());
         } else {
             throw new NoEntityFoundException("Capability " + capabilityName 
                     + " in version " + version 
