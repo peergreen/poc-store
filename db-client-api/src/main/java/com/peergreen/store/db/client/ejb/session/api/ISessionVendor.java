@@ -32,12 +32,15 @@ public interface ISessionVendor {
      * @return created vendor instance
      * @throws EntityAlreadyExistsException 
      */
-    Vendor addVendor(String vendorName, String vendorDescription) throws EntityAlreadyExistsException;
+    Vendor addVendor(String vendorName, String vendorDescription)
+            throws EntityAlreadyExistsException;
 
     /**
      * Method to delete a vendor from the database.
      * 
      * @param vendorName name of the vendor to delete
+     * @return Vendor instance deleted or
+     * <code>null</code> if the vendor doesn't exist.
      */
     Vendor deleteVendor(String vendorName);
 
@@ -47,18 +50,23 @@ public interface ISessionVendor {
      * @param vendorName the name of the vendor to find
      * 
      * @return the vendor with the name 'vendorName'
+     * or <code>null</code> if the vendor doesn't exist.
      */
     Vendor findVendor(String vendorName);
 
     /**
-     * Method to collect all petals provided by a vendor with a specified name.<br />
-     * Throws an NoEntityFoundException if no vendor correspond to the given vendor name.
+     * Method to collect all petals provided
+     * by a vendor with a specified name.<br />
+     * Throws an NoEntityFoundException
+     * if no vendor correspond to the given vendor name.
      *  
-     * @param vendorName the vendor's name to which we collect petals which he provides
+     * @param vendorName the vendor's name to
+     * which we collect petals which he provides
      * @return collection of petals which are provided by the specified vendor
      * @throws NoEntityFoundException
      */
-    Collection<Petal> collectPetals(String vendorName) throws NoEntityFoundException;
+    Collection<Petal> collectPetals(String vendorName)
+            throws NoEntityFoundException;
 
     /**
      * Method to add a new petal to those provided by a vendor.
@@ -66,9 +74,10 @@ public interface ISessionVendor {
      * @param vendor vendor to which add a new petal to provided petals list
      * @param petal petal to add to provided petals list
      * @return modified vendor entity with update provided petals list
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the vendor doesn't exist.
      */
-    Vendor addPetal(Vendor vendor, Petal petal) throws NoEntityFoundException;
+    Vendor addPetal(Vendor vendor, Petal petal)
+            throws NoEntityFoundException;
 
     /**
      * Method to delete a petal from those provided by a vendor.
@@ -76,9 +85,10 @@ public interface ISessionVendor {
      * @param vendor vendor from which remove a petal
      * @param petal petal to remove from the vendor list of provided petals
      * @return modified vendor entity with update provided petals list
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the vendor doesn't exist.
      */
-    Vendor removePetal(Vendor vendor, Petal petal) throws NoEntityFoundException;
+    Vendor removePetal(Vendor vendor, Petal petal)
+            throws NoEntityFoundException;
 
     /**
      * Method to collect all existing vendor in database.
@@ -92,7 +102,7 @@ public interface ISessionVendor {
      * @param name the name of the vendor
      * @param description the new description of the vendor
      * @return The vendor instance updated
-     * @throws NoEntityFoundException 
+     * @throws NoEntityFoundException if the vendor doesn't exist.
      */
     Vendor updateVendor(String name, String description) 
             throws NoEntityFoundException;

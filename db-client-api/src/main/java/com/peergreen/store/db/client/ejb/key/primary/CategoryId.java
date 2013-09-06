@@ -2,15 +2,24 @@ package com.peergreen.store.db.client.ejb.key.primary;
 
 import java.io.Serializable;
 
+/**
+ * Composite primary key of a category.
+ */
 public class CategoryId implements Serializable {
 
     /**
-     * 
+     * Generated serial version ID.
      */
     private static final long serialVersionUID = -3163373459046602500L;
 
+    /**
+     * Name of the category.
+     */
     private String categoryName;
 
+    /**
+     * Generated id of the category.
+     */
     private int categoryId;
 
     /**
@@ -40,5 +49,5 @@ public class CategoryId implements Serializable {
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
-    
+
 }

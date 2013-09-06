@@ -4,31 +4,55 @@ import java.io.Serializable;
 
 import com.peergreen.store.db.client.ejb.entity.Vendor;
 
-
+/**
+ * Composite primary key of a petal.
+ */
 public class PetalId implements Serializable {
 
-
-
     /**
-     * 
+     * Generated serial version ID.
      */
     private static final long serialVersionUID = -9124101103451351551L;
+
+    /**
+     * Vendor of the petal.
+     */
     private Vendor vendor;
+
+    /**
+     * ArtifactId of the petal.
+     */
     private String artifactId;
+
+    /**
+     * Version of the petal.
+     */
     private String version; 
+
+    /**
+     * Generated If of the petal.
+     */
     private int pid;
 
+    /**
+     * Default Constructor.
+     */
     public PetalId() {
 
     }
 
+    /**
+     * Constructs the composite key with the specified parameters.
+     * @param vendor petal's vendor
+     * @param artifactId petal's artifactId
+     * @param version petal's version 
+     * @param id petal's id
+     */
     public PetalId(Vendor vendor, String artifactId,String version, int id) {
         this.vendor = vendor;
         this.artifactId = artifactId;
         this.version = version;
         this.pid = id; 
-
-
     }
 
     /**
@@ -111,4 +135,3 @@ public class PetalId implements Serializable {
     }
 
 }
-

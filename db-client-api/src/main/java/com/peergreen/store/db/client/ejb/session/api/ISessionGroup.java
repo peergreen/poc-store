@@ -41,7 +41,8 @@ public interface ISessionGroup {
      * 
      * @param groupName group name to create
      * @return group created
-     * @throws EntityAlreadyExistsException
+     * @throws EntityAlreadyExistsException if the group already exists in the 
+     * database
      */
     Group addGroup(String groupName) throws EntityAlreadyExistsException;
 
@@ -56,10 +57,11 @@ public interface ISessionGroup {
     /**
      * Method to delete the group thanks to its name.<br />
      * Throws an IllegalArgumentException if the entity to remove
-     *  doesn't exist in the database.
-     * 
+     * doesn't exist in the database.
+     *
      * @param groupName the name of the group to delete
-     * @return 
+     * @return Group instance deleted or <code>null</code> if the group doesn't
+     * exist.
      */
     Group deleteGroup(String groupName);
 
@@ -69,7 +71,7 @@ public interface ISessionGroup {
      * @param group group to which add the user
      * @param myUser user to add to the group 
      * @return modified Group instance
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the group doesn't exist
      */
     Group addUser(Group group, User myUser) throws NoEntityFoundException;  
 
@@ -79,7 +81,7 @@ public interface ISessionGroup {
      * @param group group from which remove the user
      * @param user user to remove from the group
      * @return modified group
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the group doesn't exist
      */
     Group removeUser(Group group, User user) throws NoEntityFoundException;
 
@@ -89,9 +91,10 @@ public interface ISessionGroup {
      * 
      * @param groupName group's name
      * @return collection of users which belong to the group
-     * @exception NoEntityFoundException
+     * @exception NoEntityFoundException if the group doesn't exist
      */
-    Collection<User> collectUsers(String groupName) throws NoEntityFoundException;
+    Collection<User> collectUsers(String groupName) 
+            throws NoEntityFoundException;
 
     /**
      * Method to make a petal accessible to all the members of a group.
@@ -99,29 +102,32 @@ public interface ISessionGroup {
      * @param group group to which grant access to the petal 
      * @param petal petal to make available for the group
      * @return modified Group instance (updated list of accessible petals)
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the group doesn't exist
      */
     Group addPetal(Group group, Petal petal) throws NoEntityFoundException;
 
     /**
-     * Method to remove a Petal from the list of petals that are accessible for a group
-     * 
+     * Method to remove a Petal from the list of petals
+     * that are accessible for a group
+     *
      * @param group group to which remove the petal 
      * @param petal petal to make inaccessible for the Group
      * @return modified Group instance (updated list of accessible petals)
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the group doesn't exist
      */
     Group removePetal(Group group, Petal petal)throws NoEntityFoundException;
 
     /**
-     * Method to collect petals which are accessible for a specified group.<br />
+     * Method to collect petals 
+     * which are accessible for a specified group.<br />
      * Throws {@link NoEntityFoundException} if the group doesn't exist.
      * 
      * @param groupName group name
      * @return collection of petals which are accessible for the group
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the group doesn't exist
      */
-    Collection<Petal> collectPetals(String groupName) throws NoEntityFoundException;
+    Collection<Petal> collectPetals(String groupName)
+            throws NoEntityFoundException;
 
     /**
      * Method to collect all existing groups in database.

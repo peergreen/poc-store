@@ -34,7 +34,8 @@ public interface ISessionLink {
      * Method to delete an instance of link.<br />
      * 
      * @param linkUrl url of the link to delete
-     * @return 
+     * @return Link instance deleted or <code>null</code> if the link doesn't
+     * exist.
      */
     Link deleteLink(String linkUrl);
 
@@ -45,7 +46,7 @@ public interface ISessionLink {
      * @return Link instance found, or {@link null} if no instance found
      */
     Link findLink(String linkUrl);
-    
+
     /**
      * Method to find a link with thanks to its id.
      * 
@@ -67,7 +68,7 @@ public interface ISessionLink {
      * @param link the link to modify
      * @param newDescription the new link description
      * @return modified Link instance (updated description)
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the link doesn't exist
      */
     Link updateDescription(Link link, String newDescription) throws NoEntityFoundException;
 

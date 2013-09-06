@@ -18,13 +18,15 @@ public interface ISessionCategory {
      * @return created Category instance
      * @throws EntityAlreadyExistsException
      */
-    Category addCategory(String categoryName) throws EntityAlreadyExistsException;
+    Category addCategory(String categoryName)
+            throws EntityAlreadyExistsException;
 
     /**
      * Method to delete the category with the name categoryName
      * 
      * @param categoryName the name of the category to delete
-     * @return 
+     * @return Category instance deleted or <code>null</code> if the category 
+     * doesn't exist
      */
     Category deleteCategory(String categoryName);
 
@@ -38,14 +40,17 @@ public interface ISessionCategory {
     Category findCategory(String categoryName);
 
     /**
-     * Method to collect all the petals which belongs to the specified category.<br />
-     * Throws {@link NoEntityFoundException} when Category doesn't exist in database.
+     * Method to collect all the petals 
+     * which belongs to the specified category.<br />
+     * Throws {@link NoEntityFoundException} when 
+     * Category doesn't exist in database.
      * 
      * @param categoryName name of the category whose petals are collected
      * @return collection of petals which belongs to this category
      * @throws NoEntityFoundException
      */
-    Collection<Petal> collectPetals(String categoryName) throws NoEntityFoundException;
+    Collection<Petal> collectPetals(String categoryName)
+            throws NoEntityFoundException;
 
     /**
      * Method to add a new petal to a category
@@ -54,9 +59,10 @@ public interface ISessionCategory {
      * @param petal the petal to add to the category
      * 
      * @return A new category with new petals included the petal added 
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the category doesn't exist
      */
-    Category addPetal(Category category, Petal petal) throws NoEntityFoundException;
+    Category addPetal(Category category, Petal petal)
+            throws NoEntityFoundException;
 
     /**
      * Method to remove a petal from a category
@@ -66,14 +72,15 @@ public interface ISessionCategory {
      * 
      * 
      * @return A new category with petals excluded the petal removed 
-     * @throws NoEntityFoundException
+     * @throws NoEntityFoundException if the category doesn't exist
      */
-    Category removePetal(Category category, Petal petal) throws NoEntityFoundException;
+    Category removePetal(Category category, Petal petal)
+            throws NoEntityFoundException;
 
     /**
      * Method to collect all the category in the database
      * 
-     * @return A collection of cetegories in the database
+     * @return A collection of categories in the database
      */
     Collection<Category> collectCategories();
 

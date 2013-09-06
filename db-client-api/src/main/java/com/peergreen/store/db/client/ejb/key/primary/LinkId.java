@@ -2,20 +2,39 @@ package com.peergreen.store.db.client.ejb.key.primary;
 
 import java.io.Serializable;
 
+/**
+ * Composite primary key of a link.
+
+ */
 public class LinkId implements Serializable {
 
     /**
-     * 
+     * Generated serial version ID.
      */
     private static final long serialVersionUID = 3041115086896953178L;
 
+    /**
+     * Generated id of the link.
+     */
     private int linkId;
+
+    /**
+     * Url of the link.
+     */
     private String url;
 
+    /**
+     * Default Constructor.
+     */
     public LinkId() {
 
     }
 
+    /**
+     * Constructs with the specified parameters.
+     * @param linkid
+     * @param linkUrl
+     */
     public LinkId(int linkid, String linkUrl) {
         this.linkId = linkid;
         this.url = linkUrl;
@@ -58,9 +77,9 @@ public class LinkId implements Serializable {
                 &&(this.getId() == lId.getId())
                 &&(this.getUrl().equalsIgnoreCase(lId.getUrl()))) {
             b = true;
-            
+
         }
-       return b;
+        return b;
     }
 
     public int hashCode() {

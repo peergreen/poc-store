@@ -32,20 +32,35 @@ import com.peergreen.store.db.client.ejb.key.primary.RequirementId;
 @IdClass(RequirementId.class)
 public class Requirement {
 
+    /**
+     * Name of the requirement.
+     */
     @Id
     @Column(name = "name", unique=true)
     private String requirementName;
 
+    /**
+     * Generated id of the requirement.
+     */
     @Id
     @SequenceGenerator(name="idRequirementSeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idRequirementSeq")
     @Column(name="id")
     private int requirementId;
 
+    /**
+     * Namespace of the requirement.
+     */
     private String namespace;
 
+    /**
+     * Filter of the requirement.
+     */
     private String filter;
 
+    /**
+     * Set of the petals which have this requirement.
+     */
     @ManyToMany(mappedBy="requirements")
     private Set<Petal> petals;
 

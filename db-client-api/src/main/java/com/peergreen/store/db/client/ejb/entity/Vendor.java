@@ -19,19 +19,36 @@ import javax.persistence.OneToMany;
 @Entity
 public class Vendor {
 
+    /**
+     * Name of the vendor.
+     */
     @Id
     @Column(name ="name")
     private String vendorName;
 
+    /**
+     * Description of the vendor.
+     */
     private String vendorDescription;
 
+    /**
+     * Set of petals which are provided by this vendor.
+     */
     @OneToMany(mappedBy="vendor", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Petal> petals;
 
+    /**
+     * Default Constructor.
+     */
     public Vendor() {
 
     }
 
+    /**
+     * Constructs a vendor with the specified parameters. Petals are empty.
+     * @param vendorName name of the vendor to create
+     * @param vendorDescription description of the vendor to create.
+     */
     public Vendor(String vendorName, String vendorDescription) {
         super();
         this.vendorName = vendorName;

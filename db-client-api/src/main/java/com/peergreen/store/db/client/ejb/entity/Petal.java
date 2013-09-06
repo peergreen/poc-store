@@ -37,39 +37,86 @@ import com.peergreen.store.db.client.enumeration.Origin;
 @IdClass(PetalId.class)
 public class Petal {
 
+    /**
+     * Vendor who provide the petal. A petal is provided by 
+     * one and only one vendor.
+     */
     @ManyToOne
     @Id
     private Vendor vendor;
+
+    /**
+     * ArtifactId of the petal.
+     */
     @Id
     private String artifactId;
+
+    /**
+     * Version of the petal.
+     */
     @Id
     private String version;
+
+    /**
+     * Generated id of the petal.
+     */
     @Id
     @SequenceGenerator(name="idPetalSeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idPetalSeq")
     private int pid;
 
+    /**
+     * Category of the petal. A petal belongs to only one category.
+     */
     @ManyToOne
     private Category category;
 
+    /**
+     * Description of the petal.
+     */
     private String description;
 
+    /**
+     * Set of the groups which have access to the petal.
+     */
     @ManyToMany(mappedBy="petals")
     private Set<Group> groupSet;
 
+    /**
+     * Set of the requirements of the petal.
+     */
     @ManyToMany
     private Set<Requirement> requirements;
 
+    /**
+     * Set of the capabilities provided by the petal.
+     */
     @ManyToMany
     private Set<Capability> capabilities;
 
+    /**
+     * Origin of the petal.
+     */
     private Origin origin;
 
-
+    /**
+     * Default Constructor.
+     */
     public Petal() {
 
     }
 
+    /**
+     * Construct a petal with the specified parameters.
+     * @param vendor vendor who provide the petal to create
+     * @param artifactId artifactId of the petal to create
+     * @param version version of the petal to create
+     * @param category category of the petal to create
+     * @param description descrption of the petal to create
+     * @param requirements requirements of the petal to create
+     * @param capabilities capabilities provided by the petal to create
+     * @param origin origin of the petal to create
+     */
     public Petal(Vendor vendor, String artifactId, String version, Category category, String description,
             Set<Requirement> requirements, Set<Capability> capabilities, Origin origin) {
         super();
@@ -107,7 +154,7 @@ public class Petal {
      * @return the pid
      */
     public int getPid() {
-        return pid;
+        return this.pid;
     }
 
     /**
