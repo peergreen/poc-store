@@ -144,14 +144,15 @@ public class DefaultSessionCategoryTest {
     @Test
     public void testDeleteCategory() throws NoEntityFoundException {
         //Given : The category exists in the database 
+        String message =" Petal not found ";
         when(query.getSingleResult()).thenReturn(mockcategory);
         when(it.hasNext()).thenReturn(true,false);
         when(sessionPetal.addCategory(any(Petal.class),any(Category.class)))
-        .thenThrow(new NoEntityFoundException());
+        .thenThrow(new NoEntityFoundException(message));
         //When
        Category result = sessionCategory.deleteCategory(categoryName);
         //Then
-        Assert.assertNull(result);
+        Assert.assertEquals(result, mockcategory);
     }
     
     @Test
