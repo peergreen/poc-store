@@ -112,7 +112,7 @@ public class DefaultSessionVendor implements ISessionVendor {
     public Collection<Petal> collectPetals(String vendorName) throws NoEntityFoundException {
         Vendor vendor = entityManager.find(Vendor.class, vendorName);
         if (vendor != null) {
-            return vendor.getPetals();
+            return new HashSet<Petal>(vendor.getPetals());
         } else {
             throw new NoEntityFoundException("No vendor with name " + vendorName + " found in database.");
         }
