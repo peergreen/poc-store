@@ -175,7 +175,7 @@ public class DefaultSessionGroupTest {
     @Test
     public void shouldDeleteGroupBis() throws NoEntityFoundException{
         //Given : A group with 2 users and 1 petal accessible
-        String message = "Petal not found";
+        String message = "Petal not found"; 
         when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getPetals()).thenReturn(petals);
         when(mockgroup.getUsers()).thenReturn(users);
@@ -194,7 +194,7 @@ public class DefaultSessionGroupTest {
 
     @Test
     public void shouldDeleteGroupTer() throws NoEntityFoundException{
-        String message = "User not found";
+        String message = "User not found"; 
         when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getPetals()).thenReturn(petals);
         when(mockgroup.getUsers()).thenReturn(users);
@@ -213,18 +213,18 @@ public class DefaultSessionGroupTest {
         Assert.assertEquals(mockgroup, groupArgument.getValue());
 
 
-        Assert.assertSame(null, result);
+        Assert.assertSame(mockgroup, result);
     }
-    
+
     @Test
     public void shouldDeleteGroupFour() throws NoEntityFoundException{
         when(query.getSingleResult()).thenReturn(null);
-    
+
         //when
         Group result = sessionGroup.deleteGroup(groupname);
         //then     
-  
-       Assert.assertSame(null, result);
+
+        Assert.assertSame(null, result);
     }
 
     @Test
@@ -242,7 +242,7 @@ public class DefaultSessionGroupTest {
 
     }
 
-    @Test
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldAddUserToAGroupBis() throws NoEntityFoundException{
         //Given
         when(query.getSingleResult()).thenReturn(mockgroup);
@@ -259,7 +259,7 @@ public class DefaultSessionGroupTest {
 
     }
 
-   @Test(expectedExceptions = NoEntityFoundException.class)
+    @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionCauseAddUserToGroupInexistent() throws NoEntityFoundException{
         //Given
         when(query.getSingleResult()).thenReturn(null);
@@ -286,7 +286,7 @@ public class DefaultSessionGroupTest {
     @Test
     public void shouldRemoveUserFromAgroupBis() throws NoEntityFoundException{
         //Given
-        String message = "User not found";
+        String message = "User not found"; 
         when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getUsers()).thenReturn(users);
         when(sessionUser.removeGroup(any(User.class), any(Group.class))).thenThrow(new NoEntityFoundException(message));
@@ -299,7 +299,7 @@ public class DefaultSessionGroupTest {
         verify(mockgroup).getUsers();
         verify(users).remove(userArgument.capture());
         Assert.assertEquals(mockuser, userArgument.getValue());
-        Assert.assertSame(null, result);
+        Assert.assertSame(mockgroup, result);
 
     }
 
@@ -375,7 +375,7 @@ public class DefaultSessionGroupTest {
     @Test
     public void shouldRemovePetalBis() throws NoEntityFoundException{
         //Given
-        String message = "Petal not found";
+        String message = "Petal not found"; 
         when(query.getSingleResult()).thenReturn(mockgroup);
         when(mockgroup.getPetals()).thenReturn(petals);
         when(sessionPetal.removeAccesToGroup(any(Petal.class), any(Group.class))).thenThrow(new NoEntityFoundException(message));
