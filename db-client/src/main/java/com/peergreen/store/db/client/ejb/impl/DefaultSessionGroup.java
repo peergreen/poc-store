@@ -15,6 +15,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.ow2.util.log.Log;
+import org.ow2.util.log.LogFactory;
+
 import com.peergreen.store.db.client.ejb.entity.Group;
 import com.peergreen.store.db.client.ejb.entity.Petal;
 import com.peergreen.store.db.client.ejb.entity.User;
@@ -51,8 +54,8 @@ public class DefaultSessionGroup implements ISessionGroup {
 
     private ISessionUser sessionUser;
 
-    private static Logger theLogger =
-            Logger.getLogger(DefaultSessionGroup.class.getName());
+    private static Log logger = LogFactory.getLog(DefaultSessionGroup.class);
+
 
 
     @PersistenceContext
@@ -152,12 +155,10 @@ public class DefaultSessionGroup implements ISessionGroup {
 
                 //Then remove the group from the database 
                 entityManager.remove(group);
-                return group ; 
-
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
-                return null ; 
+                logger.warn(e.getMessage(), e);
             }
+            return group ;
         }else{
             return group; 
         }
@@ -212,15 +213,15 @@ public class DefaultSessionGroup implements ISessionGroup {
             try{
                 sessionUser.removeGroup(u, g);
             }catch(NoEntityFoundException e){
-                theLogger.log(Level.SEVERE, e.getMessage());        
-                return null; 
+                logger.warn(e.getMessage(), e);
             }
-
             return entityManager.merge(g);
         }else{
-            throw new NoEntityFoundException("You have to create the administrator first at all.");
+            throw new NoEntityFoundException("Group with name:"
+                    + group.getGroupname() + "doesn't exist in database.");
         }
     }
+
     /**
      * Method to collect the users which belong to a specified group.<br />
      * Throws {@link NoEntityFoundException} when the group doesn't exist.
@@ -283,7 +284,7 @@ public class DefaultSessionGroup implements ISessionGroup {
             try {
                 sessionPetal.removeAccesToGroup(p, g);
             } catch (NoEntityFoundException e) {
-                theLogger.log(Level.SEVERE, e.getMessage());
+                logger.warn(e.getMessage(), e);
             }
             return entityManager.merge(group);
         }
