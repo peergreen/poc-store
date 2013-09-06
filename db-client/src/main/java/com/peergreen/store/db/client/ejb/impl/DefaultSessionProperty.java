@@ -75,13 +75,15 @@ public class DefaultSessionProperty implements ISessionProperty {
         if (prop != null) {
             return prop.getCapability();
         } else {
-            throw new NoEntityFoundException("No existing Property with id " + id + ".");
+            throw new NoEntityFoundException("No existing Property with id "
+                    + id + ".");
         }
     }
 
     /**
      * Method to set associated Capability.<br />
-     * Throws {@literal NoEntityFoundException} if Property or Capability cannot be find.<br />
+     * Throws {@literal NoEntityFoundException} if Property
+     *  or Capability cannot be find.<br />
      * Both have to be attached entities.
      * 
      * @param id Property id
@@ -90,18 +92,24 @@ public class DefaultSessionProperty implements ISessionProperty {
      */
     @SuppressWarnings("unused")
     @Override
-    public Property setCapability(long id, Capability capability) throws NoEntityFoundException {
+    public Property setCapability(long id, Capability capability)
+            throws NoEntityFoundException {
         Property prop = find(id);
 
         if (prop != null) {
-            Capability cap = capabilitySession.findCapability(capability.getCapabilityName(), capability.getVersion(), capability.getNamespace());
+            Capability cap = capabilitySession.
+                    findCapability(capability.getCapabilityName(),
+                            capability.getVersion(), capability.getNamespace());
             if (capability != null) {
                 prop.setCapability(cap);
             } else {
-                throw new NoEntityFoundException("Capability " + capability.getCapabilityName() + " in v. " + capability.getVersion());
+                throw new NoEntityFoundException("Capability "
+                        + capability.getCapabilityName() + " in v. "
+                        + capability.getVersion());
             }
         } else {
-            throw new NoEntityFoundException("No existing Property with id " + id + ".");
+            throw new NoEntityFoundException("No existing" +
+                    " Property with id " + id + ".");
         }
 
         return prop;

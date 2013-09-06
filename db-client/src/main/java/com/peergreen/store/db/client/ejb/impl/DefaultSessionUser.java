@@ -60,7 +60,8 @@ public class DefaultSessionUser implements ISessionUser {
      * @exception EntityExistsException
      */
     @Override
-    public User addUser(String pseudo, String password, String email) throws EntityAlreadyExistsException {
+    public User addUser(String pseudo, String password, String email)
+            throws EntityAlreadyExistsException {
         User user = entityManager.find(User.class, pseudo);
 
         if (user != null) {

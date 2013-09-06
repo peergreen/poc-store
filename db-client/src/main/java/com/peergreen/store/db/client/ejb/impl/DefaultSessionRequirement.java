@@ -14,7 +14,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
 
 import org.ow2.easybeans.osgi.annotation.OSGiResource;
 import org.ow2.util.log.Log;
@@ -22,7 +21,6 @@ import org.ow2.util.log.LogFactory;
 
 import com.peergreen.store.db.client.ejb.entity.Capability;
 import com.peergreen.store.db.client.ejb.entity.Petal;
-import com.peergreen.store.db.client.ejb.entity.Property;
 import com.peergreen.store.db.client.ejb.entity.Requirement;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionRequirement;
@@ -177,36 +175,43 @@ public class DefaultSessionRequirement implements ISessionRequirement {
      * @throws NoEntityFoundException 
      */
     @Override
-    public Collection<Petal> collectPetals(String requirementName) throws NoEntityFoundException {
+    public Collection<Petal> collectPetals(String requirementName)
+            throws NoEntityFoundException {
         Requirement requirement = findRequirement(requirementName);
         if (requirement != null) {
-            return requirement.getPetals();
+            return new HashSet<Petal>(requirement.getPetals());
         } else {
-            throw new NoEntityFoundException("Requirement " + requirementName + " doesn't exist in database.");
+            throw new NoEntityFoundException("Requirement " + requirementName
+                    + " doesn't exist in database.");
         }
     }
 
     /**
-     * Method to add a petal to the list of petals which have this specific requirement.
+     * Method to add a petal to the list of petals
+     *  which have this specific requirement.
      * 
      * @param requirement requirement that is needed by the petal
      * @param petal petal to add 
-     * @return modified requirement (updated list of petals which share this requirement) 
+     * @return modified requirement (updated list of petals
+     *  which share this requirement) 
      * @throws NoEntityFoundException
      */
     @Override
-    public Requirement addPetal(Requirement requirement, Petal petal) throws NoEntityFoundException {
+    public Requirement addPetal(Requirement requirement, Petal petal)
+            throws NoEntityFoundException {
         // retrieve attached requirement
         Requirement r = findRequirement(requirement.getRequirementName());
         if(r!=null){
             // retrieve attached petal
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            Petal p = petalSession.findPetal(petal.getVendor(),
+                    petal.getArtifactId(), petal.getVersion());
 
             r.getPetals().add(p);
             return entityManager.merge(r);
         }
         else{
-            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+            throw new NoEntityFoundException("Requirement " +
+                    requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
     /**
@@ -223,12 +228,15 @@ public class DefaultSessionRequirement implements ISessionRequirement {
         Requirement r = findRequirement(requirement.getRequirementName());
         if(r!=null){
             // retrieve attached petal
-            Petal p = petalSession.findPetal(petal.getVendor(), petal.getArtifactId(), petal.getVersion());
+            Petal p = petalSession.
+                    findPetal(petal.getVendor(),
+                            petal.getArtifactId(), petal.getVersion());
             r.getPetals().remove(p);
             return entityManager.merge(r);
         }
         else{
-            throw new NoEntityFoundException("Requirement " + requirement.getRequirementName() + " doesn't exist in database.");
+            throw new NoEntityFoundException("Requirement "
+                    + requirement.getRequirementName() + " doesn't exist in database.");
         }
     }
 
