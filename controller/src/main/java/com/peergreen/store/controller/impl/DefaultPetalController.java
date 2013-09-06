@@ -14,8 +14,6 @@ import org.apache.felix.ipojo.annotations.Bind;
 import org.apache.felix.ipojo.annotations.Component;
 import org.apache.felix.ipojo.annotations.Instantiate;
 import org.apache.felix.ipojo.annotations.Provides;
-import org.osgi.resource.Resource;
-import org.osgi.resource.Wiring;
 
 import com.peergreen.store.aether.client.IPetalsPersistence;
 import com.peergreen.store.controller.IPetalController;
@@ -165,44 +163,6 @@ public class DefaultPetalController implements IPetalController {
 
         return result;
     }
-
-    /*
-    public Collection<PetalId> getTransitiveRequirements(
-            Vendor vendor,
-            String artifactId,
-            String version,
-            Map<Capability, Set<Petal>> resolvedCapabilities,
-            Set<Requirement> unresolvedRequirements) {
-
-        // find petal and its requirements
-        Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        Collection<Requirement> requirements = petal.getRequirements();
-
-        // for each requirement, retrieve matching capabilities
-        for (Requirement requirement : requirements) {
-            // need: retrieve capabilities which meet the requirements in a same namespace
-            //            Collection<Capability> capabilities = capabilitySession.findCapabilities("namespace", "filtre LDAP");
-
-            Collection<Capability> capabilities = new HashSet<>();
-
-            // retrieve petals providing the capability
-            for (Capability capability : capabilities) {
-                Collection<Petal> petals = capability.getPetals();
-                HashSet<Petal> setPetals = new HashSet<>(petals);
-
-                if (petals.isEmpty()) {
-                    // declare missing capability
-                    unresolvedRequirements.add(requirement);
-                } else {
-                    // index petals providing the capability
-                    resolvedCapabilities.put(capability, setPetals);
-                }
-            }
-        }
-
-        return null;
-    }
-     */
 
     /**
      * Method to create a new vendor on database.
