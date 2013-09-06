@@ -204,7 +204,6 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
         }
 
         String namespace = jpaContext.getNodeContext().getProperty(String.class);
-        System.out.println("namespace: " + namespace);
 
         query.select(queryRoot).where(
                 builder.and(
@@ -215,13 +214,6 @@ public class JPQLClientBinaryNode implements ILdapHandler, IQueryGenerator {
                 );
         Set<Capability> caps = new HashSet<>(entityManager.createQuery(query).getResultList());
 
-        // assemble left and right queries to form result query
-        //        return subquery.select(root).where(
-        //            builder.and(
-        //                subqueryLeft.getRestriction(),
-        //                subqueryRight.getRestriction()
-        //            )
-        //        );
         return caps;
     }
 }
