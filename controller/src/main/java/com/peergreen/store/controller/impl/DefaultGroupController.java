@@ -205,7 +205,7 @@ public class DefaultGroupController implements IGroupController {
     @Override
     public final Group removeAccessToPetal(
             String groupName,
-            String vendorName, 
+            String vendorName,
             String artifactId,
             String version) throws NoEntityFoundException {
 

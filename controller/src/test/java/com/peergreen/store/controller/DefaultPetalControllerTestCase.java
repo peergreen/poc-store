@@ -148,8 +148,8 @@ public class DefaultPetalControllerTestCase {
         requirements.add(req2);
 
         Set<Property> properties = new HashSet<>();
-        Capability cap1 = new Capability("JPA", "1.0", "provider", properties );
-        Capability cap2 = new Capability("Jersey", "3.0", "provider", properties );;
+        Capability cap1 = new Capability("JPA", "1.0", "provider", properties);
+        Capability cap2 = new Capability("Jersey", "3.0", "provider", properties);
         Set<Capability> capabilities = new HashSet<>();
         capabilities.add(cap1);
         capabilities.add(cap2);  
@@ -182,7 +182,7 @@ public class DefaultPetalControllerTestCase {
         //When 
         DependencyResult result = petalController.getTransitiveDependencies(request);
         //Then 
-        verify(requirementSession,times(2)).findCapabilities(any(Requirement.class));
+        verify(requirementSession, times(2)).findCapabilities(any(Requirement.class));
         Assert.assertFalse(result.getResolvedRequirements().isEmpty());
         Assert.assertFalse(result.getUnresolvedRequirements().isEmpty());
         Assert.assertTrue(result.getResolvedRequirements().containsKey(req1));
@@ -471,8 +471,8 @@ public class DefaultPetalControllerTestCase {
         Set<Property> properties = new HashSet<>();
 
         // verify capabilitySession.addCapability(...) is called
-        petalController.createCapability(capabilityName,version, namespace, properties);
-        verify(capabilitySession).addCapability(capabilityName,version, namespace, properties);
+        petalController.createCapability(capabilityName, version, namespace, properties);
+        verify(capabilitySession).addCapability(capabilityName, version, namespace, properties);
     }
 
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
@@ -484,7 +484,7 @@ public class DefaultPetalControllerTestCase {
 
         when(capabilitySession.addCapability(capabilityName, version, namespace, properties)).thenThrow(new EntityAlreadyExistsException());
         // verify capabilitySession.addCapability(...) is called
-        petalController.createCapability(capabilityName,version, namespace, properties);
+        petalController.createCapability(capabilityName, version, namespace, properties);
         verify(capabilitySession).addCapability(capabilityName, version, namespace, properties);
 
 
@@ -605,7 +605,7 @@ public class DefaultPetalControllerTestCase {
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         when(capabilitySession.findCapability(name, versionCap, namespace)).thenReturn(capability);
         // verify petalSession.remove
-        petalController.removeCapability(vendorName, artifactId, version,name, versionCap, namespace);
+        petalController.removeCapability(vendorName, artifactId, version, name, versionCap, namespace);
         verify(petalSession).removeCapability(petal, capability);
     }
 
@@ -643,8 +643,8 @@ public class DefaultPetalControllerTestCase {
         String filter = "namespace=service";
 
         // verify requirementSession.addRequirement(...) is called
-        petalController.createRequirement(requirementName,namespace, filter);
-        verify(requirementSession).addRequirement(requirementName,namespace, filter);
+        petalController.createRequirement(requirementName, namespace, filter);
+        verify(requirementSession).addRequirement(requirementName, namespace, filter);
     }
 
     @Test(expectedExceptions = EntityAlreadyExistsException.class)
@@ -654,7 +654,7 @@ public class DefaultPetalControllerTestCase {
         String filter = "version=2.0";
 
         when(requirementSession.addRequirement(requirementName, namespace, filter)).thenThrow(new EntityAlreadyExistsException());
-        petalController.createRequirement(requirementName,namespace, filter);
+        petalController.createRequirement(requirementName, namespace, filter);
 
     }
 
@@ -882,7 +882,7 @@ public class DefaultPetalControllerTestCase {
     @Test
     public void testCollectPetalsByCapability() throws NoEntityFoundException{
         String name = "JPA";
-        String version ="2.1.0";
+        String version = "2.1.0";
         String namespace = "Provider";
         Petal p1 = mock(Petal.class);
         Set<Petal> list = new HashSet<>();
@@ -898,7 +898,7 @@ public class DefaultPetalControllerTestCase {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowExceptionWhenCollectPetalsByCapabilityInexistent() throws NoEntityFoundException{
         String name = "JPA";
-        String version ="2.1.0";
+        String version = "2.1.0";
         String namespace = "Provider";
 
         when(capabilitySession.collectPetals(name, version, namespace)).thenThrow(new NoEntityFoundException());

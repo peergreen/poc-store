@@ -20,7 +20,7 @@ import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
 /**
- * Class defining all user related operations:
+ * Class defining all user related operations.
  * <ul>
  *      <li>retrieve metadata</li>
  *      <li>retrieve instance</li>
@@ -42,8 +42,9 @@ public class DefaultUserController implements IUserController {
     /**
      * Method to retrieve user's information.
      *
+     * @param pseudo user's pseudo
      * @return indexed collection of user's information or
-     * <em>null</em> if user doesn't exist.
+     * {@literal null} if user doesn't exist.
      */
     @Override
     public final Map<String, String> getUserMetadata(String pseudo) {
@@ -59,8 +60,6 @@ public class DefaultUserController implements IUserController {
             return null;
         }
     }
-
-
 
     /**
      * Method to retrieve a user instance from its pseudo.
@@ -105,6 +104,7 @@ public class DefaultUserController implements IUserController {
      * Method to remove a user from the database.
      *
      * @param pseudo user's pseudo
+     * @return user instance removed
      */
     @Override
     public final User removeUser(String pseudo) {

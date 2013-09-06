@@ -64,14 +64,9 @@ public class DefaultPetalController implements IPetalController {
     private ISessionRequirement requirementSession;
     private ISessionVendor vendorSession;
     private ISessionGroup groupSession;
-    /** reference to the aether client for petal persistence */
+    /** reference to the aether client for petal persistence. */
     private IPetalsPersistence petalPersistence;
-    /** resolver to get all petal"s transitive dependencies */
-    //    private ResolveContext resolver;
-    /** associated variables */
-    Collection<Resource> resources;
-    Map<Resource, Wiring> wirings;
-    Collection<Resource> mandatoryResources;
+    /** resolver to get all petal"s transitive dependencies. */
     private static Logger theLogger =
             Logger.getLogger(DefaultPetalController.class.getName());
 
@@ -160,8 +155,8 @@ public class DefaultPetalController implements IPetalController {
                 for (Capability capability : capabilities) {
                     // index petals providing the capability
                     matchingPetals.addAll(capabilitySession.
-                            collectPetals(capability.getCapabilityName(), 
-                                    capability.getVersion(), 
+                            collectPetals(capability.getCapabilityName(),
+                                    capability.getVersion(),
                                     capability.getNamespace()));
                 }
                 result.addResolvedDependency(req, matchingPetals);
@@ -220,7 +215,7 @@ public class DefaultPetalController implements IPetalController {
     public final Vendor createVendor(
             String vendorName,
             String vendorDescription)
-                    throws EntityAlreadyExistsException{
+                    throws EntityAlreadyExistsException {
 
         try {
             return vendorSession.addVendor(vendorName, vendorDescription);
@@ -327,12 +322,12 @@ public class DefaultPetalController implements IPetalController {
     public final Petal addPetal(
             String vendorName,
             String artifactId,
-            String version, 
+            String version,
             String description,
             Category category,
-            Set<Requirement> requirements, 
+            Set<Requirement> requirements,
             Set<Capability> capabilities,
-            Origin origin, File petalBinary) 
+            Origin origin, File petalBinary)
                     throws NoEntityFoundException,
                     EntityAlreadyExistsException {
 
@@ -469,7 +464,7 @@ public class DefaultPetalController implements IPetalController {
     public final Capability getCapability(
             String name,
             String version,
-            String namespace){
+            String namespace) {
 
         return capabilitySession.findCapability(name, version, namespace);
     }
@@ -719,6 +714,7 @@ public class DefaultPetalController implements IPetalController {
      * Method to get all the petals which has the requirement given.
      *
      * @param name the requirement's name
+     * @return collection of petals sharing this requirement
      * @throws NoEntityFoundException
      */
     @Override
@@ -739,6 +735,7 @@ public class DefaultPetalController implements IPetalController {
      * @param name the capability's name
      * @param version the capabilty's version
      * @param namespace the capability's namespace
+     * @return collection of petals providing the specified capability
      * @throws NoEntityFoundException
      */
     @Override
@@ -757,19 +754,24 @@ public class DefaultPetalController implements IPetalController {
 
     /**
      * Method to modify description of a petal.
-     * @param vendorName name of the vendor which provide the petal))
+     *
+     * @param vendorName name of the vendor which provide the petal
      * @param artifactId petal's artifactId
      * @param version petal's version
+     * @param newDesc new description for petal
      * @return updated petal
-     * @throws NoEntityFoundException 
+     * @throws NoEntityFoundException
      */
-    public Petal updateDescription(String vendorName, String artifactId,
-            String version, String newDesc) throws NoEntityFoundException {
+    public Petal updateDescription(
+            String vendorName,
+            String artifactId,
+            String version,
+            String newDesc) throws NoEntityFoundException {
+
         Vendor vendor = vendorSession.findVendor(vendorName);
         Petal petal = petalSession.findPetal(vendor, artifactId, version);
-        petalSession.updateDescription(petal, newDesc);
 
-        return null;
+        return petalSession.updateDescription(petal, newDesc);
     }
 
     /**
@@ -825,7 +827,7 @@ public class DefaultPetalController implements IPetalController {
     /**
      * Method to set IPetalsPersistence instance to use.
      *
-     * @param session the IPetalsPersistence to set
+     * @param persistence the IPetalsPersistence to set
      */
     @Bind
     public final void bindPetalPersistence(IPetalsPersistence persistence) {
