@@ -84,7 +84,6 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        int id = 2;
 
         Vendor vendor = mock(Vendor.class);
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -260,17 +259,10 @@ public class DefaultPetalControllerTestCase {
     public void testGetPetal() {
         String vendorName = "Peergreen";
         // create vendor entity instance
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         // create petal entity instance
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
-
-        File binary = new File("/home/toto/petal.jar");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
 
         // verify persistence.getPetal is called
@@ -284,9 +276,7 @@ public class DefaultPetalControllerTestCase {
     public void testAddPetal() throws NoEntityFoundException, EntityAlreadyExistsException {
         String vendorName = "Peergreen";
         // create vendor entity instance
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
-
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
@@ -309,8 +299,7 @@ public class DefaultPetalControllerTestCase {
     public void shouldThrowNoEntityFoundException() throws NoEntityFoundException, EntityAlreadyExistsException {
         String vendorName = "Peergreen";
         // create vendor entity instance
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
 
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
@@ -350,8 +339,7 @@ public class DefaultPetalControllerTestCase {
     public void shouldThrowEntityAlreadyExistsException() throws NoEntityFoundException, EntityAlreadyExistsException {
         String vendorName = "Peergreen";
         // create vendor entity instance
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
 
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
@@ -391,22 +379,17 @@ public class DefaultPetalControllerTestCase {
     public void testRemovePetal() throws NoEntityFoundException {
         // manage petal part
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
         // manage group part
-        Group group1 = new Group();
-        group1.setGroupname("Administrator");
-        Group group2 = new Group();
-        group2.setGroupname("web devs");
+        Group group1 = new Group("Administrator");
+        Group group2 = new Group("web devs");
 
         // initialize petal
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+
         Set<Group> groups = new HashSet<Group>();
         groups.add(group1);
         groups.add(group2);
@@ -427,22 +410,17 @@ public class DefaultPetalControllerTestCase {
     public void shouldReturnNullWhenRemovePetal() throws  NoEntityFoundException{
         // manage petal part
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
         // manage group part
-        Group group1 = new Group();
-        group1.setGroupname("Administrator");
-        Group group2 = new Group();
-        group2.setGroupname("web devs");
+        Group group1 = new Group("Administrator");
+        Group group2 = new Group("web devs");
 
         // initialize petal
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
+
         Set<Group> groups = new HashSet<Group>();
         groups.add(group1);
         groups.add(group2);
@@ -494,11 +472,10 @@ public class DefaultPetalControllerTestCase {
     public void testCollectCapabilities() throws NoEntityFoundException {
         // create a petal
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // create empty return list
         Collection<Capability> list = new ArrayList<>();
@@ -517,11 +494,10 @@ public class DefaultPetalControllerTestCase {
     public void shouldThrowExceptionWhenColletCapabilitiesForPetalInexistant() throws NoEntityFoundException{
 
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
 
         // mock petalSession.collectCapabilites behavior
@@ -544,9 +520,9 @@ public class DefaultPetalControllerTestCase {
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
-        Petal petal = new Petal();
+                Petal petal = new Petal();
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
@@ -568,9 +544,9 @@ public class DefaultPetalControllerTestCase {
         Set<Property> props = new HashSet<>();
         Capability capability = new Capability(name, versionCap, "provider", props);
         // petal
-        Petal petal = new Petal();
+                Petal petal = new Petal();
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
@@ -587,7 +563,7 @@ public class DefaultPetalControllerTestCase {
 
     @Test
     public void testRemoveCapability() throws NoEntityFoundException {
-        Petal petal = new Petal();
+                Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
         String namespace = "Provider";
@@ -595,7 +571,7 @@ public class DefaultPetalControllerTestCase {
         Capability capability = new Capability(name, versionCap, "provider", props);
 
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
@@ -611,7 +587,7 @@ public class DefaultPetalControllerTestCase {
 
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void shouldThrowNoEntityFoundExceptionForRemoveCapabilityFromPetalNonExistent() throws NoEntityFoundException {
-        Petal petal = new Petal();
+                Petal petal = new Petal();
         String name = "JPA";
         String versionCap = "2.0";
         String namespace = "Provider";
@@ -619,7 +595,7 @@ public class DefaultPetalControllerTestCase {
         Capability capability = new Capability(name, versionCap, "provider", props);
 
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
 
@@ -665,7 +641,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // create empty return list
         Collection<Requirement> list = new ArrayList<>();
@@ -684,11 +660,10 @@ public class DefaultPetalControllerTestCase {
     public void shouldThrowExceptionWhenCollectRequirementsForPetalInexistant() throws NoEntityFoundException{
 
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
 
         // mock petalSession.collectCapabilites behavior
@@ -707,7 +682,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -728,7 +703,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -751,7 +726,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -773,7 +748,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Provider";
         Requirement requirement = mock(Requirement.class);
         when(requirement.getRequirementName()).thenReturn(name);
@@ -796,7 +771,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // mock => always return targeted petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -814,7 +789,7 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
 
         // mock => always return targeted petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -832,10 +807,9 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Bundle";
-        Category category = new Category();
-        category.setCategoryName(name);
+        Category category = new Category(name);
 
         // mock => always return targeted petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -853,10 +827,9 @@ public class DefaultPetalControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
-        Petal petal = new Petal();
+                Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         String name = "Bundle";
-        Category category = new Category();
-        category.setCategoryName(name);
+        Category category = new Category(name);
 
         // mock => always return targeted petal
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);

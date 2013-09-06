@@ -136,13 +136,11 @@ public class DefaultStoreManagementTestCase {
 
     public void testSubmitPetal() throws NoEntityFoundException, EntityAlreadyExistsException {
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         File binary = new File("/home/toto/petal.jar");
-        Category category = new Category();
-        category.setCategoryName("Bundle");
+        Category category = new Category("Bundle");
         HashSet<Requirement> requirements = new HashSet<>();
         HashSet<Capability> capabilities = new HashSet<>();
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -155,13 +153,11 @@ public class DefaultStoreManagementTestCase {
     
     public void testSubmitPetalAlreadyExistent() throws EntityAlreadyExistsException, NoEntityFoundException {
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         File binary = new File("/home/toto/petal.jar");
-        Category category = new Category();
-        category.setCategoryName("Bundle");
+        Category category = new Category("Bundle");
         HashSet<Requirement> requirements = new HashSet<>();
         HashSet<Capability> capabilities = new HashSet<>();
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -176,13 +172,11 @@ public class DefaultStoreManagementTestCase {
     
     public void testSubmitPetalWithAttributeInexistent() throws EntityAlreadyExistsException, NoEntityFoundException {
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         File binary = new File("/home/toto/petal.jar");
-        Category category = new Category();
-        category.setCategoryName("Bundle");
+        Category category = new Category("Bundle");
         HashSet<Requirement> requirements = new HashSet<>();
         HashSet<Capability> capabilities = new HashSet<>();
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
@@ -198,8 +192,7 @@ public class DefaultStoreManagementTestCase {
     @Test
     public void testValidatePetal() throws NoEntityFoundException {
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();
@@ -221,8 +214,7 @@ public class DefaultStoreManagementTestCase {
     @Test(expectedExceptions = NoEntityFoundException.class)
     public void testValidatePetalInexistent() throws NoEntityFoundException {
         String vendorName = "Peergreen";
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         String artifactId = "Tomcat HTTP service";
         String version = "7.0.39";
         Petal petal = new Petal();

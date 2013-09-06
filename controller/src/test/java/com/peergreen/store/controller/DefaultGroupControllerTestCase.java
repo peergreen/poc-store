@@ -24,6 +24,7 @@ import com.peergreen.store.db.client.ejb.session.api.ISessionGroup;
 import com.peergreen.store.db.client.ejb.session.api.ISessionPetal;
 import com.peergreen.store.db.client.ejb.session.api.ISessionUser;
 import com.peergreen.store.db.client.ejb.session.api.ISessionVendor;
+import com.peergreen.store.db.client.enumeration.Origin;
 import com.peergreen.store.db.client.exception.EntityAlreadyExistsException;
 import com.peergreen.store.db.client.exception.NoEntityFoundException;
 
@@ -110,11 +111,9 @@ public class DefaultGroupControllerTestCase {
 
         String groupName = "myGroup";
         // entity instance before user add
-        Group groupBefore = new Group();
-        groupBefore.setGroupname(groupName);
+        Group groupBefore = new Group(groupName);
         // entity instance after user add
-        Group groupAfter = new Group();
-        groupAfter.setGroupname(groupName);
+        Group groupAfter = new Group(groupName);
 
         // add the user to groupAfter
         Set<User> list = new HashSet<User>();
@@ -146,8 +145,7 @@ public class DefaultGroupControllerTestCase {
 
         String groupName = "myGroup";
         // entity instance before user add
-        Group groupBefore = new Group();
-        groupBefore.setGroupname(groupName);
+        Group groupBefore = new Group(groupName);
        
         when(groupSession.findGroup(groupName)).thenReturn(groupBefore);
         when(userSession.findUserByPseudo(pseudo)).thenReturn(user);
@@ -168,8 +166,7 @@ public class DefaultGroupControllerTestCase {
 
         String groupName = "myGroup";
         // entity instance before user add
-        Group groupBefore = new Group();
-        groupBefore.setGroupname(groupName);
+        Group groupBefore = new Group(groupName);
      
 
         // mock facade => always find group called groupName
@@ -194,15 +191,13 @@ public class DefaultGroupControllerTestCase {
 
         String groupName = "myGroup";
         // entity instance before user add
-        Group groupBefore = new Group();
-        groupBefore.setGroupname(groupName);
+        Group groupBefore = new Group(groupName);
         // add the user to groupBefore
         Set<User> list = new HashSet<User>();
         list.add(user);
         groupBefore.setUsers(list);
         // entity instance after user add
-        Group groupAfter = new Group();
-        groupAfter.setGroupname(groupName);
+        Group groupAfter = new Group(groupName);
 
         // mock facade => always find group called groupName
         when(groupSession.findGroup(groupName)).thenReturn(groupBefore);
@@ -228,18 +223,13 @@ public class DefaultGroupControllerTestCase {
         String artifactId = "JPA"; 
         String version = "1.0";
         
-        Group group= new Group();
-        group.setGroupname(groupName);
+        Group group= new Group(groupName);
         when(groupSession.findGroup(groupName)).thenReturn(group);
         
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName,"");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         //When
         groupController.giveAccessToPetal(groupName, vendorName, artifactId, version);
@@ -254,17 +244,7 @@ public class DefaultGroupControllerTestCase {
         String vendorName = "Peergreen";
         String artifactId = "JPA"; 
         String version = "1.0";
-        
-        Group group= new Group();
-        group.setGroupname(groupName);
-        
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
-        
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+                
         when(groupSession.addPetal(any(Group.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
         //When
         groupController.giveAccessToPetal(groupName, vendorName, artifactId, version);
@@ -280,18 +260,13 @@ public class DefaultGroupControllerTestCase {
         String artifactId = "JPA"; 
         String version = "1.0";
         
-        Group group= new Group();
-        group.setGroupname(groupName);
+        Group group= new Group(groupName);
         when(groupSession.findGroup(groupName)).thenReturn(group);
         
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         when(vendorSession.findVendor(vendorName)).thenReturn(vendor);
         
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(petal);
         //When
         groupController.removeAccessToPetal(groupName, vendorName, artifactId, version);
@@ -307,18 +282,13 @@ public class DefaultGroupControllerTestCase {
         String artifactId = "JPA"; 
         String version = "1.0";
         
-        Group group= new Group();
-        group.setGroupname(groupName);
+        Group group= new Group(groupName);
         when(groupSession.findGroup(groupName)).thenReturn(null);
         
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         when(vendorSession.findVendor(vendorName)).thenReturn(null);
         
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         when(petalSession.findPetal(vendor, artifactId, version)).thenReturn(null);
         
         when(groupSession.removePetal(any(Group.class), any(Petal.class))).thenThrow(new NoEntityFoundException());
@@ -336,13 +306,9 @@ public class DefaultGroupControllerTestCase {
         String artifactId = "JPA"; 
         String version = "1.0";
         
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         Collection<Petal> petals = new HashSet<>();
         petals.add(petal);
         when(groupSession.collectPetals(groupName)).thenReturn(petals); 
@@ -365,13 +331,9 @@ public class DefaultGroupControllerTestCase {
         String artifactId = "JPA"; 
         String version = "1.0";
        
-        Vendor vendor = new Vendor();
-        vendor.setVendorName(vendorName);
+        Vendor vendor = new Vendor(vendorName, "");
         
-        Petal petal = new Petal();
-        petal.setVendor(vendor);
-        petal.setArtifactId(artifactId);
-        petal.setVersion(version);
+        Petal petal = new Petal(vendor, artifactId, version, null, "", null, null, Origin.LOCAL);
         Collection<Petal> petals = new HashSet<>();
         petals.add(petal);
         when(groupSession.collectPetals(groupName)).thenThrow(new NoEntityFoundException()); 
