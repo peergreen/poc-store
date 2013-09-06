@@ -12,7 +12,7 @@ import javax.persistence.SequenceGenerator;
 import com.peergreen.store.db.client.ejb.key.primary.LinkId;
 
 /**
- * Entity Bean representing in the database a link between two stores
+ * Entity Bean representing in the database a link between two stores.
  */
 @NamedQueries({
     @NamedQuery(
@@ -28,20 +28,39 @@ import com.peergreen.store.db.client.ejb.key.primary.LinkId;
 @Entity
 @IdClass(LinkId.class)
 public class Link {
+
+    /**
+     * Generated id of the link.
+     */
     @Id
-    @SequenceGenerator(name="idLinkSeq", initialValue=1, allocationSize=50)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idLinkSeq")
+    @SequenceGenerator(name = "idLinkSeq", initialValue = 1,
+    allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idLinkSeq")
     private int linkId;
 
+    /**
+     * Url of the link.
+     */
     @Id
-    private String url; 
+    private String url;
 
+    /**
+     * Description of the link.
+     */
     private String description;
 
+    /**
+     * Default Constructor.
+     */
     public Link() {
 
     }
 
+    /**
+     * Constructs a link with the specified parameters.
+     * @param url
+     * @param description
+     */
     public Link(String url, String description) {
         super();
         this.url = url;
@@ -49,8 +68,8 @@ public class Link {
     }
 
     /**
-     * Method to retrieve the link's id
-     * 
+     * Method to retrieve the link's id.
+     *
      * @return the Id of the link instance
      */
     public int getLinkId() {
@@ -58,17 +77,17 @@ public class Link {
     }
 
     /**
-     * Method to retrieve the link's url 
-     * 
-     * @return the url of the link instance 
+     * Method to retrieve the link's url.
+     *
+     * @return the url of the link instance
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     * Method to retrieve the link's description 
-     * 
+     * Method to retrieve the link's description.
+     *
      * @return the description of the link instance
      */
     public String getDescription() {
@@ -76,8 +95,8 @@ public class Link {
     }
 
     /**
-     * Method to set a description to the link instance 
-     * 
+     * Method to set a description to the link instance.
+     *
      * @param description the description of link to set
      */
     public void setDescription(String description) {
@@ -86,7 +105,7 @@ public class Link {
 
     /**
      * Returns a string representation of the object.
-     * 
+     *
      * @return a string representation of the object
      */
     @Override

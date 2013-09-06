@@ -54,11 +54,19 @@ public class DefaultSessionCapability implements ISessionCapability{
         this.entityManager = entityManager;
     }
 
+    /**
+     * Set entity session which manage the entity Petal
+     * @param sessionPetal Instance of sessionPetal
+     */
     @EJB
     public void setSessionPetal(ISessionPetal sessionPetal) {
         this.petalSession = sessionPetal;
     }
 
+    /**
+     * Set entity session which manage the entity Property
+     * @param propertySession Instance of propertySession
+     */
     @EJB
     public void setSessionProperty(ISessionProperty propertySession) {
         this.propertySession = propertySession;

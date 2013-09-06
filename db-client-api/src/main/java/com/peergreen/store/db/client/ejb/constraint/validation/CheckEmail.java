@@ -9,21 +9,32 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-  @Constraint(validatedBy = {CheckMailValidator.class})
-  @Documented
-  @Target({ElementType.METHOD,
-      ElementType.FIELD,
-      ElementType.ANNOTATION_TYPE,
-      ElementType.CONSTRUCTOR,
-      ElementType.PARAMETER})
-  @Retention(RetentionPolicy.RUNTIME)
-  
-  public @interface CheckEmail {
+/**
+ * Interface to define CkeckEmail constraint annotation.
+ */
+@Constraint(validatedBy = { CheckMailValidator.class })
+@Documented
+@Target({ElementType.METHOD,
+    ElementType.FIELD,
+    ElementType.ANNOTATION_TYPE,
+    ElementType.CONSTRUCTOR,
+    ElementType.PARAMETER })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface CheckEmail {
 
-      String message() default "{invalid.email}";
+    /**
+     * Default message when the constraint is violated.
+     */
+    String message() default "{invalid.email}";
 
-      Class<?>[] groups() default {};
+    /**
+     * Groups to which this constraint belongs.
+     */
+    Class<?>[] groups() default { };
 
-      Class<? extends Payload>[] payload() default {};
+    /**
+     * Attribute to assign custom payload objects to this constraint.
+     */
+    Class<? extends Payload>[] payload() default { };
 
-  }
+}

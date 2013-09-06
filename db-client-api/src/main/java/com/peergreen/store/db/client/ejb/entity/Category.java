@@ -32,23 +32,38 @@ import com.peergreen.store.db.client.ejb.key.primary.CategoryId;
 @IdClass(CategoryId.class)
 public class Category{
 
+    /**
+     * Name of the category.
+     */
     @Id
     @Column(name ="name")
     private String categoryName;
 
+    /**
+     * Generated Id of the category. 
+     */
     @Id
     @SequenceGenerator(name="idCategorySeq", initialValue=1, allocationSize=50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="idCategorySeq")
     private int categoryId;
 
+    /**
+     * Set of the petals which belongs to this category.
+     */
     @OneToMany(mappedBy="category", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Petal> petals;
 
-
+    /**
+     * Default constructor.
+     */
     public Category() {
 
     }
 
+    /**
+     * Constructs a category with the specified name given in parameter.
+     * @param categoryName name of the category to create.
+     */
     public Category(String categoryName) {
         super();
         this.categoryName = categoryName;
